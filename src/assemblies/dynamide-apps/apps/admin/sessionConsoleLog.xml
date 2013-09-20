@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Created with Dynamide from DYNAMIDE.COM -->
+<dynamideForm>
+
+
+<properties>
+    <property name="title">
+      <value>Console Log</value>
+      <intl>1</intl>
+      <eval>
+      document.title = "$page.title";
+
+      </eval>
+    </property>
+    <property name="consoleLogBaseURL">
+      <defaultValue></defaultValue>
+      <value></value>
+    </property>
+    <property name="sessionDetailBaseURL">
+      <defaultValue></defaultValue>
+      <value></value>
+    </property>
+    <property name="type">
+      <value>pagetypes/com.dynamide.page</value>
+      <readOnly>true</readOnly>
+    </property>
+</properties>
+
+
+<htmlsrc><![CDATA[
+<HTML>
+<HEAD>
+    <TITLE>$page.title</TITLE>
+    $session.getInclude("resources/css/ide.css")
+    $session.getInclude("resources/css/admin.css")
+</HEAD>
+<BODY  bgcolor='#A4BFDD'>
+    <SPAN class="widget" id="widgetstyle1"></SPAN>
+    #set $SUBSESSIONID = $session.getQueryParam("SUBSESSIONID")
+    #if ($SUBSESSIONID == ""){
+        #set $SUBSESSIONID = $session.get("SUBSESSIONID")
+    }
+
+    #set $subsession = $session.findSession("$SUBSESSIONID")
+    #if ($subsession == null){
+       invalid SUBSESSIONID
+    } #else {
+        #set $baseURL = $session.find("sessionConsoleLog.consoleLogBaseURL")
+        #set $sessionDetailBaseURL = $session.find("sessionConsoleLog.sessionDetailBaseURL")
+        #set $sessionIDTitle = "[<dm_nbsp/><small><b>SESSIONID:</b><dm_nbsp/>$SUBSESSIONID<dm_nbsp/>]<br/>[<dm_nbsp/><dm_nbsp/><b>Path:<dm_nbsp/></b>$subsession.getURLPath()<dm_nbsp/>]</small>"
+        <table border="0" cellpadding="5" cellspacing="0" ><tr><td valign="top">
+            <b>Console Log</b></td><td width="20"><dm_nbsp/></td><td>$sessionIDTitle</td></tr>
+        </table>
+        <a href="$sessionDetailBaseURL&amp;showSessionObjectDetail=1&amp;SUBSESSIONID=$SUBSESSIONID\&amp;SESSIONID=$SESSIONID\&amp;which=">Session Detail</a>
+        <hr />
+        <br />
+        <table border="1" cellpadding="5" cellspacing="0" bgcolor="white">
+          <tr>
+            <td valign="top">
+                    <pre>$subsession.getConsoleLog()</pre>
+            </td>
+          </tr>
+        </table>
+        <a href="#top">top</a>
+    }
+</BODY>
+</HTML>
+]]></htmlsrc>
+
+
+<widgets>
+    <widget id="widgetstyle1">
+      <properties>
+        <property name="name">
+          <defaultValue>widgetstyle</defaultValue>
+        </property>
+        <property name="type">
+          <defaultValue>com.dynamide.widgetstyle</defaultValue>
+          <readOnly>true</readOnly>
+          <value>com.dynamide.widgetstyle</value>
+        </property>
+        <property name="visible">
+          <defaultValue>true</defaultValue>
+          <datatype>boolean</datatype>
+        </property>
+      </properties>
+    </widget>
+  </widgets>
+</dynamideForm>

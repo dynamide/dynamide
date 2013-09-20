@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideDoco>
+<dynamideDoco pageTitle="Glossary">
+
+<P>&quot;handler&quot; object</P>
+<P>The handler object contains information about the current CGI
+request. You can get information about the CGI parameters sent from
+the browser, the client's browser and platform, and the client's
+Session object.  The handler is available from the ServerSide Event,
+and Widget Expansion contexts.</P>
+</dynamideDoco>

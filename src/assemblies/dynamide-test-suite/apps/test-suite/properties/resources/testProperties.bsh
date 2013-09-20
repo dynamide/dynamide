@@ -1,0 +1,24 @@
+import com.dynamide.*;
+
+void printProps(Widget w){
+    print("Defaults: ");
+    print("w.getPropertyDefault: "+w.getPropertyDefault("align"));
+    print("w.getPropertyDefault.getValue: "+w.getPropertyDefault("align").getValue());
+    print("w.getPropertyDefault.getValue.dump: \r\n"+w.getPropertyDefault("align").getValue().dump(true));
+    print(" ");
+    print("Current: ");
+    print("w.getProperty: "+w.getProperty("align"));
+    print("w.getProperty.getValue: "+w.getProperty("align").getValue());
+    print("w.getProperty.getValue.dump: \r\n"+w.getProperty("align").getValue().dump(true));
+}
+
+source("C:/dynamide/src/shell/dynamideShell.bs");
+s = Session.createSession("/test-suite/properties");
+w = s.find("page1.edit1");
+print("w: "+w);
+print("\r\n******** BEFORE: ***************");
+printProps(w);
+w.changeProperty("align", "center");
+print("\r\n******** AFTER: ***************");
+printProps(w);
+print("*******************************\r\n");

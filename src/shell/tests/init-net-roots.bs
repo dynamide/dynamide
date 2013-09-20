@@ -1,0 +1,23 @@
+//pull this script in with something like:
+//   source("/c/dynamide/src/shell/tests/init-net-roots.db");
+//or
+//   source("src/shell/tests/init-net-roots.db");
+
+import java.sql.*;
+import org.webmacro.datatable.*;
+import com.dynamide.db.*;
+import com.dynamide.util.*;
+import com.dynamide.event.ScriptEvent;
+
+
+import com.dynamide.*;
+import com.dynamide.resource.*;
+import com.dynamide.util.*;
+
+//show();
+
+ResourceManager rm = ResourceManager.createStandalone();
+Session session = Session.createSession("/swarm");
+
+ResourceManager rm = ResourceManager.getRootResourceManager();
+RDBDatabase db = rm.openDatabase("net_roots_demo");

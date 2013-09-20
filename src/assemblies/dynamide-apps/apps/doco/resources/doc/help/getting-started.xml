@@ -1,0 +1,191 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideDoco>
+<dynamideDoco  pageTitle="Quickstart">
+
+
+   <a href="#NewProject">Use the IDE to create a new project</a>
+   <br /><a href="#ModifyFirstPage">Change the content of your first Page</a>
+   <br /><a href="#CreateAppWidget">Use the IDE to create an Application Widget (using containers)</a>
+
+ <br />
+ <br />
+ See also: <br />
+ <dm_nbsp/><dm_nbsp/> $session.link("", "/doc/help/glossary", "Glossary")
+ <br />
+ <dm_nbsp/><dm_nbsp/> $session.link("", "/doc/help/index", "Application Developer Documentation")
+ <br />
+ <dm_nbsp/><dm_nbsp/> <a href="/com/dynamide/doc/internal/index.html">Component Developer Documentation</a>
+ <br />
+ <br />
+<hr />
+ <br />
+
+<h3><a name="NewProject"></a>
+ Use the IDE to create a new project</h3>
+ <p>
+ <br />
+ Start the IDE<br />
+<br />
+<dm_nbsp/><dm_nbsp/><dm_nbsp/> This will be something like: <br />
+<dm_nbsp/><dm_nbsp/><dm_nbsp/> <dm_nbsp/><dm_nbsp/><dm_nbsp/> http://apps.dynamide.com:8080/dynamide/ide<br />
+<dm_nbsp/><dm_nbsp/><dm_nbsp/> depending on how you have Resin configured for hostname
+and port.<br />
+<dm_nbsp/><dm_nbsp/><dm_nbsp/> <br />
+ <br />
+ Cancel out of <dm_nbsp/>the dialog that asks you to choose a project.<br />
+ Click "New Project".<br />
+ Fill in the form that comes up<br />
+ <dm_nbsp/><dm_nbsp/><dm_nbsp/> If you want to create a new application, say it is called
+"/Dynamie/myapp", and your login is "joe", and you have decided to put your
+applications under a site called "mysite", you would enter the following data:<br />
+ </p>
+ <br />
+
+<blockquote>URL Path for New Project:<dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/> [<b> <font color="#000099">
+ /dynamide/myapp</font></b> ]<br />
+ Site Name:<dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/> [ <b><font color="#000099">mysite</font></b>
+  ]<br />
+ Application name relative to apps/:<dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/> [ <b><font color="#000099">
+ myapp</font></b> ]<br />
+ Use User Sandbox:<dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/> [ ]<br />
+ User Directory:<dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/> [ <b><font color="#000099">joe</font></b>
+  ]<br />
+   <br />
+   </blockquote>
+ <p>
+ This could be accessed from a URL such as http://apps.dynamide.com:8080/myapp<br />
+ You could have a URI of <dm_nbsp/>"/foo/myapp" and still have an application
+name of "myapp", in which case you'd enter:<br />
+   <br />
+
+ </p>
+  <blockquote>URL Path for New Project:<dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/> [<b><font color="#000099">
+ /dynamide/myapp</font></b> ]<br />
+  Site Name:<dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/> [ <b><font color="#000099">mysite</font></b>
+  ]<br />
+  Application name relative to apps/:<dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/> [ <b><font color="#000099">
+ myapp</font></b> ]<br />
+  Use User Sandbox:<dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/> [ ]<br />
+  User Directory:<dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/> [ <b><font color="#000099">joe</font></b>
+  ]<br />
+     <br />
+     </blockquote>
+ <p>
+ These two methods would look the same on disk, but simple have a different
+URL mapping.<br />
+     <br />
+     <i><b><font color="#cc0000">Note: for the current release of <dm_nbsp/>Dynamide,
+you must preface all URI's with /dynamide.<br />
+     </font></b></i><br />
+ After you see the success dialog, click OK.<br />
+     <br />
+ The IDE should open the new project for you.<br />
+ If not, click Open Project, and type in the URL you selected above (e.g.
+"/myapp").<br />
+     <br />
+ The IDE should create a default page (of type com.dynamide.form) "page1" for you. <dm_nbsp/>If not, select the
+ page type from the dropdown labelled "Pagetypes:", then click
+New Page.<br />
+     <br />
+ You can save changes to your pages with Save Page, which applies to the
+page selected in the Windows dropdown list -- this is currently different
+than Open Page behavior.<br />
+     <br />
+ Save the project with Save Project.<br />
+     <br />
+ You can close the IDE by closing the top IDE window.<br />
+     <br />
+ You can now run your project in the development web server, and you will
+get a blank page served up.<br />
+     <br />
+ </p>
+
+    <h3><a name="ModifyFirstPage"></a>
+ Use the IDE to modify your first Page.</h3>
+ <p>
+ Start with <a href="#NewProject">Use the IDE to create a new project</a>
+  or use Open Project &gt;&gt; Open Page.<br />
+ Open Page always acts on the page selected in the Page List dropdown.<br />
+ With the Page: <br />
+     <br />
+ <dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/> Enter
+new text.<dm_nbsp/> Should only be allowed outside of widgets.<br />
+     <br />
+ <dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/> Click
+in existing widgets (with red dotted border).<br />
+ <dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/>
+property inspector should pop up. <dm_nbsp/>You can set properties and tab out
+or hit the Enter key to apply the property value.<br />
+     <br />
+ <dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/> Add new
+widgets.<br />
+ <dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/>
+Click on widget type (e.g. "com.dynamide.edit")<br />
+ <dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/>
+Click on checkbox: "Drop Components"<br />
+ <dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/>
+Click on page somewhere -- widget appears.<br />
+ <dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/>
+Un-check "Drop Components" when done.<br />
+ <dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/>
+Click on new widget.<dm_nbsp/> Property page appears.<br />
+ <dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/>
+Set a property and see the effect.<br />
+ <dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/>
+"Caption" usually is apparent.<br />
+ <dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/>
+Don't change "name" property.<br />
+ <dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/>
+    <br />
+ <dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/> Save
+the page with "Save Page". <dm_nbsp/><dm_nbsp/> <dm_nbsp/><dm_nbsp/><dm_nbsp/> <dm_nbsp/> <br />
+     <br />
+ You can also edit the HTML source of the page. <dm_nbsp/>Click Save Page. <dm_nbsp/>Click
+"Edit Page Source", edit the HTML, click Save, then close the resulting message
+page.<br />
+Go back to the IDE, close the WYSIWYG window, and re-open the page.<br />
+ <dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/> <br />
+ </p>
+
+
+<h3><a name="CreateAppWidget"></a>Use the IDE to create an Application Widget (using containers)</h3>
+ <p>
+ In addition to the widgets that ship with Dynamide, you can create your own widgets.  Widgets
+ encapsulate some functionality and some layout, or presentation.   You can author Widgets by hand, and add them
+ to the widget library.  But you can also have application-specific widgets.  These you create in
+ GUI mode using the Dynamide IDE.  You create a page that has other widgets on it, and events and
+ behavior you want.  You save the page within the current application, then, from another page,
+ you include the application-specific widget by using a com.dynamide.container.
+ </p>
+
+ <p>In this step, we are going to create a page, save that page, then include it on another page as a widget.
+     <UL>
+      <li>Select the page type from the dropdown labelled "Pagetypes:". For this example, use "com.dynamide.page".</li>
+      <li>Click "New Page", and enter a unique name for the page (should be a valid javascript identifier), for example, "widgetPage1".</li>
+      <li>Drop components on the page, and enter text.</li>
+      <li>Add page events.</li>
+      <li>Save the page with "Save Page".  Make sure <i>both</i> the "Page List" and "Windows" dropdowns
+          have your new page selected.</li>
+      <li>Save the project.</li>
+      <li>Open another page, or create one of pagetype "com.dynamide.form".</li>
+      <li>On this other page, drop a com.dynamide.container.</li>
+      <li>Click inside the container -- this sets the property editor to point to this new container, which will be named something like "com_dynamide_container1".</li>
+      <li>Set the pageName property to the widget page you just created and saved.  For example, "widgetPage1".</li>
+      <li>Save the page you are working on.</li>
+      <li>If anything gets out of sync, save the page, save the project, and click "Open Page".  This reloads your page.</li>
+     </UL>
+</p>
+
+    <h3>From Here...</h3>
+     <br />
+ See the documentation:<br />
+ <dm_nbsp/><dm_nbsp/> <a href="/com/dynamide/doc/help/index.html">Application Developer Documentation</a>
+ <br />
+ <dm_nbsp/><dm_nbsp/> <a href="/com/dynamide/doc/internal/index.html">Component Developer Documentation</a>
+     <br />
+     <br />
+     <br />
+ <dm_nbsp/> <br />
+     <br />
+
+</dynamideDoco>

@@ -1,0 +1,316 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<dynamideForm>
+
+
+
+  <event language="beanshell" name="page1_onAction"><![CDATA[
+    String action = event.action;
+    session.setFieldValue("lastAction", action);
+  ]]></event>
+
+  <widgets>
+    <widget id="session1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.session</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="hiddenPageID">
+      <properties>
+        <property name="field">
+          <value>page</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.hidden</value>
+        </property>
+        <property name="value">
+          <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+          <value>$pageID</value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="lblLastAction">
+      <properties>
+        <property name="caption">
+          <value>Last Action</value>
+        </property>
+        <property name="align">
+          <value>right</value>
+        </property>
+        <property name="enabled">
+          <value>false</value>
+        </property>
+        <property name="captionWidth">
+          <value>200</value>
+        </property>
+        <property name="field">
+           <value>lastAction</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="editUSER">
+      <properties>
+        <property name="caption">
+          <value>*User Login</value>
+        </property>
+        <property name="align">
+          <value>right</value>
+        </property>
+        <property name="captionWidth">
+          <value>200</value>
+        </property>
+        <property name="field">
+           <value>USER</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="editUSER2">
+      <properties>
+        <property name="caption">
+          <value>*User Login 2</value>
+        </property>
+        <property name="align">
+          <value>right</value>
+        </property>
+        <property name="captionWidth">
+          <value>200</value>
+        </property>
+        <property name="field">
+           <value>USER2</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="submitCancel">
+      <properties>
+        <property name="action">
+          <value>cancel</value>
+        </property>
+        <property name="caption">
+          <value>Cancel</value>
+        </property>
+        <property name="captionWidth">
+          <value>200</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+        <property name="tabindex">
+          <value>1</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="submitOK">
+      <properties>
+        <property name="action">
+          <value>OK</value>
+        </property>
+        <property name="caption">
+          <value>OK</value>
+        </property>
+        <property name="captionWidth">
+          <value>200</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+        <property name="tabindex">
+          <value>2</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="submitOK2">
+      <properties>
+        <property name="action">
+          <value>OK2</value>
+        </property>
+        <property name="captionWidth">
+          <value>200</value>
+        </property>
+        <property name="caption">
+          <value>OK2</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+        <property name="tabindex">
+          <value>3</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="btnOK">
+      <properties>
+        <property name="action">
+          <value>button1action</value>
+        </property>
+        <property name="caption">
+          <value>Button1</value>
+        </property>
+        <property name="captionWidth">
+          <value>200</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.button</value>
+        </property>
+        <property name="tabindex">
+          <value>1</value>
+        </property>
+        <property name="onClick">
+          <value>submit();</value>
+        </property>
+      </properties>
+    </widget>
+
+  </widgets>
+  <htmlsrc browser="*"><![CDATA[
+<HTML>
+  <HEAD>
+    <TITLE>$page.title</TITLE>
+  </HEAD>
+  <BODY id="page1" bottomMargin="15" leftMargin="10" topMargin="15" rightMargin="10" name="page1">
+    <P>Test Submit Scenarios</P>
+    <a href="$session.applicationURI?SESSIONID=$SESSIONID&page=page1&action=show1e1b">show 1 edit 1 button</a><br />
+    <a href="$session.applicationURI?SESSIONID=$SESSIONID&page=page1&action=show1e2b">show 1 edit 2 buttons</a><br />
+    <a href="$session.applicationURI?SESSIONID=$SESSIONID&page=page1&action=show1e3b">show 1 edit 3 buttons</a><br />
+    <a href="$session.applicationURI?SESSIONID=$SESSIONID&page=page1&action=show2e1b">show 2 edits 1 button</a><br />
+    <a href="$session.applicationURI?SESSIONID=$SESSIONID&page=page1&action=show2e2b">show 2 edits 2 buttons</a><br />
+    <a href="$session.applicationURI?SESSIONID=$SESSIONID&page=page1&action=show2e3b">show 2 edits 3 buttons</a><br />
+    <a href="$session.applicationURI?SESSIONID=$SESSIONID&page=page1&action=show1e1bt">show 1 edit 1 btn</a><br />
+    <a href="$session.applicationURI?SESSIONID=$SESSIONID&page=page1&action=show2e1bt">show 2 edits 1 btn</a><br />
+    <a href="$session.applicationURI?SESSIONID=$SESSIONID&page=page1&action=show1e1cancel">show 1 edit 1 cancel</a><br />
+    <a href="$session.applicationURI?SESSIONID=$SESSIONID&page=page1&action=IE">IE</a><br />
+    <a href="$session.applicationURI?SESSIONID=$SESSIONID&page=page1&action=NS">NS</a><br />
+    <FORM name="form$pageID" accept-charset="UNKNOWN" action="$session.applicationURI" method="get" encType="application/x-www-form-urlencoded">
+        #set $browserID = $session.getBrowserID()
+        #if ($browserID == $session.getServletTools().BROWSER_NETSCAPE_4){
+            ##BROWSER_NETSCAPE_4
+            ## NS 4 won't submit forms with two edits using the Enter key.
+            ## And when it submits a form with one, it doesn't send the submits.
+        } #else {
+            ##NOT BROWSER_NETSCAPE_4
+            #set $transSrc = $session.getInclude("resources/images/transparent.gif")
+            <input width="0" height="0" type="image" border="0" alt="" name="DM_DEFAULT_BUTTON" src="$transSrc" />
+        }
+      <SPAN class="widget" id="session1"/>
+      <SPAN class="widget" id="hiddenPageID"/>
+      <SPAN class="widget" id="lblLastAction"/>
+
+        #set $lastAction = $session.lastAction
+        #if ($lastAction == "show1e1b"){
+            <SPAN class="widget" id="editUSER"/>
+
+            <SPAN class="widget" id="submitOK"/>
+        } #elseif ($lastAction == "show1e2b"){
+            <SPAN class="widget" id="editUSER"/>
+
+            <SPAN class="widget" id="submitOK2"/>
+            <SPAN class="widget" id="submitOK"/>
+        } #elseif ($lastAction == "show1e3b"){
+            <SPAN class="widget" id="editUSER"/>
+
+            <SPAN class="widget" id="submitOK2"/>
+            <SPAN class="widget" id="submitCancel"/>
+            <SPAN class="widget" id="submitOK"/>
+        } #elseif ($lastAction == "show2e1b"){
+            <SPAN class="widget" id="editUSER"/>
+            <SPAN class="widget" id="editUSER2"/>
+
+            <SPAN class="widget" id="submitOK"/>
+        } #elseif ($lastAction == "show2e2b"){
+            <SPAN class="widget" id="editUSER"/>
+            <SPAN class="widget" id="editUSER2"/>
+
+            <SPAN class="widget" id="submitOK2"/>
+            <SPAN class="widget" id="submitOK"/>
+        } #elseif ($lastAction == "show2e3b"){
+            <SPAN class="widget" id="editUSER"/>
+            <SPAN class="widget" id="editUSER2"/>
+
+            <SPAN class="widget" id="submitOK2"/>
+            <SPAN class="widget" id="submitCancel"/>
+            <SPAN class="widget" id="submitOK"/>
+        } #elseif ($lastAction == "show1e1bt"){
+            <SPAN class="widget" id="editUSER"/>
+            <SPAN class="widget" id="btnOK"/>
+        } #elseif ($lastAction == "show2e1bt"){
+            <SPAN class="widget" id="editUSER"/>
+            <SPAN class="widget" id="editUSER2"/>
+
+            <SPAN class="widget" id="btnOK"/>
+        } #elseif ($lastAction == "IE"){
+            <SPAN class="widget" id="editUSER"/>
+            <SPAN class="widget" id="editUSER2"/>
+
+            ##For NS 4.7, this doesn't matter, since it won't submit forms with two edits.  And with one edit, it doesn't submit the buttons.
+            ## for IE:
+            <SPAN class="widget" id="submitOK"/>
+            ##<input width="0" height="0" type="image" border="0" name="refresh" src="transparent-1x1.gif" />
+            ##<input style="display:none;" type="submit" name="fakeIE" value="IE" />
+            ##<span style="visibility:hidden;" ><input type="submit" name="fakeNS6" value="netscape6" /></span>
+            <SPAN class="widget" id="submitOK2"/>
+        } #elseif ($lastAction == "NS"){
+            THIS CASE WORKS for IE and NS6
+            <SPAN class="widget" id="editUSER"/>
+            <SPAN class="widget" id="editUSER2"/>
+
+            ## for IE:
+            #set $transSrc = $session.getInclude("resources/images/transparent.gif")
+            ###if ($session.browser){
+            <input width="1" height="1" type="image" border="0" alt="" name="refresh" src="$transSrc" />
+            ##}
+            ##<input style="display:none;" type="submit" name="fakeIE" value="IE" />
+            <span style="visibility:hidden;" ><input type="submit" name="fakeNS6" value="netscape6" /></span>
+            <SPAN class="widget" id="submitOK"/>
+            <SPAN class="widget" id="submitOK2"/>
+        }
+
+
+    </FORM>
+    <table border='0' cellpadding='0' cellspacing='0'>
+      <tr>
+        <td><pre>
+        $session.dumpRequestParams()
+        </pre></td>
+      </tr>
+    </table>
+  </BODY>
+</HTML>
+]]></htmlsrc>
+  <properties>
+    <property name="formAction">
+      <value>mojoAction</value>
+    </property>
+    <property name="formName">
+      <value></value>
+    </property>
+    <property name="lastSave">
+      <datatype>java.util.Date</datatype>
+      <readOnly>true</readOnly>
+      <value>1072971697087</value>
+    </property>
+    <property name="name">
+      <readOnly>true</readOnly>
+      <value>page1</value>
+    </property>
+    <property name="title">
+      <value>Test Submit Scenarios</value>
+    </property>
+    <property name="type">
+      <readOnly>true</readOnly>
+      <value>pagetypes/com.dynamide.page</value>
+    </property>
+  </properties>
+</dynamideForm>

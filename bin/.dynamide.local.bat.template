@@ -1,0 +1,35 @@
+@echo off
+@rem  WARNING:
+@rem
+@rem  Do NOT modify this file (.dynamide.local.bat) since it is generated
+@rem    from ${DYNAMIDE_HOME}/bin/.dynamide.local.bat.template
+@rem    by ${DYNAMIDE_HOME}build.xml
+@rem  Instead, modify dynamide.local.properties, and re-run the Ant task "install-bin", e.g.
+@rem
+@rem    cd $DYNAMIDE_HOME
+@rem    $ANT_HOME/bin/ant install-bin
+@rem
+@rem  You can run this file with -quiet to supress warning messages,
+@rem    or with -verbose to see more info.
+
+set ANT_HOME=%ANT_HOME%
+set RESIN_HOME=%RESIN_HOME%
+
+set DYNAMIDE_HOME=%DYNAMIDE_HOME%
+set DYNAMIDE_RESOURCE_ROOT=%DYNAMIDE_RESOURCE_ROOT%
+set DYNAMIDE_LOGS=%DYNAMIDE_LOGS%
+set DYNAMIDE_RESIN_CONF=%DYNAMIDE_RESIN_CONF%
+
+set JAVA_HOME=%JAVA_HOME%
+
+set perl=%PERL%
+
+if "%1" == "-verbose" (
+    @echo.
+    @echo ANT_HOME: %ANT_HOME%
+    @echo DYNAMIDE_HOME: %DYNAMIDE_HOME%
+    @echo DYNAMIDE_RESIN_CONF: %DYNAMIDE_RESIN_CONF%
+    @echo JAVA_HOME: %JAVA_HOME%
+    @echo RESIN_HOME: %RESIN_HOME%
+    @echo perl: %perl%
+)

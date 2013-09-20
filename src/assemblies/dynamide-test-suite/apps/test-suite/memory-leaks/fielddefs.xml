@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+
+<fields>
+   <field name="qty">
+       <property name="value"><value>3000</value></property>
+   </field>
+   <field name="page1Description">
+       <property name="value">
+          <datatype>com.dynamide.datatypes.HTMLDatatype</datatype>
+          <value>This Application excercises the Enumerations built into Dynamide.
+          <br/>These are the enumerated types:
+          <ul>
+            <li>com.dynamide.datatypes.EnumeratedDatatype</li>
+          </ul>
+          These Widgets know how to deal with Enumerations:
+          <ul>
+            <li>com.dynamide.select</li>
+            <li>com.dynamide.radiogroup</li>
+          </ul>
+          </value>
+          <intl>1</intl>
+       </property>
+   </field>
+</fields>

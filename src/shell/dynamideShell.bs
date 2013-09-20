@@ -1,0 +1,48 @@
+import com.dynamide.*;
+import com.dynamide.event.*;
+import com.dynamide.resource.*;
+import com.dynamide.resource.ResourceManager;
+import com.dynamide.util.*;
+
+String RESOURCE_ROOT = "";
+ResourceManager rm = null;
+try {
+    RESOURCE_ROOT = ResourceManager.getResourceRootFromEnv();
+    rm = ResourceManager.createStandalone(RESOURCE_ROOT);
+} catch (Throwable t){
+    print("Error: "+t);
+    t.printStackTrace();
+}
+
+String dumpClassPath(){
+     java.net.URL[] urls = getClassPath();
+     String s = "";
+     for (int i = 0; i < urls.length; i++){
+        s += urls[i] +"\r\n";
+     }
+     return s;
+}
+
+/* call like: dump(this) */
+dump(aThis){
+    String res = "";
+    String[] sa = aThis.methods;
+    res ="methods: "+com.dynamide.util.Tools.arrayToString(sa, ";");
+    sa = aThis.variables;
+    res += "\r\nvariables: "+com.dynamide.util.Tools.arrayToString(sa, ";");
+    return res;
+}
+
+com.dynamide.Session newSession(url){
+    return com.dynamide.Session.createSession(url);
+}
+
+com.dynamide.Session newSession(url, debugURL){
+    return com.dynamide.Session.createSession(url, debugURL);
+}
+
+print("\r\n");
+print("=======================================================");
+print(" Dynamide Shell. Copyright (c) 2001-2003 Dynamide.com");
+print(" Methods available now:\r\n    "+Tools.arrayToString(this.methods, "\r\n    "));
+print("=======================================================\r\n");

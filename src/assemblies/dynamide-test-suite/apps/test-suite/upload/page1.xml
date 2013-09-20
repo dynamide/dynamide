@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm >
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<dynamideForm>
+
+<properties>
+
+    <property name="type">
+      <value>pagetypes/com.dynamide.form</value>
+      <readOnly>true</readOnly>
+    </property>
+
+    <property name="title">
+      <value>Upload Test</value>
+    </property>
+
+    <property name="margin">
+      <value>0</value>
+    </property>
+
+    <property name="bgcolor">
+      <value>white</value>
+    </property>
+
+
+  </properties>
+
+    <event language="beanshell" name="page1_onAction"><![CDATA[
+        System.out.println("====================== page1_onAction 3");
+        String filename = session.getQueryParam("file.filename");
+        String file = session.getQueryParam("file.file");
+        if ( Tools.isBlank(filename) || Tools.isBlank(file) ) {
+            System.out.println("filename '"+filename+"' or file '"+file+"' was blank");
+        } else {
+            filename = filename.replace(' ', '_');
+            filename = filename.replace('\'', '_');
+            filename = filename.replace('\"', '_');
+            if (!FileTools.isWebSafeFileName(filename)){
+                event.returnSource("<html><body>ERROR: invalid filename: "+filename+"</body></html>");
+                return;
+            }
+            String newFilename = filename;
+            int iSlash = filename.lastIndexOf("\\");
+            if ( iSlash>-1 ) {
+                newFilename = newFilename.substring(iSlash+1);
+            }
+            iSlash = filename.lastIndexOf("/");
+            if ( iSlash>-1 ) {
+                newFilename = newFilename.substring(iSlash+1);
+            }
+            rm = com.dynamide.resource.ResourceManager.getRootResourceManager();
+            String dir = FileTools.join(rm.getStaticRoot(), "dynamide/schwarmanizer/files");
+            FileTools.createDirectory(dir);
+            String fullNewFilename = FileTools.join(dir, newFilename);
+            boolean ok = FileTools.copyFile(file, fullNewFilename);
+            System.out.println("copied: "+fullNewFilename + " from "+file+" result: "+ok);
+        }
+        //java.io.FileInputStream is = new java.io.FileInputStream(fileName);
+
+        //int ch;
+        //while ((ch = is.read()) >= 0){
+        //    System.out.print((char) ch);
+        //}
+        //is.close();
+    ]]>
+    </event>
+
+
+<htmlsrc><![CDATA[
+  <HTML>
+    <HEAD>
+        <TITLE>$session.title - $page.title</TITLE>
+        $session.getInclude("resources/js/page.js")
+        $session.getInclude("resources/css/dynamide.css")
+    </HEAD>
+
+    <BODY id="page1" onclick="widgetClicked(this)" bottomMargin="0" leftMargin="0" topMargin="0" rightMargin="0" bgcolor="white">
+        <SPAN class="widget" id="widgetstyle1" onclick="widgetClicked(this)"></SPAN>
+        <form name="UploadRSS" method="POST" action="$session.requestPath" enctype="multipart/form-data">
+              <input TYPE="file" NAME="file"/>
+              <input TYPE="submit" NAME="Submit" VALUE="Submit Form"/>
+              <input type="hidden" name="action" value="UploadRSS"/>
+              <input type="hidden" name="page" value="page1"/>
+              <input type="hidden" name="next" value="page1"/>
+              <input type="hidden" name="SESSIONID" value="$SESSIONID"/>
+          </form>
+          <pre>
+          ##$session.getRequest().getParameter("file")
+          ##$session.getRequest().getParameterNames() ##("action")
+          ##$session.dumpRequestInfo()
+          </pre>
+      </BODY>
+    </HTML>
+  ]]></htmlsrc>
+
+  <widgets>
+      <widget id="widgetstyle1">
+      <properties>
+        <property name="name">
+          <value>hidden</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.widgetstyle</value>
+        </property>
+      </properties>
+    </widget>
+  </widgets>
+
+</dynamideForm>

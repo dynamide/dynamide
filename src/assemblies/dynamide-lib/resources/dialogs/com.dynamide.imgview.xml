@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm  >
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<dynamideForm>
+
+<properties>
+    <property name="align"><value>CENTER</value></property>
+    <property name="bgcolor"><value>white</value></property>
+    <property name="caption"><value></value></property>
+    <property name="captionAlign"><value>CENTER</value></property>
+    <property name="footer"><value></value></property>
+    <property name="footerAlign"><value>CENTER</value></property>
+    <property name="formAction">
+        <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+        <value>$session.applicationPath</value>
+    </property>
+    <property name="href"><value></value></property>
+    <property name="hrefCaption"><value></value></property>
+    <property name="hrefTarget"><value></value></property>
+    <property name="imageAlign"><value>center</value></property>
+    <property name="imageHeight"><value></value></property>
+    <property name="imageSrc"> <value></value></property>
+    <property name="imageWidth"><value></value></property>
+    <property name="name"><value>com.dynamide.imgview</value></property>
+    <property name="title"><value>View Image</value></property>
+    <property name="type">
+        <value>resources/dialogs/com.dynamide.imgview</value>
+    </property>
+</properties>
+
+<htmlsrc><![CDATA[
+<html>
+$page.setPropertiesFromURL()
+    <head>
+        <title>$page.title</title>
+        $session.getInclude("resources/css/dynamide.css")
+    </head>
+    <body bgcolor="$page.bgcolor">
+    #if ($page.formAction != ""){
+      <form name="frmImgview" action="$page.formAction">
+    }
+    #set $mojo= "$page.align"
+    #set $mojo = $mojo.toString()
+    #set $isCenter = $mojo.equalsIgnoreCase("CENTER")
+    #if ($isCenter){<center>}
+    <table border='0' cellpadding='0' cellspacing='0'>
+      <tr>
+        <td align="$page.captionAlign">
+           $page.caption
+        </td>
+      </tr>
+      <tr>
+        <td align="$page.imageAlign">
+            #if ($page.href!=""){<a target="$page.hrefTarget" href="$page.href">}
+            <span class="widget" id="image1"/>
+            <br/><center>$page.hrefCaption</center>
+            #if ($page.href!=""){</a>}
+        </td>
+      </tr>
+      <tr>
+        <td align="$page.footerAlign">$page.footer
+        </td>
+      </tr>
+    </table>
+    #if ($isCenter){</center>}
+    #if ($page.formAction != ""){
+        <input type="hidden" id="SESSIONID" name="SESSIONID" value="$SESSIONID" />
+        <input type="hidden" id="page" name="page" value="$page.ID" />
+      </form>
+    }
+    </body>
+  </html>
+]]></htmlsrc>
+
+<widgets>
+    <widget id="image1">
+      <properties>
+        <property name="height">
+        <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+          <value>$page.imageHeight</value>
+        </property>
+        <property name="src">
+          <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+          <value>$page.imageSrc</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.img</value>
+        </property>
+        <property name="width">
+          <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+          <value>$page.imageWidth</value>
+        </property>
+      </properties>
+    </widget>
+
+</widgets>
+
+<event language="beanshell" name="imgview_onLoad"><![CDATA[
+]]></event>
+
+
+</dynamideForm>

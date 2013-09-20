@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+
+<fields>
+   <field name="qty">
+       <property name="value"><value>3000</value></property>
+   </field>
+   <field name="page1Description">
+       <property name="value">
+          <datatype>com.dynamide.datatypes.HTMLDatatype</datatype>
+          <value>This application shows how to fire events from other events.
+          </value>
+          <intl>1</intl>
+       </property>
+   </field>
+</fields>

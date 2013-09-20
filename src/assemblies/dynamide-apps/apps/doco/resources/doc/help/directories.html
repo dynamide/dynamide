@@ -1,0 +1,187 @@
+<H1>DEPRECATED -- See assemblies.html</H1>
+
+
+<table border='1' cellpadding='0' cellspacing='0'>
+  <tr>
+    <th>Conf File</th>
+  </tr>
+  <tr>
+    <td>
+    imports
+    <br />web-apps
+    </td>
+  </tr>
+</table>
+
+    <br />
+
+<table border='1' cellpadding='0' cellspacing='0'>
+  <tr>
+    <th>Resource File</th>
+  </tr>
+  <tr>
+    <td>
+    resources
+    <br/>exports
+    </td>
+  </tr>
+</table>
+
+<H2>
+Directories in Dynamide Source Distribution
+</H2>
+
+<UL>
+  <LI><b>bin</b> -- shell scripts</LI>
+  <LI><b>build</b> -- Ant destination for output</LI>
+    <UL>
+      <LI><b>doc</b> -- Static documentation for distribution</LI>
+      <UL>
+        <LI><b>javadoc</b> -- Generated javadoc</LI>
+      </UL>
+    </UL>
+  <LI><b>doc</b> -- Static documentation</LI>
+    <UL>
+      <LI><b>internal</b> -- Static documentation on Dynamide internals</LI>
+    </UL>
+  <LI><b>lib</b> -- jar files</LI>
+  <LI><b>src</b> -- Source tree for building dynamide, including resources</LI>
+  <UL>
+    <LI><b>jacl</b> -- Modified files to be merged into Jacl source tree</LI>
+    <LI><b>java</b> -- Java source files to build dynamide.jar</LI>
+    <LI><b>jsp</b> -- Utility jsp's that can be run from App Server</LI>
+    <LI><b>resources</b> -- XML files, and other text-based files</LI>
+    <UL>
+      <LI><b>conf</b> -- Configuration files for Dynamide</LI>
+      <LI><b>sites</b> -- Installed sites, including Dynamide resource versions</LI>
+      <UL>
+        <LI><b>dynamide</b> -- current version of Dynamide resources  (Widget sources, javascript, CSS, etc.)</LI>
+          <UL>
+            <LI><b>templates</b></LI>
+              <UL>
+                <LI><b>css</b> -- Cascading Style Sheets</LI>
+              </UL>
+              <UL>
+                <LI><b>js</b> -- Javascript</LI>
+              </UL>
+              <UL>
+                <LI><b>widgets</b> -- Widget Library</LI>
+              </UL>
+              <UL>
+                <LI><b>xsl</b> -- XSLT stylesheets</LI>
+              </UL>
+          </UL>
+      </UL>
+      <LI><b>users</b> -- Installed Users</LI>
+    </UL>
+  </UL>
+
+</UL>
+
+<H2>
+Directories in Dynamide WAR-file Distribution
+</H2>
+
+
+<UL>
+  <LI><b>WEB-INF</b> -- Ant destination for output</LI>
+    <UL>
+
+      <LI><b>resources</b> -- XML files, and other text-based files</LI>
+      <UL>
+        <LI><b>conf</b> -- Configuration files for Dynamide</LI>
+        <LI><b>sites</b> -- Installed sites, including Dynamide resource versions</LI>
+        <UL>
+          <LI><b>dynamide</b> -- current version of Dynamide resources  (Widget sources, javascript, CSS, etc.)</LI>
+            <UL>
+              <LI><b>templates</b></LI>
+                <UL>
+                  <LI><b>css</b> -- Cascading Style Sheets</LI>
+                </UL>
+                <UL>
+                  <LI><b>js</b> -- Javascript</LI>
+                </UL>
+                <UL>
+                  <LI><b>widgets</b> -- Widget Library</LI>
+                </UL>
+                <UL>
+                  <LI><b>xsl</b> -- XSLT stylesheets</LI>
+                </UL>
+            </UL>
+        </UL>
+        <LI><b>users</b> -- Installed Users</LI>
+      </UL>
+
+  <LI><b>lib</b> -- jar files</LI>
+
+  </UL>
+  <LI><b>doc</b> -- Static documentation</LI>
+  <UL>
+    <LI><b>javadoc</b> -- Generated javadoc</LI>
+  </UL>
+  <UL>
+    <LI><b>internal</b> -- Static documentation on Dynamide internals</LI>
+  </UL>
+  <LI><b>jsp</b> -- Utility jsp's that can be run from App Server</LI>
+</UL>
+
+<P>Note: you may have sites outside of the war file also.  You may install these where you wish, accessible to the Resin
+box via the (possibly network) filesystem These are configured through the
+conf/web-apps.xml.  You point to your conf/web-app.xml with a serlet parameter in resin.conf.  You can
+have multiple web-apps.xml files in the same folder, just name them differently and register them in the
+resin.conf file.  You would do this if Q/A and Dev happened to point at the same source, for example.
+They follow the same layout:</P>
+<UL>
+        <li>{Dynamide-"sites"-directory-here}</li>
+        <UL>
+            <LI><b>your-lib-site</b> -- Your library to import</LI>
+                    <UL>
+                      <LI><b>resources</b></LI>
+                    </UL>
+
+          <LI><b>your-first-site</b> -- Your development files</LI>
+            <UL>
+              <LI><b>apps</b></LI>
+                  <UL>
+                    <LI><b>yourapp</b></LI>
+                    <UL>
+                      <LI><b>resources</b></LI>
+                    </UL>
+                    <LI><b>yourapp2</b></LI>
+                    <UL>
+                      <LI><b>resources</b></LI>
+                    </UL>
+                  </UL>
+              <LI><b>resources</b></LI>
+                <UL>
+                  <LI><b>css</b> -- Cascading Style Sheets</LI>
+                </UL>
+                <UL>
+                  <LI><b>js</b> -- Javascript</LI>
+                </UL>
+                <UL>
+                  <LI><b>widgets</b> -- Widget Library</LI>
+                </UL>
+                <UL>
+                  <LI><b>xsl</b> -- XSLT stylesheets</LI>
+                </UL>
+            </UL>
+            <LI><b>your-second-site</b> -- Your Q/A files</LI>
+        </UL>
+
+</UL>
+
+<hr />
+
+
+These are the task involved in installing a new WAR file.
+  back up conf file
+  install war file
+  merge conf file changes in
+    point conf to local sites file
+      sites/yoursite/conf contains a backup of conf. (maybe a local conf for all of this site?)
+  secure file system resources
+  set any non-standard ports you use
+  check resin.conf file
+
+  Site file has db connection strings, url mappings

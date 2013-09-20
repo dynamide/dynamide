@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+
+<widget>
+    <properties>
+        <property name="caption">
+          <defaultValue>button</defaultValue>
+          <type>java.lang.String</type>
+          <intl>1</intl>
+        </property>
+        <property name="class"><defaultValue></defaultValue></property>
+        <property name="name"><defaultValue>button</defaultValue></property>
+        <property name="type"><defaultValue>a.simple.button</defaultValue><readOnly>true</readOnly></property>
+    </properties>
+
+
+    <htmlsrc browser="*"><![CDATA[
+                <input class="$widget.class" type="button"
+                    #if ($designMode == "false"){ onClick="$widget.onClick" }
+                    name="$widget.field" id="$widget.field" value="$widget.caption"/>
+    ]]></htmlsrc>
+
+</widget>

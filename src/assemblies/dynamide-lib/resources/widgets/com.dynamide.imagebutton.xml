@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<widget>
+    <componentHelp>
+        <p>This component acts like a com.dynamide.button, except that it allows you to have a graphic icon
+        in the button, as well as text.
+        Calls a javascript function on the client-side when clicked.  Enter valid javascript in the
+        onClick property (not a widget event, which executes server-side) to have it executed on the client
+        when the button is clicked.   Normally, you would use inline javascript like this -- "javascript:" --
+        but you can also use either a javascript widget (not implemented), or a script editor for the property (not implemented).
+        <br/>
+        If you want to just submit the form, use com.dynamide.submit instead.
+        <br/>In the onClick property, if you wish to call functions and need quotes, use escaped quotes, for
+        example: alert(\'I was clicked\');
+
+        </p>
+    </componentHelp>
+    <properties>
+        <property name="border"><defaultValue>2</defaultValue></property>
+        <property name="bgcolor"><defaultValue>#CCCCCC</defaultValue></property>
+        <property name="bgcolorHighlight"><defaultValue>#DDDDDD</defaultValue></property>
+        <property name="bgcolorClicked"><defaultValue>#BBBBBB</defaultValue></property>
+        <property name="caption">
+        <defaultValue>caption</defaultValue>
+        <intl>1</intl>
+        </property>
+        <property name="enabled">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+        <property name="imageSource">
+            <defaultValue>resources/images/save-file.gif</defaultValue>
+            <category>read-only</category>
+        </property>
+        <property name="imgPlacement">
+            <category>required</category>
+            <readOnly>false</readOnly>
+            <datatype>com.dynamide.datatypes.Enumeration</datatype>
+            <defaultValue>
+                <enumeration>
+                    <value>left</value>
+                    <value>right</value>
+                    <value>top</value>
+                    <value>bottom</value>
+                </enumeration>
+            </defaultValue>
+            <helpTip>Image on top, bottom, left, or right</helpTip>
+        </property>
+        <property name="name"><defaultValue>imagebutton1</defaultValue></property>
+        <property name="onClick"><defaultValue></defaultValue></property>
+        <property name="padding"><defaultValue>0</defaultValue></property>
+        <property name="textPadding"><defaultValue>2</defaultValue></property>
+        <property name="type">
+            <defaultValue>com.dynamide.imagebutton</defaultValue>
+            <readOnly>true</readOnly>
+        </property>
+        <property name="visible">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+    </properties>
+
+<htmlsrc browser="*"><![CDATA[
+    ## Stylesheet semicolons and curly braces must be escaped for webmacro
+    <style><!--
+       .highlightedImageButton$widget.Name \{
+          border-top: $widget.border solid lightgrey\;
+          border-left: $widget.border solid lightgrey\;
+          border-right: $widget.border solid black\;
+          border-bottom: $widget.border solid black\;
+          background-color: $widget.bgcolorHighlight\;
+          padding: $widget.padding\;
+          margin-left: 0;
+          margin-right: 1;
+          margin-top: 0;
+          margin-bottom: 1;
+       \}
+       .normalImageButton$widget.Name \{
+          border-top: $widget.border solid \#DDDDDD\;
+          border-left: $widget.border solid \#DDDDDD\;
+          border-right: $widget.border solid black\;
+          border-bottom: $widget.border solid black\;
+          background-color: $widget.bgcolor\;
+          padding: $widget.padding\;
+          margin-left: 0;
+          margin-right: 1;
+          margin-top: 0;
+          margin-bottom: 1;
+       \}
+       .clickedImageButton$widget.Name \{
+          border-top: $widget.border solid black\;
+          border-left: $widget.border solid black\;
+          border-right: $widget.border solid lightgrey\;
+          border-bottom: $widget.border solid lightgrey\;
+          background-color: $widget.bgcolorClicked\;
+          padding: $widget.padding\;
+          margin-left: 1;
+          margin-right: 0;
+          margin-top: 1;
+          margin-bottom: 0;
+       \}
+    --></style>
+    <script language='javascript'>
+    <!--
+     function highlightButton$widget.Name\(id){
+          //alert('highlightButton'+id);
+        if (document.all[id]){
+           document.all[id].className='highlightedImageButton$widget.Name';
+        }
+        event.cancelBubble = true;
+     }
+     function unhighlightButton$widget.Name\(id){
+        timeoutscript = "document.all['"+id+"'].className='normalImageButton$widget.Name';";
+        setTimeout(timeoutscript, 100);
+        event.cancelBubble = true;
+     }
+     function clickButton$widget.Name\(id, script){
+          //alert('clickButton');
+          document.all[id].className='clickedImageButton$widget.Name';
+          timeoutscript = "document.all['"+id+"'].className='highlightedImageButton$widget.Name';";
+          setTimeout(timeoutscript,150);
+          eval(script);
+          //alert('clickButton done');
+        event.cancelBubble = true;
+     }
+    // -->
+    </script>
+    <TABLE BORDER='0' CELLSPACING='0' CELLPADDING='0'>
+    <TR>
+        <TD align="center">
+           <DIV id='div_$widget.name' name='div_$widget.name'
+              class="normalImageButton$widget.Name"
+              #if ($designMode == "false" && $widget.enabled != "false") {
+                ## These things make the button "live" at design time, which is bad.
+                onmouseover="javascript:highlightButton$widget.Name\('div_$widget.name')"
+                onmouseout="javascript:unhighlightButton$widget.Name\('div_$widget.name')"
+                onclick="javascript:clickButton$widget.Name\('div_$widget.name', '$widget.onClick')"
+              }
+              CONTENTEDITABLE='false'
+            >
+            #set $placementOK = "false"
+            ##set $foo = $session.findSession("mojo").findSession("foo")
+            #set $imgSrc = $session.getInclude("$widget.imageSource")
+            #if ($widget.imgPlacement == "top") {
+              <table BORDER='0' CELLSPACING='0' CELLPADDING='$widget.textPadding'>
+               <tr>
+                 <td align="center"><IMG border='0' SRC="$imgSrc" name='img_$widget.name'/></td>
+               </tr>
+               <tr>
+                 <td align="center">$widget.caption</td>
+               </tr>
+              </table>
+              #set $placementOK = "true"
+            }
+            #if ($widget.imgPlacement == "bottom") {
+              <table BORDER='0' CELLSPACING='0' CELLPADDING='$widget.textPadding'>
+               <tr>
+                 <td align="center">$widget.caption</td>
+               </tr>
+               <tr>
+                 <td align="center"><IMG border='0' SRC="$imgSrc" name='img_$widget.name'/></td>
+               </tr>
+              </table>
+              #set $placementOK = "true"
+            }
+            #if ($widget.imgPlacement == "left") {
+              <table BORDER='0' CELLSPACING='0' CELLPADDING='$widget.textPadding'>
+               <tr>
+                <td align="center"><IMG border='0' SRC="$imgSrc" name='img_$widget.name'/></td>
+                 <td align="center">$widget.caption</td>
+               </tr>
+              </table>
+              #set $placementOK = "true"
+            }
+            #if ($widget.imgPlacement == "right") {
+              <table BORDER='0' CELLSPACING='0' CELLPADDING='$widget.textPadding'>
+               <tr>
+                 <td align="center">$widget.caption</td>
+                <td align="center"><IMG border='0' SRC="$imgSrc" name='img_$widget.name'/></td>
+               </tr>
+              </table>
+              #set $placementOK = "true"
+            }
+            #if ($placementOK == "false") {
+                ERROR: Set imgPlacement property to one of <br/>"top", "bottom", "left", or "right"
+            }
+
+           </DIV>
+        </TD>
+    </TR>
+    </TABLE>
+
+]]></htmlsrc>
+</widget>

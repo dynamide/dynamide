@@ -1,0 +1,11 @@
+## ARRRRRRRRRRRRRRG this doesn't work.  You must do it all inline.
+##Just do this:
+## cd C:\dynamide\src\shell\webmacro
+## webmacro.bat -noInit -o C:\dynamide\src\java\com\dynamide\datatypes\PublishParamsDatatype.java C:\dynamide\src\shell\webmacro\generate-PublishParamsDatatype.wms
+#include as template "\\dynamide\\src\\shell\\webmacro\\generate-datatype.wm"
+#set $list = ["URL", "prefixURI", "outputDir", "protocolHostPort", "defaultExtension"]
+#set $classname = "PublishParamsDatatype"
+#set $superclass = "com.dynamide.datatypes.Datatype"
+$shell.clearResults()
+hello #generate($list,$classname,$superclass)
+

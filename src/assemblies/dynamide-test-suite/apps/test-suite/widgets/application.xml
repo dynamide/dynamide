@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm >
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<application>
+
+  <fields href="fielddefs.xml"></fields>
+
+  <properties>
+      <property name="type">
+        <value>com.dynamide.Session</value>
+        <readOnly>true</readOnly>
+      </property>
+
+      <property name="title">
+        <value>Test Widgets</value>
+      </property>
+
+      <property name="onStart" isEvent="true">
+        <value></value>
+        <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      </property>
+
+      <!-- without this, no language will be loaded at all by default: -->
+      <property name="defaultLanguage">
+        <value>en-us</value>
+      </property>
+
+
+  </properties>
+
+  <pages>
+    <page name="page1"></page>
+    <page name="page2"></page>
+    <page name="selects"></page>
+  </pages>
+
+  <event language="beanshell" name="application_onImport">
+  <![CDATA[
+        import com.dynamide.*;
+        import com.dynamide.event.*;
+        import com.dynamide.test.samplebeans.MyDBValueBean;
+  ]]>
+  </event>
+
+  <event language="beanshell" name="application_onStart">
+  <![CDATA[
+         String language = event.getQueryParam("language");
+         event.println("language: "+language);
+         if (language.length()>0){
+            event.session.loadInternationalization(language);
+         }
+  ]]>
+  </event>
+
+  <event language="beanshell" name="application_queryNextPage">
+  <![CDATA[
+         //always show this one until more pages are added:
+         event.nextPageID = "page1";
+  ]]>
+  </event>
+
+</application>

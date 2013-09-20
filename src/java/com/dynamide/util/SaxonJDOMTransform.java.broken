@@ -1,0 +1,214 @@
+package com.dynamide.util;
+
+import com.icl.saxon.ParameterSet;
+import com.icl.saxon.ExtendedInputSource;
+import com.icl.saxon.TransformerFactoryImpl;
+import com.icl.saxon.Controller;
+
+import com.icl.saxon.tree.TreeBuilder;
+import com.icl.saxon.tinytree.TinyBuilder;
+import com.icl.saxon.om.Builder;
+import com.icl.saxon.om.Navigator;
+import com.icl.saxon.om.DocumentInfo;
+import com.icl.saxon.om.Namespace;
+import com.icl.saxon.om.NamePool;
+import com.icl.saxon.expr.*;
+import com.icl.saxon.style.*;
+import com.icl.saxon.output.*;
+import com.icl.saxon.trace.*;
+import com.icl.saxon.style.TerminationException;
+
+import javax.xml.transform.*;
+import javax.xml.transform.sax.*;
+import javax.xml.transform.stream.*;
+
+import org.xml.sax.*;
+
+import java.util.*;
+import java.io.*;
+//==========================
+
+
+import javax.xml.transform.*;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.Attribute;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
+
+import com.icl.saxon.Context;
+import com.icl.saxon.jdom.DocumentWrapper;
+import com.icl.saxon.jdom.NodeWrapper;
+import com.icl.saxon.expr.Expression;
+import com.icl.saxon.expr.StandaloneContext;
+import com.icl.saxon.om.NodeEnumeration;
+import com.icl.saxon.om.NamePool;
+
+// Needed java classes
+import java.io.*;
+import java.io.File;
+import java.util.Properties;
+
+import com.dynamide.JDOMFile;
+
+public class SaxonJDOMTransform implements javax.xml.transform.URIResolver {
+
+    public Source resolve(String href, String base)
+    throws TransformerException {
+        //System.out.println("resolve: href: "+href);
+        //System.out.println("resolve: base: "+base);
+
+        //first, try to see if the base is a full path:
+        try {
+            File b = new File(new java.net.URI(base));
+            String parentdir = b.getParentFile().getCanonicalPath();
+            File s = new File(parentdir, href);
+            if ( s.exists() ) {
+                System.out.println("resolved as file relative to parent: "+parentdir+" file: "+href);
+                return new StreamSource(new File(parentdir, href));
+            }
+        } catch( Exception e ){
+            //System.out.println("error getting b: "+e);
+        }
+
+        //next, try to see if the href exists in the current dir:
+        try {
+            File c = new File(href);
+            if ( c.exists() ) {
+                System.out.println("resolved base as file: "+c.getCanonicalPath());
+                return new StreamSource(c);
+            }
+        } catch( Exception e2 ){
+            //System.out.println("error resolving href as standalone URI: "+e2);
+        }
+
+        //next, try to see if the href exists as a URL:
+        try {
+            System.out.println("resolved href as a remote URL: "+href);
+            return new StreamSource(href);
+        } catch( Exception e3 ){
+            System.out.println("error resolving href as standalone URL: "+e3);
+        }
+
+        throw new TransformerException("ERROR: SaxonJDOMTransform.transform(): can't resolve href: "+href +" base: "+base);
+    }
+
+    /**
+     * Method main
+     */
+    public static void main(String argv[])
+    throws TransformerException, TransformerConfigurationException, JDOMException, IOException {
+        (new SaxonJDOMTransform()).transform();
+        if (true)
+            return;
+        if (argv.length != 2) {
+            System.err.println("Usage: SaxonJDOMTransform source.xml style.xsl >out.xml");
+        } else {
+            System.out.println(transform(argv[0], argv[1]));
+        }
+    }
+
+    /**
+     * transform, given only filenames.
+     */
+    public static String transform(String sourceID, String xslID)
+    throws TransformerException, TransformerConfigurationException, JDOMException, IOException {
+        // Build the JDOM document
+        SAXBuilder builder = new SAXBuilder("com.icl.saxon.aelfred.SAXDriver");
+        //Document doc = builder.build(new File(sourceID));
+        JDOMFile jdomfile = new JDOMFile(null, sourceID);
+        Document doc = jdomfile.getDocument();
+        return transform(doc, sourceID, xslID);
+    }
+
+    /**
+     * transform, given a JDOM document.
+     */
+    public static String transform(org.jdom.Document doc, String sourceID, String xslID)
+    throws TransformerException, TransformerConfigurationException, JDOMException {
+        java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+        transform(doc, sourceID, xslID, out);
+        return out.toString();
+    }
+
+    public static void transform(org.jdom.Document doc, String sourceID, String xslID, OutputStream out)
+    throws TransformerException, TransformerConfigurationException, JDOMException {
+        // Give it a Saxon wrapper
+        DocumentWrapper docw = new DocumentWrapper(doc, sourceID);
+        //NamePool pool = NamePool.getDefaultNamePool();
+        //docw.setNamePool(pool);
+
+        // Now do a transformation
+        System.setProperty("javax.xml.transform.TransformerFactory",
+                           "com.icl.saxon.TransformerFactoryImpl");
+        TransformerFactory tfactory = TransformerFactory.newInstance();
+        System.out.println("Attempting to create xsl: "+xslID);
+        File xsl = new File(xslID);
+        System.out.println("Created xsl");
+
+        Templates templates = tfactory.newTemplates(new StreamSource(xsl));
+        Transformer transformer = templates.newTransformer();
+        transformer.transform(docw, new StreamResult(out));
+    }
+
+
+    public void transform() throws TransformerException, JDOMException, IOException {
+        String sourceFileName = "C:\\temp\\glossary.xml";
+        String styleFileName = "C:\\temp\\glossary.xsl";
+        String outputFileName = "C:\\temp\\glossary.html";
+        File sourceFile = null;
+        File styleFile = null;
+        File outputFile = null;
+        ParameterSet params = new ParameterSet();
+        Source sourceInput = null;
+        TransformerFactoryImpl factory = new TransformerFactoryImpl();
+        factory.setURIResolver(this);
+
+        sourceFile = new File(sourceFileName);
+        ExtendedInputSource eis = new ExtendedInputSource(sourceFile);
+        sourceInput = new SAXSource(factory.getSourceParser(), eis);
+        eis.setEstimatedLength((int)sourceFile.length());
+
+        Source styleSource;
+
+        File sheetFile = new File(styleFileName);
+        ExtendedInputSource eisStyle = new ExtendedInputSource(sheetFile);
+        styleSource = new SAXSource(factory.getStyleParser(), eisStyle);
+
+        Templates sheet = factory.newTemplates(styleSource);
+
+        outputFile = new File(outputFileName);
+
+        Transformer instance = sheet.newTransformer();
+        ((Controller)instance).setParams(params);
+
+        Result result =
+            (outputFile==null ?
+                new StreamResult(System.out) :
+                new StreamResult(outputFile));
+
+        try {
+            /* this doesn't work:
+                JDOMFile jdomfile = new JDOMFile(null, sourceFileName);
+                Document doc = jdomfile.getDocument();
+                System.out.println("output: "+JDOMFile.output(doc.getRootElement()));
+                DocumentWrapper docw = new DocumentWrapper(doc, sourceFileName);
+                //System.out.println("instance: "+instance.getClass().getName());
+                instance.transform(docw, result);
+            */
+
+            instance.transform(sourceInput, result);
+        } catch (TerminationException err) {
+            throw err;
+        } catch (TransformerException err) {
+            // The message will already have been displayed; don't do it twice
+            throw new TransformerException("Run-time errors were reported");
+        }
+
+    }
+
+
+}

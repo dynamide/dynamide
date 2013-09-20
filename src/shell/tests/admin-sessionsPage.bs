@@ -1,0 +1,15 @@
+import com.dynamide.*;
+import com.dynamide.resource.*;
+import com.dynamide.util.*;
+
+String RESOURCE_ROOT = "C:/dynamide/build/ROOT";
+ResourceManager rootResourceManager = ResourceManager.createStandalone(RESOURCE_ROOT);
+Session s = Session.createSession("/Dynamide/admin");
+p = s.find("sessionsPage");
+if ( p == null ) {
+    print("ERROR: page object is null");
+} else {
+    print(p.outputPage());
+}
+print("DONE outputPage");
+System.exit(0);

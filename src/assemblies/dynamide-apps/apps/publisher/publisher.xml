@@ -1,0 +1,375 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<dynamideForm>
+
+<!--/**               publisher_onImport              */-->
+
+<event language="beanshell" name="publisher_onImport"><![CDATA[
+    import com.dynamide.resource.*;
+    import com.dynamide.db.*;
+
+
+    String ROOT_WEBAPPS = "ROOT_WEBAPPS";
+    String DYNAMIDE_WEBAPPS = "DYNAMIDE_WEBAPPS";
+
+    void loadPublishable(String id, String path){
+        st = new SimpleDatasource(null, session);
+        st.setID(id);
+        w = session.getResourceManager().find(path);
+        int i = 0;
+        for (Iterator it = w.getContexts().values().iterator(); it.hasNext(); ) {
+            st.addRow();
+            wae = (WebAppEntry)it.next();
+            st.addField("URI", wae.getURI());
+            st.addField("APPNAME", wae.getAppname());
+            st.addField("ASSEMBLY", wae.getAssembly());
+            st.addField("HOME", wae.getHome());
+            st.addField("INTERFACE", wae.getInterface());
+            st.addField("BUILD", wae.getBuild());
+            st.addField("FULLPATH", wae.getWebappsFullPath());
+            if (i>0) {
+                st.addField("PUBLISH", "false");
+            } else {
+                st.addField("PUBLISH", "true");
+            }
+            st.post();
+            i++;
+        }
+        System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^ st.class: "+st.getClass().getName());
+        //st.seekBegin();
+        session.setFieldObject(id, st);
+    }
+]]></event>
+
+<!--/**               publisher_onLoad                 */-->
+
+<event language="beanshell" name="publisher_onLoad"><![CDATA[
+    loadPublishable(ROOT_WEBAPPS, "/homes/web-apps");
+    loadPublishable(DYNAMIDE_WEBAPPS, "/homes/dynamide/web-apps");
+]]></event>
+
+<!--/**               Widgets                           */-->
+
+  <widgets>
+    <widget id="com_dynamide_submit1">
+      <properties>
+        <property name="action">
+          <value>publish</value>
+        </property>
+        <property name="field">
+          <datatype>com.dynamide.datatypes.LiveEnumeratedDatatype</datatype>
+          <liveEvalString>session.getFieldNames();</liveEvalString>
+          <value>
+            <enumeration override="false" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.StringDatatype">publish</item>
+            </enumeration>
+          </value>
+        </property>
+        <property name="name">
+          <value>com_dynamide_submit1</value>
+        </property>
+        <property name="tabindex">
+          <value></value>
+        </property>
+        <property name="type">
+          <readOnly>true</readOnly>
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="session1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.session</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="hiddenPageID">
+      <properties>
+        <property name="field">
+          <value>page</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.hidden</value>
+        </property>
+        <property name="value">
+          <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+          <value>$pageID</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="includes1">
+      <properties>
+        <property name="field">
+          <value>publisher_includes1</value>
+        </property>
+        <property name="items">
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+          <value>
+            <enumeration override="false" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/css/dynamide.css</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/js/page.js</item>
+            </enumeration>
+          </value>
+        </property>
+        <property name="name">
+          <value>includes1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.includes</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="standardIncludes">
+      <properties>
+        <property name="field">
+          <value>publisher_standardIncludes</value>
+        </property>
+        <property name="name">
+          <value>standardIncludes</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.stdincludes</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="widgetstyle1">
+      <properties>
+        <property name="field">
+          <value>publisher_widgetstyle1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.widgetstyle</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="cbPublish">
+      <properties>
+        <property name="field">
+          <value></value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.checkbox</value>
+        </property>
+      </properties>
+    </widget>
+  </widgets>
+
+<!--/**               htmlsrc                         */-->
+
+  <htmlsrc browser="*"><![CDATA[
+<HTML>
+  <HEAD>
+    <TITLE/>
+  </HEAD>
+  <BODY id="publisher" onclick="bodyClicked(this)" bottomMargin="15" leftMargin="10" topMargin="15" rightMargin="10" name="publisher">
+    <P>
+      <SPAN class="widget" id="widgetstyle1"/>
+      <SPAN class="widget" id="standardIncludes"/>
+      <SPAN class="widget" id="includes1"/>
+    </P>
+    <P>
+      <FORM accept-charset="UNKNOWN" method="get" encType="application/x-www-form-urlencoded">
+
+        $session.link("next=publisher", "Refresh")
+        <br />
+        $session.link("action=publish", "Publish")
+        <br />
+        #if ($session.getQueryParam("action").equals("publish")){
+            #set $rm = $session.getResourceManager()
+            #if ($rm){
+               ##$rm.startJob($session, "job_doPublisher", "/dynamide/doco", true)
+               $rm.startJob($session, "job_doPublisher", "/dynamide/demo", true)
+            }
+        }
+        #set $thelist = $session.jobslist.getValue()
+       <table border='1' cellpadding='2' cellspacing='0'>
+         #foreach $entry in $thelist.entrySet() {
+         <tr valign='top'>
+              <td>$entry.getKey()</td>
+              <td>$entry.getValue().getPublishStatus()</td>
+         </tr>
+         }
+       </table>
+
+        ###  =========== publishable =========================================
+
+        #macro publishable($webAppsSearchPath){
+            <h4>$webAppsSearchPath</h4>
+            <table border='1' cellpadding='4' cellspacing='0'>
+            #set $w = $session.getResourceManager().find($webAppsSearchPath)
+            ##w: $w
+
+            #set $i = 0
+            #foreach $thing in $w.getContexts().values() {
+            #set $wae = $thing ##$w.getAttribute($thing)
+                #set $i = $i + 1
+                #if ($wae.getClass().getName().endsWith("WebAppEntry")) {
+                <tr>
+                    <td>$wae.URI</td>
+                    <td>$wae.Home</td>
+                    <td>$wae.Interface</td>
+                    <td>$wae.Build</td>
+                    <td>
+                    #comment {
+                        The better way to do this is to create one widget
+                        with an array value
+                        widget.index[i].field =
+                        widget.index[i].uri =
+
+                        Or, have a datasource provide values.
+                        for i = start to start+$datasource.displaySize
+                        if hasNext()...
+                        $datasource.next()
+                        $widget1.output()
+                        $widgetcol2.output()
+                        $widgetcol3.output()
+                    }
+                    ## This works:
+                    #if ($session.getFieldValue("cbPublish_$i") == ""){
+                        $session.setFieldValue("cbPublishURI_$i", "$wae.URI")
+                        $session.setFieldValue("cbPublish_$i", "off")
+                        <input type="checkbox" name="cbPublish_$i" />
+                    } #else {
+                        #if ($session.getFieldValue("cbPublish_$i") == "on") {
+                           <input type="checkbox" name="cbPublish_$i" checked='1'   />
+                        } #else {
+                           <input type="checkbox" name="cbPublish_$i" />
+                        }
+                    }
+                    </td>
+
+                </tr>
+
+                }
+            }
+
+            </table>
+            <br />
+        }
+
+        ###  =========== publishable2 =========================================
+
+
+        #macro publishable2($id){
+            <h4>$id</h4>
+            <table border='1' cellpadding='4' cellspacing='0'>
+            #set $st = $session.get($id).getValue()
+            #set $foo = $st.seekBegin()
+            ## st: $st
+
+            #count $i from 0 to ($st.getRowCount()-1) {
+                <tr>
+                    <td>$i</td>
+                    <td>$st.URI</td>
+                    <td>$st.APPNAME</td>
+                    <td>$st.HOME</td>
+                    <td>$st.ASSEMBLY</td>
+                    <td>$st.INTERFACE</td>
+                    <td>$st.BUILD</td>
+                    <td>$st.PUBLISH</td>
+                    <td>
+                        #set $widget = $session.find("publisher.cbPublish")
+                        $widget.setProperty("field", "PUBLISH")
+                        $widget.setProperty("fieldIndex", "$i")
+                        $widget.setProperty("datasource", "$id")
+                        $widget.setProperty("caption", "Publish")
+                        ##i: $widget.getProperty("fieldIndex")
+                        ##on: $widget.getField().getID()  :: $widget.field :: $widget.fieldIndex
+                        $widget.render(false)
+                    </td>
+                </tr>
+                #set $OK = $st.next()
+            }
+            </table>
+            #set $OK = $st.seekBegin()
+        }
+
+        <TABLE cellSpacing="0" cellPadding="0" border="1">
+          <TBODY class="selected">
+            <TR>
+              <TD colSpan="1" rowSpan="1">
+               ### ============= output tables here =============================================
+                ##  this works: #publishable("/homes/web-apps")
+                ##  this works: #publishable("/homes/dynamide/web-apps")
+
+                #publishable2("ROOT_WEBAPPS")
+                <br />
+                #publishable2("DYNAMIDE_WEBAPPS")
+                <br />
+
+                #set $st = $session.get("DYNAMIDE_WEBAPPS").getValue()
+
+                #foreach $thing in $st.getColumnNamesList(){
+                    #set $w =$page.createWidget("com.dynamide.edit")
+                    $w.setProperty("caption", "$thing")
+                    $w.setProperty("field", "$thing")
+                    $w.setProperty("datasource", "DYNAMIDE_WEBAPPS")
+                    $w.setProperty("captionWidth", "150")
+                    $w.render(false)
+
+                }
+              </TD>
+            </TR>
+            <TR>
+              <TD colSpan="1" rowSpan="1">
+                <SPAN class="widget" id="com_dynamide_submit1"/>
+              </TD>
+            </TR>
+          </TBODY>
+        </TABLE>
+        <SPAN class="widget" id="session1"/>
+        <SPAN class="widget" id="hiddenPageID"/>
+      </FORM>
+    </P>
+  </BODY>
+</HTML>
+]]></htmlsrc>
+
+<!--/**               properties                  */-->
+
+
+  <properties>
+    <property name="field">
+      <value>publisher</value>
+    </property>
+    <property name="formAction">
+      <value></value>
+    </property>
+    <property name="formName">
+      <value></value>
+    </property>
+    <property name="lastSave">
+      <datatype>java.util.Date</datatype>
+      <readOnly>true</readOnly>
+      <value>1056332718648</value>
+    </property>
+    <property name="margin">
+      <eval>document.body.margin = "$page.margin";document.body.bgcolor='blue';alert('changed');</eval>
+      <value>0</value>
+    </property>
+    <property name="name">
+      <readOnly>true</readOnly>
+      <value>publisher</value>
+    </property>
+    <property name="onAction" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value></value>
+    </property>
+    <property name="onLoad" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value></value>
+    </property>
+    <property name="onValidate" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value></value>
+    </property>
+    <property name="title">
+      <value></value>
+    </property>
+    <property name="type">
+      <readOnly>true</readOnly>
+      <value>pagetypes/com.dynamide.form</value>
+    </property>
+  </properties>
+</dynamideForm>

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm >
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<application>
+    <properties/>
+    <fields>
+       <field name="qty">
+           <property name="value"><value>3000</value></property>
+       </field>
+       <field name="description">
+           <property name="value">
+              <datatype>com.dynamide.datatypes.HTMLDatatype</datatype>
+              <value>This application tests loading fields.
+              </value>
+              <intl>1</intl>
+           </property>
+       </field>
+    </fields>
+</application>

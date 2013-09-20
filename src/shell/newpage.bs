@@ -1,0 +1,32 @@
+import com.dynamide.*;
+import com.dynamide.resource.*;
+import com.dynamide.util.*;
+
+try {
+    String RESOURCE_ROOT = com.dynamide.resource.ResourceManager.getEnvironmentVariable("dynamide.RESOURCE_ROOT");
+    ResourceManager rm = ResourceManager.createStandalone(RESOURCE_ROOT);
+
+    session = Session.createSession("/Dynamide/demo");
+    String PAGEID = "page22";
+    page = session.findPageByID(PAGEID);
+    if (page == null){
+        page = session.newPage(PAGEID, "pagetypes/com.dynamide.page");
+    }
+    page.setProperty("title", PAGEID);
+
+    w = page.createWidget("com.dynamide.button");
+    w.setProperty("caption", "==================== Hello, World ====================");
+    //Note: this doesn't insert a widget span or div into the actual html source, just in the widgets element.
+
+    page.setProperty("zanzibar", "new property value, sort under 'z'");
+
+    page.commitInMemoryChangesToDOM();
+    print();
+    print(page.getFullXMLSource());
+    print();
+    print(page.outputPage());
+} catch (Throwable t){
+    print("Error: "+t);
+    t.printStackTrace();
+}
+//System.exit(0);

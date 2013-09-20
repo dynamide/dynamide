@@ -1,0 +1,26 @@
+import com.dynamide.*;
+import com.dynamide.util.*;
+import com.dynamide.resource.ResourceManager;
+
+ResourceManager.createStandalone();
+
+String options = "";
+if ( bsh.args.length == 1 ) {
+    options = "&doOne_URL="+bsh.args[0];
+} else if ( bsh.args.length == 2 ) {
+    options = "&doOne_URL="+bsh.args[0]+"&doOne_Params="+bsh.args[1];
+}
+
+//list = com.dynamide.util.Audit.audit("/Dynamide/demo", "USER=audit").getList();
+//str = com.dynamide.util.Tools.collectionToString(list, "\r\n\r\n");
+
+//print(str);
+
+s = com.dynamide.Session.createSession("/dynamide/admin", "/dynamide/admin?USER=audit"+options);
+s.setBrowserID(ServletTools.BROWSER_DYNAMIDE_TEXT);
+p = s.find("audit");
+print("loaded: "+p);
+HandlerResult handlerResult = new HandlerResult("", false);
+print(p.outputPage(handlerResult));
+
+System.exit(0);

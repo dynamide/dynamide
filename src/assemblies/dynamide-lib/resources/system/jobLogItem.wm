@@ -1,0 +1,13 @@
+  <tr>
+    <td>$eventName
+    </td>
+    <td>
+    #if ($WEBMACRO_CONTEXT.getContext().get("event")) {
+    $event.dumpHTML()
+    } #else {
+        $jobStatus
+    }
+    </td>
+    <td>$jobName
+    </td>
+  </tr>

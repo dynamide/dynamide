@@ -1,0 +1,298 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm >
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<dynamideForm>
+
+
+<properties>
+
+    <property name="type">
+      <value>pagetypes/com.dynamide.form</value>
+      <readOnly>true</readOnly>
+    </property>
+
+    <property name="title">
+      <value>Test Widgets</value>
+    </property>
+
+    <property name="margin">
+      <value>0</value>
+    </property>
+
+    <property name="bgcolor">
+      <value>white</value>
+    </property>
+
+
+  </properties>
+
+
+<htmlsrc><![CDATA[
+<HTML>
+    <HEAD>
+        <TITLE>$session.title - $page.title
+        </TITLE>
+        $session.getInclude("resources/js/page.js")
+        $session.getInclude("resources/css/dynamide.css")
+    </HEAD>
+
+    <BODY id="page2" bottomMargin="0" leftMargin="0" topMargin="0" rightMargin="0" bgcolor="white">
+        <SPAN class="widget" id="widgetstyle1" onclick="widgetClicked(this)"></SPAN>
+        <FORM name="mojoForm" action="/dynamide/test-widgets" method="get" encType="application/x-www-form-urlencoded">
+           <h2>Tests for Dynamide</h2>
+           <p>Test com.dynamide.select: </p>
+        $session.selects.select1.setError(true)
+
+                <SPAN class="widget" id="select1" ></SPAN>
+                <SPAN class="widget" id="select2" ></SPAN>
+                <SPAN class="widget" id="select3" ></SPAN>
+                <SPAN class="widget" id="select4" ></SPAN>
+
+                <SPAN class="widget" id="button2" ></SPAN>
+                <SPAN class="widget" id="session1" />
+        </FORM>
+      </BODY>
+    </HTML>
+  ]]></htmlsrc>
+
+  <event language="beanshell" name="selects_onMojo">
+  <![CDATA[
+        event.println("selects_onMojo called");
+  ]]>
+  </event>
+
+
+  <widgets>
+      <widget id="widgetstyle1">
+      <properties>
+        <property name="name">
+          <value>hidden</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.widgetstyle</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="session1">
+      <properties>
+        <property name="name">
+          <value>session1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.session</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="button2">
+      <properties>
+        <property name="action">
+          <value>doSubmitThing</value>
+        </property>
+        <property name="caption">
+          <value>Submit Me!</value>
+        </property>
+        <property name="class">
+          <defaultValue>dmbutton</defaultValue>
+        </property>
+        <property name="field">
+          <defaultValue>field</defaultValue>
+        </property>
+        <property name="name">
+          <defaultValue>Submit</defaultValue>
+        </property>
+        <property name="onClick" isEvent="true">
+          <defaultValue></defaultValue>
+        </property>
+        <property name="text">
+          <defaultValue></defaultValue>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="select1">
+      <properties>
+        <property name="border">
+          <value>1</value>
+        </property>
+        <property name="caption">
+          <value>Dropdown</value>
+        </property>
+        <property name="captionClass">
+          <value>caption</value>
+        </property>
+        <property name="captionWidth">
+          <value>100</value>
+        </property>
+        <property name="field">
+          <value>selectField</value>
+        </property>
+        <property name="multiple">
+          <value>false</value>
+        </property>
+        <property name="size">
+          <value>1</value>
+        </property>
+        <property name="tabindex">
+          <value>1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.select</value>
+        </property>
+        <property name="items">
+            <datatype>com.dynamide.datatypes.Enumeration</datatype>
+            <value>
+                <enumeration>
+                    <item datatype="com.dynamide.datatypes.StringDatatype">Option 1</item>
+                    <item datatype="com.dynamide.datatypes.StringDatatype">Option 2</item>
+                    <item datatype="com.dynamide.datatypes.StringDatatype">Option 3</item>
+                    <item datatype="com.dynamide.datatypes.StringDatatype">Option 4</item>
+                    <item datatype="com.dynamide.datatypes.StringDatatype">Option 5</item>
+                    <item datatype="com.dynamide.datatypes.StringDatatype">Option 6</item>
+                    <item datatype="com.dynamide.datatypes.StringDatatype">Option 7</item>
+                    <item datatype="com.dynamide.datatypes.StringDatatype">Option 8</item>
+                </enumeration>
+            </value>
+        </property>
+
+      </properties>
+    </widget>
+    <widget id="select2">
+      <properties>
+        <property name="border">
+          <value>1</value>
+        </property>
+        <property name="caption">
+          <value>Single Selection</value>
+        </property>
+        <property name="captionClass">
+          <value>caption</value>
+        </property>
+        <property name="captionWidth">
+          <value>100</value>
+        </property>
+        <property name="field">
+          <value>selectField</value>
+        </property>
+        <property name="multiple">
+          <value>false</value>
+        </property>
+        <property name="size">
+          <value>8</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.select</value>
+        </property>
+        <property name="items">
+            <datatype>com.dynamide.datatypes.Enumeration</datatype>
+            <value>
+                <enumeration>
+                    <item datatype="com.dynamide.datatypes.StringDatatype">Option 1</item>
+                    <item datatype="com.dynamide.datatypes.StringDatatype">Option 2</item>
+                    <item datatype="com.dynamide.datatypes.StringDatatype">Option 3</item>
+                    <item datatype="com.dynamide.datatypes.StringDatatype">Option 4</item>
+                    <item datatype="com.dynamide.datatypes.StringDatatype">Option 5</item>
+                    <item datatype="com.dynamide.datatypes.StringDatatype">Option 6</item>
+                    <item datatype="com.dynamide.datatypes.StringDatatype">Option 7</item>
+                    <item datatype="com.dynamide.datatypes.StringDatatype">Option 8</item>
+                </enumeration>
+            </value>
+        </property>
+
+      </properties>
+    </widget>
+    <widget id="select3">
+      <properties>
+        <property name="border">
+          <value>1</value>
+        </property>
+        <property name="caption">
+          <value>Multiple Selection</value>
+        </property>
+        <property name="captionClass">
+          <value>caption</value>
+        </property>
+        <property name="captionWidth">
+          <value>100</value>
+        </property>
+        <property name="field">
+          <value>selectField</value>
+        </property>
+        <property name="multiple">
+          <value>true</value>
+        </property>
+        <property name="size">
+          <value>8</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.select</value>
+        </property>
+        <property name="items">
+            <datatype>com.dynamide.datatypes.Enumeration</datatype>
+            <value>
+                <enumeration>
+                    <item datatype="com.dynamide.datatypes.StringDatatype">Option 1</item>
+                    <item datatype="com.dynamide.datatypes.StringDatatype">Option 2</item>
+                    <item datatype="com.dynamide.datatypes.StringDatatype">Option 3</item>
+                    <item datatype="com.dynamide.datatypes.StringDatatype">Option 4</item>
+                    <item datatype="com.dynamide.datatypes.StringDatatype">Option 5</item>
+                    <item datatype="com.dynamide.datatypes.StringDatatype">Option 6</item>
+                    <item datatype="com.dynamide.datatypes.StringDatatype">Option 7</item>
+                    <item datatype="com.dynamide.datatypes.StringDatatype">Option 8</item>
+                </enumeration>
+            </value>
+        </property>
+
+      </properties>
+    </widget>
+    <widget id="select4">
+      <properties>
+        <property name="border">
+          <value>1</value>
+        </property>
+        <property name="caption">
+          <value>enabled == false</value>
+        </property>
+        <property name="captionClass">
+          <value>caption</value>
+        </property>
+        <property name="captionWidth">
+          <value>100</value>
+        </property>
+        <property name="enabled">
+          <value>false</value>
+        </property>
+        <property name="field">
+          <value>selectField</value>
+        </property>
+        <property name="multiple">
+          <value>true</value>
+        </property>
+        <property name="size">
+          <value>8</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.select</value>
+        </property>
+        <property name="items">
+            <datatype>com.dynamide.datatypes.Enumeration</datatype>
+            <value>
+                <enumeration>
+                    <item datatype="com.dynamide.datatypes.StringDatatype">Option 1</item>
+                    <item datatype="com.dynamide.datatypes.StringDatatype">Option 2</item>
+                    <item datatype="com.dynamide.datatypes.StringDatatype">Option 3</item>
+                    <item datatype="com.dynamide.datatypes.StringDatatype">Option 4</item>
+                    <item datatype="com.dynamide.datatypes.StringDatatype">Option 5</item>
+                    <item datatype="com.dynamide.datatypes.StringDatatype">Option 6</item>
+                    <item datatype="com.dynamide.datatypes.StringDatatype">Option 7</item>
+                    <item datatype="com.dynamide.datatypes.StringDatatype">Option 8</item>
+                </enumeration>
+            </value>
+        </property>
+
+      </properties>
+    </widget>
+  </widgets>
+
+</dynamideForm>

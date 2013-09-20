@@ -1,0 +1,7 @@
+/*
+  test with:
+  bsh %DYNAMIDE_HOME%\build\ROOT\homes\dynamide\assemblies\com-dynamide-apps-1\apps\test-suite\simple-datasource\test.bsh
+*/
+
+source("dynamideShell.bs");
+s = newSession("/dynamide/test-suite/simple-datasource");

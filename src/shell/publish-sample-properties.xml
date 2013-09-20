@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<property name="publishParams">
+  <datatype>com.dynamide.datatypes.PublishParamsDatatype</datatype>
+  <value>
+      <URL>"?USER=publish"</URL>
+      <prefixURI>/dmpub3</prefixURI>
+      <outputDir>c:/java</outputDir>
+      <protocolHostPort></protocolHostPort>
+      <defaultExtension>.html</defaultExtension>
+      <publishPagesList>false</publishPagesList>
+  </value>
+</property>

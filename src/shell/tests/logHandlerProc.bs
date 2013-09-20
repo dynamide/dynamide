@@ -1,0 +1,12 @@
+source("../dynamideShell.bs");
+s=newSession("/Dynamide/demo");
+s.enterHandlerProc("hi", "d");
+    s.enterHandlerProc("hi there", "d1");
+    s.leaveHandlerProc("hi there", "");
+
+    s.enterHandlerProc("hi there2", "d2");
+        s.enterHandlerProc("hi there3", "MOJO");
+        s.leaveHandlerProc("hi there3", "");
+    s.leaveHandlerProc("hi there2", "");
+s.leaveHandlerProc("hi", "");
+System.exit(0);

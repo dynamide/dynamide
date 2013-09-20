@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideDoco>
+<dynamideDoco pageTitle="Dynamide Help">
+
+    <CENTER>
+        <style>
+        .NOT_AVAILABLE {color: green; text-decoration: none; font: 15px}
+        .NOT_AVAILABLE:active {color: green; text-decoration: none}
+        .NOT_AVAILABLE:hover {color: green; text-decoration: none}
+        </style>
+
+    <table border='0' cellpadding='0' cellspacing='0'>
+      <tr>
+        <td  valign='top'>
+          <font size="+1" class='helpsechead'>Dynamide</font>
+          <div class='contentsItem'>
+            ##$session.enterPublishMode("", "/static/dynamide")
+            $session.link("", "/doc/help/dynamide-overview", "Overview")<br />
+            $session.link("", "/doc/help/getting-started", "Getting Started Quicksteps")<br />
+            $session.link("", "/doc/help/FAQ", "FAQ")<br />
+          </div>
+
+          <font size="+1" class='helpsechead'>Sessions and Applications</font>
+          <div class='contentsItem'>
+          <A class="NOT_AVAILABLE" HREF="#">Sessions</A><br />
+          <A class="NOT_AVAILABLE" HREF="#">Applications</A><br />
+          <A href="$session.applicationPath/doc/help/assemblies?SESSIONID=$SESSIONID">Assemblies</A><br/>
+          <A class="NOT_AVAILABLE" HREF="#">Projects, Homes, and Sandboxes</A><br />
+          <A class="NOT_AVAILABLE" HREF="#">URLs</A><br />
+          <A class="NOT_AVAILABLE" HREF="#">URL mapping (web-apps.xml)</A><br />
+          </div>
+
+          <font size="+1" class='helpsechead'>Fields</font>
+          <div class='contentsItem'>
+          <A class="NOT_AVAILABLE" HREF="#">Fields</A><br />
+          <A class="NOT_AVAILABLE" HREF="#">Fielddefs</A><br />
+          <A class="NOT_AVAILABLE" HREF="#">Datasources</A><br />
+          </div>
+
+          <font size="+1" class='helpsechead'>Pages, Widgets, Containers</font>
+          <div class='contentsItem'>
+          <A class="NOT_AVAILABLE" HREF="#">Overview</A><br />
+          <A class="NOT_AVAILABLE" HREF="#">Pages</A><br />
+          <A class="NOT_AVAILABLE" HREF="#">Widgets</A><br />
+          <A class="NOT_AVAILABLE" HREF="#">Containers</A><br />
+          </div>
+
+          <font size="+1" class='helpsechead'>Dynamide Java-side API</font>
+          <div class='contentsItem'>
+          <A HREF="$session.applicationPath/doc/help/dynamide-variables-methods?SESSIONID=$SESSIONID">Objects, Variables and Methods</A><br />
+          <A HREF="/static/dynamide/javadoc/index.html" target="_blank">Dynamide Javadoc</A><br />
+          </div>
+        </td>
+        <td valign='top' width='100'>
+          <dm_nbsp/>
+        </td>
+        <td valign='top'>
+          <font size="+1" class='helpsechead'>Properties</font>
+          <div class='contentsItem'>
+          <A class="NOT_AVAILABLE" HREF="#">Properties</A><br />
+          <A HREF="$session.applicationPath/doc/help/FAQ?SESSIONID=$SESSIONID\#enumeratedProperties">Enumerated Properties</A><br />
+          </div>
+
+          <font size="+1" class='helpsechead'>ServerSide Events</font>
+          <div class='contentsItem'>
+          <A href="$session.applicationPath/doc/help/FAQ?SESSIONID=$SESSIONID\#events">ServerSideEvents</A><br />
+          <A class="NOT_AVAILABLE" HREF="#">Event Order</A><br />
+          <A class="NOT_AVAILABLE" HREF="#">Beanshell</A><br />
+          <A class="NOT_AVAILABLE" HREF="#">Other Interpreters</A><br />
+          </div>
+
+          <font size="+1" class='helpsechead'>HTML Source</font>
+          <div class='contentsItem'>
+          <A class="NOT_AVAILABLE" HREF="#"><b>&lt;htmlsrc&gt;</b><dm_nbsp/>element</A><br />
+          <A class="NOT_AVAILABLE" HREF="#">XHTML</A><br />
+          <A class="NOT_AVAILABLE" HREF="#">Widget tags</A><br />
+          <A class="NOT_AVAILABLE" HREF="#">Webmacro</A><br />
+          </div>
+
+          <font size="+1" class='helpsechead'>XML/XSL</font>
+          <div class='contentsItem'>
+          <A class="NOT_AVAILABLE" HREF="#"><b>com.dynamide.xsl</b><dm_nbsp/>widget</A><br />
+          <A class="NOT_AVAILABLE" HREF="#">XPath</A><br />
+          </div>
+
+          <font size="+1" class='helpsechead'>Samples</font>
+          <div class='contentsItem'>
+          <A HREF="/dynamide/test" target="_blank">/dynamide/test</A><br />
+          <A HREF="/dynamide/demo" target="_blank">/dynamide/demo</A><br />
+          </div>
+
+          <font size="+1" class='helpsechead'>Miscellaneous</font>
+          <div class='contentsItem'>
+          <a href="$session.applicationPath/doc/help/glossary?SESSIONID=$SESSIONID">Glossary</a><br />
+          <a href="$session.applicationPath/doc/internal/cvs-tags?SESSIONID=$SESSIONID">Revision History</a><br />
+          <A HREF="$session.applicationPath/doc/help/magic?SESSIONID=$SESSIONID">Magic Values</A><br />
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    </CENTER>
+
+</dynamideDoco>

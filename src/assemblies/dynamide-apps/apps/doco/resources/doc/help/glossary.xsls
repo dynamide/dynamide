@@ -1,0 +1,60 @@
+<!--
+  To make a standard xsl stylesheet out of this unit, run it through XSLScript:
+  xslsdump doco.xsls
+  and send the output to doco.xsl
+-->
+X:transform {
+    X:import href="doco.xsl";
+
+    X:output method="xml" omit-xml-declaration="yes" indent="no";
+
+    X:template = "/dynamideDoco" {
+            <link rel="stylesheet"  SRC="/static/dynamide/doco/dynamidedoco.css" href="/static/dynamide/doco/dynamidedoco.css"></link>
+            <span class="FAQContentsHead">Contents</span>
+            <div class='FAQList'>
+            X:apply-templates "//definition[not(parent::section)]" mode="toc",  X:sort "caption/@id";
+            X:apply-templates "//section" mode="toc",  X:sort "@id";
+            </div>
+
+            <br />
+
+
+            <hr />
+            X:apply-templates "//definition[not(parent::section)]" ,  X:sort "caption/@id";
+            X:apply-templates "//section",  X:sort "@id";
+            <br />
+    }
+
+    X:template = "section" mode="toc" {
+
+            <span class='sectionHeadTOC'>
+            <a>
+                <xsl:attribute name="class">sectionHeadTOC</xsl:attribute>
+                <xsl:attribute name="href">#<xsl:value-of select="./@id"/></xsl:attribute>
+                <xsl:value-of select="./@title"/>
+            </a>
+            </span><br/>
+            <table border='0' cellpadding='0' cellspacing='0'>
+              <tr>
+                <td width='20'><dm_nbsp/></td><td>
+                   X:apply-templates ".//definition" mode="toc",  X:sort "caption/@id";
+                </td>
+              </tr>
+            </table>
+    }
+
+    X:template = "section" {
+            <a><xsl:attribute name="name"><xsl:value-of select="./@id"/></xsl:attribute></a>
+            <span  class='sectionHead'>
+            <xsl:value-of select="./@title"/>
+            </span><br/>
+            <blockquote>
+            X:apply-templates ".//definition",  X:sort "caption/@id";
+            </blockquote>
+            <a href="#top">FAQ Contents</a>
+            <hr />
+    }
+
+
+
+}

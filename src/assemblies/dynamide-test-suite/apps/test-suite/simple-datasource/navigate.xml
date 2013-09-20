@@ -1,0 +1,425 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<dynamideForm>
+  <event language="beanshell" name="navigate_onImport"><![CDATA[
+    import com.dynamide.resource.*;
+    import com.dynamide.db.*;
+
+
+    String DYNAMIDE_WEBAPPS = "DYNAMIDE_WEBAPPS";
+
+    void loadPublishable(String id, String path){
+        st = new SimpleDatasource(null, session);
+        st.setID(id);
+        session.registerDatasource(st);
+
+        st.addColumn("URI", "");
+        st.addColumn("APPNAME", "");
+        st.addColumn("ASSEMBLY", "");
+        st.addColumn("HOME", "");
+        st.addColumn("INTERFACE", "");
+        st.addColumn("BUILD", "");
+        st.addColumn("FULLPATH", "");
+        st.addColumn("PUBLISH", "");
+
+        w = session.getResourceManager().find(path);
+        int i = 0;
+        for (Iterator it = w.getContexts().values().iterator(); it.hasNext(); ) {
+            st.addRow();
+            wae = (WebAppEntry)it.next();
+            st.setFieldValue("URI", wae.getURI());
+            st.setFieldValue("APPNAME", wae.getAppname());
+            st.setFieldValue("ASSEMBLY", wae.getAssembly());
+            st.setFieldValue("HOME", wae.getHome());
+            st.setFieldValue("INTERFACE", wae.getInterface());
+            st.setFieldValue("BUILD", wae.getBuild());
+            st.setFieldValue("FULLPATH", wae.getWebappsFullPath());
+            if (i>0) {
+                st.setFieldValue("PUBLISH", "false");
+            } else {
+                st.setFieldValue("PUBLISH", "true");
+            }
+            st.post();
+            i++;
+        }
+        st.seekBegin();
+    }
+]]></event>
+  <event language="beanshell" name="navigate_onLoad"><![CDATA[
+    loadPublishable(DYNAMIDE_WEBAPPS, "/homes/dynamide/web-apps");
+]]></event>
+  <event language="beanshell" name="navigate_onAction"><![CDATA[
+    st = session.get(DYNAMIDE_WEBAPPS);
+    if (event.action.equals("nextRow")){
+        st.go(1);
+    } else if (event.action.equals("prevRow")){
+        st.go(-1);
+    }
+    event.jumpToPage("navigate");
+]]></event>
+  <widgets>
+    <widget id="cbPublish">
+      <properties>
+        <property name="caption">
+          <value>Publish</value>
+        </property>
+        <property name="captionWidth">
+          <value>150</value>
+        </property>
+        <property name="datasource">
+          <value>DYNAMIDE_WEBAPPS</value>
+        </property>
+        <property name="field">
+          <value>PUBLISH</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.checkbox</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_submit1">
+      <properties>
+        <property name="action">
+          <value>publish</value>
+        </property>
+        <property name="caption">
+          <value>Post</value>
+        </property>
+        <property name="field">
+          <datatype>com.dynamide.datatypes.LiveEnumeratedDatatype</datatype>
+          <liveEvalString>session.getFieldNames();</liveEvalString>
+          <value>
+            <enumeration override="false" defaultIndex="0"></enumeration>
+          </value>
+        </property>
+        <property name="name">
+          <value>com_dynamide_submit1</value>
+        </property>
+        <property name="tabindex">
+          <value></value>
+        </property>
+        <property name="type">
+          <readOnly>true</readOnly>
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="editAPPNAME">
+      <properties>
+        <property name="caption">
+          <value>App Name</value>
+        </property>
+        <property name="captionWidth">
+          <value>150</value>
+        </property>
+        <property name="datasource">
+          <value>DYNAMIDE_WEBAPPS</value>
+        </property>
+        <property name="field">
+          <value>APPNAME</value>
+        </property>
+        <property name="name">
+          <value>com_dynamide_edit1</value>
+        </property>
+        <property name="type">
+          <readOnly>true</readOnly>
+          <value>com.dynamide.edit</value>
+        </property>
+      </properties>
+    </widget>
+     <widget id="editASSEMBLY">
+        <properties>
+          <property name="caption">
+            <value>Assembly</value>
+          </property>
+        <property name="captionWidth">
+          <value>150</value>
+        </property>
+          <property name="datasource">
+            <value>DYNAMIDE_WEBAPPS</value>
+          </property>
+          <property name="field">
+            <value>ASSEMBLY</value>
+          </property>
+          <property name="name">
+            <value>com_dynamide_edit1</value>
+          </property>
+          <property name="type">
+            <readOnly>true</readOnly>
+            <value>com.dynamide.edit</value>
+          </property>
+        </properties>
+     </widget>
+    <widget id="editBUILD">
+      <properties>
+        <property name="caption">
+          <value>Build</value>
+        </property>
+        <property name="captionWidth">
+          <value>150</value>
+        </property>
+        <property name="datasource">
+          <value>DYNAMIDE_WEBAPPS</value>
+        </property>
+        <property name="field">
+          <value>BUILD</value>
+        </property>
+        <property name="name">
+          <value>com_dynamide_edit1</value>
+        </property>
+        <property name="type">
+          <readOnly>true</readOnly>
+          <value>com.dynamide.edit</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="editHOME">
+      <properties>
+        <property name="caption">
+          <value>Home</value>
+        </property>
+        <property name="captionWidth">
+          <value>150</value>
+        </property>
+        <property name="datasource">
+          <value>DYNAMIDE_WEBAPPS</value>
+        </property>
+        <property name="field">
+          <value>HOME</value>
+        </property>
+        <property name="name">
+          <value>com_dynamide_edit1</value>
+        </property>
+        <property name="type">
+          <readOnly>true</readOnly>
+          <value>com.dynamide.edit</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="editINTERFACE">
+      <properties>
+        <property name="caption">
+          <value>Interface</value>
+        </property>
+        <property name="captionWidth">
+          <value>150</value>
+        </property>
+        <property name="datasource">
+          <value>DYNAMIDE_WEBAPPS</value>
+        </property>
+        <property name="field">
+          <value>INTERFACE</value>
+        </property>
+        <property name="name">
+          <value>com_dynamide_edit1</value>
+        </property>
+        <property name="type">
+          <readOnly>true</readOnly>
+          <value>com.dynamide.edit</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="editURI">
+      <properties>
+        <property name="caption">
+          <value>URL</value>
+        </property>
+        <property name="captionWidth">
+          <value>150</value>
+        </property>
+        <property name="datasource">
+          <value>DYNAMIDE_WEBAPPS</value>
+        </property>
+        <property name="field">
+          <value>URI</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="session1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.session</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="hiddenPageID">
+      <properties>
+        <property name="field">
+          <value>page</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.hidden</value>
+        </property>
+        <property name="value">
+          <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+          <value>$pageID</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="includes1">
+      <properties>
+        <property name="field">
+          <value>navigate_includes1</value>
+        </property>
+        <property name="items">
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+          <value>
+            <enumeration override="false" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/css/dynamide.css</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/js/page.js</item>
+            </enumeration>
+          </value>
+        </property>
+        <property name="name">
+          <value>includes1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.includes</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="standardIncludes">
+      <properties>
+        <property name="field">
+          <value>navigate_standardIncludes</value>
+        </property>
+        <property name="name">
+          <value>standardIncludes</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.stdincludes</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="widgetstyle1">
+      <properties>
+        <property name="field">
+          <value>navigate_widgetstyle1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.widgetstyle</value>
+        </property>
+      </properties>
+    </widget>
+  </widgets>
+  <htmlsrc browser="*"><![CDATA[
+<HTML>
+  <HEAD>
+    <TITLE/>
+  </HEAD>
+  <BODY id="navigate" onclick="bodyClicked(this)" bottomMargin="15" leftMargin="10" topMargin="15"
+    rightMargin="10" name="navigate">
+    <P>
+      <SPAN class="widget" id="widgetstyle1"/>
+      <SPAN class="widget" id="standardIncludes"/>
+      <SPAN class="widget" id="includes1"/>
+    </P>
+    <P>
+      <FORM accept-charset="UNKNOWN" method="get" encType="application/x-www-form-urlencoded">
+
+        <center>
+        $session.link("next=pageGrid", "Grid View")
+        $session.link("next=pageGridEdit", "Editable Grid View")
+        <br />
+        $session.link("page=$pageID&amp;next=navigate&amp;action=prevRow", "&lt; Previous")
+        <dm_nbsp/>
+        $session.link("page=$pageID&amp;next=navigate&amp;action=nextRow", "Next >")
+        <br />
+        <br />
+        <TABLE cellSpacing="0" cellPadding="0" border="0">
+          <TBODY class="selected">
+            <TR>
+              <TD colSpan="1" rowSpan="1" align="center">
+                ### ============= output tables here =============================================
+                #set $id = "DYNAMIDE_WEBAPPS"
+                #set $st = $session.get($id)
+                <h4>$id</h4>
+                <table border='0' cellpadding='6' cellspacing='0'>
+                  <tr>
+                    <td><span class="widget" id="editURI"/></td>
+                  </tr>
+                  <tr>
+                    <td><span class='widget' id='editAPPNAME'/></td>
+                  </tr>
+                  <tr>
+                    <td><span class='widget' id='editHOME'/></td>
+                  </tr>
+                  <tr>
+                    <td><span class='widget' id='editASSEMBLY'/></td>
+                  </tr>
+                  <tr>
+                    <td><span class='widget' id='editINTERFACE'/></td>
+                  </tr>
+                  <tr>
+                    <td><span class='widget' id='editBUILD'/></td>
+                  </tr>
+                  <tr>
+                    <td><span class="widget" id="cbPublish"/></td>
+                  </tr>
+                </table>
+                <br />
+              </TD>
+            </TR>
+            <TR>
+              <TD colSpan="1" rowSpan="1" align="center">
+                <SPAN class="widget" id="com_dynamide_submit1"/>
+              </TD>
+            </TR>
+          </TBODY>
+        </TABLE>
+        </center>
+
+        <SPAN class="widget" id="session1"/>
+        <SPAN class="widget" id="hiddenPageID"/>
+      </FORM>
+    </P>
+  </BODY>
+</HTML>
+]]></htmlsrc>
+  <properties>
+    <property name="field">
+      <value>navigate</value>
+    </property>
+    <property name="formAction">
+      <value></value>
+    </property>
+    <property name="formName">
+      <value></value>
+    </property>
+    <property name="lastSave">
+      <datatype>java.util.Date</datatype>
+      <readOnly>true</readOnly>
+      <value>1056682833639</value>
+    </property>
+    <property name="margin">
+      <eval>document.body.margin = "$page.margin";document.body.bgcolor='blue';alert('changed');</eval>
+      <value>10</value>
+    </property>
+    <property name="name">
+      <readOnly>true</readOnly>
+      <value>navigate</value>
+    </property>
+    <property name="onAction" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value></value>
+    </property>
+    <property name="onLoad" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value></value>
+    </property>
+    <property name="onValidate" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value></value>
+    </property>
+    <property name="title">
+      <value></value>
+    </property>
+    <property name="type">
+      <readOnly>true</readOnly>
+      <value>pagetypes/com.dynamide.form</value>
+    </property>
+  </properties>
+</dynamideForm>

@@ -1,0 +1,200 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<widget>
+    <componentHelp>
+     <p>A control for presenting a radio button, or buttons in a group.  On the server the value is
+     retrieved using the "field" property.   Note that the field value should be either "on" or "off", not a boolean string.
+     <br/>The property "textSize" controls how wide the input control will be, "textWidth" controls how many characters it will accept.
+     <br/>The selectedIndex property always controls which item is selected.  If this property is empty,
+     the Field referenced by the field property will be inspected.  If the Field's value matches the item's key, that item
+     is selected.  To make sure you don't override the field's value, leave the selectedIndex property as empty.  To override
+     the Field and ensure that the radiogroup always is unselected (no items at all selected), set selectedIndex to -1.
+     For the duration of the session, then, all items will appear unselected on subsequent page presentations, even if
+     the radiogroup item is selected by the user and a page is posted.  You can change the widget's selectedIndex programmatically
+     in a server-side event like so:
+          <pre>
+             event.currentPage.getWidgetByID("myradiogroup").set("selectedIndex", "");
+          </pre>
+     </p>
+     <p>You can only set 'tabindex' for the whole group.  The browser won't let the user tab through each
+     item.  The user must use the up and down arrow keys to go through the items.
+     </p>
+    </componentHelp>
+
+    <properties>
+        <property name="align">
+           <datatype>com.dynamide.datatypes.Enumeration</datatype>
+           <defaultValue>
+                <enumeration defaultIndex='1'><!-- default it to 'right' -->
+                    <value>left</value>
+                    <value>right</value>
+                </enumeration>
+            </defaultValue>
+        </property>
+        <property name="border">
+            <defaultValue></defaultValue>
+        </property>
+        <property name="caption">
+           <defaultValue>radiogroup</defaultValue>
+           <intl>1</intl>
+        </property>
+        <property name="captionClass"><defaultValue>caption</defaultValue></property>
+        <property name="captionNOBR">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+        <property name="captionPlacement"><defaultValue>left</defaultValue></property>
+        <property name="captionWidth"><defaultValue></defaultValue></property>
+        <property name="cellpadding"><defaultValue>0</defaultValue></property>
+        <property name="cellspacing"><defaultValue>0</defaultValue></property>
+        <property name="class"><defaultValue></defaultValue></property>
+        <property name="enabled">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+        <property name="field">
+           <datatype>com.dynamide.datatypes.LiveEnumeratedDatatype</datatype>
+           <defaultValue>
+                <enumeration defaultIndex='0'>
+                    <value>{autocreate}</value>  <!-- make sure there is one empty value for autocreated fields -->
+                </enumeration>
+            </defaultValue>
+           <liveEvalString>session.getFieldNames();</liveEvalString>
+        </property>
+        <property name="items">
+            <datatype>com.dynamide.datatypes.EnumeratedDatatype</datatype>
+            <defaultValue>
+                <enumeration>
+                    <item datatype="com.dynamide.datatypes.Caption">
+                        <key>item1</key>
+                        <text>Item 1</text>
+                    </item>
+                </enumeration>
+            </defaultValue>
+        </property>
+        <property name="itemWidth"><defaultValue></defaultValue></property>
+        <property name="name"><defaultValue>radiogroup</defaultValue></property>
+        <property name="selectedIndex"><defaultValue></defaultValue></property>
+        <property name="showErrorAbove"><defaultValue>true</defaultValue></property>
+        <property name="tabindex"><defaultValue></defaultValue></property>
+        <property name="textClass"><defaultValue></defaultValue></property>
+        <property name="type">
+            <defaultValue>com.dynamide.radiogroup</defaultValue>
+            <readOnly>true</readOnly>
+        </property>
+        <property name="valign">
+           <datatype>com.dynamide.datatypes.Enumeration</datatype>
+           <defaultValue>
+                <enumeration defaultIndex='1'><!-- default it to 'center' -->
+                    <value>top</value>
+                    <value>center</value>
+                    <value>bottom</value>
+                </enumeration>
+            </defaultValue>
+        </property>
+        <property name="visible">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+    </properties>
+
+    <htmlsrc browser="*"><![CDATA[
+        #set $iserror = $widget.getError()
+        #if ($iserror == true){
+            #set $whichCaptionClass = "errorCaption"
+        } #else {
+            #set $whichCaptionClass = "$widget.captionClass"
+        }
+        <table border="0" cellpadding="0" cellspacing="0">
+            #if ($iserror == true){
+              #if ($widget.showErrorAbove == true){
+                <tr>
+                <td>
+                    <div class="errorCaption">
+                        $widget.getErrorMessage()
+                    </div>
+                </td>
+                </tr>
+              }
+            }
+
+            <tr>
+              <td>
+              <table border="$widget.border" class="$widget.class" cellpadding="$widget.cellpadding" cellspacing="$widget.cellspacing">
+                #if ($iserror == true){
+                <tr>
+                    <td colspan='4'>
+                        <div class="errorCaption">
+                        $widget.getErrorMessage()
+                        </div>
+                    </td>
+                </tr>
+                }
+               <tr>
+                 <td width="$widget.captionWidth" align="$widget.align" valign="$widget.valign">
+                    <div class="$whichCaptionClass">
+                      #if($widget.captionNOBR=="true"){<nobr>}$widget.caption<dm_nbsp/>#if($widget.captionNOBR=="true"){</nobr>}
+                    </div>
+                 </td>
+                #if ($widget.captionPlacement = "above"){
+                 </tr><tr>
+                 <td  align="$widget.align" valign="$widget.valign"
+                      #if ($widget.itemWidth != "") { width="$widget.itemWidth" }
+                      #else {width="$widget.captionWidth"} >
+
+                } #else {
+                 <td #if ($widget.itemWidth != "") { width="$widget.itemWidth" } >
+                }
+                     <table border='0' cellpadding='0' cellspacing='0' #if ($widget.itemWidth != "") { width="$widget.itemWidth" }>
+                        #set $iRow = 0
+                        ## I don't use this, I use selectedIndex of the widget: #set $defaultIndex =  $widget.getProperty("items").getDefaultIndex()
+                        #set $widgetValue = $widget.value
+                        #set $fieldID = $widget.fieldID
+                        #foreach $thing in $widget.getProperty("items").getEnumeration() {
+                            <tr>
+                                <td>
+                                    #set $tabindex = ""
+                                    #if ($widget.tabindex != "") { #set $tabindex = " tabindex='$widget.tabindex' " }
+                                    #set $checked = ""
+                                    #if ($widget.selectedIndex == ""){
+                                        #if ($thing.key == $widgetValue) {
+                                            #set $checked = " checked='1' $tabindex "
+                                        }
+                                    } #else {  ## user has specified a selectedIndex, which wins
+                                        #if ($iRow == $widget.selectedIndex){
+                                            #set $checked = " checked='1' $tabindex "
+                                        }
+                                    }
+                                    #set $text = $thing.text
+                                    #if ($widget.enabled == "true"){
+                                        <nobr><INPUT TYPE="radio" ID="$fieldID" NAME="$fieldID" VALUE="$thing.key" $checked/>$text</nobr>
+                                    } #else {  ##disabled
+                                        #if ($checked != ""){
+                                            <b>$text</b>
+                                        } #else {
+                                            $text
+                                        }
+                                    }
+                                    #set $iRow = $iRow + 1
+                                </td>
+                            </tr>
+                        }  ##end foreach
+                     </table>
+                 </td>
+                </tr>
+              </table>
+              </td>
+              <td width='20'>
+                #if ( $iserror == true ) {
+                    <img src='$session.getInclude("resources/images/redstar.gif")'/>
+                } #else {
+                    <dm_nbsp/>
+                }
+              </td>
+
+            </tr>
+        </table>
+    ]]></htmlsrc>
+</widget>

@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideDoco>
+<dynamideDoco pageTitle="Dynamide Help">
+
+
+    <table border='0' cellpadding='0' cellspacing='0'>
+      <tr>
+        <td  valign='top'>
+          <font size="+1" class='helpsechead'>Dynamide</font>
+          <div class='contentsItem'>
+          <A HREF="dynamide-overview.html">Overview</A><br />
+          <A HREF="getting-started.html">Getting Started Quicksteps</A><br />
+          </div>
+
+          <font size="+1" class='helpsechead'>Sessions and Applications</font>
+          <div class='contentsItem'>
+          <A HREF="#">Sessions</A><br />
+          <A HREF="#">Applications</A><br />
+          <A HREF="#">Projects, Sites, and Sandboxes</A><br />
+          <A HREF="#">URLs</A><br />
+          <A HREF="#">URL mapping (web-apps.xml)</A><br />
+          </div>
+
+          <font size="+1" class='helpsechead'>Fields</font>
+          <div class='contentsItem'>
+          <A HREF="#">Fields</A><br />
+          <A HREF="#">Fielddefs</A><br />
+          <A HREF="#">Datasources</A><br />
+          </div>
+
+          <font size="+1" class='helpsechead'>Pages, Widgets, Containers</font>
+          <div class='contentsItem'>
+          <A HREF="#">Overview</A><br />
+          <A HREF="#">Pages</A><br />
+          <A HREF="#">Widgets</A><br />
+          <A HREF="#">Containers</A><br />
+          </div>
+
+          <font size="+1" class='helpsechead'>Dynamide Java-side API</font>
+          <div class='contentsItem'>
+          <A HREF="dynamide-variables-methods.html">Variables and Methods</A><br />
+          <A HREF="#">Objects:</A><br />
+          &nbsp;&nbsp;&nbsp;<A HREF="server-side-event-object.html">event</A><br />
+          <A HREF="/com/dynamide/doc/api/index.html">Dynamide Javadoc</A><br />
+          </div>
+        </td>
+        <td valign='top' width='100'>
+          &nbsp;
+        </td>
+        <td valign='top'>
+          <font size="+1" class='helpsechead'>Properties</font>
+          <div class='contentsItem'>
+          <A HREF="#">Properties</A><br />
+          <A HREF="#">Enumerated Properties</A><br />
+          </div>
+
+          <font size="+1" class='helpsechead'>ServerSide Events</font>
+          <div class='contentsItem'>
+          <A>ServerSide Events</A><br />
+          <A>Event Order</A><br />
+          <A HREF="#">Beanshell</A><br />
+          <A HREF="#">Other Interpreters</A><br />
+          </div>
+
+          <font size="+1" class='helpsechead'>HTML Source</font>
+          <div class='contentsItem'>
+          <A HREF="#"><b>&lt;htmlsrc&gt;</b> element</A><br />
+          <A HREF="#">XHTML</A><br />
+          <A HREF="#">Widget tags</A><br />
+          <A HREF="#">Webmacro</A><br />
+          </div>
+
+          <font size="+1" class='helpsechead'>XML/XSL</font>
+          <div class='contentsItem'>
+          <A HREF="#"><b>com.dynamide.xsl</b> widget</A><br />
+          <A HREF="#">XPath</A><br />
+          </div>
+
+          <font size="+1" class='helpsechead'>Samples</font>
+          <div class='contentsItem'>
+          <A HREF="/dynamide/test">/dynamide/test</A><br />
+          </div>
+
+          <font size="+1" class='helpsechead'>Miscelaneous</font>
+          <div class='contentsItem'>
+          <A HREF="glossary.html">Glossary</A><br />
+          <A HREF="magic.html">Magic Values</A><br />
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    </CENTER>
+
+</dynamideDoco>

@@ -1,0 +1,297 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<widget>
+    <componentHelp>
+    <p>
+    </p>
+    </componentHelp>
+
+    <properties>
+        <property name="basename">
+            <defaultValue>rdbnavigator</defaultValue>
+            <hidden>true</hidden>
+        </property>
+        <property name="border"><defaultValue>1</defaultValue></property>
+        <property name="datasource">
+            <datatype>com.dynamide.datatypes.IDatasourceDatatype</datatype>
+            <defaultValue></defaultValue>
+        </property>
+        <property name="showEditControls"><defaultValue>true</defaultValue></property>
+        <property name="type"><defaultValue>com.dynamide.rdbnavigator</defaultValue><readOnly>true</readOnly></property>
+    </properties>
+
+  <event language="beanshell" name="com_dynamide_rdbnavigator_onImport"><![CDATA[
+    import java.util.*;
+    import com.dynamide.*;
+    import com.dynamide.db.*;
+    import com.dynamide.util.*;
+  ]]></event>
+
+  <event language="beanshell" name="com_dynamide_rdbnavigator_onLoad"><![CDATA[
+    widget = event.sender;
+    widgetID = widget.getID();
+    page = widget.getPage();
+    page.registerAction(widgetID+"_onPost", widget, "com_dynamide_rdbnavigator_onPost", "foo");
+    page.registerAction(widgetID+"_onNext", widget, "com_dynamide_rdbnavigator_onNext", "foo");
+    page.registerAction(widgetID+"_onPrev", widget, "com_dynamide_rdbnavigator_onPrev", "foo");
+    page.registerAction(widgetID+"_onEdit", widget, "com_dynamide_rdbnavigator_onEdit", "foo");
+    page.registerAction(widgetID+"_onInsert", widget, "com_dynamide_rdbnavigator_onInsert", "foo");
+    page.registerAction(widgetID+"_onCancel", widget, "com_dynamide_rdbnavigator_onCancel", "foo");
+    page.registerAction(widgetID+"_onRefresh", widget, "com_dynamide_rdbnavigator_onRefresh", "foo");
+    page.registerAction(widgetID+"_onSeekBegin", widget, "com_dynamide_rdbnavigator_onSeekBegin", "");
+    page.registerAction(widgetID+"_onSeekEnd", widget, "com_dynamide_rdbnavigator_onSeekEnd", "");
+  ]]></event>
+
+  <event language="beanshell" name="com_dynamide_rdbnavigator_onPost"><![CDATA[
+    widget = event.sender;
+    datasource = session.getDatasource(widget.get("datasource"));
+    foo = datasource.post(); //acual error shows up in control using lastError.
+  ]]></event>
+
+  <event language="beanshell" name="com_dynamide_rdbnavigator_onEdit"><![CDATA[
+    datasource = session.getDatasource(event.sender.get("datasource"));
+    datasource.edit();
+  ]]></event>
+
+  <event language="beanshell" name="com_dynamide_rdbnavigator_onInsert"><![CDATA[
+    datasource = session.getDatasource(event.sender.get("datasource"));
+    datasource.insert();
+  ]]></event>
+
+  <event language="beanshell" name="com_dynamide_rdbnavigator_onCancel"><![CDATA[
+    datasource = session.getDatasource(event.sender.get("datasource"));
+    datasource.cancel();
+  ]]></event>
+
+  <event language="beanshell" name="com_dynamide_rdbnavigator_onNext"><![CDATA[
+    widget = event.sender;
+    datasource = session.getDatasource(widget.get("datasource"));
+    foo = datasource.go(1);
+  ]]></event>
+
+  <event language="beanshell" name="com_dynamide_rdbnavigator_onPrev"><![CDATA[
+    widget = event.sender;
+    datasource = session.getDatasource(widget.get("datasource"));
+    foo = datasource.go(-1);
+  ]]></event>
+
+  <event language="beanshell" name="com_dynamide_rdbnavigator_onSeekBegin"><![CDATA[
+   session.getDatasource(event.sender.get("datasource")).seekBegin();
+  ]]></event>
+
+  <event language="beanshell" name="com_dynamide_rdbnavigator_onSeekEnd"><![CDATA[
+   session.getDatasource(event.sender.get("datasource")).seekEnd();
+  ]]></event>
+
+  <event language="beanshell" name="com_dynamide_rdbnavigator_onRefresh"><![CDATA[
+    datasource = session.getDatasource(event.sender.get("datasource"));
+    if (datasource instanceof RDBDatasource){ // %% Kludge alert: testing for this concrete class instance is wrong.
+        ((RDBDatasource)datasource).reload();
+    }
+  ]]></event>
+
+
+  <event language="beanshell" name="mojo"><![CDATA[
+  ]]></event>
+
+
+
+  <htmlsrc browser="*"><![CDATA[
+    #set $datasource = $session.getDatasource("$widget.datasource")
+    ## if design mode, show widget...
+    #if ($datasource == null){
+        #if ($designMode == "true") {
+        <table bgcolor="gray" border='1' cellpadding='0' cellspacing='0'>
+          <tr>
+            <td>$widget.ID
+            <br />datasource is null</td>
+          </tr>
+        </table>
+        } #else {
+           <!-- datasource is null in com.dynamide.rdbnavigator $widget.ID -->
+        }
+    } #else {
+    <table border='$widget.border' cellpadding='0' cellspacing='0' bgcolor='white'>
+     <tr>
+      <td>
+      <table border='0' cellpadding='0' cellspacing='0'>
+        
+        #set $datasource = $session.getDatasource("$widget.datasource")
+        #set $lastError = "$datasource.lastError"
+        #if ("$lastError" != "null" && "$lastError" != ""){
+          <script language="JavaScript">
+            <!--
+            alert("$lastError");
+            -->
+          </script>
+         <tr>
+           <td align="center" valign="top" colspan="5">
+             <font color='red'><small>$lastError</small></font>
+           </td>
+         </tr>
+       }
+
+      <tr>
+        <td align="center" valign="top">
+
+        #set $widgetID = "$widget.ID"
+
+        #set $firstDisabled = false
+        #set $lastDisabled = false
+        #set $nextDisabled = false
+        #set $prevDisabled = false
+
+        #set $rcok = $datasource.isRowCountAllowed()
+        #if ($rcok){
+            #set $cri = $datasource.getCurrentRowIndex()
+            #set $rc = $datasource.getRowCount()
+            #if ($cri == 0){
+                #set $firstDisabled = true
+                #set $prevDisabled = true
+            }
+            #if ($cri >= ($rc-1)){
+                #set $nextDisabled = true
+                #set $lastDisabled = true
+            }
+        }
+        <dm_nbsp/>
+        </td>
+        <td align="center" valign="top">
+            <table border='0' cellpadding='0' cellspacing='0' width="30">
+              <tr>
+                <td>
+                ################## first
+                #if ($firstDisabled){
+                    #set $firstSrc= $session.getInclude("resources/images/rdbnavigator/first-dis.gif")
+                    <img border='0' src='$firstSrc'></img>
+                } #else {
+                    #set $firstSrc= $session.getInclude("resources/images/rdbnavigator/first.gif")
+                    <a style="text-decoration: none;" href="?SESSIONID=$SESSIONID&action=$widgetID\_onSeekBegin&page=$pageID"><img border='0' src='$firstSrc'></img></a>
+                }
+                </td>
+              </tr>
+            </table>
+        </td>
+        <td align="center" valign="top">
+            <table border='0' cellpadding='0' cellspacing='0' width="30">
+              <tr>
+                <td>
+                ################## prev
+                #if ($prevDisabled){
+                    #set $prevSrc= $session.getInclude("resources/images/rdbnavigator/prev-dis.gif")
+                    <img border='0' src='$prevSrc'></img>
+                } #else {
+                    #set $prevSrc= $session.getInclude("resources/images/rdbnavigator/prev.gif")
+                    <a style="text-decoration: none;" href="?SESSIONID=$SESSIONID&action=$widgetID\_onPrev&page=$pageID"><img border='0' src='$prevSrc'></img></a>
+                }
+                </td>
+              </tr>
+            </table>
+        </td>
+        #if ($rcok){
+        <td align="center" valign="center">
+           #set $idx = ($datasource.getCurrentRowIndex()+1)
+           <table border='0' cellpadding='1' cellspacing='0' height="30">
+             <tr>
+               <td valign="center">
+                 <b><font face="Helvetica,Arial,Sans Serif">[$idx/$datasource.getRowCount()]</font></b>
+               </td>
+             </tr>
+           </table>
+        </td>
+        }
+        #if ("$widget.showEditControls" == "true"){
+            #set $state = "$datasource.state"
+            $session.logDebug("============>>>>>>>>>>>> datasource.state: $datasource.state")
+            #if ($state = "UPDATE" || $state == "INSERT"){
+                <td align="center" valign="top">
+                    <table border='0' cellpadding='1' cellspacing='0' height="30">
+                    <tr>
+                    <td valign="center">
+                    <dm_nbsp/>
+                    <a href="?SESSIONID=$SESSIONID&action=$widgetID\_onPost&page=$pageID"><b><font face="Helvetica,Arial,Sans Serif">[POST]</font></b></a>
+                    </td>
+                    </tr>
+                    </table>
+                </td>
+                <td align="center" valign="top">
+                    <table border='0' cellpadding='1' cellspacing='0' height="30">
+                    <tr>
+                    <td valign="center">
+                    <dm_nbsp/>
+                    <a href="?SESSIONID=$SESSIONID&action=$widgetID\_onCancel&page=$pageID"><b><font face="Helvetica,Arial,Sans Serif">[CANCEL]</font></b></a>
+                    <dm_nbsp/>
+                    </td>
+                    </tr>
+                    </table>
+                </td>
+            } #else {
+                <td align="center" valign="top">
+                    <table border='0' cellpadding='1' cellspacing='0' height="30">
+                    <tr>
+                    <td valign="center">
+                    <dm_nbsp/>
+                    <a href="?SESSIONID=$SESSIONID&action=$widgetID\_onEdit&page=$pageID"><b><font face="Helvetica,Arial,Sans Serif">[EDIT]</font></b></a>
+                    </td>
+                    </tr>
+                    </table>
+                </td>
+                <td align="center" valign="top">
+                    <table border='0' cellpadding='1' cellspacing='0' height="30">
+                    <tr>
+                    <td valign="center">
+                    <dm_nbsp/>
+                    <a href="?SESSIONID=$SESSIONID&action=$widgetID\_onInsert&page=$pageID"><b><font face="Helvetica,Arial,Sans Serif">[INSERT]</font></b></a>
+                    <dm_nbsp/>
+                    </td>
+                    </tr>
+                    </table>
+                </td>
+            }
+        }
+        <td align="center" valign="top">
+            <a style="text-decoration: none;" href="?SESSIONID=$SESSIONID&action=$widgetID\_onRefresh&page=$pageID"><img border='0' src='$session.getInclude("resources/images/rdbnavigator/refresh.gif")'></img></a>
+        </td>
+        <td align="center" valign="top">
+            <table border='0' cellpadding='0' cellspacing='0' width="30">
+              <tr>
+                <td>
+                ################## next
+                #if ($nextDisabled){
+                    #set $nextSrc= $session.getInclude("resources/images/rdbnavigator/next-dis.gif")
+                    <img border='0' src='$nextSrc'></img>
+                } #else {
+                    #set $nextSrc= $session.getInclude("resources/images/rdbnavigator/next.gif")
+                    <a style="text-decoration: none;" href="?SESSIONID=$SESSIONID&action=$widgetID\_onNext&page=$pageID"><img border='0' src='$nextSrc'></img></a>
+                }
+                </td>
+              </tr>
+            </table>
+        </td>
+        <td align="center" valign="top">
+            <table border='0' cellpadding='0' cellspacing='0' width="30">
+              <tr>
+                <td>
+                ################## last
+                #if ($lastDisabled){
+                    #set $lastSrc= $session.getInclude("resources/images/rdbnavigator/last-dis.gif")
+                    <img border='0' src='$lastSrc'></img>
+                } #else {
+                    #set $lastSrc= $session.getInclude("resources/images/rdbnavigator/last.gif")
+                    <a style="text-decoration: none;" href="?SESSIONID=$SESSIONID&action=$widgetID\_onSeekEnd&page=$pageID"><img border='0' src='$lastSrc'></img></a>
+                }
+                </td>
+              </tr>
+            </table>
+        </td>
+      </tr>
+    </table>
+    </td>
+    </tr>
+ </table>
+    } ## end else-designMode
+  ]]></htmlsrc>
+
+</widget>

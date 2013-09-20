@@ -1,0 +1,53 @@
+import com.dynamide.*;
+import com.dynamide.util.*;
+
+void test1(){
+    root = new Composite("root", null);
+    c1 = new Composite("1", root);
+    c2 = new Composite("2", root);
+    c3 = new Composite("3", c2);
+    print(root.dump());
+    c2.detach();
+    print(c2.dump());
+    print(root.dump());
+    c2.setParent(root);
+    print(root.dump());
+}
+
+void test2(){
+    root = new Composite("root", null);
+    tt = new com.dynamide.db.TableTree();
+    //public void fixup(boolean zeroIsNull, Composite root, String id, String parentID, Object row)
+    //tt.fixup(true, root,    "2",          "1",  "Volunteer Form             ");
+    //tt.fixup(true, root,    "4",          "0",  "Events                     ");
+    //tt.fixup(true, root,  "114",          "0",  "Test Now                   ");
+    //tt.fixup(true, root,  "115",        "114",  "Someone Please do this     ");
+    tt.fixup(true, root,    "1",          "0",  "1,0,Documents");
+    tt.fixup(true, root,  "130",          "0",  "130,0,Laramie New Root");
+    tt.fixup(true, root,  "131",        "130",  "131,130,Laramie new child");
+    print(root.dump());
+}
+
+void testIncludeRow(){
+    tt = new com.dynamide.db.TableTree();
+    root = tt.getRoot();
+    //public void fixup(boolean zeroIsNull, Composite root, String id, String parentID, Object row)
+    tt.fixup(true, root,    "1",          "0",  "1,0,Documents");
+    tt.fixup(true, root,  "130",          "0",  "130,0,new root");
+    tt.fixup(true, root,  "131",        "130",  "131,130,new child");
+    tt.fixup(true, root,  "132",        "131",  "131,130,new child child");
+    print(root.dump());
+
+    List exclusions = new Vector();
+    exclusions.add("130");
+    System.out.println("========without inclusion: ");
+    it = tt.getPreorderIterator(exclusions);
+    print(Tools.iteratorToString(it,"\r\n"));  //exclude 130, but then ask to see 132 and all parents.
+    System.out.println("========with inclusion: ");
+    it = tt.getPreorderIterator(exclusions, "132");
+    print(Tools.iteratorToString(it,"\r\n"));  //exclude 130, but then ask to see 132 and all parents.
+}
+
+//test1();
+//test2();
+testIncludeRow();

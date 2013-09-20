@@ -1,0 +1,1960 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideDoco>
+<dynamideDoco pageTitle="FAQ">
+
+<!-- WHEN RENDERED IN THE /dynamide/doco APPLICATION, THIS FILE IS SORTED BY THE id ATTRIBUTE -->
+
+<!--
+###======================== SECTION:  templateDetails =================================================
+-->
+
+<section id="templateDetails" title="DHTML and Template Details">
+
+    <definition>
+      <caption id="quotes">How do I deal with line breaks, carriage returns, and <i>not</i> <dm_nbsp/>breaking (NOBR)?</caption>
+      <text>
+        <h4>Background</h4>
+        <p>
+        The normal text line returns you might generate in your editor are
+        <ul>
+        <li>Windows: the CRLF sequence (\\r\\n or ASCII 13 ASCII 10)</li>
+        <li>Unix: the LF character (\\n or ASCII 10)</li>
+        <li>Mac: the carriage return character used (\\r or ASCII 13)</li>
+        </ul>
+        However, HTML pretty much ignores these.  Each block of whitespace encountered in an HTML document
+        is effectively replaced by a singe space character, unless the text is contained in a &lt;PRE> section.</p>
+
+
+        <h4>Line Breaks: the BR tag</h4>
+
+        <p>To force a line break that viewers of the web page will see, use an HTML &lt;BR /> tag.  Note that
+        to be valid XHTML, you must use &lt;BR />, and not &lt;BR>.  To prevent Netscape from mis-interpretting the
+        slash in single-element tags, use a space as shown.  That is, use this: &lt;BR /> not this: &lt;BR/> -- there is a space
+        between the R and the / characters.</p>
+
+        <h4>Avoiding Breaks: the NOBR tag</h4>
+
+        <p>Netscape and Internet Explorer will both respect the NOBR tag.  Wrap any text
+        that you wish to be rendered in the browser on one line. This is good, because Netscape and IE
+        are inconsistent about how dashes are dealt with when justifying paragraphs.
+        </p>
+
+        <p>In addition, the NOBR tag protects you from Dynamide's prettyPrint routine, which formats your page
+        as the last step -- after your application has rendered the page, but before returning it to the client.
+        This has the benefit that if the page is being requested for general viewing, all leading whitespace on lines
+        and all spurious blank lines are removed.  However, if you are working in the IDE and request the page source,
+        you get nicely indented source to view.  </p>
+
+        <p>Dynamide does not reformat any elements that must retain line breaks or
+        whitespace.  These elements are:
+        <pre>
+        &lt;SCRIPT>
+        &lt;PRE>
+        &lt;STYLE>
+        &lt;NOBR>
+        &lt;TEXTAREA></pre>
+        So by using NOBR, you can avoid the problems that come about when having tags on separate lines causes problems:
+
+<example><![CDATA[<b>Hi</b><a href="#"><img src="foo.gif"/></a>]]></example>
+
+is rendered as:
+
+<example><![CDATA[<b>Hi</b>
+<a href="#">
+<img src="foo.gif"/>
+</a>]]></example>
+
+Whereas
+
+<example><![CDATA[<b>Hi</b><nobr><a href="#"><img src="foo.gif"/></a></nobr>]]></example>
+
+is rendered as:
+
+<example><![CDATA[<b>Hi</b>
+<nobr><a href="#"><img src="foo.gif"/></a></nobr>]]></example>
+        </p>
+
+        <p>
+Note:
+You will sometimes see extra space below/right of images in table layouts.
+Dynamide reformats the
+pages to make the "squeezed" of superfluous whitespace.  This saves 15-50% of
+the rendered page size.  But it means that unless you protect a section of code with
+NOBR tags (inside which Dynamide will NOT reformat), you could end up with a
+line break after a TD open tag.  IE has a bug where
+<pre>TD
+  IMG
+/TD</pre>
+
+is rendered differently from
+
+<pre>TD IMG /TD</pre>
+
+It's a bug, and it's silly, but there's only one workaround: put
+all TD tags on the same line as the IMG tags.  This is an IE issue.
+</p>
+<p>
+
+However, in Dynamide, to make that work, you have to use PRE or NOBR which
+will protect the code.  Since PRE makes more structural changes, NOBR is the
+safe way to go.  And yes, it is legal to have carriage returns inside a NOBR
+block.  It just tells Dynamdie and the Browser not to create any MORE
+carriage returns.
+
+
+        </p>
+
+
+      </text>
+    </definition>
+
+
+    <definition>
+      <caption id="quotes">How do I deal with quotes?</caption>
+      <text>
+        <p>There are several places in Dynamide where quotes need to be treated specially:
+        HTML Browsers, the SAX parser, the WebMacro expander, and the JDOM outputter.</p>
+
+        <p>First, the SAX parser will complain if you have quotes inside attributes, so use
+        &amp;quot; or &amp;apos;.  </p>
+
+        <p>Some older browsers require these to be used in the rendered HTML
+        document, so you would generally need to use &amp;quot; and &amp;apos;.</p>
+
+        <p>The JDOM outputter builds attributes from the DOM tree, but only uses quotes, not apostrophes,
+        to <b>render</b><dm_nbsp/> the element. So if you enter an attribute such as href="/foo/bar" or href='/foo/bar', it will
+        be rendered as href="/foo/bar" always.  You typically only care about this when designing
+        Page macros, such as
+        <example>\#set \$detailURLTemplate = "<a href='#foo'>Click Me</a>"</example>
+        If you were to reverse the quote style, it would not render correctly.
+        </p>
+
+        <p> Here's a case where, when you define a macro in webmacro, you need to have the single quotes on the outside:
+<example><![CDATA[\#macro oneRow(\$cell){
+    <tr><td>\$cell</td></tr>
+}
+\#oneRow('<a href="foo">foo</a>')]]></example>
+
+        </p>
+      </text>
+    </definition>
+
+    <definition>
+      <caption id="dm_nbsp">How do I output a non-breaking space?</caption>
+      <text>
+        <p>Use the special Dynamide tag: &lt;dm_nbsp/>
+        </p>
+        <p>You can also use <example>&amp;#160;</example> in Page source or Widget source, but not in XML or XSL.
+        </p>
+      </text>
+    </definition>
+
+</section>
+
+<!--
+###======================== SECTION:  system =================================================
+-->
+
+<section id="system" title="System">
+    <definition>
+      <caption id="errors">Where do errors go?</caption>
+      <text>
+        <p>Errors are all logged, for the Session and for the Account. See: (logger window ref)</p>
+        <p>Errors in Widgets, Pages and Sessions are run through the error handler event.
+           If you do not provide an error handler event, an exception is thrown.  This exception
+           will be shown in detail in development mode, but an error page will be shown in
+           production mode.  You either provide an error page or a default one will be used.
+       </p>
+        <p>Note: it is very important to inspect the result code of ScriptEvents.  This happens when you
+        call methods such as fireEvent and fireWidgetMethod.  Since these methods are called by
+        code you write in events or in widgets, the error can be burried in the logs if you don't
+        programmatically handle them.  For example, if you call fireWidgetMethod in a template,
+        the template may just return the empty string.</p>
+      </text>
+    </definition>
+
+    <definition>
+      <caption id="errorMessages">What do these error messages mean?</caption>
+      <text>
+        <p>This is a list of error messages that are not generated by Dynamide, and
+        what they tend to mean</p>
+        <p>java.sql.SQLException: No suitable driver -- normally this means
+        that you did not load the JDBC driver for the correct database.  But
+        for PosgreSQL, it can mean that the url had an extra slash before the
+        database name.
+         <br />CORRECT:  RDBDatabase.CONX_POSTGRESQL+"net_roots"
+         <br />INCORRECT:   RDBDatabase.CONX_POSTGRESQL+"/net_roots"
+
+
+        </p>
+        <p>
+        ERROR:  Attribute "lastUpdateINT" not found
+        <br />
+        This happens when your column is not found, or the case doesn't match.
+        PostgreSQL is case sensitive when column names are *defined* using double quotes.
+         <br />CASE-INSENSITIVE:
+         <pre>
+CREATE TABLE groupprefs (
+  id INT4,
+  name varchar(32) DEFAULT '',
+);
+         </pre>
+         <br />CASE-SENSITIVE:
+         <pre>
+CREATE TABLE groupprefs (
+  "id" INT4,
+  "name" varchar(32) DEFAULT '',
+);
+         </pre>
+        </p>
+
+        <p>
+        <pre>
+    WARNING:  Error occurred while executing PL/pgSQL function ...
+    WARNING:  while casting return value to function's return type
+    ERROR:  Set-valued function called in context that cannot accept a set
+
+This means you called a set-returning function like this:
+
+    select begin_mail_swarm_actions_detail();
+
+when you should have called this:
+
+    select * from begin_mail_swarm_actions_detail();
+
+        </pre>
+        </p>
+
+        <p>
+        <pre>
+
+        If you get
+
+            SQLException: postgresql.stat.result
+
+        it means you called
+
+             public int executeUpdate(String sql) throws SQLException...
+
+        but the SQL result was not a simple integer or void result.
+
+        </pre>
+        </p>
+
+        <p>
+        <pre>
+        8:57:29 AM      engine  WARNING Error evaluating \$obj.reload()
+        org.webmacro.PropertyException\$VoidValueException: Attempt to use void value at testPage.rdbdatasource1:10.17
+
+        This means you did this:
+               \#set \$OK = \$obj.reload()
+        instead of this:
+               \$obj.reload()
+        where reload() is declared like this:
+              public void reload();
+        You get another error (null value) when you do something like this:
+              \#set \$foo = \$obj.functionReturnsNull()
+        </pre>
+        </p>
+
+        <p>tuples don't match:  This means you are using a sub-select and returning a scalar.  Try "limit 1" on the subselect.
+        </p>
+
+        <p>round(double precision, integer) not found.  Try using round(3.14::numeric, 2) which casts the double precision to "numeric".
+        </p>
+
+        <p>You will get an error if you declare char(2) but then declare a type containing that of varchar.
+        </p>
+
+      </text>
+    </definition>
+
+
+    <definition>
+      <caption id="classes">Where do my classes go?</caption>
+      <text>
+        <p>Build your .class files rooted in \${RESOURCE_ROOT}/build/classes, and they will
+        be picked up by the app server.  This would be a security breach for Hosted mode, so you need to
+        work with us to install your Java beans.
+        However, in self-hosted mode, it is secure since you
+        control this directory.</p>
+      </text>
+    </definition>
+
+    <definition>
+      <caption id="classes">How do I just run Dynamide on the command-line?</caption>
+      <text>
+        <p>Dynamide is pure Java, but there is some setup to perform.  The easy way is
+         to run in the Dynamide shell.
+        </p>
+        <p>If you need to embed Dynamide, and you have a license to do so,
+          here are some issues to be aware of:
+          <ul>
+            <li>The ResourceManager must be initialized.  To create it so that you have permission
+            to do everything, call
+            com.dynamide.resource.ResourceManager.createStandalone();
+            See the javadoc for overloads for this to allow you to use a different logging conf file
+            and a different resource root than the one supplied via the environment or java -D definition.</li>
+            <li>The ResourceManager creates some threads that do not exit.  To clean up, call
+                com.dynamide.resource.ResourceManager.shutdown();</li>
+            <li>The RESOURCE_ROOT must be set.  There are <a href="#RESOURCE_ROOT">several ways to do this</a>.</li>
+          </ul>
+        </p>
+      </text>
+    </definition>
+
+    <definition>
+      <caption id="RESOURCE_ROOT">What is RESOURCE_ROOT? How do I set it?</caption>
+      <text>
+        <p>The com.dynamide.resource.ResourceManager needs to know where the application and library files are.
+        These are mostly XML files, but also .wm, .js, .css, image files, and so on.  Dynamide
+        stores all these files in a directory tree, rooted at RESOURCE_ROOT.</p>
+
+        <p>There are several ways to tell Dynamide what value to use for RESOURCE_ROOT.  </p>
+
+        <p>When running in the application server, you must use the Servlet init param:
+<example><![CDATA[<servlet servlet-name='DynamideServlet' servlet-class='com.dynamide.DynamideServlet'>
+    <load-on-startup/>
+    <init-param dynamide.RESOURCE_ROOT="C:/dynamide/build/ROOT" />
+    <init-param ALLOW_SHUTDOWN="false" />
+</servlet>]]></example>
+        </p>
+
+        <p>Most convenient if you run on the command-line, is to set an env var.
+        for example, in Windows, you can do this, either in the shell, or in your
+        System applet:
+                <example>set dynamide.RESOURCE_ROOT="C:\dynamide\build\ROOT"</example>
+        </p>
+
+        <p>However, if you are running on the command-line, calling something that shells out and looses your environment variables,
+        use the Java -D define argument.  For example, when using JUnit, JUnit shells and looses the environment from the
+        OS, so you must set a Java System resource definition like this:
+        <example>java -Ddynamide.RESOURCE_ROOT="C:\dynamide\build\ROOT" com.dynamide.util.LogTest</example>
+        If dynamide.RESOURCE_ROOT is defined in your Windows shell, for example, you could do this:
+        <example>java -Ddynamide.RESOURCE_ROOT=%dynamide.RESOURCE_ROOT% com.dynamide.util.LogTest</example>
+        </p>
+      </text>
+    </definition>
+
+
+
+</section>
+
+
+
+<!--
+###======================== SECTION:  programming =================================================
+-->
+
+<section id="programming" title="Programming in events, Page Macros, and Widget Macros">
+
+
+<definition>
+    <caption id="sessionref">How do I get ahold of the Session object?</caption>
+    <text>
+      <p>In events, simply use
+      <example>session</example>
+      or:
+      <example>event.session</example>
+      For example:
+    <example>&lt;event language="beanshell" name="page1_onAction">&lt;[!CDATA[
+  Page p = session.find("page1");
+  Widget w = session.find("page1.widget1");
+]]&gt;&lt;/event></example>
+    In Page or Widget source, there is a pre-defined \$session macro,
+    <example>\#set \$u = \$session.get("USER")
+<b>User: </b>\$u</example>
+    Or:
+    <example><b>User: </b>\$session.USER</example>
+    Or:
+    <example>\#set \$w = \$session.find("page1.widget1")
+<b>\$widget.caption</b> : \$widget.value</example>
+        </p>
+    </text>
+    </definition>
+
+<definition>
+  <caption id="reloadingPages">How do I reload Pages?</caption>
+  <text>
+    <p>When developing a page, you can put the htmlsrc element in an external resource
+    and Dynamide will pick up any changes every time the page is rendered.
+    <example><![CDATA[<htmlsrc browser="*" href="resources/htmlsrc/chooseStory.xhtml" />]]></example>
+    NOTE: if the htmlsrc is inline in the Page's XML file, then the changes are not picked up unless you
+    reload the Page object.</p>
+    <p>To reload a Page object for a page in your application called "myPage",
+    add the following to the URL you send to Dynamide:
+    <example><![CDATA[<a href="/myapplication?SESSIONID=\$SESSIONID&next=myPage&reloadPage=true">reload myPage</a>]]></example>
+    The onLoad event is fired again, but the session is not reloaded.  You can do this in the browser's
+    address bar too, by simply adding reloadPage=true to the end of the URL.</p>
+
+    <p>This is not necessary for a production application.  For applications in production you should
+    allow Dynamide to keep Page objects loaded for the life of the Session.  Use the data-aware
+    Widgets to pull in live data, and use the com.dynamide.xmltopic to pull in XML files that may change.
+    (com.dynamide.xmltopic uses an XSL stylesheet to format the page widget output.)
+    </p>
+  </text>
+</definition>
+
+
+<definition>
+  <caption id="pageByName">How do I find a Page by name?</caption>
+  <text>
+    <p>
+These are all valid ways of getting to a page named "adminLogin" in the current event and session:
+    <example>Page page = event.session.get("adminLogin");</example>
+    <example>Page page = event.currentPage;</example>
+    </p>
+  </text>
+</definition>
+
+<definition>
+  <caption id="widgetByName">How do I find a Widget by name?</caption>
+  <text>
+    <p>
+        These are all valid ways of getting to a Widget named "userName"
+        on a page named "adminLogin" in the current event and session:
+<example>Widget userName = event.currentPage.getWidgetByID("userName");    //widget
+Widget userName = event.currentPage.get("userName");              //widget
+Widget userName = event.session.get("adminLogin").get("userName");//widget
+Widget userName = event.session.find("adminLogin.userName");      //widget
+</example>
+        With these, you should always make sure the resulting var (userName here)
+        is not null:
+<example>if (userName!=null){
+    event.println("Got the userName Widget. value: "+userName.get("value"));
+}
+</example>
+        If userName is not null, userName.get("foo") will always return an Object, even if it
+        is an empty String.  You can also safely get the value of a Widget by name like this:
+<example>String value = event.session.find("adminLogin.userName.value");</example>
+        However, value will be null if something wasn't found, either in the dotted name, or the property was wrong.
+    </p>
+  </text>
+</definition>
+
+<definition>
+  <caption id="findPageInOnLoad">Help! page not found during onLoad!</caption>
+  <text>
+    <p>
+        The Page onLoad event is fired after the Page object is constructed and all of
+        its Widgets are loaded.  However, the Page has not been added to the Session yet,
+        so session.find("page1") would fail to retrieve a page named "page1".
+        Just use event.currentPage, which will be correct.
+        <br/><br/>
+        5/25/2003 7:05PM I think this is fixed now.  Page.load() is called after construction and fixup.
+    </p>
+  </text>
+</definition>
+
+<definition>
+  <caption id="settingErrors">How do I set error codes / error text?</caption>
+  <text>
+    <p>
+        Here's how to set the error in a widget from a page:
+                <example>\$session.page1.select1.setError(true)</example>
+        Here's how to set the error in a widget from the widget source:
+                <example>\$widget.setError(true)</example>
+        Or, to set the error and provide a message the user will see:
+                <example>\$widget.setErrorMessage("Error in field \$widget.field")</example>
+        Calling setErrorMessage(String) on any AbstractWidget descendent (Page, Widget)
+        will automatically call setError(true).
+    </p>
+  </text>
+</definition>
+
+<definition>
+  <caption id="submitWithaction">How do com.dynamide.submit buttons deal with action?</caption>
+  <text>
+
+
+  <p>UPDATE:
+  <pre>
+  The actions come in several flavors:
+  global actions.  These are any action= string.  They are handled in the following order:
+    application onAction
+    application registeredActions
+    currentPage onAction
+    currentPage registeredActions
+
+    submit buttons fire an onAction event
+      the event code is stored where the widget properties are stored,
+         so for a submit widget on a page, the event source is in the page.
+         for a container, the event source is in the container that houses the widget.
+         However, the top parent page is the object that has the registration.
+         It calls the object that has the event code to fire the event.
+         For example,
+           page1
+              container1
+                 widget1_onClick
+                 widget1
+                    //registers widget1_onClick as its serverside event with page1
+
+       </pre>
+  </p>
+    <p>The com.dynamide.submit widget is special:  The com.dynamide.Session class
+    looks for registered fieldnames associated with actions, and <i>overrides</i>
+    any action parameter that may have been otherwise sent, but since you can only click on
+    one submit button or hyperlink at a time, you should never have another action being sent,
+    unless you were to put an &lt;INPUT name="action" type="HIDDEN"> field in your HTML source, which
+    is not recommended.
+    </p>
+    <p>
+    When a hyperlink is clicked, the action is usually a parameter.  These are respected, of course.
+    When a com.dynamide.submit button is clicked, its autogenerated fieldname is sent, with the
+    Text of the button sent as its value.  Since the text can be changed for localization, or by
+    the interface designer arbitrarily, it is dangerous to have code that relies on the text of a button.
+    The com.dynamide.Session takes care of this, by allowing any widget to register itself as an
+    field that contains the action.  The "action" property of the com.dynamide.submit
+    becomes the action value.  This allows you to place multiple com.dynamide.submit buttons
+    on a form, and have them all have the same caption, for example if you had a table
+    with a "delete" button in each row, on the server side you could determine which
+    button was clicked because you could assign a different "action" property to each button.
+    </p>
+    <p>
+    For example, if you have two submits, and they have the following properties:
+    </p>
+    <p>
+    <table border='1'>
+    <tr>
+    <th>name</th>                      <th>caption</th><th>   action</th>
+    </tr>
+    <tr>
+    <td>com_dynamide_submitAdd    </td><td>Add Row </td><td>add</td>
+    </tr>
+    <tr>
+    <td>com_dynamide_submitCancel </td><td>Cancel  </td><td>cancel</td>
+    </tr>
+    </table>
+    </p>
+    <p>
+    Then if com_dynamide_submitAdd is clicked, action will be "add", whereas if com_dynamide_submitCancel
+    is clicked, action will be "cancel".  The submits will not send their field values if they are not clicked.
+    </p>
+    <p>
+    Application authors don't need to worry about this, but Widget
+    authors may wish to look at the com.dynamide.submit source, where the critical line of code shows:
+      <pre>
+        \#set \$fieldID = \$widget.field
+        \$session.registerSubmitAction("\$fieldID", "\$widget.action")
+       </pre>
+
+    </p>
+  </text>
+</definition>
+
+
+<definition>
+  <caption id="enumeratedProperties">How do I access Enumerated Properties?</caption>
+  <text>
+    <p>
+    Each Property object has an accessor for the DefaultEnumeration and the Enumeration.
+    The DefaultEnumeration is under the defaultValue of the Property, while the Enumeration
+    is under the value of the Property.
+
+   Here's an example of value, using an item type that is of type
+   java.lang.String or com.dynamide.datatypes.StringDatatype:
+<example><![CDATA[<property name="items">
+  <value>
+    <enumeration override="false" defaultIndex="0">
+      <item>resources/css/dynamide.css</item>
+      <item>resources/js/page.js</item>
+    </enumeration>
+  </value>
+  <datatype>com.dynamide.datatypes.Enumeration</datatype>
+</property>]]></example>
+   Here's an example of defaultValue, and using an item type that it not a String:
+<example><![CDATA[<property name="items">
+    <datatype>com.dynamide.datatypes.EnumeratedDatatype</datatype>
+    <defaultValue>
+        <enumeration>
+            <item datatype="com.dynamide.datatypes.Caption">
+                <key>item1</key>
+                <text>Item 1</text>
+            </item>
+        </enumeration>
+    </defaultValue>
+</property>]]></example>
+Typically, Widget authors set the defaultValue, while the value is set in
+the instance of a widget that resides on a page, as created by an Application
+author.  Dynamide objects (Page, Session, Widget, etc.)
+all inherit the defaultValues, and then use the value from the instance.  But you can always
+access the original defaultValue explicitly.
+   <example><![CDATA[
+    \#set \$property = \$widget.getProperty("items")
+
+    \#foreach \$val in \$property.DefaultEnumeration \{
+        \$val.toString()
+    \}
+
+    \#foreach \$val in \$property.Enumeration \{
+        \$val.toString()
+    \}
+    ]]></example>
+    OR:
+    <example><![CDATA[
+
+    \#foreach \$val in \$widget.getProperty("items").getEnumeration() \{
+        \$val.toString()
+    \}
+
+    ]]></example>
+
+    new examples, 1/1/2004:
+
+        These two are equivalent:
+            session.find("testPage.edit1").getProperty("valign").getCollection();
+            session.find("testPage.edit1").getPropertyValue("valign").getCollection();
+
+        This gets the defaults stored in the WidgetType file:
+            session.find("testPage.edit1").getPropertyDefault("valign").getCollection();
+    </p>
+
+    <p>Note that with Enumerated Properties you can't just use the WebMacro dot syntax
+    since it will return the string value, and not the Property object:
+    <pre><font color="red">Don't do this: \$widget.items.getEnumeration()</font></pre>
+    </p>
+
+    <p>You can modify Enumerated Properties as well.  The class returned by
+    getEnumeration() is <b><i>read-only</i></b> and implements java.util.Enumeration.
+    So if you wish to modify the backing data structure, you call
+    <example>enum = property.getValue();</example>
+    and getValue() will return a com.dynamide.datatypes.Datatype, which will be
+    a com.dynamide.datatypes.EnumerateDatatype in this case.
+    </p>
+    <p>
+    Here's an example in Beanshell (from /dynamide/admin):
+<example>Vector v = new Vector();
+v.addElement("Hello");
+v.addElement("World");
+
+Widget w = event.currentPage.get("com_dynamide_select1");
+enum = w.getProperty("items").getValue();
+event.print("enum.toHTML(), before: "+enum.toHTML());
+
+enum.clear();
+enum.addStrings(v);
+
+event.println("enum.toHTML() after: "+enum.toHTML());
+</example>
+
+EnumeratedDatatype provides the following functions for manipulating the list:
+<pre>
+add(Collection)
+addStrings(Collection)
+add(Datatype)
+clear()
+remove(String key)
+size()
+</pre>
+EnumeratedDatatype provides these methods, not the returned Enumeration. This is because
+Property.getEnumeration() returns a java.util.Enumeration,
+but Property.getValue() returns a com.dynamide.datatypes.Datatype,
+which can be a com.dynamide.datatypes.EnumeratedDatatype.
+    </p>
+<p>
+Note that
+you can also get the lists as a Java 1.2 Collection, by the following method:
+<pre>
+getCollection()
+</pre>
+Also, you can get the EnumeratedDatatype from Property directly, either the
+value or the defaultValue, with these methods, which will return null if not
+found or not of type EnumeratedDatatype:
+<pre>
+in com.dynamide.Property:
+    public EnumeratedDatatype getEnumeratedDatatype()
+    public EnumeratedDatatype getDefaultEnumeratedDatatype()
+</pre>
+This is the same as Property.getValue() in Beanshell, but in strict Java, you must do some typecasting
+first, and this provides that.
+    </p>
+  </text>
+</definition>
+
+<definition>
+  <caption id="externalProperties">How do I share "property" elements?</caption>
+  <text>
+    <p>Use an external reference, relative to the application, such as:
+<example><![CDATA[<property name="links" href="resources/links.property.xml">
+</property>]]></example>
+This will look in the file "resources/links.property.xml" for the property value.  That file should
+be valid xml, and contain a root element of "property".  Here are the two files involved.  First is
+mainPage.xml, which specifies the property, second is resources/links.property.xml:
+
+<h4>mainPage.xml</h4>
+
+<example><![CDATA[<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<dynamideForm>
+  <widgets>
+    <widget id="com_dynamide_linkstrip2">
+      <properties>
+        <property name="links" href="resources/links.property.xml">
+        </property>
+        <property name="type">
+          <value>com.dynamide.linkstrip</value>
+        </property>
+      </properties>
+    </widget>
+  <widgets>
+  <htmlsrc browser="*" href="resources/mainPage.xhtml" />
+  <properties>
+    <property name="name">
+      <value>mainPage</value>
+    </property>
+    <property name="type">
+      <value>pagetypes/com.dynamide.page</value>
+      <readOnly>true</readOnly>
+    </property>
+  </properties>
+</dynamideForm>]]></example>
+
+<h4>resources/links.property.xml</h4>
+
+<example><![CDATA[<?xml version="1.0"?>
+<property name="links">
+  <value>
+    <enumeration override="true" defaultIndex="0">
+        <item datatype="com.dynamide.datatypes.Link">
+          <href>\$session.getAppURL("","/index")</href>
+          <text>Home</text>
+          <key>/home</key>
+        </item>
+        <item datatype="com.dynamide.datatypes.Link">
+          <href>stories/index.html</href>
+          <text>Stories</text>
+          <key>/stories/index</key>
+        </item>
+        <item datatype="com.dynamide.datatypes.Link">
+          <href>lists.html</href>
+          <text>eMail<dm_nbsp/>Lists
+          </text>
+          <key>/lists</key>
+        </item>
+    </enumeration>
+  </value>
+  <datatype>com.dynamide.datatypes.Enumeration</datatype>
+</property>]]></example>
+
+This enables you to share property element between widgets or across pages.  This example was
+for a linkstrip.  This way you can have separate linkstrip widgets on separate pages.  The other
+way to do this is to use a com.dynamide.container to contain the widget, and then put the container
+on each page.
+    </p>
+    <p>
+    Here is the same file, with the property inline, NOT externalized:
+<h4>mainPage.xml (w/o external property)</h4>
+
+<example><![CDATA[<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<dynamideForm>
+  <widgets>
+    <widget id="com_dynamide_linkstrip2">
+      <properties>
+        <property name="links">
+          <value>
+            <enumeration override="true" defaultIndex="0">
+                <item datatype="com.dynamide.datatypes.Link">
+                  <href>\$session.getAppURL("","/index")</href>
+                  <text>Home</text>
+                  <key>/home</key>
+                </item>
+                <item datatype="com.dynamide.datatypes.Link">
+                  <href>stories/index.html</href>
+                  <text>Stories</text>
+                  <key>/stories/index</key>
+                </item>
+                <item datatype="com.dynamide.datatypes.Link">
+                  <href>lists.html</href>
+                  <text>eMail<dm_nbsp/>Lists
+                  </text>
+                  <key>/lists</key>
+                </item>
+            </enumeration>
+          </value>
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+        </property>
+        <property name="type">
+          <value>com.dynamide.linkstrip</value>
+        </property>
+      </properties>
+    </widget>
+  <widgets>
+  <htmlsrc browser="*" href="resources/mainPage.xhtml" />
+  <properties>
+    <property name="name">
+      <value>mainPage</value>
+    </property>
+    <property name="type">
+      <value>pagetypes/com.dynamide.page</value>
+      <readOnly>true</readOnly>
+    </property>
+  </properties>
+</dynamideForm>]]></example>
+    </p>
+  </text>
+</definition>
+
+<definition>
+  <caption id="autoFields">How do Fields and Auto-generated Fields work?</caption>
+  <text>
+    <p>
+        You can see a list of all autogenerated fields after your application loads, by using the Admin application.
+        Look for the section "Auto-generated Field IDs" in the "Session Detail".
+        These are widgets that don't have a "field" property.  If you don't provide a field name, Dynamide creates one
+        for your widget so that page SUBMIT actions will work and keep all the widgets live.
+        Note that each Page object gets an auto-generated field id, that looks like \$SESSIONID_\$page.ID .
+        This will never get a live value, however.
+   </p>
+   <p>Alternatively, you can provide a fieldname, and that name will be used, with the Field objects being
+   owned by the Session object.  <b>HOWEVER</b>, you must then add the field to the fielddefs.xml file
+   in the application directory.
+  </p>
+  <p>You can also add fields to the Session by registering them at run-time, with one of these Session methods:
+  <example>public Field addField(Field field);
+public Field addField(String fieldName, Field field);
+public Field addField(String fieldName, Field field, boolean logWarnIfExists);  </example>
+  If you are doing this in a Java compiled class that implements IDatasource,
+   you can register the class as a datasource:
+      <example>session.registerField(this, addField("login", ""));</example>
+  or point to another class as the datasource with this call:
+      <example>IDatasource myDatasource = ...
+session.registerField(myDatasource, myDatasource.addField("login", ""));</example>
+  </p>
+   <p>If you provide a "datasource" property, then the Field with the name of the
+   datasource will be inspected to see if it follows the com.dynamide.db.IDatasource interface.  If so, the Field owned by
+   the datasource will be wired to your widget.
+   </p>
+  </text>
+</definition>
+
+<definition>
+  <caption id="propertyDatatypes">How do I access a Property's Datatype?</caption>
+  <text>
+    <p>
+<example><![CDATA[
+Widget widget = ...
+String what = "caption"; //the name of any widget property
+Property prop = widget.getProperty(what);
+if (prop!=null) {
+    Object o = prop.get("value");
+    if (o != null && o instanceof Datatype) {
+        //If it is not a com.dynamide.datatypes.Datatype, then it will be a java.lang.String
+        System.out.println("--- valueProperty: "+what+" datatype: "+o.getClass().getName());
+    }
+}
+]]></example>
+    </p>
+  </text>
+</definition>
+
+<definition>
+  <caption id="htmlInProperties">Can I put HTML in property values?</caption>
+  <text>
+    <p>Yes!  However, you need to tell Dynamide that the property's value datatype is "com.dynamide.datatypes.HTMLDatatype".
+    You would do this if you wanted your component's "caption" property to contain markup, for example.
+    Note: there are other datatypes to choose from, such as the default (java.lang.String),
+    dates (java.util.Date) and so on.  Here's how:
+<example><![CDATA[<property name="caption">
+  <datatype>com.dynamide.datatypes.HTMLDatatype</datatype>
+  <value><a href="#myTarget">Link Text Here</a></value>
+</property>]]></example>
+
+<example><![CDATA[<property name="caption">
+  <datatype>java.lang.String</datatype>
+  <value>This is a java.lang.String caption.
+         It cannot contain XML Elements.</value>
+</property>]]></example>
+
+
+<example><![CDATA[<property name="caption">
+  <value>This is a java.lang.String caption,
+         too, since String is the default
+         datatype.</value>
+</property>]]></example>
+
+Absence of the datatype Element is equivalent to java.lang.String, and com.dynamide.datatypes.StringDatatype, which all map to the same thing.
+
+    </p>
+  </text>
+</definition>
+
+<definition>
+  <caption id="dialogs">Dialogs: pages that are not part of your project</caption>
+  <text>
+    <p>Dynamide projects consist of:
+    <ul>
+    <li>a directory in the Assembly</li>
+    <li>an application.xml file</li>
+    <li>a fielddefs.xml file</li>
+    <li>zero or more Page files</li>
+    <li>an optional directory named "resources within the project directory, for .css files, .js files, widgets, data, and so on.</li>
+    </ul>
+    But your project can also use external pages.  These are called "Dialogs", even though they
+    don't have to be used modally.  They can be used from any project, and are designed to be used
+    without linking them in to your project.  You can display them inline -- that is, as a page that
+    is part of the flow of you web pages -- or they can be displayed as popups.  They are designed to
+    be initialized from a URL alone, though this is not mandatory.  The following are equivalent:
+
+<example><![CDATA[p = session.findOrCreateDialog("myImgview", "resources/dialogs/com.dynamide.imgview");
+p.setProperty("imageSrc", "resources/images/eventFlowChartLarge.gif");
+event.jumpToPage("myImgview");
+]]></example>
+
+<example><![CDATA[\#set \$href="imageSrc=resources/images/eventFlowChartLarge.gif"
+
+\#set \$dialogRel = "resources/dialogs/com.dynamide.imgview"
+
+\#set \$srcLarge = \$session.findOrCreateDialogURL("flowchartImgview", "\$dialogRel", "\$href")
+<a href="\$srcLarge" target="_blank"><img border="0" src="\$srcLarge" />
+]]></example>
+
+You can pass in as many parameters as you like.
+<example><![CDATA[\#set \$href="imageSrc=resources/images/eventFlowChartLarge.gif"
+\#set \$href="\$(href)&amp;imageWidth=540&amp;imgHeight=360&amp;title=Event+Flowchart"
+\#set \$href="\$(href)&amp;center=true"
+\#set \$href="\$(href)&amp;caption=&amp;lt;br/>&amp;lt;h2>Event+Flowchart&amp;lt;/h2>"
+\#set \$href="\$(href)&amp;lt;br/>"
+
+\#set \$dialogRel = "resources/dialogs/com.dynamide.imgview"
+
+\#set \$srcLarge = \$session.findOrCreateDialogURL("flowchartImgview", "\$dialogRel", "\$href")
+<a href="\$srcLarge" target="_blank"><img border="0" src="\$srcLarge" />
+]]></example>
+The parameters get translated to the Page object's Properties with this call:
+<example>\$page.setPropertiesFromURL()</example>
+Which is a member of AbstractWidget, so it works for Widget and Page.
+    </p>
+  <p>
+  Be sure to double-escape any HTML tags you send in URLS. For example:
+<example><![CDATA[<br/>]]></example>
+should be escaped as
+<example><![CDATA[&amp;lt;br/>]]></example>
+Here's a longer example:
+<example><![CDATA[caption=&amp;lt;br/>&amp;lt;h2>Event+Flowchart&amp;lt;/h2>&amp;lt;br/>]]></example>
+  </p>
+  </text>
+</definition>
+
+
+
+</section>
+
+
+            datasources
+<!--
+###======================== SECTION: Data-awareness   ====================================
+-->
+<section id="datasource" title="Data-awarness">
+
+<definition>
+  <caption id="datasourceLoadOrder">What is the load order for data-aware Widgets?</caption>
+  <text>
+    <p>For dependent Widgets to be on separate pages, the Page that contains a Widget that
+    registers an IDatasource must be loaded before Widgets that provide a view of the data.  You
+    don't need to worry about the loading order of Widgets all on one Page, since Dynamide
+    loads all Widgets on the Page, initializes all the Widget properties, then calls
+    [widget]_onLoad for each Widget.
+    </p>
+    <p>
+    To do this, control the loading order of pages in your application, and load the page
+    with the IDatasource first.  You could rely on Dynamide loading the pages in the order
+    specified by the pages list in the application.xml file, but remember that application_queryNextPage
+    event can change this order.  (Unless you explicitly call session.loadPage(String), the pages
+    are loaded on-demand.)  The safest is to load required pages in
+    application_onStart with the call session.loadPage(String).  For example, if you have the following
+    pages containing Widgets:
+<example>application.xml [your application]
+datamodule.xml  [pagetypes/com.dynamide.page]
+    datasource1 [com.dynamide.rdbdatasource]
+page1.xml       [pagetypes/com.dynamide.page]
+    dbgrid1     [com.dynamide.dbgrid]
+</example>
+Then you could make sure that the datamodule page was loaded first by doing this:
+
+<example>&lt;event language="beanshell" name="application_onStart">&lt;![CDATA[
+    session.loadPage("datamodule");
+]]&gt;&lt;/event></example>
+or even:
+<example>&lt;event language="beanshell" name="application_onStart">&lt;![CDATA[
+    session.loadPage("datamodule");
+    session.loadPage("page1");
+]]&gt;&lt;/event></example>
+    </p>
+
+    <p>
+    Component authors do need to be aware that dependent
+    Widgets should call methods of Widgets providing services to initialize them.  This works
+    because the Widgets are all loaded when the Page is loaded, and the component author
+    then needs to wire the Widgets together in code.
+    </p>
+    <p>
+    For example
+    Dynamide contains a com.dynamide.dbgrid Widget, that references a datasource.  The datasource
+    could be a com.dynamide.rdbdatasource Widget that references a com.dynamide.rdbdatabase Widget.
+    In this case, the rdbdatasource Widget calls rdbdatabase Widget's "connect" event if the
+    rdbdatasource's "open" property is true.  The dbgrid does <i>not</i><dm_nbsp/> need to open the datasource
+    since the datasource will open at load time if its "open" property is true.
+    (If the application programmer wishes to
+    open the datasource only at runtime and not at design time, the programmer would leave "open" == "false"
+    and call the rdbdatasource's loadData method.)
+    </p>
+  </text>
+</definition>
+
+<definition>
+  <caption id="registeredDatasource">What is a registered datasource?</caption>
+  <text>
+    <p>Any com.dynamide.db.IDatasource that has been registered in the Session
+    with Session.registerDatasource().  Once registered, any component in the application
+    can use it as a datasource for field values. See <a href="#datasourceLoadOrder">What is the load order for data-aware Widgets?</a>
+    </p>
+  </text>
+</definition>
+
+</section>
+
+<!--
+###======================== SECTION:  events   =================================================
+-->
+
+<section id="events" title="Events">
+
+<definition>
+  <caption id="onImport">How do onImport events work?</caption>
+  <text>
+  <p>
+  The Application import is "application_onImport", the Page import is "\$(pageID)_onImport"
+  and the WidgetType import is "\$(type_name)_onImport" where type_name is
+    AbstractWidget.widgetTypeToScriptName(getType()).
+    widgetTypeToScriptName replaces any '.', '/' and '-' characters with the '_' character.
+    </p>
+    <p> The imports are sourced, and are not wrapped in a method signature, like the other events do,
+    so your functions and imports are all at file scope.
+    </p>
+
+
+  </text>
+</definition>
+
+<definition>
+  <caption id="eventsRedirect">Which events allow redirects?</caption>
+  <text>
+    <p>
+    These events <b>DO</b><dm_nbsp/> allow redirects:
+    <UL>
+    <li>application_onError</li>
+    <li>application_onWidgetError</li>
+    <li>application_onAction</li>
+    <li>application_queryNextPage</li>
+
+    <li>[pageID]_onAction</li>
+    </UL>
+
+    These events <b>DO NOT</b><dm_nbsp/>allow redirects:
+    <UL>
+    <li>application_onImport</li>
+    <li>application_onStart</li>
+    <li>application_onClose</li>
+
+    <li>[widgetID]_onImport</li>
+    <li>[widgetID]_onLoad</li>
+
+    <li>[pageID]_onLoad</li>
+    <li>[pageID]_beforeOutput</li>
+    </UL>
+
+    </p>
+
+    <p>You can make redirects happen with one of these methods of ScriptEvent:
+    <example>public String sendRedirect(String url);
+public String sendRedirectToPage(String pageID);
+public String sendRedirectToPage(String pageID, String action);
+public String sendRedirectToPage(String pageID, String action, String moreParams);</example>
+
+    Note that this interrupts the <a href="#controlingPageFlow">page flow</a>.  The redirect will be sent instead of
+    asking application_queryNextPage or inspecting the value subsequently set by
+    ScriptEvent.jumpToPage().
+    </p>
+
+   See also: <a href="#eventFlowchart">Event Flowchart</a>
+  </text>
+</definition>
+
+<definition>
+  <caption id="eventsStandard">What are the standard Server-Side Events?</caption>
+  <text>
+    <p>
+    <pre>
+    application_onImport
+    application_onStart
+    application_onClose
+    application_onError
+    application_onWidgetError
+    application_onAction
+    application_queryNextPage
+
+    [widgetID]_onImport
+    [widgetID]_onLoad
+
+    [pageID]_onAction
+    [pageID]_onLoad
+    [pageID]_beforeOutput
+    </pre>
+    And you can define your own events, and fire them with fireApplicationEvent or fireWidgetEvent.
+    </p>
+    <p>If you define an event that sets the event.outputObject, you can simply use the call() methods
+    of Session, Page, and Widget.
+    <pre>
+    <b>Examples:</b>
+    \#set \$result = \$widget.call("com_dynamide_xsl_onTransform")
+
+    \#\#Short name is allowed:
+    \#set \$result = \$page.call("doFoo")
+
+    \#\#or full event name:
+    \#set \$result = \$page.call("page1_doFoo")
+
+    \#set \$result = \$session.call("application_getFoo")
+
+    \#set \$inputObj = \$someExistingObject
+    \#set \$result = \$session.call("application_getFoo", \$inputObj)
+    </pre>
+    The recommended naming convention is to use the pageID for page events,
+    The Widget type for Widget methods defined by the Widget author,
+    The Widget id for events associated with Widget instances in the Page sourdce,
+    and "application_" for application events.  There is a convenience
+    method in Page to change the short name to the full name:
+    <pre>
+    Page.eventShortNameToFullName(String eventShortName)
+    Example:
+
+       \#set \$fullname = \$page.eventShortNameToFullName("getFoo")
+       ==> \$fullname will be "page1_getFoo"
+       \#set \$result = \$page.call(\$fullname)
+
+       or, you can let the Page object do this:
+         \#set \$result = \$page.call("doFoo")
+       and
+         \#set \$result = \$page.call("page1_doFoo")
+       are both legal, and call the same event.
+     </pre>
+
+    </p>
+  </text>
+</definition>
+
+
+<definition>
+  <caption id="controlingPageFlow">How do I control Page flow?</caption>
+  <text>
+    <p>
+    You can
+    <UL>
+    <li>use the pages list of the application</li>
+    <li>use the application_queryNextPage event</li>
+    <li>use redirects, in certain events</li>
+    <li>roll-your-own</li>
+    </UL>
+    See also: <a href="#eventFlowchart">Event Flowchart</a>
+    </p>
+
+    <h4>The pages list</h4>
+    <p>
+    You can explicitly handle it in application_queryNextPage, or you
+    can use the implicit order defined in the &lt;pages> list.
+ <example><![CDATA[<application>
+    ...
+        <pages>
+        <page name="page1"></page>
+        <page name="page2"></page>
+        <page name="page3"></page>
+        <page name="page4"></page>
+        <page name="pageDone"></page>
+    </pages>
+     <event language="beanshell" name="application_queryNextPage">]]>&lt;<![CDATA[![CDATA[
+         //you can either do this here, or in each page as it is handled:
+         if (session.getVisitedPagesCount() == 0){
+            event.nextPageID = "page1";
+         } else if (event.currentPageID.equals("page1")){
+            event.nextPageID = "page2";
+         } else if (event.currentPageID.equals("page2")){
+            event.nextPageID = "page3";
+         } else if (event.currentPageID.equals("page3")){
+            event.nextPageID = "page4";
+         } else {
+            event.nextPageID = "pageDone";
+         }
+         event.println("application_queryNextPage: event.currentPageID: "
+                       +event.currentPageID
+                       +" nextPageID: "+event.nextPageID);
+      ]]>]<![CDATA[]>
+      </event>
+  </application>]]></example>
+
+      Since you must define the pages list in the application.xml source, this is equivalent:
+
+  <example><![CDATA[<application>
+    ...
+    <pages>
+        <page name="page1"></page>
+        <page name="page2"></page>
+        <page name="page3"></page>
+        <page name="page4"></page>
+        <page name="pageDone"></page>
+    </pages>
+  </application>]]></example>
+
+    </p>
+
+    <h4>The application_queryNextPage event</h4>
+    <p>
+    Note: application_queryNextPage is the final validator of <a
+    href="#controlingPageFlow">page flow</a>.  In this event, the event
+    object will contain event.pageID and event.nextPageID.  These values may
+    come from the URL (event.getQueryParams()), from some logic in the
+    com.dynamide.Session class, or from a previously fired event, such as
+    application_onAction or from a Page _onAction event in which the programmer
+    called event.jumpToPage(String).  In any case, application_queryNextPage can
+    inspect event.nextPageID to decide if it will allow that page to be
+    shown.  This is useful for applications that require a login, for
+    example: <example><![CDATA[<event language="beanshell"
+    name="application_queryNextPage"><![CDATA[
+        String USER = session.getUSER();
+        if ( USER.length()==0 || (getLogin().userLoggedIn(USER)==false) ) {
+            event.println("page1_beforeOutput user NOT logged in");
+            event.jumpToPage("login");
+            return;
+        }
+        System.out.println("page1_beforeOutput user logged in");
+  ]]>]<![CDATA[]></event>]]></example>
+    </p>
+
+    <p>In all events, you can tell whether this is the start page by calling
+    session.isBeforeFirstPage(), or by inspecting
+    <example>session.getVisitedPages().length</example> getVisitedPages()
+    returns a string array (String[]) with the page names the user has seen.
+    </p>
+
+    <h4>Redirects</h4>
+    <p>
+    Certain events allow use of redirects.  See <a href="#eventsRedirect">"Which events allow redirects?"</a>
+    </p>
+
+    <h4>Roll-Your-Own</h4>
+    <p>
+    If you don't wish to use the Dynamide page flow model, you can simply omit all the standard
+    named events that deal with page flow, and never call event.jumpToPage() or set
+    event.nextPageID.  You would then control page flow with hyperlinks, or
+    you can control all the flow for POSTs (e.g. submit buttons) with application_queryNextPage alone.
+    </p>
+
+
+    <p>
+    Another option is to have only one Page in your application, and have that page use a container or Widget
+    to load other Pages or Widgets.  This works well, especially if your application uses
+    XML/XSL heavily, or is very data-driven.  This documentation application you are reading, for example has only one
+    page, and uses the hyperlink URL's pathInfo to determine which XML file to load.
+    </p>
+
+    <p>See also: <a href="#eventFlowchart">Event Flowchart</a></p>
+
+  </text>
+</definition>
+
+<definition>
+  <caption id="eventFlowchart">Event Flowchart: What is the order of events?</caption>
+  <text>
+      <p>See also: <a href="#controlingPageFlow">How do I control Page flow?</a></p>
+    <p>Here is the flowchart of all the events:
+        <br/>
+        <br/>
+
+        ##set \$srcLarge = \$session.getInclude("resources/images/eventFlowChartLarge.gif")
+        #set $moreParams = "imageSrc=resources/images/eventFlowChartLarge.gif"
+        #set $moreParams = "$(moreParams)&amp;imageWidth=&amp;imgHeight=&amp;title=Event+Flowchart&amp;center=true&amp;caption=&amp;lt;br/>&amp;lt;h2>Event+Flowchart&amp;lt;/h2>&amp;lt;br/>"
+        #set $srcLarge = $session.createDialogURL("flowchartImgview", "resources/dialogs/com.dynamide.imgview", "$moreParams")
+        #set $src = $session.getInclude("resources/images/eventFlowChart.gif")
+        <center><a href="$srcLarge" target="_blank"><img border="0" src="$src" />
+        <br/><br/>(click for full-size image)</a>
+        <br/><a href="/static/dynamide/doco/eventFlowChart.pdf" target="_blank">Click to download as PDF</a>
+        <br/><a href="/static/dynamide/doco/eventFlowChartColor.pdf" target="_blank">Click to download as Color PDF</a></center>
+        <br/>
+        <br/>
+       When the session is started, either as a response to a new URL without a SESSIONID,
+       or a refresh of an expired SESSIONID, from the constructor or from within this handleAction() flow,
+       the events are fired as part of the Session startup flow, which can be seen in this flow, but
+       also can happen before Session.handleAction().
+    </p>
+
+       <!--
+    <p>Here is the flowchart of all the events, except for Session, Page and Widget load and import events.
+        #set $src = $session.getInclude("resources/images/event-flowchart.jpg")
+        <img border="0" src="$src" />
+        <br/>
+       NOTE: calls in this flowchart to loadPage() subsequently call Page.load(), which is shown below.
+       Similarly, when the session is started, either as a response to a new URL without a SESSIONID,
+       or a refresh of an expired SESSIONID, from the constructor or from within this handleAction() flow,
+       the events are fired as part of the Session startup flow, which is shown next.
+    </p>
+    <hr/>
+
+    <p>When a Session is started (application.xml loaded) there is another flow:
+        #set $src = $session.getInclude("resources/images/event-flowchart-session.jpg")
+        <img border="0" src="$src" />
+      </p>
+    <hr/>
+
+    <p>When a page is loaded, there is another flow:
+        #set $src = $session.getInclude("resources/images/event-flowchart-page.jpg")
+        <img border="0" src="$src" />
+    </p>
+    -->
+
+    <p>See also: <a href="#controlingPageFlow">How do I control Page flow?</a></p>
+
+
+  </text>
+</definition>
+
+
+</section>
+
+
+<!--
+###======================== SECTION:  widgetAuthors  =================================================
+-->
+
+<section id="widgetAuthors" title="Widget Authoring Tips">
+
+<definition>
+  <caption id="widgetsInDesignMode">How do I make Widgets behave differently in design mode and run mode?</caption>
+  <text>
+    <p>
+    This a component pattern, not a "special" property.
+    To have component behavior that is designMode only, do something like this, where you add this property:
+
+<example><![CDATA[<property name="designModeOnly">
+    <defaultValue>false</defaultValue>
+</property>]]></example>
+
+    then, in the widget html source, add this:
+
+<example>\#if (\$designMode == "false" &amp;&amp; \$widget.designModeOnly == "true") \{
+    \#\#Put your rendering code here for run mode.
+    \#\#Leave blank to disappear in run mode.
+\} \#else \{
+    \#\#Put your rendering code here for design mode.
+    \#\#Leave blank to disappear in design mode.
+\}</example>
+</p>
+  </text>
+</definition>
+
+<definition>
+  <caption id="nameProperty">My properties don't work!  My javascript fieldnames don't work!</caption>
+  <text>
+    <p>
+    When you have a property that won't update from the inspector, check to
+    make sure that you haven't used \$widet.Name as the name or id of an embedded
+    control.  The DOM rejects duplicate names.  Usually you want to use
+    \$widget.field.  Alternately, you can construct a mangled name, but those won't
+    automatically set any field values.
+    </p>
+
+    <p>
+    You need to have  a name property, or the property inspector won't work. The
+    name needs to be defined in the page.xml file as well, or it also won't show
+    up.
+    </p>
+
+    <p>
+    If setting a property doesn't affect the widget on the rendered page, be sure
+    that you have not used \$widget.Name.  You should generally use \$widget.field or
+    mangle a javascript/DOM name using \$widget.Name, e.g. \$widget.Name\\_foo, since
+    DOM names need to be unique.
+    </p>
+    <p> See also: <a href="#typeProperty">My Widget type doesn't work!</a>
+    </p>
+  </text>
+</definition>
+
+<definition>
+  <caption id="typeProperty">My Widget type doesn't work!</caption>
+  <text>
+    <p>
+    In a Widget, once it is dropped on a Page, the "type" property will be set.
+    However, in the Widget source, for example "com.dynamide.edit.xml", the
+    defaultType must be set and the type must NOT be set.
+    </p>
+  </text>
+</definition>
+
+<definition>
+  <caption id="standardProperties">What are the standard properties?</caption>
+  <text>
+    <p>
+<pre>
+    align =
+    caption =
+    captionClass =
+    captionWidth =
+    datasource =
+    enabled =
+    field =
+    left =
+    lines =
+    localStylesheet=
+    name =
+    style =
+    tabindex =
+    text =
+    top =
+    valign =
+    visible =
+
+  events (are just properties)
+    onLoad
+    onStart
+    onValidate
+    beforeRender
+    afterRender
+    onSubmit -- form event only?
+</pre>
+    </p>
+  </text>
+</definition>
+
+
+<definition>
+  <caption id="specialProperties">What are the special properties?</caption>
+  <text>
+    <p>Session.USER is a special Field of Session, wired to the Web user, and is updateable
+    via the USER= cgi parameter.  Sending an empty USER= will not un-set the value.  If you wish
+    to clear the USER, call Session.clearUSER()
+    </p>
+    <p>
+   "visible".  You should include this in your property list to be compliant.
+         <example><![CDATA[<property name="visible">
+    <defaultValue>true</defaultValue>
+ </property>]]></example>
+        The default value should be empty or "true".  If the value is "false"
+        the widget will render an html comment in design mode, and an empty string in
+        non-design mode.
+   </p>
+   <p>
+   "field" is sort of a special property, in that it will be created on the fly
+       in non-design mode if not present.
+   </p>
+   <p>
+   "value" is a special property in that it is looked up from the field if field is present,
+       then gets its content from the widget storage for "value" if no field is present.
+          -- %% todo: check the order of precedence on this.
+   </p>
+   <p>
+   "name" and "id" are bound to each other.  You provide only an "id" attribute, however,
+   not an "id" property.  Widget authors provide a default "name" property, whose defaultValue
+   will be used as the base name of any Widget instance.
+   <br/>IMPORTANT.  IE won't post form input values
+      if "name" is not specified.  But scripts work best if "id" is used.  Therefore, use
+      both name and id for HTML input controls.
+    <br/>
+    Here's an example:
+        <example><![CDATA[<input type="\$inputType" id="\$fieldID" name="\$fieldID" value="\$displayVal"/>]]></example>
+
+   </p>
+  </text>
+</definition>
+
+<definition>
+  <caption id="webmacroStringObject">WebMacro String and Object comparisons</caption>
+  <text>
+   <p>
+     When you compare two things in WebMacro, beware that == will do Object comparison.  So if your
+     expression evaluates to something other than String, the comparison will be using that Class,
+     even though the <b><i>expansion</i></b> may look the same, since WebMacro expands using toString().
+     Thus:
+      <example>\#if (\$thing.value == \$widgetValue){...}</example>
+     is not the same as
+      <example>\#if ("\$thing.value" == "\$widgetValue"){...}</example>
+
+     For String comparison, use the second case.
+
+   </p>
+  </text>
+</definition>
+
+<definition>
+  <caption id="webmacroNulls">WebMacro Nulls and Missing Values</caption>
+  <text>
+   <p>
+     WebMacro will complain if you have missing values or try to use nulls.
+     The following test is good when you may have a missing value:
+        <example>#if ($WEBMACRO_CONTEXT.getContext().containsKey("evalResult") ){
+            #if ($evalResult){
+                $evalResult
+            }
+        }</example>
+
+
+   </p>
+  </text>
+</definition>
+
+
+
+
+</section>
+
+<!--
+###======================== SECTION:  jdom  =================================================
+-->
+
+<section id="jdom" title="JDOM">
+
+<definition>
+  <caption id="removeChildren">Why doesn't removeChildren() work?</caption>
+  <text>
+    <p>
+        org.jdom.Element.removeChildren() does not remove the text node.
+        You must also call setText(""), and remove attributes if you want.
+   </p>
+  </text>
+</definition>
+
+
+
+</section>
+
+
+<!--
+###======================== SECTION:  ide   =================================================
+-->
+
+<section id="ide" title="IDE - Working in the Dynamide Integrated Development Environment">
+
+<definition>
+  <caption id="copyAndPaste">Can I use Copy and Paste in the Form Designer?</caption>
+  <text>
+    <p>For plain text, yes.  For Widgets, no.  When you copy a widget in the IDE Form Designer
+    (a Page in [Design] mode), the span tag simply gets copied.  Internet Explorer will then
+    not recognize <i>either</i> of the tags properly in Javascript, since they share the same "id" attribute.
+   </p>
+   <p>
+    If you wish to have the same widget appear on separate pages, or more than once on the
+    same page, use a com.dynamide.container, and have it point to a page widget.
+   </p>
+  </text>
+</definition>
+
+<definition>
+  <caption id="keepSessionid">How do I keep the same SESSIONID for debugging?</caption>
+  <text>
+    <p>When you are debugging an application, it is useful to keep the same SESSIONID,
+    so that you can simply refresh the Handler Log and other tools in the Admin
+    application when you restart the application.
+   </p>
+   <p>Simply add the SESSIONID parameter to the URL, and force the SESSIONID to be recycled:
+   http://myhost:8080/myapp?SESSIONID=TEST
+   and the Sessions list will allow you to click on "TEST" every time, especially when you close
+   the application with the Session List's "Close" link or with a "Close" or "Logout" link in your
+   application that either contains the parameter "action=Close" or if you have ServerSideEvent code
+   that calls Session.close().  The next time you then refresh the web page with your application,
+   it will restart, but you don't need to restart the Admin application -- simply refresh the Sessions list.
+   </p>
+   <p>
+   </p>
+  </text>
+</definition>
+
+
+
+</section>
+
+<!--
+###======================== SECTION:  componentExamples =================================================
+-->
+
+<section id="componentExamples" title="Component Examples">
+
+<definition>
+  <caption id="ResultSet">Example of using the org.webmacro.datatable.DataTable</caption>
+  <text>
+    <p>Loop through the DataTable, showing all column names, column datatypes, and values in all rows.
+<example><![CDATA[
+\#\# Assume \$datatable is of type org.webmacro.datatable.DataTable
+
+<tr bgcolor='\\\#DDDDDD'><th>Row \\\#</th>
+\#foreach \$col in \$datatable.ColumnNames{
+  <th>\$col</th>
+  }
+</tr>
+\#foreach \$row in \$datatable {
+  <tr>
+    <td>\$row.RowNumber</td>
+    \#set \$c = 0
+    \#foreach \$col in \$row {
+      <td>
+      \$datatable.getColumnTypeName(\$c) ::
+      \$col</td>
+      \#set \$c = \$c + 1
+    }
+  </tr>
+}
+]]></example>
+   </p>
+  </text>
+</definition>
+
+</section>
+
+<!--
+###======================== SECTION:  commandLineExamples  =================================================
+-->
+
+<section id="commandLineExamples" title="Command Line Examples">
+
+    <definition>
+     <caption id="shell">Shell Examples</caption>
+      <text>There are many scripts and tests that show how to use Dynamide
+      on the BeanShell command-line in the <b>src/shell</b><dm_nbsp/> directory of the distribution.
+      </text>
+    </definition>
+
+
+    <definition>
+     <caption id="find">Using IContext.find()</caption>
+      <text>
+      <example><pre><b>C:\\></b> bsh
+<b>bsh%</b>  show();
+<b>bsh%</b>  import com.dynamide.*;
+<b>bsh%</b>  import com.dynamide.resource.*;
+<b>bsh%</b>  RESOURCE_ROOT = "C:/dynamide/build/ROOT";
+<b>bsh%</b>  r = ResourceManager.createStandalone(RESOURCE_ROOT);
+<b>bsh%</b>  r.find("/", "/");
+<b>bsh%</b>  d = r.find("/homes/dynamide", "/");
+<b>bsh%</b>  d.dump();
+<b>bsh%</b>  r.find("/homes/dynamide", "/").getContexts();
+
+<b>bsh%</b>  r.find("/homes/dynamide/sessions", "/");
+&lt;com.dynamide.resource.Pool[sessions]&gt;
+
+<b>bsh%</b>  r.find("/homes/dynamide/applications", "/");
+&lt;null&gt;
+
+bsh %<b>bsh%</b>  r.find("/homes/dynamide", "/").dump();
+&lt;com.dynamide.resource.ContextNode[dynamide]  key: dynamide
+  attribute: FULLPATH == C:\dynamide\build\ROOT\homes\dynamide
+  attribute: RESOURCE_ROOT == C:\dynamide\build\ROOT
+  attribute: name == dynamide
+  account [IContext]
+  ... and so on ...
+
+      </pre></example>
+      </text>
+    </definition>
+
+<definition>
+  <caption id="pageOutputPage">Page.outputPage() -- How do I view the results of a rendered Page?</caption>
+  <text>
+    <p>
+How to find a page, and dump its output:
+<example><![CDATA[
+p = session.find("myImgview");
+com.dynamide.HandlerResult r = p.outputPage();
+su = com.dynamide.util.StringTools.escape(r.result);
+print(su);
+]]></example>
+The result of Page.outputPage() is a com.dynamide.HandlerResult, which has a .result field with the page source,
+and other fields, such as redirectURL if the programmer sent a redirect and not page or page source.
+    </p>
+
+    <p>
+    Here is another example, this one in one line of Beanshell code:
+<example><![CDATA[Session.createSession("/dynamide/admin").getPageByID("sessionDetailPage").outputPage();]]></example>
+    </p>
+      </text>
+    </definition>
+
+
+</section>
+
+
+<!--
+###======================== SECTION:  Operations Manual  ====================================
+-->
+
+<section id="operationsManual" title="Operations Manual">
+
+<definition>
+  <caption id="">How do I install Dynamide locally (Self-Hosted Mode)?</caption>
+  <text>
+    <p>
+    </p>
+  </text>
+</definition>
+
+</section>
+
+<!--
+###======================== SECTION:  Core-Development Manual  ==============================
+-->
+
+<section id="developmentCore" title="Development Manual - Core">
+
+<definition>
+  <caption id="DailyDevelopment">Notes for daily development</caption>
+  <text>
+    <pre>
+Work in the local sandbox:
+     d
+Work in the mothership sandbox:
+     ds
+commit from local sandbox:
+     d
+     updatedynamide
+sync to the mothership source tree:
+     dsync
+
+Create a new build:
+     dsync
+     ssh dynamide1
+     export DYNAMIDE_HOME=~mylogin/dynamide
+     cd \$DYNAMIDE_HOME
+     cvs update -d
+     updatedynamide
+            aliased to call bin/updatedynamide.sh or bin/updatedynamide.bat
+     ant all
+     ant dist
+     cp {dynamide-version}.zip /usr/local
+     su dynamide
+     unzip the zip file, it will have a basename of dynamide-{version}/
+     export DYNAMIDE_HOME=/usr/local/dynamide-{version}
+     cd \$DYNAMIDE_HOME
+     ant install-bin
+     \# if you are using Resin, you would use:
+         bin/resin-dynamide.sh restart
+
+    </pre>
+  </text>
+</definition>
+
+
+<definition>
+  <caption id="buildDistribution">What are the steps to building the Dynamide source for distribution?</caption>
+  <text>
+    <h4>Local laptop development notes</h4>
+    <p>To save the core CVS repository from
+    verbose intermediate versions and checkins, I keep a local CVS repository on my harddrive,
+    and commit to that daily.
+<pre class="preblack"><font class="prompt">mylogin@myhost ~
+\$</font> d
+
+   \# which calls:
+   export DYNAMIDE_HOME=/c/dynamide
+   export CVSROOT=/c/temp/cvsroot
+   echo CVSROOT=\$CVSROOT
+   cd cd \$DYNAMIDE_HOME
+
+<font class="prompt">mylogin@myhost /c/dynamide
+\$</font> bin/updatedynamide.sh</pre>
+
+Then, when I'm ready to tag a build, say "build-78", I sync my sandbox that is connected to
+my local repository to another sandbox that is connected to the mothership's repository.
+Finally, I commit from this other sandbox, which updates the Dynamide source tree:
+
+<style>
+.preblack {color: black; font: 0.9em;  font-weight: normal;}
+.prompt {color: blue; font: 0.9em;  font-weight: bold;}
+</style>
+<pre class="preblack"><font class="prompt">mylogin@myhost /c/dynamide
+\$</font> bin/dsync "build-78"
+
+    \# which calls:
+    export CVSROOT=':ext:mylogin@192.168.0.60:/home/share/cvsroot'
+    echo CVSROOT=\"\$CVSROOT\"
+    export CVS_RSH=ssh
+
+    rsync -r -v -z --cvs-exclude --times `cygpath -u \$DYNAMIDE_HOME` /c/temp/dynamide-sandboxes
+
+    pushd /c/temp/dynamide-sandboxes/dynamide
+    cvs commit -m "build-78"
+    popd</pre>
+
+If there are new directories, I run "ds" which switches my environment to the mothership sandbox,
+and execute something like this:
+<pre class="preblack"><font class="prompt">mylogin@myhost /c/dynamide
+\$</font> ds
+<font class="prompt">mylogin@myhost /c/dynamide
+\$</font> cvs add src/java/com/dynamide/users/mylogin \
+     src/assemblies/dynamide-lib/resources/dialogs \
+     bin/dsync.env \
+     bin/dsync
+
+<font class="prompt">mylogin@myhost /c/temp/dynamide-sandboxes/dynamide
+\$</font>  cvs commit
+</pre>
+
+
+    </p>
+  </text>
+</definition>
+
+</section>
+
+<!--
+### ======================= SECTION:  Features  ====================================
+-->
+<section id="features" title="Features">
+
+</section>
+
+<!--
+### ======================= SECTION:  Security ====================================
+-->
+<section id="security" title="Security">
+
+<definition>
+  <caption id="codeSecure">Is my code secure?</caption>
+  <text>
+    <p>
+    Yes.  Dynamide serves up rendered web pages only -- your code stays on the server
+    and cannot be accessed by the normal user.  If you have developer or admin rights in an account
+    on a Dynamide server, then of course you can view and modify your code
+    (Java Beanshell code, XML Page, Widget and Application source) in a browser
+    for that account only.  We recommend that in Self-Hosted Mode you use https for all
+    editing and administration sessions that leave your trusted network.  In Hosted Mode,
+    the Dynamide applications that allow editing and Session introspection (/dynamide/admin, /dynamide/ide, etc.)
+    are all installed
+    to run through https only, and these applications require user authentication.  You can write applications
+    that expose Dynamide methods, and you should secure these methods.  For example, do not
+    call Session.eval() on anything sent by the user -- it is better to parse what the user
+    wanted and explicitly call methods, or at least build your own eval string.  Similarly,
+    escape any text that gets stored in a database if you plan to use that text in a page
+    that will be expanded by WebMacro.  The Dynamide call Session.escapeForWebmacro() deals
+    with escaping things such as \$session.someMethod().
+    </p>
+    <p>
+    Java classes, of course, are never available via the browser.
+    </p>
+  </text>
+</definition>
+
+</section>
+
+<!--
+###======================== SECTION: Beanshell   ====================================
+-->
+<section id="beanshell" title="Beanshell">
+
+<definition>
+  <caption id="beanshellNamespaces">Beanshell namespaces</caption>
+  <text>
+    <p>
+<pre>
+    How to determine methods defined in application in a Beanshell namespace:<br />
+    com.dynamide.util.Tools.arrayToString(this.namespace.getMethodNames());
+
+also
+    //String[] sa = this.methods;
+    //res ="methods: "+com.dynamide.util.Tools.arrayToString(sa, ";");
+</pre>
+    </p>
+  </text>
+</definition>
+
+</section>
+
+<!--
+### ======================= SECTION:  Jobs ====================================
+-->
+<section id="jobs" title="Jobs">
+
+<definition>
+  <caption id="asyncHowto">How do I run asynchronous events?</caption>
+  <text>
+    <p>
+    Use startJob() or installJob() from ResourceManager.  startJob is useful when you
+    wish to run a single event asynchronously, within the context of the current Session.
+    installJob() is useful for spinning off daemon threads, such as monitors or recurring tasks.
+    For installJob(), the Job must exist as a separate web application.  That application
+    is a regular Dynamide Session, with an application.xml and so on, except that it has
+    one application event that will be called by the system when the Job should be run:
+    "application_runJob".  The application can have the following properties, which govern
+    the timing and lifecycle of the job: jobDelay, jobInterval, jobCount, closeOnJobClose.
+    See more details here: magic. $session.link("","/doc/help/magic", "magic values")<dm_nbsp/>
+    under "Session Properties".  Jobs started with startJob() run once.  Jobs started with
+    installJob can be recurring events.
+    </p>
+    <p>Jobs fire two application events: application_runJob and application_onJobError
+    <br />
+    <br />
+    <table border='1' cellpadding='4' cellspacing='0'>
+      <tr>
+        <td rowspan="2"><b>application_runJob</b></td>
+        <td width="50">inputObject</td>
+        <td>Whatever you set as the inputObject in the call to startJob(...) or installJob(...).
+            If the Job was started because of load-on-startup in web-apps.xml, then the inputObject will be null.
+            In this case you can initialize any variables in application_onStart for the Job,
+            since the application is dedicated to just running the Job.
+        </td>
+      </tr>
+      <tr>
+        <td width="50">outputObject</td>
+        <td><dm_nbsp/></td>
+      </tr>
+      <tr>
+        <td rowspan="2"><b>application_onJobError</b></td>
+        <td width="50">inputObject</td>
+        <td>The java.lang.Exception object that was caught.</td>
+      </tr>
+      <tr>
+        <td width="50">outputObject</td>
+        <td>event.outputObject = "true"; // if the Job should close
+        <br />event.outputObject = "false";  //if the Job should not close.
+        <br />// (Useful for recurring Jobs.)
+        </td>
+      </tr>
+    </table>
+    </p>
+  </text>
+</definition>
+
+<definition>
+  <caption id="jobInternals">How do Dynamide Jobs actually work?</caption>
+  <text>
+    <p>
+    Internally, the ResourceManager creates a com.dynamide.resource.Job object.  This
+    object's start() method is called, which creates a Thread object, with the Job as
+    the Runnable target.  Typically, your Session is running in an HTTP Request thread.
+    By creating a new thread for the job, your request can return immediately, so that your
+    web page is not delayed by tasks such as sending mail, which can take a long time. (Relatively speaking --
+    an SMTP request may take a full second or more to run, but Dynamide typically returns web pages in the 50-500 millisecond time
+    frame.  And a failed SMTP request can take 30 seconds or so.)
+    </p>
+  </text>
+</definition>
+
+</section>
+
+
+
+
+<!--
+###======================== SECTION:    ====================================
+-->
+<!--  remove this comment to fill out this prototype, leave the comment around the SECTION: comment line.
+<section id="" title="">
+
+<definition>
+  <caption id="">?</caption>
+  <text>
+    <p>
+    </p>
+  </text>
+</definition>
+
+</section>
+-->
+
+</dynamideDoco>

@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm  >
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<!-- 5/23/2003 11:37PM copied from ide/evaltop.xml -->
+
+<dynamideForm>
+
+<properties>
+    <property name="type"><value>pagetypes/com.dynamide.form</value></property>
+    <property name="bgcolor"><value>#A4BFDD</value></property>
+</properties>
+
+<htmlsrc><![CDATA[
+<html>
+
+#################### TREE ############################################
+#macro tree(){
+<tr>
+  #set $href = $session.getAppURL("next=expansionLog")
+  <td align="left">
+    <a name='tree'></a>
+  <b>Expansion Tree:</b>   [$session.link("expansionLogShowAll=1&next=expansionLog", "Show All")]<br />
+    <small>$subsession.getExpansionLog().dumpLinks("$href")</small>
+  </td>
+</tr>
+}
+#################### DETAIL ##########################################
+#macro detail(){
+    #set $compositeID = $session.getQueryParam("compositeID")
+    #set $composite = $subsession.getExpansionLog().getExpansionLogRoot().findComposite($compositeID)
+    #if ($composite){
+    <tr>
+      <td align="left">
+        <a name='detail'></a>
+        <hr />
+           <b>Detail for $compositeID</b>
+           &nbsp;&nbsp;&nbsp;&nbsp;[back to <a href="#tree">tree</a>]&nbsp;&nbsp;[<a href="#top">top</a>]
+           <br/>
+           <pre>$composite</pre>
+           [back to <a href="#tree">tree</a>]&nbsp;&nbsp;[<a href="#top">top</a>]
+      </td>
+    </tr>
+    }
+}
+#################### ALL #############################################
+#macro all(){
+  #if ("$session.expansionLogShowAll" != ""){
+  <tr>
+     <hr />
+     <td align="left"><b>All Expansions:</b><br /><pre>$subsession.getExpansionLog().dump()</pre></td>
+  </tr>
+ }
+}
+######################################################################
+
+#set $SUBSESSIONID = $session.get("SUBSESSIONID")
+#set $subsession = $session.getSubsession()
+#set $subsessionURLPath = ""
+#if ($subsession){
+    #set $subsessionURLPath = $subsession.getURLPath()
+    #set $time = $session.getTimestampLocale()
+    <head>
+        <title>Expansion Log</title>
+        $session.getInclude("resources/css/ide.css")
+        $session.getInclude("resources/css/admin.css")
+        $session.getInclude("resources/js/page.js")
+    </head>
+    <body bgcolor="#A4BFDD">
+    <form name="frmExpansionLog" action="/dynamide/admin">
+        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+          <td valign="top">
+            #set $subsessionIDTitle = "[<dm_nbsp/><small><b>SESSIONID:</b><dm_nbsp/>$SUBSESSIONID<dm_nbsp/>]<br/>[<dm_nbsp/><dm_nbsp/><b>Path:<dm_nbsp/></b>$subsessionURLPath<dm_nbsp/>]</small>"
+            <table border="0" cellpadding="5" cellspacing="0">
+            <tr>
+                <td valign="top">
+                    <table border="0" cellpadding="5" cellspacing="0" ><tr><td valign="top">
+                    <b>Expansion Log</b>
+                    </td><td width="20"><dm_nbsp/></td><td>$subsessionIDTitle</td></tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td valign="bottom">
+                    #set $href = $session.getAppURL("next=sessionDetailPage")
+                    <a href="$href">Session Detail</a>
+                </td>
+            </tr>
+            </table>
+            <hr />
+          </td>
+        </tr>
+        #set $eLog = $subsession.getExpansionLog()
+        #if ($eLog){
+              #tree()
+              #detail()
+              #all()
+        } #else {
+          <tr><td>
+          <table border='1' cellpadding='2' cellspacing='0' bgcolor='white'>
+            <tr>
+              <td>
+Expansion Log is off because server is in production/non-verbose mode,
+or the application doesn't have verbose mode on.
+<br />Set the following value in log.conf if you want it on for the whole server instance:
+<pre>
+    log4j.category.com.dynamide.Constants.LOG_EXPANSIONS=DEBUG
+</pre>
+Alternatively, add the following Element to &lt;app> in web-apps.xml for this application:
+<pre>
+&lt;web-apps>
+  &lt;app>
+    &lt;URI>/example&lt;/URI>
+    &lt;APPNAME>example&lt;/APPNAME>
+    <font color='green'>&lt;verbose-mode>true&lt;/verbose-mode></font>
+  &lt;/app>
+&lt;/web-apps>
+</pre>
+              </td>
+            </tr>
+          </table>
+        </td></tr>
+        }
+        </table>
+        <input type="hidden" id="SUBSESSIONID" name="SUBSESSIONID" value="$SUBSESSIONID" />
+        <input type="hidden" id="SESSIONID" name="SESSIONID" value="$SESSIONID" />
+        <input type="hidden" id="action" name="action" value="show" />
+        <input type="hidden" id="page" name="page" value="expansionLog" />
+    </form>
+    </body>
+} #else {
+    <body>ERROR: No Subsession: '$SUBSESSIONID'</body>
+}
+</html>
+]]></htmlsrc>
+
+<widgets>
+</widgets>
+
+<event language="beanshell" name="expansionLog_onLoad"><![CDATA[
+]]></event>
+
+
+<event language="beanshell" name="expansionLog_onAction"><![CDATA[
+    event.println("in expansionLog_onAction: "+event.action);
+]]></event>
+
+
+</dynamideForm>

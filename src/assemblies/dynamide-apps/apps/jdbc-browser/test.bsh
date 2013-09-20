@@ -1,0 +1,9 @@
+/*
+  test with:
+  bsh %DYNAMIDE_HOME%\build\ROOT\homes\dynamide\assemblies\com-dynamide-apps-1\apps\jdbc-browser\test.bsh
+*/
+
+source("dynamideShell.bs");
+s = newSession("/dynamide/jdbc-browser");
+w = s.find("browse.dbgridTables");
+print("Widget prop visibleColumns: '"+w.get("visibleColumns")+"'");

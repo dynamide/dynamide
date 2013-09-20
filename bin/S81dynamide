@@ -1,0 +1,64 @@
+#! /bin/bash
+#
+# dynamide          Start/Stop the dynamide resin server
+#
+# Source function library.
+. /etc/init.d/functions
+
+RETVAL=0
+
+# See how we were called.
+  
+prog="dynamide"
+
+export DYNAMIDE_HOME=/usr/local/dynamide
+
+start() {
+	#echo -n $"Starting $prog: "
+	/usr/local/dynamide/bin/resin-dynamide.sh start
+	RETVAL=$?
+        ret=$?
+        if [ $ret -eq 0 ]; then
+            action $"Starting $prog: " /bin/true
+        else
+            action $"Starting $prog: " /bin/false
+        fi
+	return $RETVAL
+}
+
+stop() {
+	#echo -n $"Stopping $prog: "
+	/usr/local/dynamide/bin/resin-dynamide.sh stop
+        RETVAL=$?
+        ret=$?
+        if [ $ret -eq 0 ]; then
+            action $"Stopping $prog: " /bin/true
+        else
+            action $"Stopping $prog: " /bin/false
+        fi
+	[ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/crond
+	return $RETVAL
+}	
+
+restart() {
+	echo -n $"restarting $prog: "
+  	/usr/local/dynamide/bin/resin-dynamide.sh restart
+}	
+
+
+case "$1" in
+  start)
+  	start
+	;;
+  stop)
+  	stop
+	;;
+  restart)
+  	restart
+	;;
+  *)
+	echo $"Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit $?

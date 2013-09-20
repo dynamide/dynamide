@@ -1,0 +1,13 @@
+
+
+#set $audit = $shell.loadClass("com.dynamide.util.Audit")
+#foreach $item in $audit.audit("/dynamide/demo", "").List {
+   $item.Passed
+   $item.SenderID
+   $item.TestID
+   $item.ApplicationURI
+   $item.QueryParams
+   $item.ErrorMessage
+   $item.ResultCodeStr
+
+}

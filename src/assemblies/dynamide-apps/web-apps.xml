@@ -1,0 +1,22 @@
+<web-apps>
+    <app>
+    <URI>/dynamide/demo</URI>
+    <APPNAME>demo</APPNAME>
+    </app>
+    <app>
+    <URI>/dynamide/admin</URI>
+    <APPNAME>admin</APPNAME>
+    </app>
+    <app>
+    <APPNAME>doco</APPNAME>
+    <URI>/dynamide/doco</URI>
+    </app>
+    <app>
+        <URI>/dynamide/publisher</URI>
+        <APPNAME>publisher</APPNAME>
+    </app>
+    <app>
+        <URI>/dynamide/jdbc-browser</URI>
+        <APPNAME>jdbc-browser</APPNAME>
+    </app>
+</web-apps>

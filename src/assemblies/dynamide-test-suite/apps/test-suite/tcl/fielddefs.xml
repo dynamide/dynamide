@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+
+<!-- I'm not sure overrides should go in here anymore.  Now I just use the value property.
+ -   It's not clear that setting "caption" from the field is a good idea.
+ -   Maybe for some database fields, the column title is valuable...not sure until I see a case.
+-->
+
+<fields>
+   <field name="customer">
+       <property name="value">
+          <value>Laramie</value>
+          <intl>1</intl>
+       </property>
+   </field>
+   <field name="makeAnError">
+       <property name="value">
+          <value>off</value>
+       </property>
+   </field>
+   <field name="language">
+       <property name="value">
+          <value>en-us</value>
+       </property>
+   </field>
+   <field name="labelField1">
+       <property name="value">
+          <value>This is the label text from the field</value>
+          <intl>1</intl>
+       </property>
+   </field>
+   <field name="qty">
+       <property name="value"><value>3000</value></property>
+   </field>
+   <field name="total">
+       <property name="value">
+          <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+          <value>\$1,000,000</value>
+       </property>
+   </field>
+
+   <field name="page1Description">
+       <property name="value">
+          <value>This Application shows the features of Dynamide.  On this page you can see several types
+                    of components (called Widgets in Dynamide), including one that is a view of a table in a MySQL database.</value>
+          <intl>1</intl>
+       </property>
+   </field>
+
+</fields>

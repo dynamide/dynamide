@@ -1,0 +1,55 @@
+Steps to installing dynamide as a developer.
+====================================
+
+dynamide needs an admin-facing installation script and instructions.
+This file is NOT that file.
+This file tells you how to install from source and get a build working.
+After that, you would follow INSTALLING-tomcat.txt except that that file is just notes right now.
+
+Here's how you get a source distribution, customize the properties file, and then do a build.
+
+Prerequisites:
+  Java
+  Ant
+  svn
+
+Developer Installation Instructions
+====================================
+In these instructions, I have a src directory where I keep all my projects 
+under my home dir.  You can have it elsewhere.  The directory you check out 
+is called dynamide by default.  So just change /Users/laramie/src to whatever you want.
+The rest of the instructions should be generic.
+====================================
+
+cd /Users/laramie/src
+
+svn co https://dynamie.svn.sourceforge.net/svnroot/dynamide dynamide
+
+export DYNAMIDE_HOME=/Users/laramie/src/dynamide
+
+cd ${DYNAMIDE_HOME}
+
+cp ${DYNAMIDE_HOME}/bin/dynamide.local.properties.template ${DYNAMIDE_HOME}/dynamide.local.properties
+
+## In this next file, you want to change some variables.  
+## Read the notes there.
+## Specifically, you need to change these two lines for your system and uncomment them:
+## DYNAMIDE_LOGS=/Users/laramie/tmp/dynamide-logs
+## JAVA_HOME=/Library/Java/Home
+
+vi ${DYNAMIDE_HOME}/dynamide.local.properties
+
+ant compile javadoc dist zip install-bin homes
+
+
+## From here, you would pull down tomcat and follow the instructions 
+## in ./INSTALLING-tomcat.xml
+
+##############################################
+#### WARNING.
+####  On our current servers, we never install
+####  ~/dynamide/build/ROOT/homes/dynamide/assemblies/com-dynamide-apps-1/apps/admin/eval.xml
+####  since we don't have a real security manager.
+#### However, it is installed by default, so you must secure your instance by removing this file.
+##############################################
+

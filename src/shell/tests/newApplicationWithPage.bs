@@ -1,0 +1,66 @@
+import com.dynamide.*;
+import com.dynamide.resource.*;
+import com.dynamide.util.*;
+
+    //works. make it a test case: print("findWebAppsRoot: "+rm.findWebAppsRoot().dump());
+    //works. make it a test case: print("findWebAppsInAccount: "+rm.findWebAppsInAccount("dynamide").dump());
+
+    //works. make it a test case: Assembly assembly = rm.findAssemblyInAccount("dynamide", "com-dynamide-apps", "1", "1");
+    //works. make it a test case: print("findWebAppsInAssembly: "+rm.findWebAppsInAssembly(assembly).dump());
+
+try {
+    ResourceManager rm = ResourceManager.createStandalone();
+
+    uri = "/test-newApplication5";
+    appname = "newapp-test5";
+    home = "dynamide";
+    assemblyBasename = "com-dynamide-apps";
+    assemblyInterfaceNumber = "1";
+    build = "1";
+    loadOnStartup = false;
+    PAGEID = "testPage";
+    PAGE_URL = ":homes:dynamide:assemblies:com-dynamide-apps-1:apps/"+appname+"/"+PAGEID+".xml";
+
+    Assembly assembly = rm.findAssemblyInAccount(home, assemblyBasename, assemblyInterfaceNumber, build);
+    rm.createApplication(assembly, appname);
+    if (false){
+        rm.addWebApp( uri,
+                  appname,
+                  home,
+                  assemblyBasename,
+                  assemblyInterfaceNumber,
+                  build,
+                  loadOnStartup);
+    } else {
+        rm.addWebApp( assembly,
+                  uri,
+                  appname,
+                  loadOnStartup
+                  );
+    }
+    session = Session.createSession(uri);
+
+    page = session.newPage(PAGEID, "pagetypes/com.dynamide.page");
+    page.setProperty("title", PAGEID);
+    page.saveToFile();
+
+    session.saveToFile();
+    session.close();
+
+    //====== Now, create a new session to see if it worked:
+
+    session = Session.createSession(uri);
+    ic = rm.find(PAGE_URL, ":");
+    if ( ic != null ) {
+        print("\r\nresource: 2================================= "
+           +Assembly.listResource(
+              ic
+            )
+        );
+    }
+    print(Assembly.listResource(session.getApplicationResource(PAGEID+".xml")));
+} catch (Throwable t){
+    print("Error: "+t);
+    t.printStackTrace();
+}
+System.exit(0);

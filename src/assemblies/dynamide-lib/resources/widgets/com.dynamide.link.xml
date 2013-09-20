@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<widget>
+    <componentHelp>
+     <p>A hyperlink control.  Manages the different types of targets that hyperlinks can have, and
+     allows dynamic generation of the link or link text on the server.</p>
+    </componentHelp>
+
+    <properties>
+        <property name="action"><defaultValue></defaultValue></property>
+        <property name="caption">
+          <defaultValue>link</defaultValue>
+          <intl>1</intl>
+        </property>
+        <property name="class"><defaultValue>link</defaultValue></property>
+        <property name="enabled">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+        <property name="field">
+           <datatype>com.dynamide.datatypes.LiveEnumeratedDatatype</datatype>
+           <defaultValue>
+                <enumeration defaultIndex='0'>
+                    <value></value>  <!-- make sure there is one empty value for autocreated fields -->
+                </enumeration>
+            </defaultValue>
+           <liveEvalString>session.getFieldNames();</liveEvalString>
+        </property>
+        <property name="name"><defaultValue>link</defaultValue></property>
+        <property name="pageJump">
+            <defaultValue></defaultValue>
+            <helpTip>Jumps straight to named page in this session</helpTip>
+        </property>
+        <property name="path">
+            <defaultValue></defaultValue>
+            <helpTip>Determines which application path to use</helpTip>
+        </property>
+        <property name="tabindex"><defaultValue></defaultValue></property>
+        <property name="type"><defaultValue>com.dynamide.link</defaultValue><readOnly>true</readOnly></property>
+        <property name="visible">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+        <property name="fancyLink">
+            <datatype>com.dynamide.datatypes.Link</datatype>
+            <defaultValue></defaultValue>
+            <helpTip>Jumps</helpTip>
+        </property>
+        <property name="URL">
+            <defaultValue></defaultValue>
+            <helpTip>Jumps straight to URL</helpTip>
+        </property>
+        <property name="value"><defaultValue></defaultValue></property>
+    </properties>
+
+    <htmlsrc browser="*"><![CDATA[
+    #set $fieldID = $widget.field
+    ##This needs to be worked out so that field and name don't conflict.
+    #if ($designMode == "true" || $widget.enabled == "false"){
+       <u>$widget.caption</u>
+    } #else #if ($widget.URL.length() > 0){
+        <a class="$widget.class" href="$widget.URL" #if ($widget.tabindex != "") { tabindex='$widget.tabindex' } >$widget.caption</a>
+    } #else #if ($widget.pageJump.length() > 0) {
+        <a class="$widget.class" href="$widget.path?next=$widget.pageJump&amp;$widget.name=$fieldID&amp;SESSIONID=$SESSIONID" #if ($widget.tabindex != "") { tabindex='$widget.tabindex' } >$widget.caption</a>
+    } #else #if ($widget.action.length() > 0) {
+        <a class="$widget.class" href="$widget.path?action=$widget.action&amp;$widget.name=$fieldID&amp;SESSIONID=$SESSIONID" #if ($widget.tabindex != "") { tabindex='$widget.tabindex' } >$widget.caption</a>
+    } #else {
+        <a class="$widget.class" href="$widget.path?$fieldID=$widget.value&amp;$widget.name=$fieldID&amp;SESSIONID=$SESSIONID" #if ($widget.tabindex != "") { tabindex='$widget.tabindex' } >$widget.caption</a>
+    }
+    ]]></htmlsrc>
+</widget>

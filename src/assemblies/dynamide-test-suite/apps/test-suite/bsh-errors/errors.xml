@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm >
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<dynamideForm>
+
+<properties>
+    <property name="type">
+      <value>pagetypes/com.dynamide.page</value>
+      <readOnly>true</readOnly>
+    </property>
+
+    <property name="title">
+      <value>Test Suite :: Error Tests</value>
+    </property>
+
+    <property name="margin">
+      <value>0</value>
+    </property>
+
+    <property name="bgcolor">
+      <value>white</value>
+    </property>
+
+  </properties>
+
+  <event language="beanshell" name="onAction"><![CDATA[
+    String action = event.action;
+    if ( event.action.equals("makeRuntimeError") ) {
+         n = null;
+         n.toString();
+    } else if (action.equals("makeSyntaxError")) {
+         event.sender.call("makeSyntaxError");
+    } else if (action.equals("makeThrowable")) {
+         throw new FileNotFoundException("Test case for FileNotFoundException");
+    } else if (action.equals("makeCaughtException")) {
+        try {
+            n = null;
+            n.toString();
+        } catch (Exception e)  {
+            event.returnSource("<html><body>caught: "+e+"</body></html>");
+        }
+    }
+  ]]></event>
+
+  <event language="beanshell" name="makeSyntaxError"><![CDATA[
+     //This is a java syntax error:
+     thisIsAnUnterminatedStatement
+  ]]></event>
+
+
+
+<htmlsrc><![CDATA[
+  <HTML>
+    <HEAD>
+        <TITLE>$session.title - $page.title
+        </TITLE>
+        $session.getInclude("resources/css/ide.css")
+    </HEAD>
+
+    <BODY id="page1" bgcolor="white">
+           <h2>$page.title</h2>
+           <hr />
+           <h2>WebMacro Errors</h2>
+           $session.link("page=errors&next=webmacroError1", "Make Syntax Exception")
+           <br />
+           $session.link("page=errors&next=webmacroError2", "Make Syntax Exception 2")
+
+           <h2>Beanshell Errors</h2>
+           $session.link("page=errors&next=errors&action=makeSyntaxError", "Make Syntax Exception")
+           <br />
+           $session.link("page=errors&next=errors&action=makeRuntimeError", "Make Runtime Error")
+           <br />
+           $session.link("page=errors&next=errors&action=makeThrowable", "Make Throwable")
+           <br />
+           $session.link("page=errors&next=errors&action=makeCaughtException", "Make Caught Exception")
+     </BODY>
+    </HTML>
+  ]]></htmlsrc>
+
+  <widgets>
+  </widgets>
+
+</dynamideForm>

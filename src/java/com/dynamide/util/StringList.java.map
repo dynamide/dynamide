@@ -1,0 +1,618 @@
+package com.dynamide.util;
+
+import java.util.*;
+
+import com.dynamide.util.SortVector;
+import com.dynamide.util.ICompare;
+
+/** A Delphi-style StringList: internally keeps space for an object associated
+ *  with every string on the list.  If you don't use it, the object
+ *  will just be null.  You can use the object functions or the non-object
+ *  functions. For example, add(String) or addObject(String, Object).
+ *
+ *  The list will behave like a hashtable if you keep the
+ *  allowDuplicates property as its default value of 'false'.
+ *
+ *  The 'sorted' property is not supported, so just call sort()
+ *  whenever you wish to look at the list sorted.
+ */
+public class StringList
+implements ICompare, java.util.Map {
+    private class ListItem {
+        public ListItem(String str, Object obj){string=str;object=obj;}
+        public String string;
+        public Object object;
+        public String toString(){return string;}
+    }
+
+    private String extractString(Object item){
+        return ((ListItem)item).string;
+    }
+
+    private Object extractObject(Object item){
+        return ((ListItem)item).object;
+    }
+
+    public StringList(){
+        list = new SortVector(this);
+    }
+
+    public StringList(int initialSize){
+        list = new SortVector(this, initialSize);
+    }
+
+
+    private boolean ascendingSort = true;
+    public boolean getAscendingSort(){return ascendingSort;}
+    public void setAscendingSort(boolean ascending){ascendingSort = ascending;}
+
+    private boolean caseSensitive = true;
+    public boolean getCaseSensitive(){return caseSensitive;}
+    public void setCaseSensitive(boolean caseSensitive){this.caseSensitive = caseSensitive;}
+
+
+
+    /** Ignores the objects, just return the strings.*/
+    public String toString(){
+        String nl = "\r\n";
+        StringBuffer buff = new StringBuffer(list.size());
+        for (Enumeration elems = list.elements(); elems.hasMoreElements(); ){
+             buff.append(extractString(elems.nextElement()));
+             buff.append(nl);
+        }
+        return buff.toString();
+    }
+
+    public String dump(){
+        String nl = "\r\n";
+        String lb = "\r\n----------------------\r\n";
+        StringBuffer buff = new StringBuffer(lb);
+        for (Enumeration elems = list.elements(); elems.hasMoreElements(); ){
+            Object elem =  elems.nextElement();
+            buff.append(extractString(elem));
+            Object obj = extractObject(elem) ;
+            if (obj!=null){
+                buff.append(nl);
+                buff.append(obj.toString());
+            }
+            buff.append(lb);
+        }
+        return buff.toString();
+    }
+
+    public String[] toStringArray(){
+        return Tools.vectorToStringArray(list);
+    }
+
+    public Enumeration elements() {
+       return getCopyAsVector().elements();
+    }
+
+    public Vector getCopyAsVector(){
+       Vector result = new Vector();
+       int list_size  = list.size();
+       for (int i=0; i<list_size; i++){
+          result.addElement(extractString(list.elementAt(i)));
+       }
+       return result;
+    }
+
+    private SortVector list;
+
+    /** DO NOT mess with the items on the list returned.  If you want to access
+     *  individual items, use elements();
+     */
+    private Vector getInternalVector(){return list;}
+
+    private boolean allowDuplicates = false;
+    public boolean getAllowDuplicates(){return allowDuplicates;}
+    public void setAllowDuplicates(boolean new_value){allowDuplicates = new_value;}
+
+    public String getString(int i){
+       if (i<0 || i>=list.size())
+           return "";
+       return extractString(list.elementAt(i));
+    }
+
+    public void setString(int i, String newstr, Object obj){
+       if (i<0 || i>=list.size())
+           throw new IndexOutOfBoundsException();
+       list.setElementAt(new ListItem(newstr, obj), i);
+    }
+
+    public void setString(int i, String newstr){
+       setString(i, newstr, null);
+    }
+
+    public String first(){
+       if (0==list.size())
+           return "";
+       return extractString(list.elementAt(0));
+    }
+
+    public String last(){
+       if (0==list.size())
+           return "";
+       return extractString(list.elementAt(list.size()-1));
+    }
+
+    /** Warning: if the item to be added is already on the list, and allowDuplicates
+     *  has been set to false, the index of the existing item is returned.  This does
+     *  not mean that the index returned is the list size.  Call size() to get the list size.
+     */
+    public int add(String newstr){
+        return addObject(newstr, null);
+    }
+
+    public int addObject(String newstr, Object obj){
+        if ( !allowDuplicates ) {
+            int i = indexOf(newstr);  //case sensitive!!
+            if ( i > -1 ) {
+                return i;
+            }
+        }
+        list.addElement(new ListItem(newstr, obj));
+        return list.size() - 1;
+    }
+
+    public Object getObject(String key){
+        return getObjectAt(indexOf(key));
+    }
+
+    public Object getObjectAt(int i){
+        if (i<0 || i>=list.size())
+            return null;
+        return extractObject(list.elementAt(i));
+    }
+
+    public void add(Vector other){
+        String aString;
+        for (Enumeration elems = other.elements(); elems.hasMoreElements(); ){
+            aString = extractString(elems.nextElement());
+            add(aString);
+        }
+    }
+
+    public void clear(){
+        list.removeAllElements();
+    }
+
+    public void delete(int index){
+        if ( index < list.size()  &  index > -1) {
+            list.removeElementAt(index);
+        }
+    }
+
+    public boolean insertObject(String newstr, Object obj, int index){
+        if ( !allowDuplicates ) {
+            int i = indexOf(newstr);  //case sensitive!!
+            if ( i > -1 ) {
+                return false;
+            }
+        }
+        list.insertElementAt(new ListItem(newstr, obj), index);
+        return true;
+    }
+
+    public boolean insert(String newstr, int index){
+        return insertObject(newstr, null, index);
+    }
+
+    public int indexOf(String which){
+        return indexOf(which, false);
+    }
+
+    public int indexOf(String which, boolean ignoreCase){
+        int i = -1;
+        String aString;
+        boolean matched;
+        for (Enumeration elems = list.elements(); elems.hasMoreElements(); ){
+            aString = extractString(elems.nextElement());
+            i++;
+            if (ignoreCase)
+                matched = aString.equalsIgnoreCase(which);
+            else
+                matched = aString.equals(which);
+            if (matched){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+
+    public Object remove(String which){
+        Object prev = getObject(which);
+        remove(which, false);
+        return prev;
+    }
+
+    public Object remove(Object which){
+        Object obj;
+        for (Enumeration elems = list.elements(); elems.hasMoreElements(); ){
+            Object elem = elems.nextElement();
+            obj = extractObject(elem);
+            if ( obj.equals(which) ) {
+                remove(extractString(elem));
+                return obj;
+            }
+        }
+        return null;
+    }
+
+    public void remove(String which, boolean ignoreCase){
+        int i = indexOf(which, ignoreCase);
+        if ( i > -1 ) {
+            list.removeElementAt(i);
+        }
+    }
+
+    public int size(){
+        return list.size();
+    }
+
+    public void sort(){
+        list.sort();
+    }
+
+    //================ ICompare interface for quicksort in SortVector ==========
+
+    public boolean lessThan(Object l, Object r) {
+        String sl = extractString(l);
+        String sr = extractString(r);
+        if ( ! caseSensitive ) {
+            sl = sl.toLowerCase();
+            sr = sr.toLowerCase();
+        }
+        if (ascendingSort){
+            return sl.compareTo(sr) < 0;
+        } else {
+            return sl.compareTo(sr) > 0;
+        }
+    }
+
+    public boolean lessThanOrEqual(Object l, Object r) {
+        String sl = extractString(l);
+        String sr = extractString(r);
+        if ( ! caseSensitive ) {
+            sl = sl.toLowerCase();
+            sr = sr.toLowerCase();
+        }
+        if (ascendingSort){
+            return sl.compareTo(sr) <= 0;
+        } else {
+            return sl.compareTo(sr) >= 0;
+        }
+    }
+
+    //====================== Map interface for Java collections ==================
+
+    // Already implemented: size(), remove(), clear().
+
+    /**
+     * Returns <tt>true</tt> if this map contains no key-value mappings.
+     *
+     * @return <tt>true</tt> if this map contains no key-value mappings.
+     */
+    public boolean isEmpty(){
+        return size()==0;
+    }
+
+    /**
+     * Returns <tt>true</tt> if this map contains a mapping for the specified
+     * key.
+     *
+     * @param key key whose presence in this map is to be tested.
+     * @return <tt>true</tt> if this map contains a mapping for the specified
+     * key.
+     *
+     * @throws ClassCastException if the key is of an inappropriate type for
+     * 		  this map.
+     * @throws NullPointerException if the key is <tt>null</tt> and this map
+     *            does not not permit <tt>null</tt> keys.
+     */
+    public boolean containsKey(Object key){
+        return indexOf(key.toString()) > -1;
+    }
+
+    /**
+     * Returns <tt>true</tt> if this map maps one or more keys to the
+     * specified value.  More formally, returns <tt>true</tt> if and only if
+     * this map contains at least one mapping to a value <tt>v</tt> such that
+     * <tt>(value==null ? v==null : value.equals(v))</tt>.  This operation
+     * will probably require time linear in the map size for most
+     * implementations of the <tt>Map</tt> interface.
+     *
+     * @param value value whose presence in this map is to be tested.
+     * @return <tt>true</tt> if this map maps one or more keys to the
+     *         specified value.
+     */
+    public boolean containsValue(Object value){
+        Object obj;
+        for (Enumeration elems = list.elements(); elems.hasMoreElements(); ){
+            obj = extractObject(elems.nextElement());
+            if ( obj.equals(value) ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns the value to which this map maps the specified key.  Returns
+     * <tt>null</tt> if the map contains no mapping for this key.  A return
+     * value of <tt>null</tt> does not <i>necessarily</i> indicate that the
+     * map contains no mapping for the key; it's also possible that the map
+     * explicitly maps the key to <tt>null</tt>.  The <tt>containsKey</tt>
+     * operation may be used to distinguish these two cases.
+     *
+     * @param key key whose associated value is to be returned.
+     * @return the value to which this map maps the specified key, or
+     *	       <tt>null</tt> if the map contains no mapping for this key.
+     *
+     * @throws ClassCastException if the key is of an inappropriate type for
+     * 		  this map.
+     * @throws NullPointerException key is <tt>null</tt> and this map does not
+     *		  not permit <tt>null</tt> keys.
+     *
+     * @see #containsKey(Object)
+     */
+    public Object get(Object key){
+        return getObject(key.toString());
+    }
+
+    // Modification Operations
+
+    /**
+     * Associates the specified value with the specified key in this map
+     * (optional operation).  If the map previously contained a mapping for
+     * this key, the old value is replaced.
+     *
+     * @param key key with which the specified value is to be associated.
+     * @param value value to be associated with the specified key.
+     * @return previous value associated with specified key, or <tt>null</tt>
+     *	       if there was no mapping for key.  A <tt>null</tt> return can
+     *	       also indicate that the map previously associated <tt>null</tt>
+     *	       with the specified key, if the implementation supports
+     *	       <tt>null</tt> values.
+     *
+     * @throws UnsupportedOperationException if the <tt>put</tt> operation is
+     *	          not supported by this map.
+     * @throws ClassCastException if the class of the specified key or value
+     * 	          prevents it from being stored in this map.
+     * @throws IllegalArgumentException if some aspect of this key or value
+     *	          prevents it from being stored in this map.
+     * @throws NullPointerException this map does not permit <tt>null</tt>
+     *            keys or values, and the specified key or value is
+     *            <tt>null</tt>.
+     */
+    public Object put(Object key, Object value){
+        Object prev = getObject(key.toString());
+        addObject(key.toString(), value);
+        return prev;
+    }
+
+    /**
+     * Removes the mapping for this key from this map if present (optional
+     * operation).
+     *
+     * @param key key whose mapping is to be removed from the map.
+     * @return previous value associated with specified key, or <tt>null</tt>
+     *	       if there was no mapping for key.  A <tt>null</tt> return can
+     *	       also indicate that the map previously associated <tt>null</tt>
+     *	       with the specified key, if the implementation supports
+     *	       <tt>null</tt> values.
+     * @throws UnsupportedOperationException if the <tt>remove</tt> method is
+     *         not supported by this map.
+     */
+    //see above.
+
+    // Bulk Operations
+
+    /**
+     * Copies all of the mappings from the specified map to this map
+     * (optional operation).  These mappings will replace any mappings that
+     * this map had for any of the keys currently in the specified map.
+     *
+     * @param t Mappings to be stored in this map.
+     *
+     * @throws UnsupportedOperationException if the <tt>putAll</tt> method is
+     * 		  not supported by this map.
+     *
+     * @throws ClassCastException if the class of a key or value in the
+     * 	          specified map prevents it from being stored in this map.
+     *
+     * @throws IllegalArgumentException some aspect of a key or value in the
+     *	          specified map prevents it from being stored in this map.
+     *
+     * @throws NullPointerException this map does not permit <tt>null</tt>
+     *            keys or values, and the specified key or value is
+     *            <tt>null</tt>.
+     */
+    public void putAll(Map t){
+        //not implemented
+    }
+
+
+    // Views
+
+    /**
+     * Returns a set view of the keys contained in this map.  The set is
+     * backed by the map, so changes to the map are reflected in the set, and
+     * vice-versa.  If the map is modified while an iteration over the set is
+     * in progress, the results of the iteration are undefined.  The set
+     * supports element removal, which removes the corresponding mapping from
+     * the map, via the <tt>Iterator.remove</tt>, <tt>Set.remove</tt>,
+     * <tt>removeAll</tt> <tt>retainAll</tt>, and <tt>clear</tt> operations.
+     * It does not support the add or <tt>addAll</tt> operations.
+     *
+     * @return a set view of the keys contained in this map.
+     */
+    public Set keySet(){
+        return new HashSet(this);
+    }
+
+    /**
+     * Returns a collection view of the values contained in this map.  The
+     * collection is backed by the map, so changes to the map are reflected in
+     * the collection, and vice-versa.  If the map is modified while an
+     * iteration over the collection is in progress, the results of the
+     * iteration are undefined.  The collection supports element removal,
+     * which removes the corresponding mapping from the map, via the
+     * <tt>Iterator.remove</tt>, <tt>Collection.remove</tt>,
+     * <tt>removeAll</tt>, <tt>retainAll</tt> and <tt>clear</tt> operations.
+     * It does not support the add or <tt>addAll</tt> operations.
+     *
+     * @return a collection view of the values contained in this map.
+     */
+    public Collection values(){
+        return this;
+    }
+
+    /**
+     * Returns a set view of the mappings contained in this map.  Each element
+     * in the returned set is a <tt>Map.Entry</tt>.  The set is backed by the
+     * map, so changes to the map are reflected in the set, and vice-versa.
+     * If the map is modified while an iteration over the set is in progress,
+     * the results of the iteration are undefined.  The set supports element
+     * removal, which removes the corresponding mapping from the map, via the
+     * <tt>Iterator.remove</tt>, <tt>Set.remove</tt>, <tt>removeAll</tt>,
+     * <tt>retainAll</tt> and <tt>clear</tt> operations.  It does not support
+     * the <tt>add</tt> or <tt>addAll</tt> operations.
+     *
+     * @return a set view of the mappings contained in this map.
+     */
+    public Set entrySet(){
+        return new HashSet(this);
+
+    }
+
+	/**
+	 * Compares the specified object with this entry for equality.
+	 * Returns <tt>true</tt> if the given object is also a map entry and
+	 * the two entries represent the same mapping.  More formally, two
+	 * entries <tt>e1</tt> and <tt>e2</tt> represent the same mapping
+	 * if<pre>
+         *     (e1.getKey()==null ?
+         *      e2.getKey()==null : e1.getKey().equals(e2.getKey()))  &&
+         *     (e1.getValue()==null ?
+         *      e2.getValue()==null : e1.getValue().equals(e2.getValue()))
+         * </pre>
+	 * This ensures that the <tt>equals</tt> method works properly across
+	 * different implementations of the <tt>Map.Entry</tt> interface.
+	 *
+	 * @param o object to be compared for equality with this map entry.
+	 * @return <tt>true</tt> if the specified object is equal to this map
+	 *         entry.
+         */
+    //boolean equals(Object o);
+
+	/**
+	 * Returns the hash code value for this map entry.  The hash code
+	 * of a map entry <tt>e</tt> is defined to be: <pre>
+	 *     (e.getKey()==null   ? 0 : e.getKey().hashCode()) ^
+	 *     (e.getValue()==null ? 0 : e.getValue().hashCode())
+         * </pre>
+	 * This ensures that <tt>e1.equals(e2)</tt> implies that
+	 * <tt>e1.hashCode()==e2.hashCode()</tt> for any two Entries
+	 * <tt>e1</tt> and <tt>e2</tt>, as required by the general
+	 * contract of <tt>Object.hashCode</tt>.
+	 *
+	 * @return the hash code value for this map entry.
+	 * @see Object#hashCode()
+	 * @see Object#equals(Object)
+	 * @see #equals(Object)
+	 */
+    //int hashCode(){
+    //    return super.hashCode();//not quite full implementation! Laramie
+    //}
+
+    // Comparison and hashing
+
+    /**
+     * Compares the specified object with this map for equality.  Returns
+     * <tt>true</tt> if the given object is also a map and the two Maps
+     * represent the same mappings.  More formally, two maps <tt>t1</tt> and
+     * <tt>t2</tt> represent the same mappings if
+     * <tt>t1.entrySet().equals(t2.entrySet())</tt>.  This ensures that the
+     * <tt>equals</tt> method works properly across different implementations
+     * of the <tt>Map</tt> interface.
+     *
+     * @param o object to be compared for equality with this map.
+     * @return <tt>true</tt> if the specified object is equal to this map.
+     */
+    //boolean equals(Object o){
+    //    return super.equals(o); //laramie: minimal
+    //}
+
+    /**
+     * Returns the hash code value for this map.  The hash code of a map
+     * is defined to be the sum of the hashCodes of each entry in the map's
+     * entrySet view.  This ensures that <tt>t1.equals(t2)</tt> implies
+     * that <tt>t1.hashCode()==t2.hashCode()</tt> for any two maps
+     * <tt>t1</tt> and <tt>t2</tt>, as required by the general
+     * contract of Object.hashCode.
+     *
+     * @return the hash code value for this map.
+     * @see Map.Entry#hashCode()
+     * @see Object#hashCode()
+     * @see Object#equals(Object)
+     * @see #equals(Object)
+     */
+    //int hashCode();
+
+    //========== Collection  ===================================
+    public boolean contains(Object key){
+        return indexOf(key.toString()) > -1;
+    }
+
+    public Iterator iterator(){
+        iteratorIndex = -1;
+        return this;
+    }
+
+    public Object[] toArray(Object[] a){
+        return new Object[0];
+    }
+    public Object[] toArray(){
+        return new Object[0];
+    }
+
+    public int add(Object obj){
+        return addObject(obj.toString, obj);
+    }
+
+    public boolean containsAll(Collection c){
+        return false;
+    }
+
+    public boolean addAll(Collection c){
+        return false;
+    }
+
+    public boolean removeAll(Collection c){
+        return false;
+    }
+
+    public boolean retainAll(Collection c){
+        return false;
+    }
+
+
+    //======== Iterator =============================================
+    private int iteratorIndex = -1;
+
+    public boolean hasNext(){
+        return iteratorIndex < size();
+
+    }
+
+    public Object next(){
+        iteratorIndex++;
+        if ( iteratorIndex < size() ) {
+            return getObjectAt(iteratorIndex);
+        }
+        return null;
+    }
+
+}

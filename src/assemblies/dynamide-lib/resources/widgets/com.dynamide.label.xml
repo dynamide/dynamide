@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<widget>
+    <componentHelp>
+     <p>A text field for displaying any text, with any style.  You cannot embed html tags within the text.  For that, use com.dynamide.container.
+     But this widget is useful for internationalizing areas of text or titles.
+     <ul>
+     The value can be entered manually, or looked up from a field. <b>IMPORTANT: </b>
+     <li>If you set the value property, that value will override any value from the field.</li>
+     <li>If you leave the value property empty, and have a field, the value from the field will be used.</li>
+     </ul>
+     </p>
+    </componentHelp>
+
+    <properties>
+        <property name="basename">
+            <defaultValue>label</defaultValue>
+            <hidden>true</hidden>
+        </property>
+        <property name="border">
+            <defaultValue>0</defaultValue>
+        </property>
+        <property name="caption">
+          <defaultValue>caption</defaultValue>
+          <intl>1</intl>
+        </property>
+        <property name="captionNOBR">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+        <property name="cellpadding"><defaultValue>0</defaultValue></property>
+        <property name="cellspacing"><defaultValue>0</defaultValue></property>
+        <property name="class"><defaultValue></defaultValue></property>
+        <property name="datasource">
+            <datatype>com.dynamide.datatypes.IDatasourceDatatype</datatype>
+            <defaultValue></defaultValue>
+        </property>
+        <property name="field">
+           <datatype>com.dynamide.datatypes.LiveEnumeratedDatatype</datatype>
+           <defaultValue>
+                <enumeration defaultIndex='0'>
+                    <value></value>  <!-- make sure there is one empty value for autocreated fields -->
+                </enumeration>
+            </defaultValue>
+           <liveEvalString>session.getFieldNames();</liveEvalString>
+        </property>
+        <property name="name"><defaultValue>edit</defaultValue></property>
+        <property name="type">
+            <defaultValue>com.dynamide.label</defaultValue>
+            <readOnly>true</readOnly>
+        </property>
+        <property name="visible">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+        <!-- No Events -->
+    </properties>
+
+    <htmlsrc browser="*"><![CDATA[
+
+        #set $txt = $widget.caption
+        #set $val = $widget.value
+        #if ($val.length()>0){
+            #set $txt = $val
+        }
+        <table border='$widget.border' cellpadding='$widget.cellpadding' cellspacing='$widget.cellspacing'>
+            <tr>
+            <td><span class='$widget.class'>$txt</span></td>
+            </tr>
+        </table>
+
+    ]]></htmlsrc>
+</widget>

@@ -1,0 +1,6 @@
+<?xml version="1.0" ?>
+<assembly>
+  <basename>com-dynamide-lib</basename>
+  <interface>1</interface>
+  <build>1</build>
+</assembly>

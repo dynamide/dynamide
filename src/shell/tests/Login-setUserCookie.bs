@@ -1,0 +1,12 @@
+source("c:/dynamide/src/shell/dynamideShell.bs");
+s = newSession("/swarm", "/swarm?USER=laramie&group=eb4dean");
+l = new com.dynamide.security.Login(s, "dynamide", "laramietest");
+l.setUserCookie("laramie", "DynamideToken", "FF");
+l.getUserCookie("laramie", "DynamideToken");
+
+sl = s.eval("getSchwarmanizer();");
+res = sl.restoreLoginFromCookie("laramie", "FF");
+System.out.println("res, FF: "+res);
+
+res = sl.restoreLoginFromCookie("laramie", "AA");
+System.out.println("res, AA: "+res);

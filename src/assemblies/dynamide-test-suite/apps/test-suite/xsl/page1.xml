@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm >
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<dynamideForm>
+
+<properties>
+
+    <property name="type">
+      <value>pagetypes/com.dynamide.form</value>
+      <readOnly>true</readOnly>
+    </property>
+
+    <property name="title">
+      <value>Dynamide XSL Test Application - Page 1</value>
+    </property>
+
+    <property name="margin">
+      <value>0</value>
+    </property>
+
+    <property name="bgcolor">
+      <value>white</value>
+    </property>
+
+
+  </properties>
+
+
+<htmlsrc><![CDATA[
+  <HTML>
+    <HEAD>
+        <TITLE>$session.title - $page.title
+        </TITLE>
+        $session.getInclude("resources/js/page.js")
+        $session.getInclude("resources/css/dynamide.css")
+    </HEAD>
+    <BODY id="page1" onclick="widgetClicked(this)" bottomMargin="0" leftMargin="0" topMargin="0" rightMargin="0" bgcolor="white">
+        <SPAN class="widget" id="widgetstyle1"></SPAN>
+        <FORM name="mojoForm" action="/dynamide/xsl" method="get" encType="application/x-www-form-urlencoded">
+           <h2>Dynamide XSL</h2>
+           ##$session.transform("resources/xml/xsl-edit4.xsl", "resources/xml/sample-edit.xsl")
+           $session.transform("resources/xml/xsl-edit4.xsl", "resources/xml/xsl-edit4.xsl")
+                <SPAN class="widget" id="button2" onclick="widgetClicked(this)"></SPAN>
+                <SPAN class="widget" id="session1" />
+        </FORM>
+      </BODY>
+    </HTML>
+  ]]></htmlsrc>
+
+  <widgets>
+      <widget id="widgetstyle1">
+      <properties>
+        <property name="name">
+          <value>hidden</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.widgetstyle</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="session1">
+      <properties>
+        <property name="name">
+          <value>session1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.session</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="button2">
+      <properties>
+        <property name="action">
+          <value>doSubmitThing</value>
+        </property>
+        <property name="caption">
+          <value>Submit Me!</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="label_page1Description">
+      <properties>
+        <property name="field">
+          <value>page1Description</value>
+        </property>
+        <property name="name">
+          <value>label_page1Description</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.label</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_radiogroup1">
+      <properties>
+        <property name="border">
+          <value>1</value>
+        </property>
+        <property name="caption">
+          <value>Lanugage</value>
+        </property>
+        <property name="enabled">
+          <value>true</value>
+        </property>
+        <property name="selectedIndex">
+          <value>2</value>
+        </property>
+        <property name="field">
+          <value>language</value>
+        </property>
+        <property name="itemWidth">
+          <value>120</value>
+        </property>
+        <property name="items">
+            <datatype>com.dynamide.datatypes.Enumeration</datatype>
+            <value>
+                <enumeration override="true">
+                    <item datatype="com.dynamide.datatypes.Caption">
+                        <key>en-us</key>
+                        <text>English</text>
+                    </item>
+                    <item datatype="com.dynamide.datatypes.Caption">
+                        <key>en-uk</key>
+                        <text>British</text>
+                    </item>
+                    <item datatype="com.dynamide.datatypes.Caption">
+                        <key>es</key>
+                        <text>Spanish</text>
+                    </item>
+                </enumeration>
+            </value>
+            <helpTip>items: a list of Strings.</helpTip>
+        </property>
+        <property name="type">
+          <value>com.dynamide.radiogroup</value>
+        </property>
+      </properties>
+    </widget>
+  </widgets>
+
+</dynamideForm>

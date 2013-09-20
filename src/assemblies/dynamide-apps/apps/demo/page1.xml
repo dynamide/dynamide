@@ -1,0 +1,1316 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<dynamideForm>
+  <event language="beanshell" name="submit1_onClick"><![CDATA[//no escapes
+    session.logDebug("page1 in submit1_onClick "+event.action);
+  ]]></event>
+  <event language="beanshell" name="page1_onAction"><![CDATA[//no escapes
+  import com.dynamide.*;
+    session.logDebug("page1 in onAction "+event.action);
+    try {
+        ji = new tcl.lang.Interp();
+
+        String source = event.currentPage.getPropertyStringValue("tclsource");
+        ji.eval("package require java");
+        ji.eval("set event [java::new com.dynamide.event.ScriptEvent]");
+        ji.eval("puts $event");
+        tcl.lang.TclObject tclobj = ji.getResult();
+        event.println("tcl obj to string:"+tclobj.toString());
+    } catch (Throwable tcle){
+        event.println("Tcl exception: "+tcle);
+    }
+    //event.println(event.toString());
+
+    //Example Doco: %%  These all work:
+    //    //This gets you a string value:
+    //    System.out.println("page1 EVAL: "+event.session.expand("$session.page1.com_dynamide_img_logo.src"));
+    //    //This gets you a string value:
+    //    System.out.println("page1 EVAL: "+event.session.expand("$session.page1.qty1.value"));
+    //    //This gets you a chain of real Java objects:
+    //    System.out.println("page1 EVAL: "+event.session.get("page1").get("qty1").getValue());
+    //    System.out.println("page1 EVAL: "+event.session.get("page1").get("qty1").render());
+
+    String language = "";
+    languageField = event.session.findField("language");
+    if (languageField != null){
+        language = languageField.getValue().toString();
+    }
+    String oldLanguage = event.session.getCurrentLanguageCode();
+    if ( language.length() > 0 && (! oldLanguage.equals(language)) ){
+        event.println("page1 changing language: "+language);
+        event.session.loadInternationalization(language);
+    } else {
+        event.println("page1 not changing language. old: '"+oldLanguage+"' new: '"+language+"'");
+    }
+
+    makeAnErrorField = event.session.findField("makeAnError");
+    customerField = event.session.findField("customer");
+    boolean makeError = false;
+    if (makeAnErrorField != null){
+        makeError = (makeAnErrorField.getValue().equals("on"));
+    }
+
+    if (customerField != null){
+        if (makeError){
+            customerField.setErrorMessage("Error in field 'customer'");
+        } else {
+            customerField.setError(false);
+        }
+        event.println("Field name: "+customerField.get("name") + " Field value: "+customerField.getValue());
+        //event.println(customerField.toString());
+        IValueBean mb = event.session.getValueBean("myValueBean");
+        if (mb != null){
+            mb.setCellValue(1,1,customerField.getValue());
+        }
+    } else {
+        event.println("Field was null");
+    }
+    totalField = event.session.findField("total");
+    if (totalField != null && makeAnErrorField != null){
+        event.println("Field name: "+makeAnErrorField.get("name") + " Field value: "+makeAnErrorField.getValue());
+        if (makeError){
+            totalField.set("value", "inEvent");
+            totalField.setErrorMessage("Error in field 'total'");
+        } else {
+            totalField.setErrorMessage("");
+            totalField.setError(false);
+        }
+    } else {
+        event.println("Field 'total' was null");
+    }
+  ]]></event>
+  <widgets>
+    <widget id="breadcrumbs1">
+      <properties>
+        <property name="field">
+          <value>page1_breadcrumbs1</value>
+        </property>
+        <property name="name">
+          <value>breadcrumbs1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.breadcrumbs</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="button1">
+      <properties>
+        <property name="caption">
+          <value>Click Me!</value>
+        </property>
+        <property name="field">
+          <value>page1_button1</value>
+        </property>
+        <property name="onClick">
+          <value></value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.button</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="submit1">
+      <properties>
+        <property name="action">
+          <value>doSubmitThing</value>
+        </property>
+        <property name="caption">
+          <value>Submit Me!</value>
+        </property>
+        <property name="field">
+          <value></value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="callout1">
+      <properties>
+        <property name="caption">
+          <value>My Callout</value>
+        </property>
+        <property name="field">
+          <value>page1Description</value>
+        </property>
+        <property name="flavor">
+          <value>tab</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.callout</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="callout2">
+      <properties>
+        <property name="caption">
+          <value>My Callout</value>
+        </property>
+        <property name="field">
+          <value>page1Description</value>
+        </property>
+        <property name="flavor">
+          <value>colorbar</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.callout</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_breadcrumbs1">
+      <properties>
+        <property name="field">
+          <value>page1_com_dynamide_breadcrumbs1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.breadcrumbs</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_callout1">
+      <properties>
+        <property name="field">
+          <value>page1_com_dynamide_callout1</value>
+        </property>
+        <property name="type">
+          <readOnly>true</readOnly>
+          <value>com.dynamide.callout</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_datagrid1">
+      <properties>
+        <property name="field">
+          <value>page1_com_dynamide_datagrid1</value>
+        </property>
+        <property name="type">
+          <readOnly>true</readOnly>
+          <value>com.dynamide.datagrid</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_datagrid2">
+      <properties>
+        <property name="field">
+          <value>page1_com_dynamide_datagrid2</value>
+        </property>
+        <property name="type">
+          <readOnly>true</readOnly>
+          <value>com.dynamide.datagrid</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_grid1">
+      <properties>
+        <!--
+        <property name="bean">
+          <value>myValueBean</value>
+        </property>
+        -->
+        <property name="border">
+          <value>1</value>
+        </property>
+        <property name="enabled">
+          <value>true</value>
+        </property>
+        <property name="field">
+          <value>page1_com_dynamide_grid1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.datagrid</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_imagebutton1">
+      <properties>
+        <property name="bgcolor">
+          <value>#AFB6D3</value>
+        </property>
+        <property name="bgcolorClicked">
+          <value>#6A76AD</value>
+        </property>
+        <property name="bgcolorHighlight">
+          <value>#C9CDE0</value>
+        </property>
+        <property name="caption">
+          <value>Click Me</value>
+        </property>
+        <property name="field">
+          <value>page1_com_dynamide_imagebutton1</value>
+        </property>
+        <property name="imgPlacement">
+          <value>bottom</value>
+        </property>
+        <property name="padding">
+          <value>10</value>
+        </property>
+        <property name="textPadding">
+          <value>10</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.imagebutton</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_imagebutton2">
+      <properties>
+        <property name="bgcolor">
+          <value>#AFB6D3</value>
+        </property>
+        <property name="bgcolorClicked">
+          <value>#6A76AD</value>
+        </property>
+        <property name="bgcolorHighlight">
+          <value>#C9CDE0</value>
+        </property>
+        <property name="caption">
+          <value>Or Me</value>
+        </property>
+        <property name="field">
+          <value>page1_com_dynamide_imagebutton2</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.imagebutton</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_imagebutton3">
+      <properties>
+        <property name="bgcolor">
+          <value>#AFB6D3</value>
+        </property>
+        <property name="bgcolorClicked">
+          <value>#6A76AD</value>
+        </property>
+        <property name="bgcolorHighlight">
+          <value>#C9CDE0</value>
+        </property>
+        <property name="caption">
+          <value>No, Click Me</value>
+        </property>
+        <property name="field">
+          <value>page1_com_dynamide_imagebutton3</value>
+        </property>
+        <property name="onClick">
+          <value>alert(\\'Hurray!\\')</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.imagebutton</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_imagebutton4">
+      <properties>
+        <property name="bgcolor">
+          <value>#AFB6D3</value>
+        </property>
+        <property name="bgcolorClicked">
+          <value>#6A76AD</value>
+        </property>
+        <property name="bgcolorHighlight">
+          <value>#C9CDE0</value>
+        </property>
+        <property name="caption">
+          <value>Click Me</value>
+        </property>
+        <property name="field">
+          <value>page1_com_dynamide_imagebutton4</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.imagebutton</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_imagebutton5">
+      <properties>
+        <property name="border">
+          <value>3</value>
+        </property>
+        <property name="caption">
+          <value>caption</value>
+        </property>
+        <property name="enabled">
+          <value>true</value>
+        </property>
+        <property name="field">
+          <value>page1_com_dynamide_imagebutton5</value>
+        </property>
+        <property name="imageSource">
+          <value>resources/images/save-file.gif</value>
+        </property>
+        <property name="imgPlacement">
+          <value>top</value>
+        </property>
+        <property name="name">
+          <value>imagebutton1</value>
+        </property>
+        <property name="onClick">
+          <value></value>
+        </property>
+        <property name="padding">
+          <value>1</value>
+        </property>
+        <property name="textPadding">
+          <value>20</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.imagebutton</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_imagebutton6">
+      <properties>
+        <property name="border">
+          <value>3</value>
+        </property>
+        <property name="caption">
+          <value>caption me</value>
+        </property>
+        <property name="enabled">
+          <value>true</value>
+        </property>
+        <property name="field">
+          <value>page1_com_dynamide_imagebutton6</value>
+        </property>
+        <property name="imageSource">
+          <value>resources/images/save-file.gif</value>
+        </property>
+        <property name="imgPlacement">
+          <value>top</value>
+        </property>
+        <property name="name">
+          <value>imagebutton1</value>
+        </property>
+        <property name="onClick">
+          <value></value>
+        </property>
+        <property name="padding">
+          <value>10</value>
+        </property>
+        <property name="textPadding">
+          <value>20</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.imagebutton</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_img_logo">
+      <properties>
+        <property name="field">
+          <value>page1_com_dynamide_img_logo</value>
+        </property>
+        <property name="height">
+          <value>40</value>
+        </property>
+        <property name="src">
+          <value>resources/images/dynamide-logo.gif</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.img</value>
+        </property>
+        <property name="width">
+          <value>40</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_linkstrip1">
+      <properties>
+        <property name="border">
+          <value>0</value>
+        </property>
+        <property name="enabled">
+          <value>true</value>
+        </property>
+        <property name="field">
+          <value>page1_com_dynamide_linkstrip1</value>
+        </property>
+        <property name="fontColor">
+          <value>white</value>
+        </property>
+        <property name="links">
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+          <value>
+            <enumeration override="true" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>?SESSIONID=$SESSIONID&amp;page=$pageID&amp;action=com.dynamide.linkstrip&amp;dmLinkstripItem=Home</href>
+                <text>Page 1</text>
+                <key>home</key>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>?SESSIONID=$SESSIONID&amp;page=$pageID&amp;action=com.dynamide.linkstrip&amp;dmLinkstripItem=Support</href>
+                <text>Page 2</text>
+                <key>support</key>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>?SESSIONID=$SESSIONID&amp;page=$pageID&amp;action=com.dynamide.linkstrip&amp;dmLinkstripItem=Contact%20Us</href>
+                <text>Page 3</text>
+                <key>contactus</key>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>?SESSIONID=$SESSIONID&amp;page=$pageID&amp;action=com.dynamide.linkstrip&amp;dmLinkstripItem=Site%20Map</href>
+                <text>Page 4</text>
+                <key>sitemap</key>
+              </item>
+            </enumeration>
+          </value>
+        </property>
+        <property name="orientation">
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+          <value>
+            <enumeration override="true" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.StringDatatype">horizontal</item>
+            </enumeration>
+          </value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.linkstrip</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_radiogroup1">
+      <properties>
+        <property name="border">
+          <value>1</value>
+        </property>
+        <property name="caption">
+          <value>Lanugage</value>
+        </property>
+        <property name="enabled">
+          <value>true</value>
+        </property>
+        <property name="field">
+          <value>language</value>
+        </property>
+        <property name="itemWidth">
+          <value>120</value>
+        </property>
+        <property name="items">
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+          <helpTip>items: a list of Strings.</helpTip>
+          <value>
+            <enumeration override="true" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.Caption">
+                <key>en-us</key>
+                <text>English</text>
+              </item>
+              <item datatype="com.dynamide.datatypes.Caption">
+                <key>en-uk</key>
+                <text>British</text>
+              </item>
+              <item datatype="com.dynamide.datatypes.Caption">
+                <key>es</key>
+                <text>Spanish</text>
+              </item>
+            </enumeration>
+          </value>
+        </property>
+        <property name="selectedIndex">
+          <value></value>
+        </property>
+        <property name="tabindex">
+          <value>2</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.radiogroup</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_spacer1">
+      <properties>
+        <property name="field">
+          <value>page1_com_dynamide_spacer1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.spacer</value>
+        </property>
+        <property name="width">
+          <value>50</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_spacer2">
+      <properties>
+        <property name="field">
+          <value>page1_com_dynamide_spacer2</value>
+        </property>
+        <property name="height">
+          <value>30</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.spacer</value>
+        </property>
+        <property name="width">
+          <value>0</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="customer1">
+      <properties>
+        <property name="border">
+          <value></value>
+        </property>
+        <property name="buttonCaptionDisabled">
+          <value>---</value>
+        </property>
+        <property name="enabled">
+          <value>true</value>
+        </property>
+        <property name="field">
+          <value>customer</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.picker</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="session1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.session</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="hiddenPageID">
+      <properties>
+        <property name="field">
+          <value>page</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.hidden</value>
+        </property>
+        <property name="value">
+          <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+          <value>$pageID</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="includes1">
+      <properties>
+        <property name="field">
+          <value>page1_includes1</value>
+        </property>
+        <property name="items">
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+          <value>
+            <enumeration override="false" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/css/dynamide.css</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/js/page.js</item>
+            </enumeration>
+          </value>
+        </property>
+        <property name="name">
+          <value>includes1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.includes</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="label1">
+      <properties>
+        <property name="border">
+          <value>0</value>
+        </property>
+        <property name="class">
+          <value>big1</value>
+        </property>
+        <property name="field">
+          <value>labelField1</value>
+        </property>
+        <property name="name">
+          <value>label1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.label</value>
+        </property>
+        <property name="value">
+          <value>From page</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="label_page1Description">
+      <properties>
+        <property name="field">
+          <value>page1Description</value>
+        </property>
+        <property name="name">
+          <value>label_page1Description</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.label</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="link1">
+      <properties>
+        <property name="action">
+          <value>pageDone</value>
+        </property>
+        <property name="caption">
+          <value>By action</value>
+        </property>
+        <property name="field">
+          <value>page1_link1</value>
+        </property>
+        <property name="name">
+          <value>link1</value>
+        </property>
+        <property name="path">
+          <value>/dynamide/demo</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.link</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="link2">
+      <properties>
+        <property name="URL">
+          <value>/com/dynamide/doc/help/index.html</value>
+        </property>
+        <property name="caption">
+          <value>By URL</value>
+        </property>
+        <property name="field">
+          <value>page1_link2</value>
+        </property>
+        <property name="name">
+          <value>link2</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.link</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="link3">
+      <properties>
+        <property name="action">
+          <value>pageDone</value>
+        </property>
+        <property name="caption">
+          <value>Click the link</value>
+        </property>
+        <property name="field">
+          <value>page1_link3</value>
+        </property>
+        <property name="name">
+          <value>link3</value>
+        </property>
+        <property name="path">
+          <value></value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.link</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="link4">
+      <properties>
+        <property name="caption">
+          <value>Jump to pageDone</value>
+        </property>
+        <property name="field">
+          <value>page1_link4</value>
+        </property>
+        <property name="pageJump">
+          <value>pageDone</value>
+        </property>
+        <property name="path">
+          <value></value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.link</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="linkContainer">
+      <properties>
+        <property name="field">
+          <value>page1_linkContainer</value>
+        </property>
+        <property name="pageName">
+          <value>linkPage</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.container</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="makeAnError1">
+      <properties>
+        <property name="align">
+          <value>right</value>
+        </property>
+        <property name="caption">
+          <value>Make an error in 'customer'</value>
+        </property>
+        <property name="captionWidth">
+          <value>true</value>
+        </property>
+        <property name="field">
+          <value>makeAnError</value>
+        </property>
+        <property name="name">
+          <value>makeAnError1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.checkbox</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="qty1">
+      <properties>
+        <property name="align">
+          <value>right</value>
+        </property>
+        <property name="border">
+          <value></value>
+        </property>
+        <property name="caption">
+          <value>edit me</value>
+        </property>
+        <property name="captionClass">
+          <value>caption</value>
+        </property>
+        <property name="captionWidth">
+          <value>100</value>
+        </property>
+        <property name="cellpadding">
+          <value>0</value>
+        </property>
+        <property name="cellspacing">
+          <value>0</value>
+        </property>
+        <property name="class">
+          <value></value>
+        </property>
+        <property name="enabled">
+          <value>true</value>
+        </property>
+        <property name="field">
+          <value>qty</value>
+        </property>
+        <property name="name">
+          <value>qty1</value>
+        </property>
+        <property name="onError" isEvent="true">
+          <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+          <value>qty1_onError</value>
+        </property>
+        <property name="textClass">
+          <value></value>
+        </property>
+        <property name="textSize">
+          <value>20</value>
+        </property>
+        <property name="textWidth">
+          <value>30</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="standardIncludes">
+      <properties>
+        <property name="field">
+          <value>page1_standardIncludes</value>
+        </property>
+        <property name="name">
+          <value>standardIncludes</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.stdincludes</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="tot1">
+      <properties>
+        <property name="align">
+          <value>right</value>
+        </property>
+        <property name="captionWidth">
+          <value>100</value>
+        </property>
+        <property name="field">
+          <value>total</value>
+        </property>
+        <property name="name">
+          <value>tot1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="widgetstyle1">
+      <properties>
+        <property name="field">
+          <value>page1_widgetstyle1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.widgetstyle</value>
+        </property>
+      </properties>
+    </widget>
+  </widgets>
+  <event name="page1_onLoad" language="beanshell"><![CDATA[print("mojo load");]]></event>
+  <event name="qty1_onError" language="beanshell"><![CDATA[print('h');]]></event>
+  <htmlsrc browser="*"><![CDATA[
+<HTML>
+  <HEAD>
+    <TITLE></TITLE>
+  </HEAD>
+  <BODY id="page1" onclick="widgetClicked(this)" bottomMargin="0" bgColor="#ffffff" leftMargin="0" topMargin="0" rightMargin="0" name="page1">
+    <SPAN class="widget" id="standardIncludes"/>
+    <SPAN class="widget" id="includes1"/>
+    <SPAN class="widget" id="widgetstyle1"/>
+    <DIV id="pageWrapper">
+      <FORM name="mojoForm" accept-charset="UNKNOWN" action="/dynamide/demo" method="get" encType="application/x-www-form-urlencoded">
+        <TABLE cellSpacing="0" cellPadding="0" width="100%" border="0">
+          <TBODY>
+            <TR>
+              <!-- Top Bar -->
+
+              <TD colSpan="3" rowSpan="1">
+                <TABLE cellSpacing="0" cellPadding="0" border="0">
+                  <TBODY>
+                    <TR>
+                      <TD vAlign="bottom" colSpan="1" rowSpan="1">
+                        <SPAN class="widget" id="com_dynamide_img_logo"/>
+                      </TD>
+                      <TD vAlign="middle" colSpan="1" rowSpan="1">
+                        <SPAN class="big1">Dynamide</SPAN>
+                      </TD>
+                      <TD vAlign="middle" width="100%" colSpan="1" rowSpan="1">
+                        <CENTER>
+                          <SPAN class="big4">Demo Application</SPAN>
+                        </CENTER>
+                      </TD>
+                    </TR>
+                  </TBODY>
+                </TABLE>
+                <SPAN class="widget" id="com_dynamide_linkstrip1"/>
+              </TD>
+            </TR>
+            <TR>
+              <!-- Left Bar -->
+
+              <TD vAlign="top" colSpan="1" rowSpan="1">
+                <SPAN class="widget" id="com_dynamide_spacer2"/>
+                <SPAN class="widget" id="linkContainer"/>
+              </TD>
+              <!-- Spacer -->
+
+              <TD colSpan="1" rowSpan="1">
+                <SPAN class="widget" id="com_dynamide_spacer1"/>
+              </TD>
+              <!-- Middle Body -->
+
+              <TD width="100%" colSpan="1" rowSpan="1">
+                <P align="right">
+                  <SPAN class="widget" id="breadcrumbs1"/>
+                </P>
+                <H2>Page 1</H2>
+                <SPAN class="widget" id="label_page1Description"/>
+                <BR />
+                <TABLE cellSpacing="0" cellPadding="0" border="0">
+                  <TBODY>
+                    <TR vAlign="top">
+                      <TD colSpan="1" rowSpan="1">
+                        <B>An edit Widget:</B>
+                        <BR />
+                        <SPAN class="widget" id="qty1"/>
+                      </TD>
+                      <TD colSpan="1" rowSpan="1">
+                        <B>A radiogroup Widget:</B>
+                        <BR />
+                        <SPAN class="widget" id="com_dynamide_radiogroup1"/>
+                      </TD>
+                      <TD colSpan="1" rowSpan="1">
+                        <TABLE cellSpacing="0" cellPadding="2" border="0">
+                          <TBODY>
+                            <TR>
+                              <TD colSpan="1" rowSpan="1">
+                                <B>Link Widgets:</B>
+                              </TD>
+                            </TR>
+                            <TR>
+                              <TD vAlign="top" colSpan="1" rowSpan="1">
+                                <SPAN class="widget" id="link1"/>
+                              </TD>
+                            </TR>
+                            <TR>
+                              <TD colSpan="1" rowSpan="1">
+                                <SPAN class="widget" id="link2"/>
+                              </TD>
+                            </TR>
+                            <TR>
+                              <TD colSpan="1" rowSpan="1">
+                                <SPAN class="widget" id="link3"/>
+                              </TD>
+                            </TR>
+                            <TR>
+                              <TD colSpan="1" rowSpan="1">
+                                <SPAN class="widget" id="link4"/>
+                              </TD>
+                            </TR>
+                          </TBODY>
+                        </TABLE>
+                      </TD>
+                    </TR>
+                  </TBODY>
+                </TABLE>
+                <BR />
+                <TABLE cellSpacing="0" cellPadding="10" border="1">
+                  <TBODY>
+                    <TR>
+                      <TD vAlign="top" colSpan="1" rowSpan="1">
+                        <TABLE>
+                          <TBODY>
+                            <TR>
+                              <TD colSpan="1" rowSpan="1">
+                                <B>Field Links:</B>
+                              </TD>
+                            </TR>
+                            <TR>
+                              <TD colSpan="1" rowSpan="1">
+                                <A href="javascript:alert(getFieldValue('SESSIONID'));">getFieldValue('SESSIONID')</A>
+                              </TD>
+                            </TR>
+                            <TR>
+                              <TD colSpan="1" rowSpan="1">
+                                <A href="javascript:alert(getFieldValue('pageID'));">getFieldValue('pageID')</A>
+                              </TD>
+                            </TR>
+                            <TR>
+                              <TD colSpan="1" rowSpan="1">
+                                <A href="javascript:alert(getFieldValue('customer'));">getFieldValue('customer')</A>
+                              </TD>
+                            </TR>
+                            <TR>
+                              <TD colSpan="1" rowSpan="1">
+                                <A href="javascript:alert(getFieldValue('qty'));">getFieldValue('qty')</A>
+                              </TD>
+                            </TR>
+                          </TBODY>
+                        </TABLE>
+                      </TD>
+                      <TD colSpan="1" rowSpan="1">
+                        <B>Widgets in a Table Layout:</B>
+                        <TABLE border="2">
+                          <TBODY>
+                            <TR>
+                              <TD colSpan="1" rowSpan="1">
+                                <SPAN class="widget" id="customer1"/>
+                              </TD>
+                            </TR>
+                            <TR>
+                              <TD bgColor="#aaaaaa" colSpan="1" rowSpan="1">cell</TD>
+                            </TR>
+                            <TR>
+                              <TD colSpan="1" rowSpan="1">cell 2</TD>
+                            </TR>
+                            <TR>
+                              <TD colSpan="1" rowSpan="1">
+                                <SPAN class="widget" id="makeAnError1"/>
+                              </TD>
+                            </TR>
+                            <TR>
+                              <TD colSpan="1" rowSpan="1">
+                                <SPAN class="widget" id="button1"/>
+                                <SPAN class="widget" id="submit1"/>
+                              </TD>
+                            </TR>
+                          </TBODY>
+                        </TABLE>
+                      </TD>
+                      <TD vAlign="top" colSpan="1" rowSpan="1">
+                        <B>Table Widget
+                          <BR />(using Datasource Bean):
+                        </B>
+                        <BR />
+                        <SPAN class="widget" id="com_dynamide_grid1"/>
+                      </TD>
+                    </TR>
+                  </TBODY>
+                </TABLE>
+                <!-- for testing where the value comes from: SPAN class="widget" id="label1"/-->
+
+                <SPAN class="widget" id="session1"/>
+                <SPAN class="widget" id="hiddenPageID"/>
+                <BR />
+                <BR />
+                <SPAN class="widget" id="callout1"/>
+                <BR />
+                <BR />
+                <SPAN class="widget" id="callout2"/>
+                <!-- End Middle Body -->
+
+              </TD>
+            </TR>
+          </TBODY>
+        </TABLE>
+      </FORM>
+    </DIV>
+  </BODY>
+</HTML>
+]]></htmlsrc>
+  <htmlsrc browser="*"><![CDATA[
+<HTML>
+  <HEAD>
+    <TITLE/>
+  </HEAD>
+  <BODY id="page1" onclick="bodyClicked(this)" bottomMargin="0" bgColor="#ffffff" leftMargin="0" topMargin="0" rightMargin="0" name="page1">
+    <SPAN class="widget" id="standardIncludes"/>
+    <SPAN class="widget" id="includes1"/>
+    <SPAN class="widget" id="widgetstyle1"/>
+    <DIV id="pageWrapper">
+      <FORM name="mojoForm" accept-charset="UNKNOWN" action="/dynamide/demo" method="get" encType="application/x-www-form-urlencoded">
+        <TABLE cellSpacing="0" cellPadding="0" width="100%" border="0">
+          <TBODY class="selected">
+            <TR>
+              <!-- Top Bar -->
+
+              <TD colSpan="3" rowSpan="1">
+                <TABLE cellSpacing="0" cellPadding="0" border="0">
+                  <TBODY>
+                    <TR>
+                      <TD vAlign="bottom" colSpan="1" rowSpan="1">
+                        <SPAN class="widget" id="com_dynamide_img_logo"/>
+                      </TD>
+                      <TD vAlign="middle" colSpan="1" rowSpan="1">
+                        <SPAN class="big1">Dynamide</SPAN>
+                      </TD>
+                      <TD vAlign="middle" width="100%" colSpan="1" rowSpan="1">
+                        <CENTER>
+                          <SPAN class="big4">Demo Application</SPAN>
+                        </CENTER>
+                      </TD>
+                    </TR>
+                  </TBODY>
+                </TABLE>
+                <SPAN class="widget" id="com_dynamide_linkstrip1"/>
+              </TD>
+            </TR>
+            <TR>
+              <!-- Left Bar -->
+
+              <TD vAlign="top" colSpan="1" rowSpan="1">
+                <SPAN class="widget" id="com_dynamide_spacer2"/>
+                <SPAN class="widget" id="linkContainer"/>
+              </TD>
+              <!-- Spacer -->
+
+              <TD colSpan="1" rowSpan="1">
+                <SPAN class="widget" id="com_dynamide_spacer1"/>
+              </TD>
+              <!-- Middle Body -->
+
+              <TD width="100%" colSpan="1" rowSpan="1">
+                <P align="right">
+                  <SPAN class="widget" id="breadcrumbs1"/>
+                </P>
+                <H2>Page 1
+                </H2>
+                <SPAN class="widget" id="label_page1Description"/>
+                <BR />
+                <TABLE cellSpacing="0" cellPadding="0" border="0">
+                  <TBODY>
+                    <TR vAlign="top">
+                      <TD colSpan="1" rowSpan="1">
+                        <B>An edit Widget:</B>
+                        <BR />
+                        <SPAN class="widget" id="qty1"/>
+                      </TD>
+                      <TD colSpan="1" rowSpan="1">
+                        <B>A radiogroup Widget:</B>
+                        <BR />
+                        <SPAN class="widget" id="com_dynamide_radiogroup1"/>
+                      </TD>
+                      <TD colSpan="1" rowSpan="1">
+                        <TABLE cellSpacing="0" cellPadding="2" border="0">
+                          <TBODY>
+                            <TR>
+                              <TD colSpan="1" rowSpan="1">
+                                <B>Link Widgets:</B>
+                              </TD>
+                            </TR>
+                            <TR>
+                              <TD vAlign="top" colSpan="1" rowSpan="1">
+                                <SPAN class="widget" id="link1"/>
+                              </TD>
+                            </TR>
+                            <TR>
+                              <TD colSpan="1" rowSpan="1">
+                                <SPAN class="widget" id="link2"/>
+                              </TD>
+                            </TR>
+                            <TR>
+                              <TD colSpan="1" rowSpan="1">
+                                <SPAN class="widget" id="link3"/>
+                              </TD>
+                            </TR>
+                            <TR>
+                              <TD colSpan="1" rowSpan="1">
+                                <SPAN class="widget" id="link4"/>
+                              </TD>
+                            </TR>
+                          </TBODY>
+                        </TABLE>
+                      </TD>
+                    </TR>
+                  </TBODY>
+                </TABLE>
+                <BR />
+                <TABLE cellSpacing="0" cellPadding="10" border="1">
+                  <TBODY>
+                    <TR>
+                      <TD vAlign="top" colSpan="1" rowSpan="1">
+                        <TABLE>
+                          <TBODY>
+                            <TR>
+                              <TD colSpan="1" rowSpan="1">
+                                <B>Field Links:</B>
+                              </TD>
+                            </TR>
+                            <TR>
+                              <TD colSpan="1" rowSpan="1">
+                                <A href="javascript:alert(getFieldValue('SESSIONID'));">getFieldValue('SESSIONID')</A>
+                              </TD>
+                            </TR>
+                            <TR>
+                              <TD colSpan="1" rowSpan="1">
+                                <A href="javascript:alert(getFieldValue('pageID'));">getFieldValue('pageID')</A>
+                              </TD>
+                            </TR>
+                            <TR>
+                              <TD colSpan="1" rowSpan="1">
+                                <A href="javascript:alert(getFieldValue('customer'));">getFieldValue('customer')</A>
+                              </TD>
+                            </TR>
+                            <TR>
+                              <TD colSpan="1" rowSpan="1">
+                                <A href="javascript:alert(getFieldValue('qty'));">getFieldValue('qty')</A>
+                              </TD>
+                            </TR>
+                          </TBODY>
+                        </TABLE>
+                      </TD>
+                      <TD colSpan="1" rowSpan="1">
+                        <B>Widgets in a Table Layout:</B>
+                        <TABLE border="2">
+                          <TBODY>
+                            <TR>
+                              <TD colSpan="1" rowSpan="1">
+                                <SPAN class="widget" id="customer1"/>
+                              </TD>
+                            </TR>
+                            <TR>
+                              <TD bgColor="#aaaaaa" colSpan="1" rowSpan="1">cell</TD>
+                            </TR>
+                            <TR>
+                              <TD colSpan="1" rowSpan="1">cell 2</TD>
+                            </TR>
+                            <TR>
+                              <TD colSpan="1" rowSpan="1">
+                                <SPAN class="widget" id="makeAnError1"/>
+                              </TD>
+                            </TR>
+                            <TR>
+                              <TD colSpan="1" rowSpan="1">
+                                <SPAN class="widget" id="button1"/>
+                                <SPAN class="widget" id="submit1"/>
+                              </TD>
+                            </TR>
+                          </TBODY>
+                        </TABLE>
+                      </TD>
+                      <TD vAlign="top" colSpan="1" rowSpan="1">
+                        <B>Table Widget
+                          <BR />(using Datasource Bean):
+                        </B>
+                        <BR />
+                        <SPAN class="widget" id="com_dynamide_grid1"/>
+                      </TD>
+                    </TR>
+                  </TBODY>
+                </TABLE>
+                <!-- for testing where the value comes from: SPAN class="widget" id="label1"/-->
+
+                <SPAN class="widget" id="session1"/>
+                <SPAN class="widget" id="hiddenPageID"/>
+                <BR />
+                <BR />
+                <SPAN class="widget" id="callout1"/>
+                <BR />
+                <BR />
+                <SPAN class="widget" id="callout2"/>
+                <!-- End Middle Body -->
+
+              </TD>
+            </TR>
+          </TBODY>
+        </TABLE>
+      </FORM>
+    </DIV>
+  </BODY>
+</HTML>
+]]></htmlsrc>
+  <properties>
+    <property name="field">
+      <value>page1</value>
+    </property>
+    <property name="formAction">
+      <value></value>
+    </property>
+    <property name="formName">
+      <value></value>
+    </property>
+    <property name="lastSave">
+      <datatype>java.util.Date</datatype>
+      <readOnly>true</readOnly>
+      <value>1056780992041</value>
+    </property>
+    <property name="margin">
+      <eval>document.body.margin = "$page.margin";alert('hi');document.body.bgcolor='blue';</eval>
+      <value>0</value>
+    </property>
+    <property name="name">
+      <readOnly>true</readOnly>
+      <value>page1</value>
+    </property>
+    <property name="onAction" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value>page1_onAction</value>
+    </property>
+    <property name="onLoad" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value>page1_onLoad</value>
+    </property>
+    <property name="onValidate" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value></value>
+    </property>
+    <property name="tclsource">
+      <value>
+      proc onscript {event} {
+        return [event toString]
+      }
+      </value>
+    </property>
+    <property name="title">
+      <eval>
+      document.title = "$page.title";
+
+      </eval>
+      <intl>1</intl>
+      <value>Demo Application - Page 1</value>
+    </property>
+    <property name="type">
+      <readOnly>true</readOnly>
+      <value>pagetypes/com.dynamide.form</value>
+    </property>
+  </properties>
+</dynamideForm>

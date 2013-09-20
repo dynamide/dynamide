@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<widget>
+    <properties>
+        <property name="type">
+            <defaultValue>com.dynamide.widgetstyle</defaultValue>
+            <readOnly>true</readOnly>
+        </property>
+        <property name="name"><defaultValue>widgetstyle</defaultValue></property>
+        <property name="visible">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+    </properties>
+
+    <htmlsrc browser="*"><![CDATA[
+        <STYLE><!--
+          ## Make this a webmacro include block:
+          #if ($designMode == "true"){
+
+              .widget \{border-color:red;
+                border-style:dotted;
+                border-top-width:1px;
+                border-bottom-width:1px;
+                border-right-width:1px;
+                border-left-width:1px;
+                cursor:"hand"
+                \}
+              CENTER \{border-color:blue;
+                border-style:dotted;
+                border-top-width:1px;
+                border-bottom-width:1px;
+                border-right-width:1px;
+                border-left-width:1px;
+                \}
+          } #else {
+              .widget \{\}
+          }
+
+        --></STYLE>
+    ]]></htmlsrc>
+</widget>

@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideDoco>
+<dynamideDoco pageTitle="&quot;Magic&quot; programming values and methods">
+<P>This is a list of special values and methods you should be aware of when programming in Dynamide.</P>
+<table border='1' cellpadding='5' cellspacing='0'>
+  <tr>                                                                 <tr>
+    <td>get...() versus find...()</td>
+    <td>In the Dynamide API, getFoo() returns a Foo if found, otherwise may throw some kind of Exception.
+    But findFoo() will return a null rather than throwing an Exception.</td>
+  </tr>
+  <tr>
+    <td><A HREF="">setHTMLSourceIE</A></td>
+    <td>Save IE's innerHTML and outterHTML with Persistent.setHTMLSourceIE(String) rather than Persistent.setHTMLSource(String), which expects XHTML.</td>
+  </tr>
+
+    <td>Scripts in comments</td>
+    <td>Javascript blocks must be in HTML comments.  If you use the com.dynamide.script widget, this is done automatically.</td>
+  </tr>
+  <tr>
+    <td>&lt;dm_nbsp/></td>
+    <td>&quot;<b>&amp;nbsp;</b>&quot; is problematic with the various parsers and transformations involved.  Use &lt;dm_nbsp/>
+    to safely include a non-breaking space (char 160) in html output.  The substitution is made after all other page
+    processing.</td>
+  </tr>
+  <tr>
+    <td>Magic URLs and Query Params</td>
+    <td>The following query params work globally with any Dynamide application.
+    <ul>
+    <li><b>&amp;reloadPage=1</b></li> -- reloads the page if page= is specified
+    <li><b>&amp;action=Close</b></li> -- Closes the session if SESSIONID= is specified
+    <li><b>&amp;action=Restart</b></li> -- Restarts the session if SESSIONID= is specified
+    </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>Magic Names</td>
+    <td>The following will all return the Session object:
+    <ul>
+    <li>session.get("session")</li>
+    <li>session.get("application")</li>
+    <li>session.find("session")</li>
+    <li>session.find("application")</li>
+    </ul>
+    This may seem useless, since you need the session reference to be able to call the method,
+    but it enables String based methods to be able to pass any String to Session.find(),
+    including self-references to "session".
+    <!-- %% application will some day not be equal to session -->
+    </td>
+  </tr>
+  <tr>
+    <td>Batch, Test, Audit</td>
+    <td>In Audit mode, you can specify that a page is not auditable by setting the page property
+    "auditable" to "false".
+    <p>You can use an htmlsrc element for your pages that has a browserID of DYNAMIDE_TEXT to output
+    text only, and not html tags.</p>
+    </td>
+  </tr>
+  <tr>
+    <td>Session Properties</td>
+    <td>The application.xml file defines properties for the application/session.
+    Dynamide uses standard properties to determine application behavior.  Application
+    programmers should not add application properties, but should instead use Fields.
+    Here are the standard properties, and what they effect.
+
+    <table border='1' cellpadding='2' cellspacing='0'>
+      <tr>
+        <td><b>poolable</b></td><td>boolean</td><td>if true, the session will be added back to the pool of sessions for its URI at the end of the request, to be recyled on the next request for that URI, by any user</td>
+      </tr>
+      <tr>
+        <td><b>jobInterval</b></td><td>int</td><td>milliseconds between job invocations</td>
+      </tr>
+      <tr>
+        <td><b>jobDelay</b></td><td>int</td><td>milliseconds before job starts the first time</td>
+      </tr>
+      <tr>
+        <td><b>closeOnJobClose</b></td><td>boolean</td><td>If true, the Job will call Session.close() when it is done.</td>
+      </tr>
+      <tr>
+        <td><b>jobCount</b></td><td>int</td><td>maximum number of times job runs.  -1 for infinite, i.e.
+
+        <table border='1' cellpadding='2' cellspacing='0'>
+          <tr>
+            <th colspan='2'><b>
+                     jobCount values
+            </b></th>
+          </tr>
+          <tr>
+            <td>-1
+            </td>
+            <td>run indefinitely
+            </td>
+          </tr>
+          <tr>
+            <td>0
+            </td>
+            <td>don't run
+            </td>
+          </tr>
+          <tr>
+            <td>a positive number
+            </td>
+            <td>number of times to run job
+            </td>
+          </tr>
+        </table>
+        </td>
+      </tr>
+      <tr>
+        <td><b>lastSave</b></td><td>long</td><td>java.util.Date long representation of timestamp on last file save.</td>
+      </tr>
+      <tr>
+        <td><b>imports</b></td><td></td><td></td>
+      </tr>
+      <tr>
+        <td><b>errorPageStatic</b></td><td>path</td><td>path relative to RESOURCE_ROOT of a static page to show on errors where the application_onError can't be run.</td>
+      </tr>
+      <tr>
+        <td><b>publishParams</b></td><td>com.dynamide.datatypes.PublishParamsDatatype</td><td>The XML representation of the
+        Java type describes all the parameters need to publish an application.  See:
+        <a href="/static/dynamide/javadoc/com/dynamide/datatypes/PublishParamsDatatype.html">javadoc for PublishParamsDatatype</a></td>
+      </tr>
+      <tr>
+        <td><b>jobUseDetachedInterpreter</b></td><td></td><td>(default == true) If true, each run will use a new IInterpreter instance,
+            rather than recycling the main session interpreter.  Using a detached IInterpreter is slower, but safer.  For jobs
+            that run standalone, i.e. started with installJob() rather than startJob(), it is usually safe to reuse the
+            interpreter, since there are no other Session events that would use it.  However, you must set this
+            property value to false to make the interpreter be reused.</td>
+      </tr>
+      <tr>
+        <td><b></b></td><td></td><td></td>
+      </tr>
+      <tr>
+        <td><b></b></td><td></td><td></td>
+      </tr>
+      <tr>
+        <td><b></b></td><td></td><td></td>
+      </tr>
+      <tr>
+        <td><b></b></td><td></td><td></td>
+      </tr>
+
+    </table>
+    </td>
+  </tr>
+  <tr>
+    <td>web-apps</td>
+    <td>In the web-apps.xml file, you can specify that an application be loaded on startup, with the element
+    &lt;load-on-startup>true&lt;/load-on-startup>
+    See the documentation here: <a href="/dynamide/doco/doc/help/assemblies">Assembly Documentation</a>
+    </td>
+  </tr>
+
+
+
+</table>
+</dynamideDoco>

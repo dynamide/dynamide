@@ -1,0 +1,54 @@
+import com.dynamide.*;
+import com.dynamide.resource.*;
+import com.dynamide.util.*;
+
+try {
+    exec("cmd.exe /c del C:\\dynamide\\build\\ROOT\\homes\\dynamide\\assemblies\\com-dynamide-apps-1\\apps\\doco\\page22.xml");
+    ResourceManager rm = ResourceManager.createStandalone();
+    session = Session.createSession("/dynamide/doco");
+    String PAGEID = "page22";
+    page = session.findPageByID(PAGEID);
+    if (page == null){
+        page = session.newPage(PAGEID, "pagetypes/com.dynamide.page");
+    }
+    page.setProperty("title", PAGEID);
+
+    //page.saveToFile();
+    session.saveToFile();  //will call page.saveToFile
+
+    session.close();
+    
+    //now re-open and try to change a property
+    session = Session.createSession("/dynamide/doco");
+    page = session.findPageByID(PAGEID);
+    page.setProperty("title", PAGEID+" New Title");
+    session.saveToFile();  //will call page.saveToFile
+    session.close();
+    
+    
+    
+    ic =  rm.find(":homes:dynamide:assemblies:com-dynamide-apps-1:apps/doco/page22.xml", ":");
+    //FileTools.saveFile("", "1.xml", ic.getAttribute(Assembly.CONTENT));
+    print("\r\nresource: 1================================= "
+       +Assembly.listResource(
+          ic
+        )
+    );
+    
+
+    session = Session.createSession("/dynamide/doco");
+    session.getApplicationResource("page22.xml");
+    ic =      rm.find(":homes:dynamide:assemblies:com-dynamide-apps-1:apps/doco/page22.xml", ":");
+    //FileTools.saveFile("", "2.xml", ic.getAttribute(Assembly.CONTENT));
+
+    print("\r\nresource: 2================================= "
+       +Assembly.listResource(
+          ic
+        )
+    );
+    print(Assembly.listResource(session.getApplicationResource("page22.xml")));
+} catch (Throwable t){
+    print("Error: "+t);
+    t.printStackTrace();
+}
+System.exit(0);

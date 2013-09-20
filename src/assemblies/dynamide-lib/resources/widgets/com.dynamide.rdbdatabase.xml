@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<widget>
+    <componentHelp>
+    </componentHelp>
+
+    <properties>
+        <property name="basename">
+            <defaultValue>rdbdatabase</defaultValue>
+            <hidden>true</hidden>
+        </property>
+        <property name="dbname"><defaultValue></defaultValue></property>
+        <property name="debugSQL"><defaultValue></defaultValue></property>
+        <property name="interface">
+          <defaultValue>database</defaultValue>
+          <readOnly>true</readOnly>
+        </property>
+        <property name="rdbdatabase"><defaultValue>[null]</defaultValue><readOnly>true</readOnly></property>
+        <property name="type"><defaultValue>com.dynamide.rdbdatabase</defaultValue><readOnly>true</readOnly></property>
+    </properties>
+
+  <event language="beanshell" name="com_dynamide_rdbdatabase_onImport"><![CDATA[
+    import java.util.*;
+    import com.dynamide.*;
+    import com.dynamide.db.*;
+    import com.dynamide.util.*;
+  ]]></event>
+
+  <event language="beanshell" name="connect"><![CDATA[
+    session.logDebug("*************** rdbdatabase::connect event");
+    widget = event.sender;
+    rm = session.getResourceManager();
+    RDBDatabase rdb;
+    dbname = widget.get("dbname");
+    if ( dbname!=null && dbname.length()>0 ) {
+        rdb = widget.getObject();
+        if ( rdb != null){
+            if ( rdb.getContextName().equals(dbname) ) {
+               System.out.println("ignoring 'connect' call since already connected to context name: "+dbname);
+               event.outputObject = rdb;
+               return;
+            }
+        }
+        System.out.println("in rdbdatabase.connect:"+dbname+" ... prev rdb: "+rdb+" session: "+session);
+        rdb = rm.openDatabase(widget.get("dbname"), session);
+        Property p = new Property(null, "rdbdatabase", "[object]");
+        p.set("object", rdb);
+        widget.setObject(rdb);
+        rdb.setPropertyProvider(widget);
+        widget.setProperty(p);
+        event.outputObject = rdb;
+    } else {
+        System.out.println("rdbdatabase in connect, but dbname was blank: "+dbname);
+    }
+    //session.logDebug("widget.properties: \r\n"+widget.listProperties());
+  ]]></event>
+
+  <htmlsrc browser="*"><![CDATA[
+    ## if design mode, show widget...
+    #if ($designMode == "true"){
+        #if ("$widget.dbname" != ""){
+            #set $foo = $widget.call("connect")
+        }
+        <table bgcolor="gray" border='1' cellpadding='0' cellspacing='0'>
+          <tr>
+            <td>$widget.ID $widget.dbname #if ("$widget.rdbdatabase"!="[null]") {[open]}</td>
+          </tr>
+        </table>
+    }
+  ]]></htmlsrc>
+
+</widget>

@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<assembly>
+  <basename>com-dynamide-apps</basename>
+  <interface>1</interface>
+  <build>1</build>
+  <imports>
+    <import>
+       <basename>com-dynamide-lib</basename>
+       <interfaces>
+          <interface>1</interface>
+          <interface>0</interface>
+       </interfaces>
+    </import>
+  </imports>
+</assembly>

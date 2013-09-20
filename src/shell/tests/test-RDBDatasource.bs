@@ -1,0 +1,41 @@
+//test with : bsh tests\test-RDBDatasource.bs -d net_roots_demo -testIterator
+if (bsh.args.length == 0){
+    print("\r\n  Usage: bsh test-RDBDatasource.bs -d <database> [-testIterator] \r\n");
+    System.exit(1);
+}
+
+
+source("dynamideShell.bs");
+import com.dynamide.*;
+import com.dynamide.util.*;
+import com.dynamide.db.*;
+
+s = Session.createSession("/dynamide/doco");  //could be any session, really.
+sd = new RDBDatasource(s, s);
+
+Opts opts = new Opts(bsh.args);
+dbname=opts.getOption("-d");
+testIterator=opts.getOption("-testIterator");
+RDBDatabase db  = ResourceManager.getRootResourceManager().openDatabase(dbname);
+print("db: "+db);
+sd.registerColumnTypeMapper("bytea", "com.dynamide.db.mappers.Bytea");
+sd.setDatabase(db);
+sd.setProperty("sql", "select * from swarm_actions_detail;");
+sd.load();
+print("rowcount: "+sd.getRowCount());
+if (testIterator.length()>0){
+    it = sd.iterator();
+    while ( it.hasNext() ) {
+        row = it.next();
+        print("==== row: "+row);
+    }
+}
+print("sd.current.value: "+sd.get("ID"));
+sd.setID("test-datasource");
+s.registerDatasource(sd);
+print("session.getDatasources():"+s.getDatasources());
+w = s.find("main").createWidget("com.dynamide.edit", "editTest");
+w.setProperty("datasource", "test-datasource");
+w.setProperty("field", "ID");
+print("w.datasource: "+w.get("datasource"));
+print("w.value: "+w.get("value"));

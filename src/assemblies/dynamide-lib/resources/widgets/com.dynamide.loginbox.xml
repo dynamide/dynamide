@@ -1,0 +1,245 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<widget>
+    <componentHelp>
+     The loginbox does nothing to log the user in.  It is just a view.
+     It will fire an event (onLoginAttempt) when the user has clicked "Login".
+     This event contains an inputObject that is a Map, containing two values:
+    <pre>
+     "login"
+     "password"
+    </pre>
+    Your event should return an outputObject that is a String equal to "true" if
+    the user is logged in, otherwise a short String which contains the error message to show the user.
+    <pre>
+    String login = event.inputObject.get("login");
+    String password = event.inputObject.get("password");
+
+    boolean OK = .... do login processing here....
+
+    if (OK){
+        event.outputObject = "true";
+    } else {
+        event.outputObject = "ERROR: "+message;
+    }
+    </pre>
+
+    </componentHelp>
+
+    <properties>
+        <property name="align"><defaultValue>right</defaultValue></property>
+        <property name="basename">
+            <defaultValue>loginbox</defaultValue>
+            <hidden>true</hidden>
+        </property>
+        <property name="bgcolor">
+            <defaultValue>#DDDDDD</defaultValue>
+        </property>
+        <property name="border">
+            <defaultValue>1</defaultValue>
+        </property>
+        <property name="captionLogin">
+          <defaultValue>Login:</defaultValue>
+          <intl>1</intl>
+        </property>
+        <property name="captionPassword">
+          <defaultValue>Password:</defaultValue>
+          <intl>1</intl>
+        </property>
+        <property name="captionClass"><defaultValue>caption</defaultValue></property>
+        <property name="cellpadding"><defaultValue>0</defaultValue></property>
+        <property name="cellspacing"><defaultValue>0</defaultValue></property>
+        <property name="class"><defaultValue></defaultValue></property>
+        <property name="datasource">
+            <datatype>com.dynamide.datatypes.IDatasourceDatatype</datatype>
+            <defaultValue></defaultValue>
+        </property>
+        <property name="enabled">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+        <property name="field">
+           <datatype>com.dynamide.datatypes.FieldDatatype</datatype>
+           <defaultValue>lbxLogin</defaultValue>
+        </property>
+        <property name="isForm">
+            <defaultValue>true</defaultValue>
+        </property>
+        <property name="outerpadding"><defaultValue>2</defaultValue></property>
+        <property name="passwordField">
+           <datatype>com.dynamide.datatypes.FieldDatatype</datatype>
+           <value>LBXPASSWORD</value>
+        </property>
+        <property name="name"><defaultValue>edit</defaultValue></property>
+        <property name="showErrorAbove"><defaultValue>true</defaultValue></property>
+        <property name="successRedirectURL">
+            <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+            <defaultValue></defaultValue>
+            <helpTip>The URL to redirect on successful login.
+                     If blank, it will redirect to the applicationPath.
+            </helpTip>
+        </property>
+        <property name="tabindex"><defaultValue></defaultValue></property>
+        <property name="textClass"><defaultValue>loginbox</defaultValue></property>
+        <property name="textSize"><defaultValue>20</defaultValue></property>
+        <property name="textWidth"><defaultValue>30</defaultValue></property>
+        <property name="type"><defaultValue>com.dynamide.loginbox</defaultValue><readOnly>true</readOnly></property>
+        <property name="visible">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+        <property name="width"><defaultValue></defaultValue></property>
+    </properties>
+
+  <event language="beanshell" name="com_dynamide_loginbox_onImport"><![CDATA[
+    import java.util.*;
+    import com.dynamide.*;
+    import com.dynamide.util.*;
+  ]]></event>
+
+  <event language="beanshell" name="com_dynamide_loginbox_onLoad"><![CDATA[
+    widget = event.sender;
+    widgetID = widget.getID();
+    page = widget.getPage();
+    //if (session.findField. is null .... then session.createField(widgetID+"_lbxLogin", "");
+    page.registerAction(widgetID+"_onLoginAttempt", widget, "com_dynamide_loginbox_onLoginAttempt", "");
+    page.registerAction(widgetID+"_onLoginFail", widget, "com_dynamide_loginbox_onLoginFail", "");
+    page.registerAction(widgetID+"_onLoginOK", widget, "com_dynamide_loginbox_onLoginOK", "");
+  ]]></event>
+
+
+  <event language="beanshell" name="com_dynamide_loginbox_onLoginAttempt"><![CDATA[
+    //Here we fire the event in the specific widget instance on a page.
+    widget = event.sender;
+    System.out.println("=============== in com_dynamide_loginbox_onLoginAttempt widget: "+widget);
+    map = new HashMap();
+    map.put("login", widget.getValue());
+    map.put("password", session.getFieldValue("LBXPASSWORD"));
+    evt2 = widget.fireEvent(map, "onLoginAttempt");
+    System.out.println("evt2: "+evt2);
+    event.setResultsFrom(evt2);
+    if (Tools.isTrue(evt2.outputObject)){
+        widget.call("com_dynamide_loginbox_onLoginOK", map);
+        url = widget.get("successRedirectURL");
+        if ( Tools.isBlank(url) ) {
+            url = session.get("applicationPath");
+        }
+        event.sendRedirect(url);
+    } else {
+        widget.setErrorMessage(evt2.outputObject);
+        widget.call("com_dynamide_loginbox_onLoginFail", map);
+    }
+  ]]></event>
+
+  <event language="beanshell" name="com_dynamide_loginbox_onLoginFail"><![CDATA[
+    //Here we fire the event in the specific widget instance on a page.
+    widget = event.sender;
+    event.setResultsFrom(widget.fireEvent(null, "onLoginFail"));
+    System.out.println("=============== in com_dynamide_loginbox_onLoginFail widget: "+widget);
+  ]]></event>
+
+  <event language="beanshell" name="com_dynamide_loginbox_onLoginOK"><![CDATA[
+    //Here we fire the event in the specific widget instance on a page.
+    widget = event.sender;
+    event.setResultsFrom(widget.fireEvent(null, "onLoginOK"));
+    System.out.println("=============== in com_dynamide_loginbox_onLoginOK widget: "+widget);
+  ]]></event>
+
+    <htmlsrc browser="*"><![CDATA[
+    <style>
+    <!--
+        .columnNumbers {font-family: Arial,Helvetica,sans-serif; font-weight: bold; }
+        .columnTitles {font-family: Arial,Helvetica,sans-serif; font-weight: bold; }
+        .loginbox {font-size: 8pt;}
+        ## You could do inline styles like this, except you need a hash, since underlines aren't allowed:
+        ##."$widget.name"columnTitles {font-family: Arial,Helvetica,sans-serif; font-weight: bold; }
+    -->
+    </style>
+
+    #macro dbgrid_link_by_col ($colval, $rowID, $column){
+       #set $therowID = $rowID - 1
+       <a href="?action=$widget.ID\_onClick&page=$pageID&column=$column&rowID=$therowID&SESSIONID=$SESSIONID">$colval</a>
+    }
+
+  #if ($widget.isValueTrue("isForm")){
+   <FORM name="mojoForm" accept-charset="UNKNOWN" action="$session.applicationPath" method="get" encType="application/x-www-form-urlencoded">
+  }
+        #set $iserror = $widget.getError()
+        #if ($iserror == true){
+            #set $whichCaptionClass = "errorCaption"
+        } #else {
+            #set $whichCaptionClass = "$widget.captionClass"
+        }
+        ### There is something weird: you must add the magic fields lbxPassword an lbxLogin to the fielddefs
+
+        #set $fieldID = $widget.fieldID
+        #set $passwordFieldID = $widget.passwordField
+        #if ("$passwordFieldID" != ""){
+            #set $fn = $widget.formatFullFieldName($widget, true, "$passwordFieldID")
+        }
+
+        <table border='$widget.border' cellpadding='$widget.outerpadding' cellspacing='0' bgcolor="$widget.bgcolor">
+          <tr>
+            <td>
+                <table border='0' cellpadding='$widget.cellpadding' cellspacing='$widget.cellspacing'>
+                #set $err = "$widget.getErrorMessage()"
+                #if ("$err" != ""){
+                <tr>
+                    <td align="left" colspan="2">
+                    <div class="errorCaption">
+                    $err
+                    </div>
+                    </td>
+                </tr>
+                }
+                <tr>
+                    <td width="$widget.captionWidth" align="right" valign="center">
+                        <div class="$whichCaptionClass">
+                        $widget.captionLogin
+                        </div>
+                    </td>
+                    <td>
+                        #set $val = $session.StringTools.escapeForJavascript($widget.value)
+
+                        <input type="text" class="$widget.textClass" width="$widget.textWidth"
+                            size="$widget.textSize" id="$fieldID" name="$fieldID"
+                            value="$val" #if ($widget.tabindex != "") { tabindex='$widget.tabindex' } />
+                    </td>
+                </tr>
+                <tr>
+                    <td width="$widget.captionWidth" align="right" valign="center">
+                        <div class="$whichCaptionClass">
+                        $widget.captionPassword
+                        </div>
+                    </td>
+                    <td>
+                        <input type="password" class="$widget.textClass" width="$widget.textWidth"
+                            size="$widget.textSize" id="$passwordFieldID" name="$passwordFieldID"
+                            value="" #if ($widget.tabindex != "") { tabindex='$widget.tabindex' } />
+                    </td>
+                </tr>
+                <tr><td><SPAN class="widget" id="editPassword"/></td></tr>
+                <tr>
+                <td  align="left">
+                        <dm_nbsp/>
+                </td>
+                <td  align="left">
+                        <input class="dmbutton" type="submit" id="submitLogin" name="submitLogin" value="Login"/>
+                </td>
+                </tr>
+                </table>
+            </td>
+          </tr>
+        </table>
+
+        <input type="hidden" id="action" name="action" value="$widget.ID\_onLoginAttempt"/>
+        <input type="hidden" id="SESSIONID" name="SESSIONID" value="$SESSIONID"/>
+        <input type="hidden" id="page" name="page" value="$widget.findTopParentPage().getID()"/>
+  #if ($widget.isValueTrue("isForm")){
+   </FORM>
+  }
+
+    ]]></htmlsrc>
+</widget>

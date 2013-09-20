@@ -1,0 +1,31 @@
+import org.jdom.Element;
+
+import com.dynamide.util.*;
+import com.dynamide.util.FileTools;
+
+if (bsh.args.length == 0){
+    print("Usage: xhtml.bs [options] filename");
+    print("  options:");
+    print("   -e : expand empty elements (default false)");
+    print("   -j : justify (don't indent) (default false)");
+    print("   -t : trim lines (default false)");
+    exit();
+}
+Opts opts = new Opts(bsh.args);
+boolean justify = opts.getOptionBool("-j");
+String trim = ""+opts.getOptionBool("-t");
+boolean indent = !justify;
+boolean expandEmpty = opts.getOptionBool("-e");
+String path = bsh.args[(bsh.args.length-1)];
+
+String src = FileTools.readFile(path);
+
+String res = com.dynamide.JDOMFile.prettyPrintHTML(src,    //String html
+    "true",   //String newlines -- Netscape can't handle superlong lines.
+    trim,    //String trim    -- save time by not trimming
+    true,      //boolean xhtml -- don't break DOM parser in IDE.
+    expandEmpty,      //boolean expandEmpty -- not needed for this test
+    indent,    //boolean indent
+    false);   //hide errors  --only do if explicitly asked
+
+print(res);

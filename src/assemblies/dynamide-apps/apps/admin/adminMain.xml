@@ -1,0 +1,936 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<dynamideForm>
+<properties>
+    <property name="type">
+        <value>pagetypes/com.dynamide.form</value>
+    </property>
+       <property name="bgcolor">
+            <value>white</value>
+    </property>
+        <property name="margin">
+            <value>0</value>
+    </property>
+        <property name="title">
+            <value>Main</value>
+    </property>
+</properties>
+
+<htmlsrc><![CDATA[
+<HTML>
+<HEAD>
+  <TITLE></TITLE>
+  <SPAN class="widget" id="includes1"/>
+</HEAD>
+<BODY id="adminMain" onclick="widgetClicked(this)" bottomMargin="0" bgColor="#ffffff" leftMargin="0" topMargin="0" rightMargin="0">
+<SPAN class="widget" id="widgetstyle1" onresizestart="javascript:event.cancelBubble=true;return false;" onclick="widgetClicked(this)"></SPAN>
+
+<FORM action="/dynamide/admin" method="get" encType="application/x-www-form-urlencoded">
+          <TABLE cellSpacing="0" cellPadding="" border="0" width="100%">
+            <TBODY>
+              <TR>
+                <TD colSpan="3">
+                        <TABLE cellSpacing="0" cellPadding="0" bgColor="#ffffff" border="0" width="100%">
+                            <TBODY>
+                            <TR>
+                                <TD valign="bottom">
+                                <SPAN class="widget" id="com_dynamide_img_logo" onresizestart="javascript:event.cancelBubble=true;return false;" onclick="widgetClicked(this)"></SPAN>
+                                </TD>
+                                <TD valign="middle">
+                                <SPAN class="big1">Dynamide</SPAN>
+                                </TD>
+                                    <TD valign="middle" width="100%">
+                                <CENTER>
+                                    <SPAN class="big4">Dynamide Control Panel</SPAN>
+                                </CENTER>
+                                </TD>
+                            </TR>
+                            </TBODY>
+                        </TABLE>
+                    <SPAN class="widget" id="com_dynamide_linkstrip1" onresizestart="javascript:event.cancelBubble=true;return false;" onclick="widgetClicked(this)"></SPAN>
+                </TD>
+              </TR>
+              <TR>
+                <TD>
+                    <SPAN class="widget" id="com_dynamide_spacer1" onresizestart="javascript:event.cancelBubble=true;return false;" onclick="widgetClicked(this)"></SPAN>
+                </TD>
+                <TD colspan='2' align="left" width="100%">
+                    <table border='0' cellpadding='0' cellspacing='6' width="100%">
+                    <tr>
+                        <td align="left">
+                            <br/><font size="+2">Global Values and Links</font>
+                            <hr />
+                        </td>
+                    </tr>
+          ##          <tr>
+          ##              <td>
+          ##              <script language="Javascript">
+          ##              <!--
+          ##                  function showSessionPick(){
+          ##                      return getControlFieldValue("com_dynamide_select1_");
+          ##                  }
+          ##              // -->
+          ##              </script>
+          ##              <SPAN class="widget" id="com_dynamide_select1" />
+          ##              <a href="javascript:location='?next=sessionDetailPage&amp;SESSIONID=$SESSIONID&amp;SUBSESSIONID='+getControlFieldValue('com_dynamide_select1_');">Show Session Detail</a>
+          ##              </td>
+          ##          </tr>
+          ##          <tr>
+          ##              <td>
+          ##              <br/><br/>
+          ##              <a href="?next=sessionsPage&amp;SESSIONID=$SESSIONID">Show All Dynamide Sessions</a><br/><br/>
+          ##
+          ##              <a href="?page=adminMain&amp;action=getfile&amp;SESSIONID=$SESSIONID">Get File</a>
+          ##              </td>
+          ##          </tr>
+                    <tr>
+                        <td>
+
+                        <small><SPAN class="widget" id="lblUserName"/></small>
+
+                        <hr/>
+                        <h4>Last Action: $session.lastAction</h4>
+                        <a href="?next=sessionsPage&amp;SESSIONID=$SESSIONID">Show All Dynamide Sessions</a><br/><br/>
+
+                        RESOURCE_ROOT: $session.getResourceManager().getAttribute("RESOURCE_ROOT")
+
+
+                        <br />
+                        <br />
+
+                        $session.linkHref("?servletAction=dumpInit", "target='_blank'", "Show Servlet Init")
+                        <br />
+
+                        $session.linkHref("?servletAction=dumpRequestInfo", "target='_blank'", "Show Request Info")
+                        <br />
+			$session.link("next=webappsView", "Show URI mappings / web-apps.xml files loaded at startup")
+                        <br />
+			
+			$session.linkHref("?servletAction=reloadSettings", "target='_blank'", "Reload Settings")
+                        <br />
+                        $session.linkHref("?servletAction=reinitHome&amp;account=dynamide", "target='_blank'", "Re-Initialize Dynamide Account and re-read dynamide/web-apps.xml")
+                        <br />
+                        $session.link("action=reloadRootWebApps&page=adminMain", "Re-read root web-apps.xml")
+                        <br />
+                        $session.link("next=errorLog", "Error Log")
+                        <br />
+                        $session.link("action=flushSysLog&page=adminMain", '', "target='_blank'", "Sys Log")
+                        <br />
+
+
+                        see resource subtrees using:
+                            http: ... /dynamide/admin?servletAction=dumpContext&amp;search=/homes/dynamide
+
+                        <br />
+                        $session.link("action=garbageCollect&amp;next=adminMain&amp;page=adminMain", "Run System Garbage Collector")
+                        <br />
+                        $session.linkHref("?servletAction=dumpAddedContexts", "target='_blank'", "Dump Added Contexts")
+                        <br />
+
+                        $session.linkHref("?servletAction=dumpRootContext", "target='_blank'", "Show Root Context")
+                        <br />
+                        <br />
+                        Current log.conf file: $session.getResourceManager().callStaticMethod("com.dynamide.util.Log", "getInstance").getConfigFile()
+                        <br />
+                        $session.linkHref("?servletAction=reconfigureLog", "target='_blank'", "Reload log.conf")
+                        </td>
+                        <!-- todo: add these from DynamideServlet:
+                            Log.info(DynamideServlet.class, "DYNAMIDE_HOME from env: "+DYNAMIDE_HOME_env);
+                            Log.info(DynamideServlet.class, "DYNAMIDE_HOME from init: "+DYNAMIDE_HOME_before);
+                            Log.info(DynamideServlet.class, "DYNAMIDE_HOME substituted: "+DYNAMIDE_HOME);
+                            Log.info(DynamideServlet.class, "DYNAMIDE_RESOURCE_ROOT: "+RESOURCE_ROOT);
+                            Log.info(DynamideServlet.class, "DYNAMIDE_STATIC_ROOT: "+rootResourceManager.getStaticRoot());
+                            Log.info(DynamideServlet.class, "ResourceManager.getStaticPrefix: "+rootResourceManager.getStaticPrefix());
+                        -->
+                    </tr>
+
+
+                    <tr>
+                        <td>
+                        <br/><br/>
+                        <span class="widget" id="editResourceID" />
+                        <span class="widget" id="submitInvalidateResource" />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                        <hr />
+                        Added Contexts:
+                        <br />
+                        $session.getResourceManager().dumpAddedContexts()
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                        <hr />
+                        ConnectionPoolManager <a href="?SESSIONID=$SESSIONID&amp;fullConnectionPoolStats=true&amp;next=adminMain">Show Full Stats</a>
+                        <dm_nbsp/> <a href="?SESSIONID=$SESSIONID&amp;next=adminMain">Show Main Stats</a>
+                        <br />
+                        <pre>$session.StringTools.escape($session.getResourceManager().dumpConnectionPoolStats($session.hasQueryParam("fullConnectionPoolStats")))</pre>
+                        </td>
+                    </tr>
+
+
+
+
+                    </table>
+                </TD>
+              </TR>
+            </TBODY>
+          </TABLE>
+        <SPAN class="widget" id="session1" onresizestart="javascript:event.cancelBubble=true;return false;" onclick="widgetClicked(this)"></SPAN>
+
+        </FORM>
+
+      </BODY>
+    </HTML>
+  ]]></htmlsrc>
+
+<event language="beanshell" name="adminMain_onLoad">
+    <![CDATA[
+        event.println("\r\n\r\n<hr/>in adminMain_onLoad");
+        //This one fails since the page has not been added to the session yet, it just loaded.
+        //event.println("    session.find: "+event.session.find("adminMain.com_dynamide_select1"));//.getProperty("items").setValueObject(v);
+]]>
+</event>
+
+
+
+<event language="beanshell" name="adminMain_beforeOutput">
+<![CDATA[
+        /* This is not used now.
+        *
+        *event.println("\r\n\r\n<hr/>in adminMain_beforeOutput");
+        *event.println("    event.currentPage.get: "+event.currentPage.get("com_dynamide_select1").getClass().getName());
+        *
+        *items = event.currentPage.get("com_dynamide_select1").getProperty("items");
+        *enumObj = items.getValue(); //getValueObject will return a Datatype, which should be EnumerateDatatype in this case.
+        *
+        *event.print("enumObj.toHTML(): "+enumObj.toHTML());
+        *
+        *Vector v = new Vector();
+        * //Enumeration sessions = this is broken now: event.db.getSessions();
+        *Object obj;
+        *while (sessions.hasMoreElements()){
+        *    obj = sessions.nextElement();
+        *    if (obj != null && obj instanceof ISessionItem && obj instanceof Session){
+        *        sd = (ISessionItem)obj;
+        *        v.addElement(sd.getSessionID());
+        *    }
+        *}
+        *enumObj.clear();
+        *enumObj.addStrings(v);
+        *
+        *event.println("enumObj.toHTML(): "+enumObj.toHTML());
+        *event.println("enumObj "+enumObj.getObjectID()+" dotname: "+enumObj.getDotName()+" classname: "+enumObj.getClass().getName());
+        *Widget widget = event.currentPage.get("com_dynamide_select1");
+        *event.println("widget: "+widget.getObjectID());
+        *event.println("widget properties: "+widget.dumpProperties());
+        */
+        //event.println("Widget: "+event.currentPage.outputWidget("com_dynamide_select1)", null));
+        //event.println("    event.currentPage.get: "+event.currentPage.get("com_dynamide_select1").getClass().getName());
+        //event.println("    session.find: "+event.session.find("adminMain.com_dynamide_select1"));//.getProperty("items").setValueObject(v);
+        //event.println("     items: "+event.currentPage.get("com_dynamide_select1").getProperty("items").getValue());
+]]>
+</event>
+
+
+<event language="beanshell" name="adminMain_onAction">
+    <![CDATA[
+        System.out.println("in adminMain_onAction");
+	session.setFieldValue("lastAction", "");
+        event.println("in adminMain_onAction");
+        if (event.action.equals("getfile")){
+            String filename = "secretFile.txt";
+
+            //shouldn't this be event.response, not request??????
+
+            if (event.request!=null) event.request.setContentType("APPLICATION/OCTET-STREAM");
+            //should add this method to be servlet compatible:
+            //if (event.request!=null)  event.request.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+            if (event.request!=null) event.request.addResponseDirective("Content-Disposition: attachment; filename=\"" + filename + "\"");
+            //probably use: getQueryParam
+            //String filecontents = event.session.getAppFileContent(event.request......);
+            //event.returnSource(filecontents);
+            event.returnSource("this is broken, used to work, but I changed the handler");
+            //should also have event.returnBytes... for binary files, and event.returnFile(String filename) to wrap all this up.
+        } else if (event.action.equals("invalidateResource")) {
+            System.out.println("~~~~~~~~~~~~~~~~~~~~~~event: "+event);
+            event.returnSource("<html><body>not implemented</body></html>");
+            return;
+            String resourceID = event.getQueryParam("resourceID");
+            com.dynamide.resource.IContext ctx = event.session.getApplicationResource(resourceID);
+            if (ctx != null){
+                com.dynamide.resource.Assembly assembly
+                   = (com.dynamide.resource.Assembly)ctx.getAttribute(com.dynamide.resource.Assembly.ASSEMBLY);
+                if (assembly!=null){
+                    assembly.invalidate(resourceID);
+                }
+            }
+        } else if (event.action.equals("garbageCollect")) {
+            session.setFieldValue("lastAction", "System.gc");
+            System.gc();
+            System.out.println("****************** in garbageCollect *********************"+event);
+            event.jumpToPage("adminMain");
+            return;
+        } else if (event.action.equals("reloadRootWebApps")) {
+            session.setFieldValue("lastAction", "reloadRootWebApps");
+            session.getResourceManager().reloadRootWebApps();
+            event.jumpToPage("adminMain");
+            return;
+        } else if (event.action.equals("flushSysLog")) {
+	    rm = session.getResourceManager();
+	    rm.flushErrorLog();
+	    event.sendRedirect(rm.getErrorLogsURI());
+            return;
+        }
+
+]]>
+</event>
+
+
+
+
+
+<widgets>
+    <widget id="includes1">
+      <properties>
+        <property name="items">
+          <value>
+            <enumeration override="false" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/css/dynamide.css</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/js/page.js</item>
+            </enumeration>
+          </value>
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+        </property>
+        <property name="name">
+          <value>includes1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.includes</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="editApplicationPath">
+      <properties>
+        <property name="align">
+          <defaultValue>
+            <enumeration override="false" defaultIndex="1">
+              <item datatype="com.dynamide.datatypes.StringDatatype">left</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">right</item>
+            </enumeration>
+          </defaultValue>
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+        </property>
+        <property name="border">
+          <defaultValue>0</defaultValue>
+        </property>
+        <property name="caption">
+          <defaultValue>edit</defaultValue>
+          <intl>1</intl>
+          <value>Application URI</value>
+        </property>
+        <property name="captionClass">
+          <defaultValue>caption</defaultValue>
+        </property>
+        <property name="captionWidth">
+          <value>250</value>
+        </property>
+        <property name="cellpadding">
+          <defaultValue>0</defaultValue>
+        </property>
+        <property name="cellspacing">
+          <defaultValue>0</defaultValue>
+        </property>
+        <property name="class">
+          <defaultValue></defaultValue>
+        </property>
+        <property name="enabled">
+          <defaultValue>true</defaultValue>
+          <datatype>boolean</datatype>
+        </property>
+        <property name="field">
+          <defaultValue>
+            <enumeration override="false" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.StringDatatype"></item>
+            </enumeration>
+          </defaultValue>
+          <datatype>com.dynamide.datatypes.LiveEnumeratedDatatype</datatype>
+          <liveEvalString>session.getFieldNames();</liveEvalString>
+        </property>
+        <property name="name">
+          <defaultValue>edit</defaultValue>
+        </property>
+        <property name="onError" isEvent="true">
+          <defaultValue></defaultValue>
+          <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+        </property>
+        <property name="onValidate" isEvent="true">
+          <defaultValue></defaultValue>
+          <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+        </property>
+        <property name="showErrorAbove">
+          <defaultValue>true</defaultValue>
+        </property>
+        <property name="tabindex">
+          <defaultValue></defaultValue>
+        </property>
+        <property name="textClass">
+          <defaultValue></defaultValue>
+        </property>
+        <property name="textSize">
+          <defaultValue>20</defaultValue>
+        </property>
+        <property name="textWidth">
+          <defaultValue>30</defaultValue>
+        </property>
+        <property name="type">
+          <defaultValue>com.dynamide.edit</defaultValue>
+          <readOnly>true</readOnly>
+          <value>com.dynamide.edit</value>
+        </property>
+        <property name="valign">
+          <defaultValue>
+            <enumeration override="false" defaultIndex="1">
+              <item datatype="com.dynamide.datatypes.StringDatatype">top</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">center</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">bottom</item>
+            </enumeration>
+          </defaultValue>
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+        </property>
+        <property name="visible">
+          <defaultValue>true</defaultValue>
+          <datatype>boolean</datatype>
+        </property>
+      </properties>
+    </widget>
+    <widget id="editPassword">
+      <properties>
+        <property name="align">
+          <defaultValue>
+            <enumeration override="false" defaultIndex="1">
+              <item datatype="com.dynamide.datatypes.StringDatatype">left</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">right</item>
+            </enumeration>
+          </defaultValue>
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+        </property>
+        <property name="border">
+          <defaultValue>0</defaultValue>
+        </property>
+        <property name="caption">
+          <defaultValue>edit</defaultValue>
+          <intl>1</intl>
+          <value>Password</value>
+        </property>
+        <property name="captionClass">
+          <defaultValue>caption</defaultValue>
+          <value>caption</value>
+        </property>
+        <property name="captionWidth">
+          <value>250</value>
+        </property>
+        <property name="cellpadding">
+          <defaultValue>0</defaultValue>
+        </property>
+        <property name="cellspacing">
+          <defaultValue>0</defaultValue>
+        </property>
+        <property name="class">
+          <defaultValue></defaultValue>
+        </property>
+        <property name="enabled">
+          <defaultValue>true</defaultValue>
+          <datatype>boolean</datatype>
+        </property>
+        <property name="field">
+          <defaultValue>
+            <enumeration override="false" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.StringDatatype"></item>
+            </enumeration>
+          </defaultValue>
+          <datatype>com.dynamide.datatypes.LiveEnumeratedDatatype</datatype>
+          <liveEvalString>session.getFieldNames();</liveEvalString>
+        </property>
+        <property name="isPassword"><value>true</value></property>
+        <property name="name">
+          <defaultValue>edit</defaultValue>
+        </property>
+        <property name="onError" isEvent="true">
+          <defaultValue></defaultValue>
+          <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+        </property>
+        <property name="onValidate" isEvent="true">
+          <defaultValue></defaultValue>
+          <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+        </property>
+        <property name="showErrorAbove">
+          <defaultValue>true</defaultValue>
+        </property>
+        <property name="tabindex">
+          <defaultValue></defaultValue>
+        </property>
+        <property name="textClass">
+          <defaultValue></defaultValue>
+        </property>
+        <property name="textSize">
+          <defaultValue>20</defaultValue>
+        </property>
+        <property name="textWidth">
+          <defaultValue>30</defaultValue>
+        </property>
+        <property name="type">
+          <defaultValue>com.dynamide.edit</defaultValue>
+          <readOnly>true</readOnly>
+          <value>com.dynamide.edit</value>
+        </property>
+        <property name="valign">
+          <defaultValue>
+            <enumeration override="false" defaultIndex="1">
+              <item datatype="com.dynamide.datatypes.StringDatatype">top</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">center</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">bottom</item>
+            </enumeration>
+          </defaultValue>
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+        </property>
+        <property name="visible">
+          <defaultValue>true</defaultValue>
+          <datatype>boolean</datatype>
+          <value>true</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_img_logo">
+      <properties>
+        <property name="border">
+          <defaultValue>0</defaultValue>
+        </property>
+        <property name="caption">
+          <defaultValue></defaultValue>
+          <intl>1</intl>
+        </property>
+        <property name="enabled">
+          <defaultValue>true</defaultValue>
+          <datatype>boolean</datatype>
+        </property>
+        <property name="height">
+          <defaultValue></defaultValue>
+          <value>40</value>
+        </property>
+        <property name="name">
+          <defaultValue>img1</defaultValue>
+        </property>
+        <property name="src">
+          <defaultValue></defaultValue>
+          <value>resources/images/dynamide-logo.gif</value>
+        </property>
+        <property name="tabindex">
+          <defaultValue></defaultValue>
+        </property>
+        <property name="type">
+          <defaultValue>com.dynamide.img</defaultValue>
+          <readOnly>true</readOnly>
+          <value>com.dynamide.img</value>
+        </property>
+        <property name="visible">
+          <defaultValue>true</defaultValue>
+          <datatype>boolean</datatype>
+        </property>
+        <property name="width">
+          <defaultValue></defaultValue>
+          <value>40</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_linkstrip1">
+      <properties>
+        <property name="bgcolor">
+          <defaultValue>#336699</defaultValue>
+        </property>
+        <property name="border">
+          <value>1</value>
+        </property>
+        <property name="class">
+          <defaultValue></defaultValue>
+        </property>
+        <property name="enabled">
+          <defaultValue>true</defaultValue>
+          <datatype>boolean</datatype>
+          <value>true</value>
+        </property>
+        <property name="fontColor">
+          <defaultValue>white</defaultValue>
+        </property>
+        <property name="fontSize">
+          <defaultValue>8pt</defaultValue>
+        </property>
+        <property name="fontWeight">
+          <defaultValue>bold</defaultValue>
+        </property>
+        <property name="links">
+          <defaultValue>
+
+            </defaultValue>
+          <value>
+            <enumeration override="true" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>/dynamide/doco</href>
+                <text>Documentation</text>
+                <key>doco</key>
+              </item>
+              <!--
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>${SESSIONARG}&amp;${PAGEARG}&amp;action=com.dynamide.linkstrip&amp;dmLinkstripItem=Home</href>
+                <text>Home</text>
+                <key>home</key>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>${SESSIONARG}&amp;${PAGEARG}&amp;action=com.dynamide.linkstrip&amp;dmLinkstripItem=Support</href>
+                <text>Support</text>
+                <key>support</key>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>${SESSIONARG}&amp;${PAGEARG}&amp;action=com.dynamide.linkstrip&amp;dmLinkstripItem=Contact%20Us</href>
+                <text>Contact Us</text>
+                <key>contactus</key>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>${SESSIONARG}&amp;${PAGEARG}&amp;action=com.dynamide.linkstrip&amp;dmLinkstripItem=Site%20Map</href>
+                <text>Site Map</text>
+                <key>sitemap</key>
+              </item>
+              -->
+            </enumeration>
+          </value>
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+        </property>
+        <property name="name">
+          <defaultValue></defaultValue>
+        </property>
+        <property name="orientation">
+          <defaultValue>
+            <enumeration override="true" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.StringDatatype">horizontal</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">vertical</item>
+            </enumeration>
+          </defaultValue>
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+          <helpTip>orientation: horizontal, vertical</helpTip>
+        </property>
+        <property name="showBottomBorder">
+          <defaultValue>true</defaultValue>
+        </property>
+        <property name="showTopBorder">
+          <defaultValue>true</defaultValue>
+        </property>
+        <property name="spacing">
+          <defaultValue>50</defaultValue>
+        </property>
+        <property name="tabindex">
+          <defaultValue></defaultValue>
+        </property>
+        <property name="type">
+          <defaultValue>com.dynamide.linkstrip</defaultValue>
+          <readOnly>true</readOnly>
+          <value>com.dynamide.linkstrip</value>
+        </property>
+        <property name="visible">
+          <defaultValue>true</defaultValue>
+          <datatype>boolean</datatype>
+        </property>
+        <property name="width">
+          <defaultValue>150</defaultValue>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_spacer1">
+      <properties>
+        <property name="height">
+          <defaultValue>0</defaultValue>
+        </property>
+        <property name="name">
+          <defaultValue></defaultValue>
+        </property>
+        <property name="type">
+          <defaultValue>com.dynamide.spacer</defaultValue>
+          <readOnly>true</readOnly>
+          <value>com.dynamide.spacer</value>
+        </property>
+        <property name="visible">
+          <defaultValue>true</defaultValue>
+          <datatype>boolean</datatype>
+        </property>
+        <property name="width">
+          <defaultValue>50</defaultValue>
+        </property>
+      </properties>
+    </widget>
+    <widget id="session1">
+      <properties>
+        <property name="field">
+          <value>mojo</value>
+        </property>
+        <property name="name">
+          <defaultValue>Session</defaultValue>
+          <value>session1</value>
+        </property>
+        <property name="type">
+          <defaultValue>com.dynamide.session</defaultValue>
+          <readOnly>true</readOnly>
+          <value>com.dynamide.session</value>
+        </property>
+        <property name="value">
+          <defaultValue></defaultValue>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="lblUserName">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.label</value>
+        </property>
+        <property name="value">
+          <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+          <value>Admin USER: $session.USER</value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="userName">
+      <properties>
+        <property name="align">
+          <defaultValue>
+            <enumeration override="false" defaultIndex="1">
+              <item datatype="com.dynamide.datatypes.StringDatatype">left</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">right</item>
+            </enumeration>
+          </defaultValue>
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+        </property>
+        <property name="border">
+          <defaultValue>0</defaultValue>
+        </property>
+        <property name="caption">
+          <defaultValue>edit</defaultValue>
+          <intl>1</intl>
+          <value>User Name</value>
+        </property>
+        <property name="captionClass">
+          <defaultValue>caption</defaultValue>
+        </property>
+        <property name="captionWidth">
+          <value>250</value>
+        </property>
+        <property name="cellpadding">
+          <defaultValue>0</defaultValue>
+        </property>
+        <property name="cellspacing">
+          <defaultValue>0</defaultValue>
+        </property>
+        <property name="class">
+          <defaultValue></defaultValue>
+        </property>
+        <property name="enabled">
+          <defaultValue>true</defaultValue>
+          <datatype>boolean</datatype>
+        </property>
+        <property name="field">
+          <defaultValue>
+            <enumeration override="false" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.StringDatatype"></item>
+            </enumeration>
+          </defaultValue>
+          <datatype>com.dynamide.datatypes.LiveEnumeratedDatatype</datatype>
+          <liveEvalString>session.getFieldNames();</liveEvalString>
+        </property>
+        <property name="name">
+          <defaultValue>edit</defaultValue>
+          <value>userName</value>
+        </property>
+        <property name="onError" isEvent="true">
+          <defaultValue></defaultValue>
+          <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+        </property>
+        <property name="onValidate" isEvent="true">
+          <defaultValue></defaultValue>
+          <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+        </property>
+        <property name="showErrorAbove">
+          <defaultValue>true</defaultValue>
+        </property>
+        <property name="tabindex">
+          <defaultValue></defaultValue>
+        </property>
+        <property name="textClass">
+          <defaultValue></defaultValue>
+        </property>
+        <property name="textSize">
+          <defaultValue>20</defaultValue>
+        </property>
+        <property name="textWidth">
+          <defaultValue>30</defaultValue>
+        </property>
+        <property name="type">
+          <defaultValue>com.dynamide.edit</defaultValue>
+          <readOnly>true</readOnly>
+          <value>com.dynamide.edit</value>
+        </property>
+        <property name="valign">
+          <defaultValue>
+            <enumeration override="false" defaultIndex="1">
+              <item datatype="com.dynamide.datatypes.StringDatatype">top</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">center</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">bottom</item>
+            </enumeration>
+          </defaultValue>
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+        </property>
+        <property name="visible">
+          <defaultValue>true</defaultValue>
+          <datatype>boolean</datatype>
+          <value>true</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="widgetstyle1">
+      <properties>
+        <property name="name">
+          <defaultValue>widgetstyle</defaultValue>
+        </property>
+        <property name="type">
+          <defaultValue>com.dynamide.widgetstyle</defaultValue>
+          <readOnly>true</readOnly>
+          <value>com.dynamide.widgetstyle</value>
+        </property>
+        <property name="visible">
+          <defaultValue>true</defaultValue>
+          <datatype>boolean</datatype>
+        </property>
+      </properties>
+    </widget>
+    <widget id="submit1">
+      <properties>
+        <property name="action">
+          <value>login</value>
+        </property>
+        <property name="caption">
+          <value>Submit Me!</value>
+        </property>
+        <property name="captionWidth">
+          <value>250</value>
+        </property>
+        <property name="class">
+          <defaultValue>dmbutton</defaultValue>
+        </property>
+        <property name="field">
+          <defaultValue>adminMain_submit1</defaultValue>
+        </property>
+        <property name="onClick" isEvent="true">
+          <defaultValue></defaultValue>
+        </property>
+        <property name="text">
+          <defaultValue></defaultValue>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="com_dynamide_select1">
+      <properties>
+        <property name="border">
+          <defaultValue>0</defaultValue>
+        </property>
+        <property name="caption">
+          <value>SUBSESSIONID</value>
+        </property>
+        <property name="captionClass">
+          <defaultValue>caption</defaultValue>
+        </property>
+        <property name="captionWidth">
+          <defaultValue>100%</defaultValue>
+        </property>
+        <property name="items">
+          <value>
+            <enumeration override="false" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.StringDatatype">A</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">B</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">C</item>
+            </enumeration>
+          </value>
+          <datatype>com.dynamide.datatypes.EnumeratedDatatype</datatype>
+        </property>
+        <property name="multiple">
+          <value>false</value>
+        </property>
+        <property name="tabindex">
+          <defaultValue></defaultValue>
+        </property>
+        <property name="type">
+          <defaultValue>com.dynamide.select</defaultValue>
+          <readOnly>true</readOnly>
+          <value>com.dynamide.select</value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="submitInvalidateResource">
+      <properties>
+        <property name="action">
+          <value>invalidateResource</value>
+        </property>
+        <property name="caption">
+          <value>Invalidate Resource</value>
+        </property>
+        <property name="class">
+          <defaultValue>dmbutton</defaultValue>
+        </property>
+        <property name="field">
+          <value>adminMain_submitInvalidateResource</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="editResourceID">
+      <properties>
+        <property name="align">
+          <defaultValue>
+            <enumeration override="false" defaultIndex="1">
+              <item datatype="com.dynamide.datatypes.StringDatatype">left</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">right</item>
+            </enumeration>
+          </defaultValue>
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+        </property>
+        <property name="caption">
+          <value>resource ID</value>
+        </property>
+        <property name="captionClass">
+          <defaultValue>caption</defaultValue>
+          <value>caption</value>
+        </property>
+        <property name="type">
+          <defaultValue>com.dynamide.edit</defaultValue>
+          <readOnly>true</readOnly>
+          <value>com.dynamide.edit</value>
+        </property>
+        <property name="field">
+          <value>resourceID</value>
+        </property>
+      </properties>
+    </widget>
+
+
+
+  </widgets>
+</dynamideForm>

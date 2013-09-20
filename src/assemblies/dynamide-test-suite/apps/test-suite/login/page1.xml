@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<dynamideForm>
+  <widgets>
+    <widget id="session1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.session</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="hiddenPageID">
+      <properties>
+        <property name="field">
+          <value>page</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.hidden</value>
+        </property>
+        <property name="value">
+          <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+          <value>$pageID</value>
+        </property>
+      </properties>
+    </widget>
+  </widgets>
+  <htmlsrc browser="*"><![CDATA[
+<HTML>
+  <HEAD>
+    <TITLE>$page.title</TITLE>
+  </HEAD>
+  <BODY id="page1" bottomMargin="15" leftMargin="10" topMargin="15" rightMargin="10" name="page1">
+    <P>Test Login</P>
+    ##$session.dumpContext($WEBMACRO_CONTEXT.getContext())
+    <SPAN class="container" id="login1dyn" href="resources/widgets/com.dynamide.login" />
+    <FORM name="form$pageID" accept-charset="UNKNOWN" action="$session.applicationURI" method="get" encType="application/x-www-form-urlencoded">
+      <SPAN class="widget" id="session1"/>
+      <SPAN class="widget" id="hiddenPageID"/>
+    </FORM>
+  </BODY>
+</HTML>
+]]></htmlsrc>
+  <properties>
+    <property name="formAction">
+      <value>mojoAction</value>
+    </property>
+    <property name="formName">
+      <value></value>
+    </property>
+    <property name="lastSave">
+      <datatype>java.util.Date</datatype>
+      <readOnly>true</readOnly>
+      <value>1072971697087</value>
+    </property>
+    <property name="name">
+      <readOnly>true</readOnly>
+      <value>page1</value>
+    </property>
+    <property name="title">
+      <value>Test Login</value>
+    </property>
+    <property name="type">
+      <readOnly>true</readOnly>
+      <value>pagetypes/com.dynamide.page</value>
+    </property>
+  </properties>
+</dynamideForm>

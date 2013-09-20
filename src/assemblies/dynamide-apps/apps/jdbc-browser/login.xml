@@ -1,0 +1,240 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<dynamideForm>
+  <htmlsrc><![CDATA[
+<HTML>
+<HEAD>
+  <TITLE></TITLE>
+  <SPAN class="widget" id="includes1"/>
+</HEAD>
+<BODY id="login" onclick="widgetClicked(this)" bottomMargin="0" bgColor="#ffffff" leftMargin="0" topMargin="0" rightMargin="0">
+<SPAN class="widget" id="widgetstyle1" onresizestart="javascript:event.cancelBubble=true;return false;" onclick="widgetClicked(this)"></SPAN>
+
+<FORM action="/dynamide/jdbc-browser" method="get" encType="application/x-www-form-urlencoded">
+        <table border='0' cellpadding='0' cellspacing='6'>
+        <tr>
+            <td align="center">
+                <br/><H3>Log in to the Dynamide JDBC Browser</H3>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <SPAN class="widget" id="userName"></SPAN>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <SPAN class="widget" id="editPassword"></SPAN>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <SPAN class="widget" id="jdbc_browser_database"></SPAN>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+               <SPAN class="widget" id="submit1" />
+            </td>
+        </tr>
+        </table>
+
+        <SPAN class="widget" id="session1"></SPAN>
+
+        </FORM>
+
+      </BODY>
+    </HTML>
+  ]]></htmlsrc>
+
+  <event language="beanshell" name="login_onAction"><![CDATA[
+        Widget editUserName = event.session.find("login.userName");
+        if (editUserName != null){
+            value =  editUserName.get("value");
+            password =  session.find("login.editPassword.value");
+            if (value.equals("admin") && password!=null && password.equals("cooper")){
+                session.setUSER(value);
+                event.println("set field value in session, USER == "+value);
+                editUserName.setErrorMessage(null);
+                event.sendRedirectToPage("browse");
+                return;
+            } else {
+                editUserName.setErrorMessage("User '"+value+"' is not authorized, or wrong password");
+                event.println("error: wrong user");
+            }
+        } else {
+            event.println("error: no widget");
+        }
+]]></event>
+  <widgets>
+    <widget id="includes1">
+      <properties>
+        <property name="items">
+          <value>
+            <enumeration override="false" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/css/dynamide.css</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/js/page.js</item>
+            </enumeration>
+          </value>
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+        </property>
+        <property name="name">
+          <value>includes1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.includes</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="editPassword">
+      <properties>
+        <property name="caption">
+          <value>Password</value>
+          <intl>1</intl>
+        </property>
+        <property name="captionClass">
+          <value>caption</value>
+        </property>
+        <property name="captionWidth">
+          <value>250</value>
+        </property>
+        <property name="isPassword">
+          <value>true</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+          <readOnly>true</readOnly>
+        </property>
+        <property name="visible">
+          <value>true</value>
+          <datatype>boolean</datatype>
+        </property>
+      </properties>
+    </widget>
+    <widget id="session1">
+      <properties>
+        <property name="field">
+          <value>mojo</value>
+        </property>
+        <property name="name">
+          <value>session1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.session</value>
+          <readOnly>true</readOnly>
+        </property>
+      </properties>
+    </widget>
+    <widget id="userName">
+      <properties>
+        <property name="caption">
+          <value>User Name</value>
+          <intl>1</intl>
+        </property>
+        <property name="captionWidth">
+          <value>250</value>
+        </property>
+        <property name="field">
+          <value>USER</value>
+        </property>
+        <property name="name">
+          <value>userName</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+          <readOnly>true</readOnly>
+        </property>
+        <property name="visible">
+          <value>true</value>
+          <datatype>boolean</datatype>
+        </property>
+      </properties>
+    </widget>
+    <widget id="widgetstyle1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.widgetstyle</value>
+          <readOnly>true</readOnly>
+        </property>
+      </properties>
+    </widget>
+    <widget id="submit1">
+      <properties>
+        <property name="action">
+          <value>login</value>
+        </property>
+        <property name="caption">
+          <value>Login</value>
+        </property>
+        <property name="captionWidth">
+          <value>250</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="jdbc_browser_database">
+      <properties>
+        <property name="caption">
+          <value>Database</value>
+          <intl>1</intl>
+        </property>
+        <property name="captionWidth">
+          <value>250</value>
+        </property>
+        <property name="datasource">
+          <value></value>
+        </property>
+        <property name="field">
+          <value>jdbc_browser_database</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+          <readOnly>true</readOnly>
+        </property>
+        <property name="visible">
+          <value>true</value>
+          <datatype>boolean</datatype>
+        </property>
+      </properties>
+    </widget>
+  </widgets>
+  <properties>
+    <property name="bgcolor">
+      <value>white</value>
+    </property>
+    <property name="lastSave">
+      <value>1022263965846</value>
+      <readOnly>true</readOnly>
+      <datatype>java.util.Date</datatype>
+    </property>
+    <property name="margin">
+      <value>0</value>
+      <eval>document.body.margin = "$page.margin";</eval>
+    </property>
+    <property name="name">
+      <value>login</value>
+    </property>
+    <property name="onAction" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+    <property name="onLoad" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+    <property name="onValidate" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+    <property name="title">
+      <value>Login</value>
+    </property>
+    <property name="type">
+      <value>pagetypes/com.dynamide.form</value>
+      <readOnly>true</readOnly>
+    </property>
+  </properties>
+</dynamideForm>

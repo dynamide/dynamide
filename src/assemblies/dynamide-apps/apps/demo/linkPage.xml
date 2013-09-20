@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<dynamideForm>
+  <widgets>
+    <widget id="com_dynamide_linkstrip2">
+      <properties>
+        <property name="border">
+          <value>0px</value>
+        </property>
+        <property name="enabled">
+          <value>true</value>
+        </property>
+        <property name="bgcolor">
+          <value>white</value>
+        </property>
+        <property name="fontColor">
+          <value>#336699</value>
+        </property>
+        <property name="links">
+          <value>
+            <enumeration override="true" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>?SESSIONID=$SESSIONID&amp;page=$pageID&amp;next=page1</href>
+                <text>Page 1</text>
+                <key>page1</key>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>?SESSIONID=$SESSIONID&amp;page=$pageID&amp;next=page2</href>
+                <text>Page 2</text>
+                <key>page2</key>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>?SESSIONID=$SESSIONID&amp;page=$pageID&amp;next=page3</href>
+                <text>Page 3</text>
+                <key>page3</key>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>?SESSIONID=$SESSIONID&amp;page=$pageID&amp;next=page4</href>
+                <text>Page 4</text>
+                <key>page4</key>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>?SESSIONID=$SESSIONID&amp;page=$pageID&amp;next=pageDone</href>
+                <text>Page Done</text>
+                <key>pageDone</key>
+              </item>
+            </enumeration>
+          </value>
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+        </property>
+        <property name="orientation">
+          <value>
+            <enumeration override="true" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.StringDatatype">vertical</item>
+            </enumeration>
+          </value>
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+        </property>
+
+        <property name="separator">
+          <value>hr</value>
+        </property>
+        <property name="tabindex">
+          <value>1</value>
+        </property>
+        <property name="targetID">
+          <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+          <value>$session.getCurrentPageID()</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.linkstrip</value>
+        </property>
+        <property name="showBottomBorder">
+          <value>false</value>
+        </property>
+        <property name="showTopBorder">
+          <value>false</value>
+        </property>
+        <property name="width">
+          <value>100</value>
+        </property>
+      </properties>
+    </widget>
+  </widgets>
+  <htmlsrc browser="*"><![CDATA[
+<HTML>
+  <HEAD>
+    <TITLE/>
+  </HEAD>
+  <BODY id="linkPage" name="linkPage">
+    <SPAN class="widget" id="com_dynamide_linkstrip2"/>
+  </BODY>
+</HTML>
+]]></htmlsrc>
+  <properties>
+    <property name="lastSave">
+      <value>1026334921947</value>
+      <readOnly>true</readOnly>
+      <datatype>java.util.Date</datatype>
+    </property>
+    <property name="name">
+      <value>linkPage</value>
+    </property>
+    <property name="type">
+      <readOnly>true</readOnly>
+      <value>pagetypes/com.dynamide.page</value>
+    </property>
+  </properties>
+</dynamideForm>

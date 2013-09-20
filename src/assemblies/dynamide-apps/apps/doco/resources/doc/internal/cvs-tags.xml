@@ -1,0 +1,1348 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideDoco>
+<dynamideDoco pageTitle="Revision History">
+<!--
+   This file has been escapeded to be presentable by Webmacro, so dollar-signs have extra slashes, etc.
+   If in doubt, simply look at it using the /dynamide/doco app.
+-->
+    <pre>
+Started using CVS on laramiedell.
+Repository is in /c/temp/cvsroot.lar.
+Best accessed using cygwin bash, then
+   export CVSROOT=/c/temp/cvsroot.lar
+then
+   rxvt
+Sandbox is in /c/java/com/dynamide .
+module is com/dynamide .
+
+These builds were not in CVS:
+==============================================
+build1
+	date: 7/25/2001
+  Sent this version to Dan.  Has separate windows.
+
+build2
+	date: 7/27/2001
+	Includes some ant enhancements (push backups, javadoc)
+	and the red boxes around the components.
+	Added all current components to the palette.
+
+build3
+	date: ??
+  Moved to the InternalFrameset MDI arcitecture.
+==============================================
+
+
+Notes:
+To see the dates the project was worked on, use:
+
+    cvs -q log |grep 'date:' | cut -f 2 -d ' ' | sort | uniq
+
+To see any changes made since a specific tag, use this (-w excludes whitespace checking, see diff --help, or rcsdiff):
+
+    cvs -q diff -w -r build-37 | less
+
+
+  BUILD         CHANGES
+===========   ================================================================
+<a name='build-1'></a>
+build-1       I put in a new scheme for sending property updates to the server.
+              Instead of using the MSXML ActiveX component, I use a hidden frame.
+              It's not clear if I can make this generic.  On load, it calls an anonymous function.
+
+              I changed the Page class to look up widgets in createWidget.  I
+              don't know if this is correct.  It makes the property inspector behave
+              in a strange way.  However, something needs to be done to stop the
+              widgets being simply recreated each time.   This was preventing properties
+              set from the inspector sticking.
+
+              In Page.propertyChanged(), I now check for event.oldValue being null.
+
+
+<a name='build-2'></a>
+build-2       Added jtidy.  Still has bug where jtidy won't give me the same results
+                for errors that it will on the command line.
+
+              Property Inspector works again.   I had added widgets to page
+                with getWidgetID rather than just using the widgetID passed in.
+
+              Fixed body tag to have spanClicked(this)
+
+              Added eval() via web page.
+
+<a name='build-3'></a>
+build-3       ??
+
+<a name='build-4'></a>
+build-4       Changing the currentWidget in the Inspector now works: you can change
+                it and when you set a property, it goes to the correct widget.
+                It now goes through opener...mojoWin rather than mojoDiv.
+                Some objects, like page1.qty1 are still not working since the span seems to
+                be empty when you view the source.
+
+before-name-id-changes
+              I made this tag for my change from name to id.
+
+<a name='build-5'></a>
+build-5       Most of the name-id changes work in the property inspector, and you
+                can now change widgets from the inspector or choose them from the
+                page and have property changes stick and update the page.
+                Some widgets, like buttons, don't work yet, probably because I haven't
+                fixed the name/id attributes in the widget source.
+
+<a name='build-6'></a>
+build-6       Page file persistence works.  Haven't made it save all the way to disk, yet.
+                This build will save all the ide and demo project source prior to testing disk persistence.
+              Also, added Request Handler Log.  Accessible from the SESSION detail page,
+                and the API
+                enterHandlerProc(String procName, Object info)
+                leaveHandlerProc(String procName, Object info)
+                logHandlerProc(String procName, Object info)
+                handlerProcComplete(long elapsedMillis, String replayURL)
+                printHandlerProcLog()
+
+<a name='build-7'></a>
+build-7       Changed "spanClicked" to "widgetClicked" everywhere.
+              Fixed file persistence.
+              Now there is the ability to create brand new forms. (application.xml is not saved, yet, though.)
+              Added a blank form template:
+                  \com\dynamide\templates\en\system\form.xml
+                This thing has some default widgets in it.  This may be more desirable than
+                trying to be smart about inserting things into forms on the fly.
+              Added an extra search for pageID as the body.id attribute if the
+                pageID hidden param is not found.
+
+<a name='build-8'></a>
+build-8       Added Hiermenus, but I'll probably pull them back out.
+              Added the Widget Help system.  Added compoenentHelp tags to widgets.
+
+<a name='build-9'></a>
+build-9       Page properties work in inspector.
+              Widgets have *class properties for CSS classes.
+              Pages are run through webmacro before widgets are expanded now.
+              There is a new bug because of webmacro-ing the whole page source: the
+                frameset gives a webmacro error when processed (just inspector.xml, actually).
+              I tried to plug in to webmacro logging, but failed.  My attempts are in
+              SessionWebMacroLogTarget.java, and some commented out things in Session.java.
+
+<a name='build-10'></a>
+build-10      Body and Form margins are zero, page and body properties are working.
+              File saves are working.  getWidgetDiv errors are trapped.
+              imagebuttons are working.  imagebuttons, submits, links, and pickers
+              have actions removed so the work in the ide.
+              CENTER style in design mode is blue dotted, widget is now 1px not 1pt.
+
+<a name='build-11'></a>
+build-11      Added handling for when the page properties change, but faked out the back
+                end.  Right now it just sets the body bgcolor to blue. :) Next is to
+                make real property elements, not just name-value pairs.  So this build
+                is the last working version before I rip into the Property object and its
+                XML persistence.
+
+<a name='build-12'></a>
+build-12      Properties are now kept as Property objects, with two maps to the "old way":
+                if you call set(string, string) it will automatically create a property with
+                only a string value in the "value" subproperty.  Everything in the widget source
+                uses "defaultValue" rather than "value".  Persistent searches for value, then defaultValue.
+                This may be weird if you wish to set the value as empty.  Real widgets should
+                not persist the value property, maybe.   There may need to be a transient attribute
+                as a subproperty.  Don't be confused by "name".  A property has a name.  But in the
+                internal hashtables, the property is also registered with that name.
+
+<a name='build-13'></a>
+build-13      Clicking in the page now shows the page selected in the whichWidget select box.
+                This is the default for when the page comes up.  This change was done purely in the
+                com.dynamide.propertytable widget.
+              Reworked the construction of Property, so that the Property(Element) constructor
+                is always called, except where  a copy is needed, then Property.clone() is called,
+                which does a deep copy by creating a JDOM Element out of its state and then creating the
+                clone with the Property(Element) constructor.
+              All refs through get(String) and so on should now use the real Property object returned
+                rather than the getStringValue behavior.  STILL HAVEN'T DONE THIS FOR FIELDS.
+              Fixed a nasty bug where some bean properties were available with a set* but not a get*,
+                so webmacro got confused and freaked out.  Now everything is funneled through get(String).
+              Added readOnly elements to property, so that a property can be readOnly in the IDE.  So
+                far "type" is the only one, since it is weird to allow that to be changed.
+              Started making Datatypes in com.dynamide.datatypes, but they are not plugged
+                into anything yet.
+              Started making property designers, but they are also not plugged in.
+
+<a name='build-14'></a>
+build-14      More fixes for widget defaults and instance properties.  Everything seems to be working.
+                Specifically, fixed the bug where the property editor only showed instance properties.
+                In fact, it went much deeper than that.
+              Removed Session.getVariable and Session.setVariable.  The callers of these functions were just moved
+                over to using getFieldValue and setFieldValue.
+
+<a name='build-15'></a>
+build-15      Starting on db stuff.
+              Added apps/dynamide/test/ project for testing.  page1 tests WebMacro
+                expressions and boolean/String evaluation and documents the results.
+                The next build will contain the corrected boolean evaluation techniques
+                that I learned from these tests.
+              Committed before changing the boolean expressions in the widgets.
+
+<a name='build-16'></a>
+build-16      More futzing with the properties.  Turns out I was overwriting the defaults
+                from the WidgetType class, which is what reads the com.dyanamide.*.xml file.
+                In the call to addProperties, which calls addProperty, I simply removed the default
+                and replace with the override.  Now I added mergeProperties and it applies the new over
+                the default.  TODO: make it so that default values etc. are transient.  Rather than
+                flag every subproperty, maybe just a list of transient properties.
+              Messed around with trying to clean up after the webmacro template string.
+              Added StringTools.removeExtraTrailingWakka(), but it still doesn't work yet.
+              Also, installed webmacro.jar, which webmacro 1.0, in both dynamide/lib and jdk14b3/jre/lib/ext.
+
+<a name='build-17'></a>
+build-17      Made the webmacro Context object one-per-thread by adding Session.releaseContext()
+                and checking calls to Session.getContext(), also, within Session.getContext(),
+                I call Context.cloneContext().
+              Added onresizestart event to all widgets, so they are no longer resizable.
+
+<a name='build-18'></a>
+build-18      Fixed the bug where the Sessions page was blank.  The DynamideHandler object was calling
+                the Session.printDetail method directly, which skipped the handleAction method, which is
+                where m_handler gets set.  Since handler is passed into printDetail, I just set the m_handler
+                and safely unset it when done.
+              Also related, but still working on, is the various locations where the Session.getContext() function
+                is called.  Other callers that put variables into the context loose if they call getContext(), since
+                this function clones the context so that it is threadsafe.  So I'm in the middle of ferreting those
+                out.  I removed one set of puts from the Session where they were superfluous.
+              Added IValueBean and descendants, and test/samplebeans, and some implementors, including
+              MyDBValueBean, which I put on page1 of the demo app.
+
+<a name='build-19'></a>
+build-19      Added a new function in Session, called expandTemplate.  This does all the work of setting up the context
+                and calling WebMacro, so you should always use it.
+                It also throws an exception on syntax errors (TemplateException.java in build-19, but
+                changed to TemplateSyntaxException.java in build-20).  This is caught in several spots
+                to show the syntax error to the developer rather than just going to stdout.
+              Properties now use editors to represent themselves in the property page (inspector).
+                I called them editors/\${datatype}.editor.xml in the template dir.  They have verbose
+                names because some day they will be inserted into a database and won't be unique based on dir location.
+                But to keep things organized, I put them in the editors directory.  There is also a directory
+                for designers, but it is not working yet.  There is a search in Session for the names
+                to keep them out of the component palette also.
+              To support enumerated types, I extended Property.java to have a separate list, m_enumeration,
+                since all the other subprops were just strings. Also, there can only be one enum per property.
+              Currently I have editors for int, boolean, and com.dynamide.datatypes.EnumeratedDatatype, and String.
+
+<a name='build-20'></a>
+build-20      Added [view parameters] link to Session Log, so you can see the query params split out and decoded.
+              Added capability to DynamideHandler and Session to statically eval a page in WebMacro, but using
+                the goodies of the Session.getContext and variables.  The pages read should be xml, but should not
+                be Dynamide Pages (i.e. should not have properties, widgets, etc.).  Dollar sign macros are definitely
+                available.   The first thing I used this for was to use a base template for all the session detail pages
+                so that they can have the same bgcolor and stylesheet.
+              Changed the new session logic: if a session is refreshed with an old SESSIONID, then I remove that
+                ID from the handler's query list.  I log this as a warning in the Session Log.  And I always report
+                in the Session log when I set a sessionID.
+
+<a name='build-21'></a>
+build-21      Made the Session Detail pages more pretty.  Lots of links added between pages, also banners and titles,
+                and a new color scheme: white for tables.  Added the page list to any pages where it makes sense.
+                The handler log is still blue, since it is just a StringList.dumpHTML().
+              Worked on ServerSideEvent editor.
+              Worked on Page properties.
+              Added Page templates using WidgetType to read the templates the same way that Widget does,
+                so I abstracted their common functions and put them in AbstractWidget, which Page now descends from.
+                There is a little kludge, though: Page constructor calls setType("com.dynamide.normalpage") instead
+                of reading it from the file.
+              The editors now use a passthrough onchange and onkeydown javascript, rather than trying to construct them.
+                This means I can reuse the editors for Widgets or Pages, since the scripts are very different, but otherwise
+                the resulting editor widgets are identical.
+
+<a name='build-22'></a>
+build-22      Now the new *ViewObjects scripts are done in scripts.js, along with the tester in
+                  /com/dynamide/templates/en/js/test.html
+              This is before I will rename them to replace the old *View methods that are called by the IDE.
+
+<a name='build-23'></a>
+build-23      Now the new *ViewObjects functions have been renamed and all placed in windowing.js.
+              The IDE uses all these new functions.
+              I added an onfocus handler to the main ide window, and it surfaces all windows when it is focused,
+                but doesn't recurse, like the old one did.  The old one was hidden since it didn't work.  This new
+                one protects against recursion with a boolean.
+              I also broke out the DOM-specific stuff into msdom.js.  Presumably if there are differences with NS,
+                you can make an nsdom.js.  This one is for use primarily by the IE IDE, however.
+
+<a name='build-24'></a>
+build-24      Now the focus debacle is solved.  When the page is clicked, it triggers ondesignModeClicked, which
+                 I changed to focus the inspector, then to call plainFocus.  When the IDE main is focused by the
+                 user, it triggers bodyOnFocus, which has logic to detect the difference.  This build is just to cement that
+                 logic, since it works now.
+                 I also removed logDebug from the page.js file, it was bad to have a duplicate.
+
+<a name='build-25'></a>
+build-25      Added three new widgets: a tree control, a radiogroup control, and a linkstrip control.
+                 Added all the support files for these.
+              For the linkstrip control, it became obvious
+                 that I'd need to support real streaming to datatype elements in the xml files, rather than
+                 the String-only enumeration hack I put in for enumerated types.  So many things that depend
+                 on enumerated types now don't work.   The sketches of where the reading of tree data for
+                 subproperties are in place in com.dynamide.linkstrip.xml and demo/page1.xml, with implementation
+                 attempts in Property.java.  One issue will be that widgettype files should only have the defaultValue
+                 element, while page files should have only the value element.
+              For the Tree control, I needed to have a real java recursive-descent algorythm, and webmacro
+                 doesn't support that well, so I added the ability to load any java class via the Session.loadWidetBean() method,
+                 which just calls the classloader, and loads a no-arg constructor.  I made a place for these types
+                 of beans: /com/dynamide/widgetbeans/, but they could come from anywhere.
+              I added two test pages to the demo app: page3 and page4.  Page 3 is just for the image buttons,
+                 page4 is just for the tree control.  All pages now have linkstrips, horizontal and vertical,
+                 and share the same color scheme.  Todo is figuring out how to have all the pages either
+                 inherit from the same template, or to put the top bar and left bar in widgets, or to put the
+                 middle content in a widget.  The latter two require container-widgets, which is less daunting
+                 than page inheritance.  Making composite widgets would entail surfacing properties for the composite widget,
+                 which would be put as variables into the wm context.  Things like \$page and \$SESSIONID might be done
+                 automatically.
+              Fixed a bug in showQueryParams, there needed to be an extra encoding done.
+              Got the evaltop page working in the IDE, it now shows the results of the eval in the same page,
+                 and reloads your code you sent back in the text area so you can hit "eval" again.
+                 Many types of bsh errors are trapped.  I may be missing a catch somewhere.  Error lines
+                 are highlighted in bold-red.
+              Fixed the problem with checkboxes, how they must be validated specially on the server, since
+                 the browser doesn't send them if they aren't checked.  Each checkbox has its own hidden field
+                 that gets sent just to say "I'm here".  If it is found, but there is not handler.getFieldValue, then
+                 the meaning is "off", that is, unchecked.
+              Added a check to the Session where it fires the Page onAction event.  After that event, the page
+                 is asked to see if any widgets' fields have errors.  If so, the page is re-presented.  It
+                 is therefore critical that all widgets show some kind of error message if they have a field property.
+                 Also, TODO, make a page errors function so that errors can be ascribed to the page, or just
+                 gathered from the fields.  There should be autoErrors, which would construct a string based
+                 on all error fields, and then Page.get("error") which would show up where you dropped a com.dynamide.pageerrors
+                 control on the page.
+
+<a name='build-26'></a>
+build-26      I think all the instances of code trying to output html and body tags are gone.  Now I use
+                 the Session.expandTemplate* methods, or the convenience wrappers in DynamideHandler, which
+                 just call the session ones.
+              Added a Session Console Log, which shows any calls to event.print(), event.println(), or session.print() or
+                 session.println().  Now there should be nothing on stdout/stderr that an app developer or component developer
+                 needs to see.
+              Worked on getting all beanshell and webmacro errors to pop up formatted system pages.
+              Added a system/systemPage.xml plain type with just the background color, and \$body and \$title variables.
+
+<a name='build-27'></a>
+build-27      Just fixed one bug, but it made everything work, so I'm calling it a build.  Bsh errors
+                 are now passed through to the error tag, all the way to the widgets.   Using this,
+                 I traced a bug in inspectortop, that was the result of a spurious line-cut.
+                 Now setting string properties works in the inspector again.
+              apps/dynamide/ide now uses event.println().
+
+<a name='build-28'></a>
+build-28      ServerSideEvent.editor works, and pops up the event source code.
+              Enumerated types work in the property editor.  setting values is still funny.
+              Added support for showing JDOM exceptions to developer.  The line numbers seem perfect,
+                 though I don't highlight them, since it is yet another expression to parse.  I should install
+                 a regex for doing these.  Right now there's one hardcoded parser for webmacro and one for beanshell,
+                 but not for all the cases.
+              Added globally-unique error number to anything that starts with "ERROR:".
+
+<a name='build-29'></a>
+build-29      Added internationalization of widget properties, page properties, session properties and variables, and Fields.
+              Added a datatypes/Caption class for dealing with keys and text, so that things like captions can be
+              internationalized without changing the application logic, which can look for things based
+              on keys.
+              Fixed bug in Session, where the getPageByID called loadPage which changed the order of the pages in
+                the visited pages list, and changed the current page id.  Now these are set outside of the call in
+                places where the page is output by the session, through the new call addVisitedPage().
+              Added features to radiogroup: now keeps choice between page presentations.  Consults the associated Field
+                to see which value is selected, unless widget.selectedIndex is not empty, in which case selectedIndex always
+                wins.  A selectedIndex of -1 forces all radio items to be unselected.
+             Internationalized the demo application.  Users can click on the language choice on the first page
+                and the resources for this app are applied on subsequent page loads.
+                You can test this by doing this
+                   http://localhost:82/dynamide/demo?language=en-uk
+                since I modified application_onStart to read the queryString and call loadInternationalization().
+             Added Session.internationalize(String, String) that can be called from within the widget webmacro source,
+                so that widgets can internationalize their strings kept internally in lists, and other datatypes.
+
+<a name='build-30'></a>
+build-30     Added owner for all DynamideObjects.  Only Session is allowed to have a null owner.
+             All DynamideObjects also have a getDotName(), and the important classes override this.
+                This method returns the name from the parent to this object separated by dots, so each
+                class can return getOwner().getDotName + '.' + myname.  The default implementation is empty.
+             Internationalization is now automatic for any Datatype that implements internationalize().  Still
+                hazy on how to tell the difference between datatypes owned by enumerations and not.  But each
+                datatype should have a "key" property if it can participate in an enumeration.
+                Maybe put in IEnumeratableDatatype interface.
+             This build has some code in radiogroup and linkstrip(commented out) that does the internationalization
+                right in the webmacro source.  I've deprecated that and will delete those next.
+
+<a name='build-31'></a>
+build-31     Removed the internationalization code from the Datatype subclasses and from widget sources.  Now everything
+                is done either through Session or Datatype.
+             Got all the internationalization stuff working for the for the apps and the IDE.
+             All Widget properties and all Datatype values are expanded.  I'm having trouble with the escaping characters.
+                I'm going to check in, then escape all the \# sequences in the properties in the xml files.
+             Added the Dynamide/test2 application for testing internationalization and just the radiogroup.
+
+<a name='build-32'></a>
+build-32     I don't think build-31 was tagged.
+             This build commits the escaping of property strings as stored.  So all color codes
+               like \#AACCC88 become \#AACCC88 and so on.
+             Added ExpandableDatatype to deal with datatypes that don't get picked up by the Widget expansion.
+             Expansion should now be complete for all properties, nested an regular.  You can put any
+               webmacro expression in a property value or property datatype if the datatype descends
+               from ExpandableDatatype.   Also, some time in the last build or so, I made all the get(String) methods
+               of Session and AbstractWidget return Object so that webmacro can now expand this correctly:
+               \$session.page1.button1.caption .  Somethings don't work, like \$session.page1.linkstrip1.home.text,
+               since it is an enumerated type.  It's not clear if I want to support that from a single expansion string.
+               It can be gotten with a few lines of webmacro code instead.  See com.dynamide.linkstrip for an example
+               of how to do it the long way.
+
+<a name='build-33'></a>
+build-33     Relative template dir lookups are mostly working, but next I will restructure the template read
+               etc. to exclude static functions.  Everything will have to be a project with files.  This means
+               static pages without sessions will be out.  Error pages will just be hardcoded or have hardcoded
+               paths, which is good for presenting errors if the system is hosed.  All debug pages will
+               become part of /dynamide/ide and all admin page, like session detail, will become part
+               of /dynamide/admin.  I've already added the necessary directory for the admin project.
+             I did a bit of cleaning out allowed by the new template searches.  Some files got moved.
+             All of the dynamide.dtd's are just gone completely.  The weren't needed and the can't be done
+               with relative paths.  The xml parser either requires a full path or a file in the current dir.
+               I couldn't specify one relative to the wwwroot, since the parser doesn't know about wwwroot.
+
+<a name='build-34'></a>
+build-34     Moved all the *.ide.* widgets to dynamide/apps/ide/templates/widgets.  Removed
+               the hardcoded restriction on showing these.
+               Changed the ide application and some java classes to support this.  Now demo
+               application makes no reference to these widgets.  Moved ide.widgetstyle to just widgetstyle.
+             Other little tweaks to the page.xml and widgets and some javascript stuff so
+               New Project, Save Project, New Page, and Save Page all work.
+
+<a name='build-35'></a>
+build-35    I made it so that you can open the ide within the ide.
+               Got rid of all 'forced1' identifiers, appended the SESSIONID
+               to all window names, removed the autoload and unload stuff
+               from the main ide window if in design mode, caught some ERRORs.
+
+
+<a name='build-36'></a>
+build-36    Fixed boolean and enumerated types so that you can set those properties from the inspector.
+            Added a LiveEnumeratedDatatype datatype and editor type, so you can get values from
+               some live object at runtime.  See the example in LiveEnumerateDatatype.editor.xml
+               where I call \$session.eval(\$property.liveEvalString) to have it give me a live Object to populate the list
+               of Fields.
+            Fixed WidgetHelp -- it was looking for a directory, then gluing on the template name.
+               So the search returned the dir, not the filename.
+            Fixed the css stuff in SessionDetail, but adding \$session to the context and
+               a few SESSIONID=\$SESSIONID to the urls.
+
+<a name='build-37'></a>
+build-37    Handled autocreation of fields.
+            Moved ID to DynamideObject.
+
+
+<a name='build-38'></a>
+build-38    Added special property "visible".  This is dealt  with by Widget.java.
+               If visible == "false", the widget disappears.  In designMode, you
+               still get a span tag with the widget id.  In pro mode, it is totally gone.
+
+            Allowed for nullifying a field when unset in the inspector.
+            Added removeProperty.
+
+            Got rid of paletteDir.
+
+            I changed the javascript events in the editors.  Now the attribute value is in
+                \$onchange and \$onkeydown, so you can assign these to onblur.
+                Different editors do different things.  Select is the only one that does it correctly:
+                it fires onchange when the item is selected. The edit boxes fire onblur, every time, even
+                if you changed nothing.  This helps when you click in a value box, then click another page,
+                but it can leave the rendered widget out of sync.  the stored prop is correct, however.
+                but the multiple requests hose up the handler object somehow, essentially not single threaded.
+                It works if you just click some other page, but it fails if you click on a widget, so widgetclicked
+                is coming in on top.  I think I fixed this by putting the "busy" lock check in
+                DynamideHandler.handleHttpRequest_Internal, but keep an eye on it.
+
+            Added Session.busy for serializing requests to the Session without thread-locking the whole
+                damn thing.  See above the item directly about the javascript events.
+
+            Prettied up the Request Handler Log, now has section breaks.
+
+            Changed ScriptEvent to check for null session in print and println, and
+                to have getQueryStringParam, so that beanshell code doesn't need to
+                talk to the handler.  Updated ide/application.xml to use this.
+
+            Changed com.dynamide.grid to com.dynamide.datagrid.
+
+            Fixed breadcrumbs live links at design time.
+
+            Added com.dynamide.textarea.
+
+            Crossed a bunch of stuff off the TODO list.
+
+<a name='build-38-1'></a>
+build-38-1  After changing createWidgetFromElement to NOT call Widget.setElement.
+                     if (created) widget.setElement(element);
+            but before messing things up any further.  Right now, the demo and admin apps load.
+            In demo, the breadcrumbs are weird.
+            Perhaps  because some fields aren't sticking.
+            In admin, the USER fielddef'd field doesn't stick, but the widget autocreated fields do.
+            Things seem to be working in the IDE.
+
+<a name='build-39'></a>
+build-39    Accepting the changes after build-38-1.
+            Now Widgets are not re-initialized in createWidgetFromElement
+            from the Element when they are rendered, if they
+                have been previously created, loaded, and stored in the Page by ID.
+                This works completely.
+            The add(Datatype) and addStrings(Collection) methods of EnumeratedDatatype work.
+            The admin application is working, except that it doesn't get the live values
+                for subsession id's yet.
+            I haven't switched over to the widget naming scheme yet -- I still use the fieldID.
+            Added dumpHTML and dump() to DynamideObject.
+
+<a name='build-40'></a>
+build-40    Added live lookups of session IDs to the admin application.
+            Added lazy initialization to pages in Session.  Now a page is loaded when
+                it is actally referenced.  Until then, it just lives on the pageNames list,
+                which is what shows up in the page list in the IDE and the SessionDetail pages.
+            Added prettyPrintHTML to JDOMFile, but it is based on dom4j.  It is used
+                only in showing the widget prototype and showing the page source.
+            page loads are now logged to the handler request log.
+            Since the prettyPrintHTML runs through dom4j, it validates the generated source
+                for pages and widgets.   So I used it to validate all the demo and admin pages
+                and all the installed widgets.  This should be automated as part of the
+                component author's toolkit.  I found a number of errors and fixed them
+                in the components.
+
+<a name='build-41'></a>
+build-41    Futzing with the Editor/Designer/PropertyEditor interfaces. The chain of calls
+                seems to be working, though it is not actually modifying the property yet.
+                But all the correct windows get called, etc.
+            Changed the JS eval that gets called when a prop is updated.  Hopefully this
+                gets rid of "mojoWin" for good.  Now I look up the targetPage by id with the
+                new function idetop.getViewByPageID.  After this, I'm going to clean up a bunch of
+                stuff, so this build still have the old way commented out.
+            Added captionNOBR to most of the widgets.  Allows you to say don't break the caption line.
+                You can still put an explicit BR tag in there.
+            Changed all the defaultValues for captionWidth that were 100% to 150, just a number.
+                The percents were making the captions greedy.
+
+<a name='build-42'></a>
+build-42    Cleaned up commented out code from build-41, including mojoWin and mojowin.
+            Changed "funcname" to "functionExpression", since it was not only the function name
+            but also the definition and invocation.
+
+<a name='build-43'></a>
+build-43    Saving events works for widget events.  Signature is not saved, so I'm
+                going to change everything around so that signatures are not stored.
+                This is because if the signature is stored, it will be difficult to
+                walk the events and parse them when the page or widget names change.
+                Instead, I'll manufacture the signatures when the event source is requested,
+                and only store the page or widget name in the event name.
+                To aid this, I'm going to make all event signatures identical, and remove the
+                sometimes present String action parameter, and just put this in the event object.
+
+<a name='build-44'></a>
+build-44    Restructured all events, moved to generating function signatures, and added application_onImport,
+                which sources but does not fire any procs.  This brings in imports at global namespace.
+            I have somehow broken the post of the ServerSideEvent designer.  see std-out, something is null.
+            But I am committing anyway, since the new event structure seems to be working.
+            There's still some funniness in how the page id is set, with START, etc., and also the action.
+            It works, but its not clean.  Also, I'll have to make custom events be able to set ScriptEvent
+            fields in a generic way somehow.
+
+<a name='build-45'></a>
+build-45    Made sure that the ant push stuff still works. Made some modifications to the routerwin.bat
+              file in vwebserver.  It points to my laptop directories for config, not the installed ones.
+              But I don't plan on distributing the vwebserver anyway, so...
+              This makes it easier to use Together out of a real sandbox.
+              In bash, you do:
+                cd /c/java/com/dynamide
+                ant '-DPUSHDIR=/temp/_tg/dynamide/build' pushNoBackup
+                cd /c/temp/_tg/dynamide/build/com/dynamide
+                ant
+                cmd start './vwebserver/routerwin.bat
+              These are summed up in: /c/bin/build-dynamide-tg.bash
+              And also, just the restart is in: /c/bin/restart-dynamide-tg.bash
+            Now everything works in Together, but you have to change a line in Session.java
+              where you must hardcode the properties file location for the debugger.
+            Setting Page properties now works from the IDE.  There must be an eval defined for each property.
+              (in normalpage.xml, I hope. For now, it is just in the page.xml)
+            Moved to beanshell 1.2 and jdom beta8, release candidate 5.
+
+<a name='build-46'></a>
+build-46    Factored lots of methods up into AbstractWidget and Persistent.
+            Changed Page to descend from Widget.
+            This is prior to adding Page inheritance, which is experimental.
+            Everything works right now, so if there is any weirdness, this is the spot to roll back to.
+            Moved error message and flag into AbstractWidget, so no Pages can have errorMessages,
+            but I don't do anything with them right now.  There should be page level errors
+            a la Struts.
+
+<a name='build-47'></a>
+build-47    Worked on Containers a bit.  The designertop page now uses containers,
+               especially Session.expandContainer() to get the designer as a container.
+               The context is cloned, so containers can't affect the caller, unless
+               they use the caller's methods through the passed in \$outer context variable.
+               \$page and \$pageID refer to the container while in the container source.
+               Note: the editors use CDATA sections and getText(), while the designers
+               use non-CDATA sections and output().
+
+<a name='build-48'></a>
+build-48    Moved designers and editors under the template dir in apps/ide, which
+               meant that I also had to move the java functions from Page to Session,
+               since they were loading through the subsession, not the ide session.
+               Removed the old ones that allowed lookup by id's.
+
+<a name='build-49'></a>
+build-49    Changed all htmlsrc elements to just have CDATA sections.  All Page and Widgets
+               now just call getText() rather than output().  No sense in walking the tree
+               to get the htmlsrc (although internally the dom parser will walk the tree to
+               get text, I suppose, unless the CDATA is just stored as text).  But it
+               means Page, Widget, and Container can be consistent.  Got rid of the kludge
+               getSourceOutput().
+
+<a name='build-50'></a>
+build-50    When I moved to IE6, I found that msdom.js needed a change, since now comment
+               nodes no longer need to be wrapped in html comments, since they come with them
+               in the text string now.
+            The function in idetop references the window name, which has the datetime stamp
+               in addition to the page name.
+            Tracked down more instances of event.handler.getFieldValue, and replaced with event.getQueryParam.
+               I can't make handler private, but getQueryParam won't through null pointers.
+            Made the IDE read the "ERROR" results more seriously, and not open pages, paletteLists
+               or projects when there are errors.
+            Worked some more on saving the HTML source in Persistent.  Works well, but
+               saves the expanded macros, losing the original macros.  This must be fixed.
+            The hidden widgets are still messing things up.
+
+<a name='build-51'></a>
+build-51    THIS IS NOT A STABLE BUILD.  I just checked everything in so that I could try rolling back
+              to build-50 for a demo.
+
+<a name='build-52'></a>
+build-52    Released to Dan as online user.  5/22/2002 5:12AM.
+            ServerSideEvent editors work again.
+            New Project, Open Proj, Save Proj, Open, New, Save Page all work.
+
+<a name='build-53'></a>
+build-53    Zipped up and mailed to yahoo.
+            Added com.dynamide.includes widget to manage includes.
+            Prototyped Jacl events.  Works from beanshell event.
+            Fixed Page|Save for brand new pages, since they need the msdom.js and scripts.js file included now.
+            Note: system/page.xml is used, not com.dynamide.normalpage.xml.
+            Dropping a new component on a page and saving the page works.
+
+<a name='build-54'></a>
+build-54    Was working on editor and designer for enumerations, see "Where I Left Off" notes as of 7/4/2002 10:09AM.
+            Now I'm going to try to switch everything to the HttpServletRequest interface
+              instead of HttpMethodRequestHandler.
+
+<a name='build-55'></a>
+build-55    Now works in Resin, using the new com.dynamide.DynamideServlet, and with all
+              references to HttpMethodRequestHandler changed to HttpServletRequest.
+              I set up a host, apps.dynamide.com, and map this host in resin.conf.
+              You can see the sample conf block in com/dynamide/conf/resin.conf.
+              For now, this means all apps must begin with /dynamide.
+              I had to copy the current dom4j build into lib, and use the
+              jsdk23.jar from the resin distribution.  I nixed jws.jar, since
+              it was the old javax.servlet stuff.
+
+<a name='build-56'></a>
+build-56    Fixed the includes widget, and added a designModeOnly prop, so there are two includes
+              on the std page now are two widgets: one for production, and one for designMode,
+              which includes the msdom.js stuff that is required to save pages.
+            Added code to strip certain attributes from the widget tags when they are saved,
+              in Persistent.removeWidgetContents()
+            Worked on jar and war Ant targets, and deployment to Resin.
+            Removed dependendence on vwebserver.
+
+<a name='build-57'></a>
+build-57    Added a build.xml file for jacl.  I incorporate a change that lets the library
+              resources be found correctly.  I have built jacl.jar and tcljava.jar and
+              put them in dynamide/lib
+            Fixed a typo that was preventing the consoleLog from showing in the session web page.
+            Moved WebMacroDynamide.properties to com/dynamide/conf/, and changed
+              Session.java to init with this file.
+            Added safety to com.dynamide.datagrid in case bean doesn't initialize.
+              Cranky evaluator still puts a message on stdout, but it seems to work
+              when trying to evaluate \$bean == null.  Also added some try safety to the demo app.
+            Got rid of all refs to C:\ and /java and \java and localhost, except for getHostName() in Session,
+              which is benign.
+
+<a name='build-58'></a>
+build-58    Made containers work.
+            Changed pagetypes.  Now there are com.dynamide.page and com.dynamide.form.
+              These live in widgets/pagetypes/ .  Use a page when you want just layout,
+              use a form when you want the html form tags.  If your widget handles being a form,
+              and you include it on a page using containers, then the page you include it on
+              should be a simple page, not a form.   To create a widget that knows how
+              to submit itself, use form when you design the widget's base page.
+            Update the Application developer help, including the variables page.
+
+build-59
+            7/12/2002 9:56PM
+            Design of page / containers
+                Each widget has to decide if it is form capable.
+                Now, you can't place form[true] widgets within other form widgets, this is a requirement of HTML.
+                So you'd have an audit for this, but otherwise would allow it.
+                then the Parent page just lays out the page, and doesn't have the form, unless it's formName is set.
+                But it can be one of two scenarios:
+                    page is_a form
+                        widget1 not a form
+                        widet2 not a form
+
+                    or
+
+                    page not a form
+                        widget
+                        widget is a form
+                        widget is a form
+                        widget
+                        widget
+                or, a widget, any widget, has an isForm property that will render this stuff,
+                  being sure to wrap the whole thing
+                or, you can drop any widget in a formWidget
+                The thing of not having a form widget is that each widget can decide how best to lay out its form-ness.
+
+                Containers are working with forms and noform pages.
+                Now the thing to look at is
+                    in page1_event what manipulation do I want to do
+                        page1.container1.linkstrip1.list = ...
+                and how do I handle the two scenarios:
+                    1) there is only page1, and it has inner body that maps to subpage1, subpage2, etc
+                        page1.container1.pageName = "subpage2"
+                    2) there are 4 pages, all of which use the same header, footer, and menu.
+                        page2.menu1 = page1.menu  //this seems rife with problems, like
+                          can a widget ask for it's page, if you keep changing the parent,
+                          will the widget get confused?
+                          Maybe if you have this rule, then the widget must ALWAYS ask for its parent
+                          which would be better.
+                          Seems you would need a com.dynamide.widgetref to refer to the other widgets at designtime.
+                          Or you just use a container.
+
+build-60
+            7/19/2002 11:09AM
+            Made it so that you can change widget names using the inspector.  This is achieved through
+            allowing the property to be set on the back end, and checking for the special "name" property
+            in the javascript in the IDE.  If it is being set, I cause a reload of the inspector itself
+            *after* the property has been set.  This causes the new name to appear in the combo box.
+
+            Made page "name" property read-only so that you can't change a page name.
+              I plan to make a changePage utility from the IDE that will save and close any open pages by that name,
+              and do the page name change on the back end.  There are too many weirdnesses to allow it on the fly.
+              This would be the place to adjust any page refs in the code, and to audit user strings that have
+              page name refs (audit, don't fix).  This is a one-time audit, since after that the page name is gone.
+                For example, if I change page1 to myPage1, then I know I can search all event code and properties
+                for "page1".  After that, I won't know about "page1" since the page will be called "myPage1".
+
+            Fixed Enumerated datatypes to read in their defaults when they are properties.  The defaults
+              are applied if "override" attribute is not "true".
+
+            Fixed linkstrip to use the default enumeration.  Added the datatype element to the defaultValue element,
+            so that it works.
+
+            Note: when you drop a linkstrip on a form, the styles aren't applied until you reload the page.
+            This has been a running problem.  I need to teach IE how to reload pages from memory -- I have been working
+            on this in the page property setters.
+
+            Note: for properties that have been saved to a page file, they override the default props, so Orientation
+            etc. disappears from the properties list.  It is present when you first drop a component.  This should be fixed
+            as well as figuring out how to allow uses to use override or not.  Should be a checkbox in the list editor.
+            If you want the default members, you hit the checkbox.  Default is unchecked.  For built-in enumerated types
+            like Orientation {horizontal; vertical} the component author should be able to say that the enumeration is read
+            only, but the property is not readonly.  This would be an attribute, like override is an attribute.
+
+            Added a method to clean out the page file of widgets that are included in the widgets tag
+            but are not referenced from the htmlsrc.  I call this from the renamePage function in the IDE.
+
+            Moved the includes widgets out of the head and into the body for com.dynamide.page and com.dynamide.form
+              I think this was done in system/page.xml but didn't get moved over.
+              If they are in the head they get expanded incorrectly.
+
+build-61
+            Now when the IDE accesses any property of the subsession it "touches" the subsession, so that the
+            subsession won't time out.  When the com.dynamide.sessiondetail widget snoops on a session, it does NOT
+            "touch" the session, so as to be as non-invasive as possible.
+
+            Enumerated types are working better in the property inspector, property editor and property designer.
+            There are two new javascript arguments and matching cgi params: noPropUpdate and forceReload.  forceReload reloads
+            the inspector, since things like the enumerated types change the back end in a way that is difficult to communicate
+            to the inspector.  noPropUpdate is for the same reason: when the designer is processed on the back end
+            it directly sets the enumerated property.  When the inspector is updated, it should not then send
+            the new values to the back end, since only the designer page knows how to do this properly.  That's why there are
+            designer pages in the first place.  The inspector is only good for selecting single-valued items.
+
+            ServerSideEvent designer and editor seem to be working perfectly.  You can create new events,
+            edit exitsing events, in Page, Widget, and Application.
+
+<a name='build-62'></a>
+build-62    Revised the XML/XSL strategy of com.dynamide.xsl.  Now it uses Saxon.  It also supports
+              a few new events. This change was necessary because the Resin xsl, besides being
+              proprietary, requires exec permission on "javac".
+            Updated the Dynamide/doco application to read the xml files to determine the pageTitle.
+              Installed some of the security features.  DynamideSecurityManager is installed via the
+              DynamideServlet.  Also, tagging of ThreadGroups as DynamideWorkerThreadGroup is working.
+              The DynamideSecurityManager disallows System.exit, exec, socket.listen and a few others.
+              File access is still allowed.
+
+<a name='build-63'></a>
+build-63    Changed all &amp;\#160; to <dm_nbsp/>
+            Merged build-59-2 changes in.
+                - events in pages within folders now fire correctly.
+                - if extra path info is passed in the URI, the URI is resolved to the
+                  application with the longest name in web-apps.
+            Fixed a bug that prevented Session.find() from performing lazy loading of pages.
+            Migrated the System.err.println stuff to logging.  Changed the logging to
+                use session id's for log categories.
+            Automatically call Log.configure() from DynamideServlet.
+            Security stuff and Pools are still in transition.
+
+<a name='build-64'></a>
+build-64    Cleaned up doco app, made it use the applicationPath and requestPath fields.
+            Changed Session.get() to support those special fields.
+            Fixed Page to use the same strategy Widget does to get to its properties
+              from WidgetType
+            Added viewing of the WidgetType to Page and Widget detail views.
+            Fixed the com.dynamide.linkstrip to handle hr, and borders when
+              the top and bottom borders are not desired.
+            Made the onAction fire for application startup, and even if no action
+              is specified.
+
+<a name='build-65'></a>
+build-65    Changed Property.getValue to return an Object, not a String. Now you
+              should call Property.getStringValue or getCurrentStringValue
+              to get the value as a String.  All current dynamide xml files have been
+              update with this change.  Projects outside of dynamide will need to be updated.
+            Changed Field constructor and setValue to use Object also.
+            Added check in AbstractWidget.get(String) to look for the magic Webmacro
+              characters \$, \, and \#.  If found, the usual expand() method is called,
+              but now if not found, the expansion is skipped.  This saves about .4 to .6
+              seconds per page in the demo page1, which is fairly large, but has only a few
+              expressions.
+            Fixed the linkstrip to handle hr's correctly for all possible
+              combinations of top and bottom border.
+
+            Tracked down some memory leaks.
+              When a page is forced to reload, it now calls cleanup() on all
+                contained widgets, since they point back at the page, and hinder
+                garbage collection.
+              Getting the Webmacro context requires a method to be called
+                when you are done, Context.recycle().  This is now done.
+              Outputter and XmlOutputter now have the page set to null in the finally.
+
+<a name='build-66'></a>
+build-66      Removed setElement, getElement and m_element in Widget.  It was funky
+                anyway, and not used anywhere, but it was hanging on to a reference.
+              Removed a duplicate version of getSession/setSession/m_session in
+                AbstractWidget, which was shadowing the version in DynamideObject.
+              Changed m_session to getSession() in a number of other classes, too.
+              Moved all interpreter stuff to its own class and package to allow
+                for pluggable interpreters and for testing of the memory leakage
+                of interpreters.  Created com.dynamide.interpreters package.
+                Create com.dynamide.interpreters package.BshInterpreter which
+                wraps bsh.Interpreter.  The language string on the event is mapped to
+                an interpreter, the mapping is hardcoded for now, it should be
+                replaced with a secured XML map.  There is also a call, Session.eval(...)
+                that simply maps to the default interpreter, which is BshInterpreter.
+                Changed the return code from methods that lookup the event source to
+                  return a ScriptEventSource struct, just contains source and language.
+              Moved the Webmacro instance to the SessionDatabase, and initialize it in
+                the DynamideServlet, since it creates a singleton for caching
+                Context objects.
+              Fiddled with the DynamideServlet cleanup of threads and threadgroups.
+              Made Page cleanup all widgets on cleanup.
+              Removed references to DynamideHandler.  This class is now transparent to callees.
+                The thing that matters is the HttpServletRequest.
+              Added more apps to the test-suite: memory-leaks, and upload.
+              Added object tracking features to com.dynamide.util.Profiler.
+
+
+<a name='build-67'></a>
+build-67      This build doesn't have many of the new Assembly or JNDI features
+                installed.  The code is there, but either isn't called, or mimics
+                the old way of doing things.  The site, for example, is hardcoded
+                to "dynamide".  But the memory leaks have been fixed, and the Properties
+                now deal with Objects and not Strings.
+              Removed the bodies of CVS.java, AntRunner, AntRunnerJavac.  These
+                depend on some jakarta ant stuff, which may not be present on the
+                target machine for build.xml.
+              Cleaned up the javadoc task and javadoc a little.
+              Still futzing with the JNDI stuff.
+              Added WWWROOT to the SessionDatabase on initializing it from the Servlet.
+                Also, I ensure that the WWWROOT ends with a slash.
+              Added magic.xml and cvs-tags.xml to the doco app.
+              Cleaned up the std-out noise.
+              Note: there is a feature of Session that was not documented before:
+                Session.setStdoutEcho(boolean) takes all session (and thus ScriptEvent, too)
+                logging and echos it to std-out.
+              There is a feature in DynamideServlet that allows you to shut down the application
+                server.  For this feature to work, you must have the following line in your
+                servlet element in your app server configuration:
+
+                   &lt;init-param ALLOW_SHUTDOWN="true" /&gt;
+
+                Any other value disallows shutdown via URL.
+
+<a name='build-68'></a>
+build-68      Moved the source layout around.  The sites and packages are the same, but
+                the containing structure has changed.  The new layout is:
+
+                    build.xml
+                    dynamide.version
+                    /bin
+                    /build
+                    /doc
+                    /lib
+                    /src
+                        /assemblies
+                        /jacl
+                        /java
+                            /com/dynamide/...
+                        /java-test
+                        /jsp
+
+                The /build directory gets deleted and re-created by the build.xml file.
+                The version string is in the dynamide.version properties file.  Keep this
+                updated with the build number, and Ant will use it.
+
+
+<a name='build-69'></a>
+build-69      Added a fix so that bsh errors would go to logger and out to the page correctly.
+
+<a name='build-70'></a>
+build-70
+              I'm marking this build, since a lot of stuff seems to work, but I
+                haven't put together test cases or walked through all the new code.
+              Fixed /dynamide/xsl so that templates are displayed.  Now I use the outputChildren(Node) overload.
+              Apps: IDE seems to work, Demo works, Doco works.
+              Assembly stuff is working, but web-apps aren't searched correctly.
+              /cache works.
+              /static is in place, but not sure how well it works.
+              Added code for gettting files from disk instead of cache if ResourceManager
+                 caching is off.
+
+<a name='build-71'></a>
+build-71
+              Assembly.getImportsFullPath works in several flavors now: String result, String result with separator
+                and IContext result.  Importing seems to be working now.
+              This build is just prior to reorganizing DynamideHandler.  Admin stuff will be moved out.
+
+<a name='build-74'></a>
+build-74
+              Admin app is working.
+              Session table is working.
+
+<a name='build-75'></a>
+build-75
+              This is the build I used for the Oakland Java SIG presentation on 4/16/2003 .
+              The IDE works for Page New, Page Save, Project Save, drop widget,
+                 set widget property, edit event source, view session.
+              These don't work: Project New,
+              The Admin app works, and I fixed bugs where the app would look at itself
+                and not the subsession.  Also, from the main page, it is now  legal
+                to hit the "all sessions" link.
+              Dropping a com.dynamide.container on the page, and pointing it to,
+                say, page1 as it's pagename works.
+              You need to select the pagetype before saying "new page".
+              I changed the .css sheets to use relative font sizes.  Remember that the
+                files are in the C:\bin\_resin\webapps\dynamide\wwwroot-static\dynamide\doco location.
+
+              Added com.dynamide.util.WebMacroTools
+
+<a name='build-76'></a>
+build-76
+              This build includes /swarm with the following features:
+                  org.netroots.Login  handles login logic.
+                  Caches login information in /homes/dynamide/appdata/swarm in ResourceManager
+                    and does a restore if the user comes in with the same sessionid and USER param.
+              Reworked Session.handleAction so that application_queryNextPage can
+                  approve whether a page will be shown by cgi param (nextPageID) or
+                  by any other event, or by page order.  The event.nextPageID is initialized now
+                  to the nextPageID sent on the URL, so that application_queryNextPage can inspect it.
+                  There is no magic "START" page any more.  Simply inspect session.getVisitedPageCount()
+                  or session.getVisitedPages.length.
+              If the user comes in with a sessionid that is expired, recycle the session id.  This
+                  helps with caching of Logins, sessions, etc.
+              Fixed the admin sessionsPage to jump back to the sessionsPage on closing an app.
+                  Also, the sessionsPage is the default now.
+              Changed how the LiveEnumeratedDatatype behaves, so that it reads its data for both
+                  defaultValue *and* value.
+              Played around with BshInterpreter's reloading of classes and classpath, but commented
+                  the changes out since they cause some problems by having two classloaders in use.
+              Added com.dynamide.db.TableTree -- reads a db table, converts it into a tree based on
+                  parent/id keys.
+              Put in a new implementation of datasource wiring.  IDatasource is the interface.
+                  There is a basic implementation that data strategies can subclass from: SimpleDatasource,
+                  and Session implements the interface too.
+              The com.dynamide.db.RDB* components have been reworked.  They now handle update and insert
+                  on Maps of fields, and return the standard int SQL return values.
+              AbstractWidget now does autofields a little differently -- if the widget
+                  has a datasource and a field, then IDatasource's id is used in the name of the field.
+                  If it just has field, then that is used.  Otherwise, the field is autogenerated.
+                  Only com.dynamide.edit has been fixed to handle this, I think.
+
+              Added support for background jobs, as events.
+
+              Added the following API enhancements:
+
+                  ICompositeWalker.onNode has a return value so that listeners can request that the
+                    walk not descend any farther into the current branch.
+
+                  ResourceManager now has a reconfigureLog() method, which forces a re-read of the installed log.conf.
+                    This is available through ?servletAction=reconfigureLog
+
+                  IContext.find(String) added for searching with the default separator of "/"
+                    and added implementation to ContextNode
+
+                  RDBDatabase and RDBTable now contain setDebugSQL(boolean) commands.
+
+                  Session now has a real getUSER() method, and setUSER() which are backed by the "USER" Field.
+
+                  Session.getAppURL with overloads for generating correct session URL that link back to this session or application.
+
+                  Widget.call, Session.call, Page.call have been added to ease calling of events and jobs.
+
+                  getFieldValue should return Object from all classes now.
+
+<a name='build-77'></a>
+build-77
+              IDE is working again.
+
+              Added documentation on the flowchart for the event model.
+
+              As a result of documenting the event model, cleaned up the event dispatcher: Session.handleAction().
+              It is not finished: this method should throw errors, rather than catching them
+                and dealing with them incosistently.
+                Redirects are handled correctly.
+              Removed code that createSession but doesn't start it.  There is still support for creating a session
+                without starting it (fires the onImport and onStart events, which may be undesireable for debugging)
+                but the default is to always start it.
+
+              Added ability to use dialogs outside of your project.  See Session.findOrCreateDialog()
+                Files can live in {library}/resources/dialogs/ for example.
+                Added a resources/dialogs/com.dynamide.imgview dialog for displaying just an image.
+
+              There is now a function call, Session.getDialog, that allows you to pass in a separate
+                 name for the dialog than the filename.  This doesn't address the issue of the events being named
+                 with the page name.
+
+              Added support for relative Widget types that don't live in resources/widigets.
+                resources/widigets is checked first, then just the name passed in, which should start with "resources".
+
+              Messed around with EnumeratedDatatype and LiveEnumeratedDatatype some more. Still
+                 not working quite right.  The admin app has some uses of it in the eval.xml and debugEvent.xml files.
+
+              The admin app now supports test-firing events and evals with two new windows:
+                  Eval (eval.xml)
+                  Debug Events (debugEvent.xml)
+
+<a name='build-78'></a>
+build-78
+              Moved to unified "DYNAMIDE_HOME" instead of "RESOURCE_ROOT".
+              Shell scripts now pass in the value in a -D define.
+
+              Added Audit class and script.
+
+              Added JUnit testing.
+
+<a name='build-79'></a>
+build-79
+              Changed "dataType" to "datatype" everywhere.
+
+              Changed all URI's that had "Dynamide" to "dynamide", to make it
+              simpler to publish.
+
+              Added batch and publish modes.
+
+              Added a little API in Session for managing hrefs and links (Anchor tags)
+                so that the application developer never needs to hardcode hyperlinks.
+                Instead the Session formats the links and URLs for you, so that it
+                can easily format them differently for publishing mode.
+
+              Added the ability to publish applications to static web pages.
+                This is in Session.publish(), and allows application-specific
+                publishing via the publishParams property of the application,
+                which is of type com.dynamide.datatypes.PublishParamDatatype,
+                and via the application_onPublish event.
+                The /dynamide/doco application has a full example of how to
+                customize publishing.  The /dynamide/admin application has an
+                example of how to drive publishing of *other* applications, and
+                can publish /dynamide/doco and /dynamide/demo.
+
+              To make publishing work, the ResourceManager now supports multiple
+              caches.  Each cache is named.  If you don't specify one, the global
+              cache named "cache" with URI "/cache" is used.
+
+
+              Added an href attribute to htmlsrc so that source can be pulled in
+              from anywhere in the Assembly search path.
+              For example:
+                  &lt;htmlsrc href="resources/mypage.html" />
+
+              Made com.dynamide.Page do the right thing and request all htmlsrc
+                Elements from Persistent, rather than going directly through the DOM.
+
+              Figured out how to sync between two CVS repositories.  Scripts
+                are in bin/dsync and bin/updatedynamide.sh
+                dsync is for use from the local developer's station,
+                updatedynamide.sh works there and on the server.
+
+              Re-organized the layout of Session.java code, but didn't really
+              make many changes.  It is more readable, but CVS diffing across this
+              version would be difficult. Diff before and after this change.
+
+              Installation script via Ant, shell scripts, and CVS scripts all
+                work now to to a checkout on another machine and an installation.
+                Everything is based on \$DYNAMIDE_HOME, so you can have multiple
+                installations.  I have used all this to set up Dynamide on
+                dynamide1.dynamide.com on a RedHat Linux server, with
+                Postgres and MySQL, Ant, Resin, and CVS.
+
+              Tightened up a bit more on getProperty, getPropertyValue and getPropertyStringValue.
+                Field and Property get*Value should now return Object, not String.
+
+              Began to use javadoc custom tags: @todo, @bug, @dynamide.keymethod, @dynamide.factorymethod.
+
+              Fixed a bug in FileTools that prevented files from being read, due to a buggy implementation
+              of the resolve() method.  Also worked around a missunderstanding where the JVM can't create directories
+              unless the directory portion of the call to File(String, String) is the *first* string, rather than
+              allowing a full path in second string, and an empty first string.
+
+              Fixed getProtoHostPort in ServletTools.
+
+              com/dynamide/util/URLDecoder.java now supports a getURL method, and
+              deals with URL Strings and URL Objects.
+
+              A bunch of features for the WebMacroTools shell.  Notably, the
+              fix for using quotes around sourced filenames, and the ability
+              to capture all output to an output file ( with option "-o").
+              Added some scripts in dynamide/src/shell/webmacro/ to use
+              the WebMacroTools shell.
+
+              Changed web-aps.xml representation in the ResourceManager IContext to be an
+                IContext and not an attribute.  This means that WebAppEntry is now an IContext,
+                and can be searched like this:
+
+                \#set \$w = \$session.getResourceManager().find("/homes/dynamide/web-apps")
+                \#foreach \$targetSession in \$w.getContexts().values() {
+                }
+
+                You could also search the root web-apps:
+                "/homes/web-apps"
+
+               Added handling of session list via IContexts, not the com.dynamide.util.SessionDatabase class.
+
+                \#set \$sessions = \$session.getResourceManager().find("/homes/dynamide/sessions")
+                \#foreach \$t in \$sessions.getAttributes().entrySet() {
+                    #set \$s = \$t.getValue()  ##WebAppEntry
+                }
+
+              Changed the Admin application to use the new scheme in the Sessions list.
+              Formatting of the Sessions list is now done entirely in sessionsPage.xml, not in Java.
+
+              Changed handleAction to know about design mode, it skips out early if true.
+
+              Added /dynamide/publisher application
+
+              Changed the way widget.fullFieldname is implemented: now there
+              is a fieldIndex property for widgets.
+              [12/1/2003 NOTE: in build-92 it is called widget.fieldID]
+              Currently, on the com.dynamide.checkbox has it correctly.
+              When outputting IDatasources, and iterating over the rows, you can increment the
+              datasource's currentRowIndex property, and set the widget to use this index.  Then a
+              grid of controls will POST properly.
+
+              Changed SimpleDatasource to handle tabular data.
+
+<a name='build-80'></a>
+build-80
+              Dynamide is now case-insensitive for the following lookups:
+                  Anything in Session.get(), Session.find(), Page.get(), AbstractWidget.get()
+                  Property.get(), Field.get(), and so all methods related to finding
+                  Fields and Properties.
+                  Also, URI's are looked up case-insensitively, but are case-preserved.
+                     This is important, since when dynamide publishes, the filenames
+                     created from the URI's should be what the programmer specified.
+                     So even if you hit /DynAmiDe/deMo, the links will all be
+                     to /dynamide/demo
+                  Dynamide is still case-preserved.
+              To handle this, many of the collections in Session now use the Collections API
+                  rather than Enumeration or StringList.
+              Got rid of Property.getValueObject(), since it is obviated. Now getValue() always returns
+                  the object anyway.
+              Added audit.bat which calls "bsh audit.bs" which runs the Admin app
+                  with a DYNAMIDE_TEXT output of the audit page.
+              Added junit.bat and audit.bat to test.bat as case "test.bat --daily"
+              IDatasource, IDatasourceBasic, and SimpleDatasource tightened up.
+
+<a name='build-81'></a>
+build-81
+              Changed the search order for fields.
+                1) application.xml fields element "filename" attribute
+                2) application.xml fields element
+                3) presence of fielddefs.xml
+
+              Fixed a bug where FileTools.FileInfo was reporting getFileNotFound()==true when a file was modified.
+
+<a name='build-82'></a>
+build-82
+              Fixed bug in linkstrip, where highlighted item was not working.
+              Working on new doco-app which encapsulates /dynamide/doco into a
+              more reusable widget and application.
+
+<a name='build-83'></a>
+build-83
+              Sync'd to DYNAMIDE1
+              Publishing is working with
+                 publishURLs can be specified in an application.xml property
+                 applicationPath can be ommitted
+              Session pooling is working
+                 application.xml can specify a property: poolable == true to participate,
+                   but the default is false.
+
+<a name='build-85'></a>
+build-85
+             Bugfix.
+             Also, added some controls at the global (not session) level
+             on the admin main page.
+
+<a name='build-86'></a>
+build-86
+
+    JVM 1.3 doesn't support some new 1.4 calls, which messes up ability to run on FreeBSD.
+     Removed calls to
+      Throwable.getCause(), added this into DynamideException,
+      added Tools.isJVM13() and isJVM14(), and fixed DynamideSecurityManager
+      calling getStackTrace(), and use printStackTrace() instead.
+
+<a name='build-87'></a>
+build-87
+
+    Schwarmanizer fixes, PostgreSQL working with permissioned stored procs.
+    BYTEA PostgreSQL support.
+    Fixes to Composite and TableTree.  Added test case.
+    Fixed xsl so that processing-instruction() is output in com.dynamide.xsl
+
+<a name='build-88'></a>
+build-88
+    Added jdbc connection pooling.  RDBTable, RDBDatabase and ResourceManager changed.
+        Also, fixed bug in connections not being closed.
+    Removed .dynamide.local.properties, changed to dynamide.local.properties in $DYNAMIDE_HOME
+       and stopped lookin in $HOME for this file.
+    Added pid file to resin startup.
+    /dynamide/admin now has
+        ResourceManager context dump
+        JDBC ConnectionPool dump
+        Links on sessions page cleaned up.  Columns reordered.
+    /swarm (application)  has changes, such as menu page not used now, and more postgres functions.
+    I started messing with the expires / HTTP caching headers, but it doesn't seem to make a difference.
+       Files changed: Constants.java, DynamideServlet.java, DynamideHandler.java
+    Added Session.hasQueryParam and also to ScriptEvent.hasQueryParam() and URLDecoder.hasField().
+
+<a name='build-89'></a>
+build-89
+    Some Beanshell and Webmacro memory leak fixes, notably:
+      ByteArrayOutputStream MUST have its reset() method called BEFORE it is destroyed
+        Also, if the stream is owned by another, you should call reset() before the other's close() is called.
+        close() has no effect on the direct class.  This seems like a JVM bug.
+        I used this in BufferConsole.  There is still an issue with the global Bsh interp, which
+        I can't get rid of (it is a singleton).  I can't upgrade to Bsh 1.3 or 2.0
+        because it breaks Dynamide due to some difference in the class loader.
+        But in those later versions, I should be able to pass in a NameSpace, which will hold
+        all the globals and thus be able to be gc()'d.
+      WebMacro -- FastWriter -- do NOT call FastWriter.close() or FastWriter.flush()
+        as these cause the writer to be cached.  Just create one and throw it away.
+        Also, setAsciiHack(true).
+
+    Added create scripts for bootstrapping Net_roots and the Schwarmanizer.
+                $DYNAMIDE_HOME/src/db/postgresql/net_roots_bootstrap.bash
+            which depends on
+                $DYNAMIDE_HOME/src/db/postgresql/net_roots_create.sql
+            and
+                $DYNAMIDE_HOME/build/ROOT/homes/dynamide/assemblies/com-dynamide-apps-1
+                  /apps/swarm/resources/sql/pg/swarm_functions.sql
+
+<a name='build-90'></a>
+build-90
+    Prior to reorganizing the webmacro expansion versus xhtml reading of htmlsrc elements.
+    10/30/2003 7:13PM
+
+<a name='build-91'></a>
+build-91
+    Implemented IDatasource in SimpleDatasource, RDBDatasource and Session.
+    It now specifies an iterator() call, and a simplified interface.
+    AbstractWidget is modified to now look in the datasource for field values,
+       not just the Session as the default datasource.
+    WebmacroDatatype is now used for any property values that are webmacro.
+      Note that in sub-properties, you may still be able to use webmacro expressions,
+      for example, the in the Link datatype, href can contain $session.createHref(...)
+      because the link is dumped on the page, and the page is then expanded.
+      Properties that are String properties no longer need to be escaped for webmacro.
+    Added widgets:
+       com.dynamide.dbgrid
+       com.dynamide.rdbdatabase
+       com.dynamide.rdbdatasource
+    Reworked Page.outputContainer -- it is now very simple and just calls Page.outputPage
+       but strips the HTML and BODY elements.  Otherwise all processing of containers
+       is the same as outputing a page with extra variables available.
+    Added IPropertyProvider interface, which Persistent implements.  Now you can
+       wire a Java object to an xml widget by the widget's properties.  The widget
+       events and htmlsrc are separate, but having the properties wired means that
+       when you change a property in the widget, the underlying Java object
+       can always have the latest property.  (This was done by references to IPropertyProvider
+       rather than broadcasting Property Change events.)  See how com.dynamide.rdbdatasource.xml
+       wires to com.dynamide.db.RDBDatasource.java.
+
+<a name='build-91'></a>
+build-91
+    Changed AbstractWidget.getFullFieldName to getFieldID and mapped get("fieldID") to this.
+        Now all widgets should use $widget.fieldID to get the id of the control to place in
+        the browser, e.g. <input type="text" id="$widget.fieldID"/>
+
+<a name='build-92'></a>
+build-92
+    Got the rdb components working pretty well:
+       rdbdatabase.xml
+       rdbdatasource.xml
+       rdbnavigator.xml
+       dbgrid.xml
+       RDBDatasource.java
+       RDBDatabase.java
+       IDatasource.java
+       IDatasourceBasic.java
+    Now these all work together to give tabular data with navigation and RDB backing
+      or use SimpleDatasource.java to give unbacked data.  The fields for the current row
+      are always in the Session and the standard HTML inputs know how to display these data
+      and also any Dynamide Widget that uses field and $widget.value and $widget.fieldID
+      can access the data.  See examples in test-RDBDatasource.bs, test-RDBDatasourcePOST.bs
+      and /dynamide/test-suite/dbgrid and /dynamide/test-suite/dbcontrols and also /soldierstories
+      applications.
+    /soldierstories defines an onHeaderClick event that sorts the grid up then down.
+
+<a name='build-93'></a>
+build-93
+    Added defaultProperty to the property editor specification.  Now
+    there is no need for the following calls:
+       Property.getDefaultEnumeration()
+       Property.getDefaultEnumerationDefaultIndex()
+       Property.getDefaultEnumeratedDatatype()
+
+<a name='build-94'></a>
+build-94
+    Added ExpansionLog (available via Session.getExpansionLog()) to log all
+        expansions and errors from expansions.  Expansions are: webmacro expansions,
+        beanshell events, and, in theory, JDOMFile.output() calls, though those haven't
+        been added since JDOMFile.output is static.
+        Using the ExpansionLog, which is a tree of log items, the current log item
+        can be referenced in the exceptions, or the whole tree can be viewed through
+        the admin application.
+    Also, all log messages now go to the "dynamide" database instance, using the DBLogAppender.
+        The admin application now has an "Error Log" link that shows a dbgrid, with all the
+        errors, that can be scrolled.
+    The key to the new logging is that DynamideLoggedException is a runtime exception
+        that pops to the top and is only caught by handleAction_internal, which
+        calls hookException.
+    Did quite a bit of work on the designers and editors. These mostly work in the IDE now.
+        The designers are separate pages, not widgets now.
+    Ported the Login class from the Schwarmanizer.
+    Added a "dynamide" schema in dynamide_schema.sql which contains support
+        for the Login class.  Now any account can source in the dynamide_schema.sql
+        and get the namespace "dynamide" which will contain the Login stuff and
+        the errorlog table.
+
+  </pre>
+</dynamideDoco>

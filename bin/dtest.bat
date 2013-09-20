@@ -1,0 +1,1 @@
+call test.bat --daily

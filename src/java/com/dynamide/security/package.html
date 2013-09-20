@@ -1,0 +1,37 @@
+<BODY>
+<P>Security objects, for preventing unauthorized access to resources across Dynamide Assemblies, Sessions, etc.
+There are many security features in dynamide, most of which are best described in the
+Dynamide "doco" application.  If you have it installed on this server, you can see
+it here:
+<br/>
+<A HREF="/dynamide/doco/doc/help/security">Security</A>
+<br/>
+Otherwise, you can see it here:
+<br/>
+<A HREF="http://apps.dynamide.com/dynamide/doco/doc/help/security">Security [on apps.dynamide.com]</A>
+<br/>
+</P>
+
+<p>
+The core classes in this package restrict access and implement security policies:
+<UL>
+  <LI>DynamideSecurityManager - installed as the Java VM SecurityManager, polices all access.</LI>
+  <LI>HackerSecurityManager - test case to make sure another SecurityManager can't be installed</LI>
+  <LI>DynamideClassLoader - the one and only ClassLoader allowed</LI>
+</UL>
+</p>
+
+<p>
+These classes participate in authentication and authorization:
+<UL>
+  <LI>Group -</LI>
+  <LI>User -</LI>
+</UL>
+</p>
+
+<p>
+
+</p>
+
+
+</BODY>

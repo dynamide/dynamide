@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<application>
+  <fields href="fielddefs.xml"></fields>
+  <event language="beanshell" name="application_onImport"><![CDATA[
+    import java.util.*;
+    import com.dynamide.*;
+    import com.dynamide.util.*;
+    import com.dynamide.datatypes.*;
+    import com.dynamide.test.samplebeans.MyDBValueBean;
+  ]]></event>
+  <event language="beanshell" name="application_onAction"><![CDATA[
+         event.println("application_onAction");
+         if ( event.action.equals("testQueryParam") ) {
+            session.logDebug("=================== in testQueryParam");
+            event.outputObject = ""+event.getQueryParam("test");
+            session.logDebug("=================== "+event.outputObject);
+            return;
+         }
+
+  ]]></event>
+  <event language="beanshell" name="application_onStart"><![CDATA[
+         event.session.setFieldValue("presentation", "webservice");
+         String language = event.getQueryParam("language");
+         event.println("language: "+language);
+         if (language.length()>0){
+            event.session.loadInternationalization(language);
+         }
+         try {
+            MyDBValueBean myValueBean = new MyDBValueBean();
+            event.session.addValueBean("myValueBean", (IValueBean)myValueBean);
+            event.print("myValueBean: ");
+            event.println(event.session.getValueBean("myValueBean").toString());
+            Map map = new HashMap();
+            map.put("qty", "333");
+            myValueBean.update(map, "orderID=12");
+            event.print("myValueBean, after update: ");
+            event.println(event.session.getValueBean("myValueBean").toString());
+         } catch (Exception beanError){
+            event.println("ERROR: myValueBean didn't come up correctly.  Probably a misconfiguration of MySQL on local server.");
+         }
+  ]]></event>
+  <event language="beanshell" name="application_onClose"><![CDATA[
+         MyDBValueBean myValueBean = event.session.getValueBean("myValueBean");
+         if (myValueBean != null){
+             myValueBean.close();
+         }
+  ]]></event>
+  <pages>
+    <page name="page1"></page>
+    <page name="page2"></page>
+    <page name="page3"></page>
+    <page name="page4"></page>
+    <page name="pageDone"></page>
+  </pages>
+  <properties>
+    <property name="defaultLanguage">
+      <value>en-us</value>
+    </property>
+    <property name="errorPageStatic">
+      <value>error.html</value>
+    </property>
+    <property name="lastSave">
+      <datatype>java.util.Date</datatype>
+      <readOnly>true</readOnly>
+      <value>1057021819845</value>
+    </property>
+    <property name="onImport" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value>application_onImport</value>
+    </property>
+    <property name="onStart" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value>application_onAction</value>
+    </property>
+    <property name="title">
+      <value>Demo Application</value>
+    </property>
+    <property name="type">
+      <readOnly>true</readOnly>
+      <value>com.dynamide.Session</value>
+    </property>
+  </properties>
+</application>

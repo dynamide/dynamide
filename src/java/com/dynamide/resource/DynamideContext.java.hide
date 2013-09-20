@@ -1,0 +1,350 @@
+package com.dynamide.resource;
+
+import java.io.*;
+import java.util.*;
+import javax.naming.*;
+
+import org.apache.naming.NamingContextEnumeration;
+
+
+/**
+ *  @see javax.naming.Context
+ */
+public class DynamideContext implements Context
+{
+  private static Hashtable tree = new Hashtable();
+
+  private boolean closed = false;
+
+  public DynamideContext() {
+    super();
+  }
+
+  public String toString(){
+    return super.toString()+"{"+tree.toString()+"}";
+  }
+
+  /**
+   *  Not implemented.
+   */
+  public Object addToEnvironment(String propName, Object propVal)
+  throws NamingException
+  {
+    checkClosed();
+    throw new IllegalArgumentException("Method addToEnvironment not implemented.");
+  }
+
+  /**
+   *  Not implemented.
+   */
+  public void bind(Name name, Object obj)
+  throws NamingException
+  {
+    checkClosed();
+    throw new IllegalArgumentException("Method 'bind' not implemented.");
+  }
+
+  public synchronized void bind(String name, Object obj)
+  throws NamingException
+  {
+    checkClosed();
+    if (tree.get(name) == null)
+    {
+      tree.put(name, obj);
+    }
+    else
+    {
+      throw new NamingException("Object already bound to \"" + name + "\"");
+    }
+  }
+
+  public void close()
+  throws NamingException
+  {
+    this.closed = true;
+  }
+
+  private final boolean isClosed()
+  {
+    return this.closed;
+  }
+
+  private final void checkClosed()
+  throws NamingException
+  {
+    if (isClosed())
+    {
+      throw new NamingException("Context already closed.");
+    }
+  }
+
+  /**
+   *  Not implemented.
+   */
+  public Name composeName(Name name, Name prefix)
+  throws NamingException
+  {
+    checkClosed();
+    throw new IllegalArgumentException("Method 'composeName(Name name, Name prefix)' not implemented.");
+  }
+
+  /**
+   *  Not implemented.
+   */
+  public String composeName(String name, String prefix)
+  throws NamingException
+  {
+    checkClosed();
+    throw new IllegalArgumentException("Method 'composeName(String name, String prefix)' not implemented.");
+  }
+
+  /**
+   *  Not implemented.
+   */
+  public Context createSubcontext(Name name)
+  throws NamingException
+  {
+    checkClosed();
+    throw new IllegalArgumentException("Method 'createSubcontext(Name name)' not implemented.");
+  }
+
+  /**
+   *  Not implemented.
+   */
+  public Context createSubcontext(String name)
+  throws NamingException
+  {
+    checkClosed();
+    throw new IllegalArgumentException("Method 'createSubcontext(String name)' not implemented.");
+  }
+
+  /**
+   *  Not implemented.
+   */
+  public void destroySubcontext(Name name)
+  throws NamingException
+  {
+    checkClosed();
+    throw new IllegalArgumentException("Method 'destroySubcontext(Name name)' not implemented.");
+  }
+
+  /**
+   *  Not implemented.
+   */
+  public void destroySubcontext(String name)
+  throws NamingException
+  {
+    checkClosed();
+    throw new IllegalArgumentException("Method 'destroySubcontext(String name)' not implemented.");
+  }
+
+  /**
+   *  Not implemented.
+   */
+  public Hashtable getEnvironment()
+  throws NamingException
+  {
+    checkClosed();
+    throw new IllegalArgumentException("Method 'getEnvironment()' not implemented.");
+  }
+
+  /**
+   *  Not implemented.
+   */
+  public NameParser getNameParser(Name name)
+  throws NamingException
+  {
+    checkClosed();
+    throw new IllegalArgumentException("Method 'getNameParser(Name name)' not implemented.");
+  }
+
+  /**
+   *  Not implemented.
+   */
+  public NameParser getNameParser(String name)
+  throws NamingException
+  {
+    checkClosed();
+    throw new IllegalArgumentException("Method 'getNameParser(String name)' not implemented.");
+  }
+
+  /**
+   *  Not implemented.
+   */
+  public NamingEnumeration list(Name name)
+  throws NamingException
+  {
+    checkClosed();
+    throw new IllegalArgumentException("Method 'list(Name name)' not implemented.");
+  }
+
+  /**
+   *  Not implemented.
+   */
+  public NamingEnumeration list(String name)
+  throws NamingException
+  {
+    checkClosed();
+    throw new IllegalArgumentException("Method 'list(String name)' not implemented.");
+  }
+
+  /**
+   *  Not implemented.
+   */
+  public NamingEnumeration listBindings(Name name)
+  throws NamingException
+  {
+    checkClosed();
+
+    throw new IllegalArgumentException("Method 'listBindings(Name name)' not implemented.");
+  }
+
+  /**
+   *  Not implemented.
+   */
+  public NamingEnumeration listBindings(String name)
+  throws NamingException
+  {
+    checkClosed();
+    return new NamingContextEnumeration(tree.keys());
+    //throw new IllegalArgumentException("Method 'listBindings(String name)' not implemented.");
+  }
+
+  /**
+   *  Not implemented.
+   */
+  public Object lookup(Name name)
+  throws NamingException
+  {
+    checkClosed();
+    throw new IllegalArgumentException("Method 'lookup(Name name)' not implemented.");
+  }
+
+  public synchronized Object lookup(String name)
+  throws NamingException
+  {
+    checkClosed();
+    Object o = tree.get(name);
+    if (o != null)
+    {
+      return o;
+    }
+    else
+    {
+      throw new NamingException("No object for \"" + name + "\"");
+    }
+  }
+
+  /**
+   *  Not implemented.
+   */
+  public Object lookupLink(Name name)
+  throws NamingException
+  {
+    checkClosed();
+    throw new IllegalArgumentException("Method 'lookupLink(Name name)' not implemented.");
+  }
+
+  /**
+   *  Not implemented.
+   */
+  public Object lookupLink(String name)
+  throws NamingException
+  {
+    checkClosed();
+    throw new IllegalArgumentException("Method 'lookupLink(String name)' not implemented.");
+  }
+
+  /**
+   *  Not implemented.
+   */
+  public void rebind(Name name, Object obj)
+  throws NamingException
+  {
+    checkClosed();
+    throw new IllegalArgumentException("Method 'rebind(Name name, Object obj)' not implemented.");
+  }
+
+  public void rebind(String name, Object obj)
+  throws NamingException
+  {
+    checkClosed();
+    tree.put(name, obj);
+  }
+
+  /**
+   *  Not implemented.
+   */
+  public Object removeFromEnvironment(String propName)
+  throws NamingException
+  {
+    checkClosed();
+    throw new IllegalArgumentException("Method 'removeFromEnvironment(String propName)' not implemented.");
+  }
+
+  /**
+   *  Not implemented.
+   */
+  public void rename(Name oldName, Name newName)
+  throws NamingException
+  {
+    checkClosed();
+    throw new IllegalArgumentException("Method 'rename(Name oldName, Name newName)' not implemented.");
+  }
+
+  /**
+   *  Not implemented.
+   */
+  public void rename(String oldName, String newName)
+  throws NamingException
+  {
+    checkClosed();
+    throw new IllegalArgumentException("Method 'rename(String oldName, String newName)' not implemented.");
+  }
+
+  /**
+   *  Not implemented.
+   */
+  public String getNameInNamespace()
+  throws NamingException
+  {
+    checkClosed();
+    throw new IllegalArgumentException("Method 'getNameInNamespace()' not implemented.");
+  }
+
+  /**
+   *  Not implemented.
+   */
+  public void unbind(Name name)
+  throws NamingException
+  {
+    checkClosed();
+    throw new IllegalArgumentException("Method 'unbind(Name name)' not implemented.");
+  }
+
+  public void unbind(String name)
+  throws NamingException
+  {
+    checkClosed();
+    tree.remove(name);
+  }
+
+    public static void main(String [] args)
+    throws javax.naming.NamingException {
+        Hashtable env = new Hashtable();
+        env.put(Context.INITIAL_CONTEXT_FACTORY,
+        "com.dynamide.resource.DynamideInitialContextFactory");
+        Context context = new InitialContext(env);
+        com.dynamide.util.Tools tools = new com.dynamide.util.Tools();
+
+        context.bind("foo", tools);
+        System.out.println("context: "+context.toString());
+
+        StringWriter sw = new StringWriter();
+        (new com.dynamide.util.JNDIWalk()).walk(context, "     ", "     ", sw);
+        System.out.println("walk: " + sw.toString());
+
+    }
+
+
+}

@@ -1,0 +1,213 @@
+<?xml version="1.0"?>
+<!DOCTYPE widget>
+<!--  DOCTYPE widget SYSTEM "widget.dtd"-->
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<widget>
+    <componentHelp>
+     <p>An input field for passing simple one-line strings to the server.  On
+     the server the value is retrieved using the "field" property.
+
+     <br/>The property "textSize" controls how wide the input control will
+     be, "textWidth" controls how many characters it will accept. WARNING:
+     don't use the captionNOBR in conjunction with any greedy-width controls
+     on the same row.  Greedy-width captions are those whose captionWidth is
+     100% or whose width is 100% .  In Nestcape 4.7 Any input control will
+     simply overlay the caption. </p>
+    </componentHelp>
+
+    <properties>
+        <property name="align">
+           <datatype>com.dynamide.datatypes.Enumeration</datatype>
+           <defaultValue>
+                <enumeration defaultIndex='1'><!-- default it to 'right' -->
+                    <value>left</value>
+                    <value>right</value>
+                </enumeration>
+            </defaultValue>
+        </property>
+        <property name="border">
+            <defaultValue>0</defaultValue>
+        </property>
+        <property name="basename">
+            <defaultValue>edit</defaultValue>
+            <hidden>true</hidden>
+        </property>
+        <property name="caption">
+            <defaultValue>edit</defaultValue>
+            <intl>1</intl>
+        </property>
+        <property name="captionClass"><defaultValue>caption</defaultValue></property>
+        <property name="captionPlacement"><defaultValue>left</defaultValue></property>
+        <property name="captionNOBR">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+        <property name="captionWidth"><defaultValue></defaultValue></property>
+        <property name="cellpadding"><defaultValue>0</defaultValue></property>
+        <property name="cellspacing"><defaultValue>0</defaultValue></property>
+        <property name="class"><defaultValue></defaultValue></property>
+        <property name="datasource">
+            <datatype>com.dynamide.datatypes.IDatasourceDatatype</datatype>
+            <defaultValue></defaultValue>
+        </property>
+        <property name="echoPassword">
+            <defaultValue>false</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+        <property name="enabled">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+        <property name="field">
+           <datatype>com.dynamide.datatypes.FieldDatatype</datatype>
+           <defaultValue></defaultValue>
+        </property>
+
+        <!--
+        <property name="field">
+           <datatype>com.dynamide.datatypes.LiveEnumeratedDatatype</datatype>
+           <comment>make sure there is one empty value for autocreated fields</comment>
+           <defaultValue>
+                <enumeration defaultIndex='0'>
+                    <value></value>
+                </enumeration>
+            </defaultValue>
+           <liveEvalString>session.getFieldNames();</liveEvalString>
+        </property>
+        -->
+
+        <property name="fieldIndex"><defaultValue></defaultValue></property>
+        <property name="isPassword"><defaultValue>false</defaultValue></property>
+        <property name="name"><defaultValue>edit</defaultValue></property>
+        <property name="padError"><defaultValue>true</defaultValue><helpTip>If this is false, and the
+            error message is blank, then the error
+            won't take up any space.  Otherwise, space is constant whether there is a
+            red star or not.</helpTip></property>
+        <property name="showErrorAbove"><defaultValue>true</defaultValue></property>
+        <property name="tabindex"><defaultValue></defaultValue></property>
+        <property name="textClass"><defaultValue></defaultValue></property>
+        <property name="textSize"><defaultValue>20</defaultValue></property>
+        <property name="textWidth"><defaultValue></defaultValue></property>
+        <property name="type">
+            <defaultValue>com.dynamide.edit</defaultValue>
+            <readOnly>true</readOnly>
+        </property>
+        <property name="valign">
+           <datatype>com.dynamide.datatypes.Enumeration</datatype>
+           <defaultValue>
+                <enumeration defaultIndex='1' final="true"><!-- default it to 'center' -->
+                    <value>top</value>
+                    <value>center</value>
+                    <value>bottom</value>
+                </enumeration>
+            </defaultValue>
+        </property>
+        <property name="visible">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+
+        <!-- Events -->
+
+        <property name="onValidate" isEvent="true">
+           <defaultValue></defaultValue>
+           <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+        </property>
+        <property name="onError" isEvent="true">
+           <defaultValue></defaultValue>
+           <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+        </property>
+
+    </properties>
+
+    <htmlsrc browser="*"><![CDATA[
+        #set $iserror = $widget.getError()
+        #if ($iserror == true){
+            #set $whichCaptionClass = "errorCaption"
+        } #else {
+            #set $whichCaptionClass = "$widget.captionClass"
+        }
+        <table border="0" cellpadding="0" cellspacing="0">
+            #if ($iserror == true && $widget.showErrorAbove == "true"){
+            <tr>
+            <td>
+                <div class="errorCaption">
+                    $widget.getErrorMessage()
+                </div>
+            </td>
+            </tr>
+            }
+            <tr>
+            <td>
+            ##$session.setStdoutEcho(true)
+            ##$session.println("in com.dynamide.edit htmlsrc @@@@@@@@@@@@@@ $widget.getID()")
+             ##               hhh $widget.getField().getObjectID()
+             ##               hhh $widget.getField().dumpHTML()
+             ##               iii $widget.getErrorMessage()
+             ##       $widget.getField().getPropertiesTable().hashCode();
+            <table border="$widget.border" class="$widget.class" cellpadding="$widget.cellpadding" cellspacing="$widget.cellspacing">
+            <tr>
+                <td width="$widget.captionWidth" align="$widget.align" valign="$widget.valign">
+                    ##widget.getID:$widget.getID()<br />
+                    ##field.id:$widget.getField().id<br />
+                    ##$widget.getField().dumpHTML()
+                    ##$widget.getField().dump()
+                    #if ($iserror == true && $widget.showErrorAbove == "false"){
+                        <div class="errorCaption">
+                            $widget.getErrorMessage()
+                        </div>
+                    }
+                    <div class="$whichCaptionClass">
+                    #if ($widget.caption.length()>0){
+                      #if($widget.captionNOBR=="true"){<nobr>}$widget.caption#if($widget.captionNOBR=="true"){</nobr>}
+                    }
+                    </div>
+                </td>
+                #if ($widget.captionPlacement = "above"){
+                 </tr><tr>
+                 <td width="$widget.captionWidth" align="$widget.align" valign="$widget.valign">
+                } #else {
+                 <td>
+                }
+                    #set $inputType = "text"
+                    #if ($widget.isPassword == "true"){
+                        #set $inputType = "password"
+                    }
+                    #set $val = $session.StringTools.escapeForJavascript($widget.value)
+                    #set $fieldID = $widget.fieldID
+                    #if ($widget.isPassword == "true"  && $widget.echoPassword == "false"){
+                        #set $displayVal = ""  ##Don't redisplay the value on subsequent showing, since "View Source" could reveal.
+                    } #else {
+                        #set $displayVal = "$val"
+                    }
+                    #if ($widget.enabled == "true"){
+                        <input type="$inputType" class="$widget.textClass" #if ($widget.textWidth!=""){ MAXLENGTH="$widget.textWidth"}
+                            size="$widget.textSize" id="$fieldID" name="$fieldID"
+                            value="$displayVal" #if ($widget.tabindex != "") { tabindex='$widget.tabindex' } />
+                    } #else {
+                        <table border='1' cellpadding='0' cellspacing='0'>
+                        <tr>
+                            <td>$displayVal</td>
+                        </tr>
+                        </table>
+                    }
+                </td>
+                </tr>
+            </table>
+            </td>
+        #if ( $iserror == true ) {
+            <td width='20'>
+                <img src='$session.getInclude("resources/images/redstar.gif")'/>
+            </td>
+        } #else {
+            #if ($widget.padError=="true"){
+            <td width='20'>
+                 <dm_nbsp/>
+            </td>
+            }
+        }
+            </tr>
+        </table>
+    ]]></htmlsrc>
+</widget>

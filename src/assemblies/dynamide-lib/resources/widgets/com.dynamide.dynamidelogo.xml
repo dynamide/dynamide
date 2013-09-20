@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<!DOCTYPE widget>
+<!--  DOCTYPE widget SYSTEM "widget.dtd"-->
+<!-- Copyright (c) 2001, 2002, 2003 DYNAMIDE.COM -->
+
+<widget>
+<componentHelp>
+</componentHelp>
+
+<properties>
+    <property name="bgcolor">
+        <defaultValue>#DDDDDD</defaultValue>
+    </property>
+    <property name="border">
+        <defaultValue></defaultValue>
+    </property>
+    <property name="flavor">
+        <defaultValue>box</defaultValue>
+    </property>
+    <property name="type">
+        <defaultValue>com.dynamide.dynamidelogo</defaultValue>
+        <readOnly>true</readOnly>
+    </property>
+</properties>
+
+<htmlsrc browser="*"><![CDATA[
+#if ("$widget.flavor"=="green"){
+<!--this is a green border, but at cellpadding=0, it disappears-->
+<table border='0' bgcolor='#B8E285' cellpadding='0' cellspacing='0'>
+<tr>
+<td>
+  <table border='0' cellpadding='0' cellspacing='0' bgcolor='white'>
+        <tr>
+            <td colspan='2' align='left'><FONT SIZE="-1" COLOR="00FF00" face="Helvetica"><b>DYNAMIC</b></FONT></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><FONT SIZE="-1" COLOR="0099FF" face="Helvetica"><b>IDE</b></FONT></td>
+        </tr>
+        <tr>
+            <td><FONT SIZE="-1" COLOR="00FF00" face="Helvetica"><b>DYNAM</b></FONT></td>
+            <td><FONT SIZE="-1" COLOR="00AAFF" face="Helvetica"><b>IDE</b></FONT></td>
+        </tr>
+        <tr>
+            <td  colspan='2' align='left'><FONT SIZE="-1" COLOR="00aa00" face="Helvetica"><b>DYNAMIDE</b></FONT></td>
+        </tr>
+    </table>
+</td>
+</tr>
+</table>
+} #elseif ("$widget.flavor"=="box") {
+<nobr><table border='0' cellpadding='1' cellspacing='0' bgcolor="black">
+  <tr><td><table border='0' cellpadding='0' cellspacing='0' bgcolor="#DDDDDD">
+  <tr><td><a href="/dynamide/doco?next=about"><img border='0' src='$session.href("resources/images/dynamide-logo-small.gif")' /></a></td></tr>
+</table></td></tr></table></nobr>
+} #elseif ("$widget.flavor"=="plain") {
+<a href="/dynamide/doco?next=about"><img border='0' src='$session.href("resources/images/dynamide-logo-small.gif")' /></a>
+} #else {
+<nobr><table border='0' cellpadding='$widget.border' cellspacing='0' bgcolor="black">
+  <tr><td><table border='0' cellpadding='0' cellspacing='0' bgcolor="$widget.bgcolor">
+  <tr><td><a href="/dynamide/doco?next=about"><img border='0' src='$session.href("resources/images/dynamide-logo-small.gif")' /></a></td></tr>
+</table></td></tr></table></nobr>
+}
+]]></htmlsrc>
+</widget>

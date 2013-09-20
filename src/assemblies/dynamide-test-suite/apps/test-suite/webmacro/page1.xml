@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm >
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<dynamideForm>
+
+
+<properties>
+
+    <property name="type">
+      <value>pagetypes/com.dynamide.form</value>
+      <readOnly>true</readOnly>
+    </property>
+
+    <property name="title">
+      <value>Test Application - Page 1</value>
+    </property>
+
+    <property name="margin">
+      <value>0</value>
+    </property>
+
+    <property name="bgcolor">
+      <value>white</value>
+    </property>
+
+
+  </properties>
+
+
+<htmlsrc><![CDATA[
+<HTML>
+    <HEAD>
+        <TITLE>$session.title - $page.title
+        </TITLE>
+        $session.getInclude("resources/js/page.js")
+        $session.getInclude("resources/css/dynamide.css")
+    </HEAD>
+
+<BODY id="page1" onclick="widgetClicked(this)" bottomMargin="0" leftMargin="0" topMargin="0" rightMargin="0" bgcolor="white">
+        <SPAN class="widget" id="widgetstyle1" onclick="widgetClicked(this)"></SPAN>
+
+<FORM name="mojoForm" action="/dynamide/demo" method="get" encType="application/x-www-form-urlencoded">
+           <h2>Tests for WebMacro expressions</h2>
+<p>You can see below that the rules are as follows:
+<ul>
+<li>If the method returns a boolean, you can use it as expected in boolean expressions </li>
+<li>If the method returns a string, boolean expressions return true if the string is not null, or false if null</li>
+<li>If the method returns a string that is "true" or "false", you must do string comparison with it.</li>
+<li>In a string context, booleans will expand to <b>true</b> and <b>false</b>, without quotes.</li>
+<li>In a string context, Strings will expand without quotes, also.</li>
+</ul>
+<b><i>
+So if you know you have a boolean return value, you can use a boolean expression, otherwise use a string comparison.
+As a convenience, some objects have an isValueTrue(String) method, that calls get(String) on the same object for you,
+and returns a boolean.</i></b>
+
+<br/>For example:<br/>
+\$widget.isValueTrue("readOnly")<br/>
+For Session, the method looks at Fields of the Session:
+<br/>
+\$session.isValueTrue("qty") : $session.isValueTrue("qty")
+<br/>
+See the Javadoc for the other objects.<p>
+For clarity, here are the method declarations used in this test:<br/>
+<b>public String getFieldValue(String fieldName);</b><br/>
+<b>public boolean getDesignMode();</b><br/>
+
+</p>
+</p>
+<hr/>
+          Explicitly call the getter:  \$session.getDesignMode(): $session.getDesignMode()<br/>
+          Tries to use the get(String) accessor, but returns an empty string: \$session.designMode: $session.designMode<br/>
+          Uses the getter, and returns a boolean, <i>not</i> a String: \$session.DesignMode: $session.DesignMode<br/>
+          session.get("SESSIONID"): $session.get("SESSIONID")<br/>
+
+
+
+<hr/>
+          <h3>After setting qty to true:</h3>
+          $session.setFieldValue("qty", "true")
+          \$session.getFieldValue("qty"): $session.getFieldValue("qty")<br/>
+          \"\$session.getFieldValue(\"qty\")\": \"$session.getFieldValue("qty")\"<br/>
+
+          <br/>
+          <b>with a method that returns a string ("true") :</b> <br/>
+          if (\$session.getFieldValue("qty")): #if ($session.getFieldValue("qty"))  { <b> yes</b> }<br/>
+          <font color='green'><b>But notice this error in usage: </b></font>if (\$session.getFieldValue("i'm not defined")): #if ($session.getFieldValue("I'm not defined"))  { <b> yes</b> }<br/>
+          <font color='green'><b>This should have returned false, but it returned true, since getFieldValue returns an empty string when the field is undefined.</b></font><br/>
+          if (\$session.getFieldValue("qty") == true): #if ($session.getFieldValue("qty") == true){  <b> yes</b>}<br/>
+          if (\$session.getFieldValue("qty") == "true"): #if ($session.getFieldValue("qty") == "true") {<b> yes</b>}<br/>
+
+<hr/>
+          <h3>After changing qty to false:</h3>
+          $session.setFieldValue("qty", "false")
+          \$session.getFieldValue("qty"): $session.getFieldValue("qty")<br/>
+          \"\$session.getFieldValue(\"qty\")\": \"$session.getFieldValue("qty")\"<br/>
+          (Note that you can't use this escaped quote trick in an expression:<br/>
+          (this would cause an error) \#if (\"\$session.getFieldValue(\"qty\")\")\{ yes \}
+
+          <br/>
+
+          <b>with a method that returns a string ("false") :</b> <br/>
+          if (null): #if (null)  { <b> yes</b> } #else { <b>no</b>}<br/>
+          if (""): #if ("")  { <b> yes:</b> } #else { <b>no</b>}<br/>
+          if ("a"): #if ("a")  { <b> yes:</b> } #else { <b>no</b>}<br/>
+          if (\$session.getFieldValue("qty")): #if ($session.getFieldValue("qty"))  { <b> yes</b> (dangerous, since \$session.getFieldValue("qty") == $session.getFieldValue("qty") } #else { no }<br/>
+          if (\$session.getFieldValue("qty") == false): #if ($session.getFieldValue("qty") == false){  <b> yes</b>}<br/>
+          if (\$session.getFieldValue("qty") == "false"): #if ($session.getFieldValue("qty") == "false") {<b> yes</b>}<br/>
+
+          <br/>
+
+          <b>with a method that returns boolean (false):</b> <br/>
+          if (!\$session.getDesignMode()): #if (!$session.getDesignMode()){ <b> yes</b> }<br/>
+          if (\$session.getDesignMode() == false): #if ($session.getDesignMode() == false){ <b> yes</b> }<br/>
+          if (\$session.getDesignMode() == "false"): #if ($session.getDesignMode() == "false"){ <b> yes</b> }<br/>
+          if ("\$session.getDesignMode()" == "false"): #if ("$session.getDesignMode()" == "false"){ <b> yes</b> }<br/>
+<hr/>
+
+        </FORM>
+        Entity:
+        <dm_nbsp/>
+
+
+
+      </BODY>
+
+
+    </HTML>
+  ]]></htmlsrc>
+
+  <widgets>
+
+      <widget id="widgetstyle1">
+      <properties>
+        <property name="name">
+          <value>hidden</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.widgetstyle</value>
+        </property>
+      </properties>
+    </widget>
+
+  </widgets>
+
+</dynamideForm>

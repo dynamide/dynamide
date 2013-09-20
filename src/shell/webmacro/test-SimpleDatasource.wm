@@ -1,0 +1,4 @@
+#set $session = $res.createSession("/dynamide/doco");
+#set $ev = "source(\"tests/test-SimpleDatasource.bs\");"
+#set $foo = $session.eval($ev)
+#set $foo = $session.eval($ev)

@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<application>
+  <fields href="fielddefs.xml"></fields>
+  <pages>
+    <page name="page1"></page>
+  </pages>
+  <properties>
+    <property name="afterPublish" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value></value>
+    </property>
+    <property name="applicationID">
+      <value>properties</value>
+    </property>
+    <property name="beforePublish" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value></value>
+    </property>
+    <property name="defaultLanguageCode">
+      <value>en-us</value>
+    </property>
+    <property name="lastSave">
+      <datatype>java.util.Date</datatype>
+      <readOnly>true</readOnly>
+      <value>1072971700281</value>
+    </property>
+    <property name="onAction" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value></value>
+    </property>
+    <property name="onClose" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value></value>
+    </property>
+    <property name="onImport" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value></value>
+    </property>
+    <property name="onPublish" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value></value>
+    </property>
+    <property name="onStart" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value></value>
+    </property>
+    <property name="poolable">
+      <value>false</value>
+    </property>
+    <property name="publishParams">
+      <datatype>com.dynamide.datatypes.PublishParamsDatatype</datatype>
+      <value>
+        <URL></URL>
+        <URIPrefix></URIPrefix>
+        <outputDir></outputDir>
+        <protocolHostPort></protocolHostPort>
+        <defaultExtension>.html</defaultExtension>
+        <publishPagesList></publishPagesList>
+        <hideApplicationPath></hideApplicationPath>
+        <skipResourcesCopy></skipResourcesCopy>
+      </value>
+    </property>
+    <property name="queryNextPage" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value></value>
+    </property>
+    <property name="title">
+      <value></value>
+    </property>
+    <property name="type">
+      <readOnly>true</readOnly>
+      <value>com.dynamide.Session</value>
+    </property>
+  </properties>
+</application>
+

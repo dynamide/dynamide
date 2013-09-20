@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<widget>
+    <properties>
+        <property name="type">
+            <defaultValue>com.dynamide.stdincludes</defaultValue>
+            <readOnly>true</readOnly>
+        </property>
+        <property name="name"><defaultValue>includes</defaultValue></property>
+        <property name="designModeItems">
+            <datatype>com.dynamide.datatypes.EnumeratedDatatype</datatype>
+            <defaultValue>
+                <enumeration override="false" defaultIndex="0">
+                  <item datatype="com.dynamide.datatypes.StringDatatype">resources/js/scripts.js</item>
+                  <item datatype="com.dynamide.datatypes.StringDatatype">resources/js/page.js</item>
+                  <item datatype="com.dynamide.datatypes.StringDatatype">resources/js/msdom.js</item>
+                  <item datatype="com.dynamide.datatypes.StringDatatype">resources/js/dmDesign.js</item>
+                </enumeration>
+            </defaultValue>
+        </property>
+        <property name="runModeItems">
+            <datatype>com.dynamide.datatypes.EnumeratedDatatype</datatype>
+            <defaultValue>
+                <enumeration override="false" defaultIndex="0">
+                  <item datatype="com.dynamide.datatypes.StringDatatype">resources/js/scripts.js</item>
+                  <item datatype="com.dynamide.datatypes.StringDatatype">resources/js/page.js</item>
+                </enumeration>
+            </defaultValue>
+        </property>
+    </properties>
+
+    <htmlsrc browser="*"><![CDATA[
+        #if ($designMode == "true"){
+            <table border='1' cellpadding='0' cellspacing='0' bgcolor="gray">
+            <tr><td>com.dynamide.includes
+                #foreach $thing in $widget.getProperty("designModeItems").getEnumeration() {
+                    #if ("$thing" == ""){
+                    <!-- WARNING: included item was empty -->
+                    } #else {
+                        $session.getInclude("$thing")
+                    }
+                }
+            </td></tr>
+            </table>
+        } #else {
+            #foreach $thing in $widget.getProperty("runModeItems").getEnumeration() {
+                #if ("$thing" == ""){
+                <!-- WARNING: included item was empty -->
+                } #else {
+                    $session.getInclude("$thing")
+                }
+            }
+        }
+    ]]></htmlsrc>
+</widget>

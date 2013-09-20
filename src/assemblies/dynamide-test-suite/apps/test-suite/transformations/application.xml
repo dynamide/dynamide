@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm >
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<application>
+
+  <fields href="fielddefs.xml"></fields>
+
+  <properties>
+    <property name='imports'>
+            <datatype>com.dynamide.datatypes.Enumeration</datatype>
+            <value>
+                <enumeration defaultIndex='0'>
+                    <item datatype="com.dynamide.datatypes.Version">
+                        <basename>com-dynamide-lib</basename>
+                        <interface>1</interface>
+                        <build>59+</build>
+                    </item>
+                </enumeration>
+            </value>
+            <helpTip>Imports defined for this Application</helpTip>
+        </property>
+        <property name="publishParams">
+          <datatype>com.dynamide.datatypes.PublishParamsDatatype</datatype>
+          <value>
+              <URL>?USER=publish</URL>
+              <URIPrefix></URIPrefix>
+              <outputDir></outputDir>
+              <protocolHostPort></protocolHostPort>
+              <defaultExtension>.html</defaultExtension>
+              <publishPagesList>true</publishPagesList>
+              <hideApplicationPath>true</hideApplicationPath>
+          </value>
+        </property>
+  </properties>
+
+  <pages>
+    <page name="page1"></page>
+  </pages>
+
+</application>

@@ -1,0 +1,352 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<widget>
+    <componentHelp>
+    <p>The "sql" property is used to retrieve a dataset.
+
+    </p>
+    <p>
+    The "updateSQL" property is used for UPDATE
+    when the programmer calls the "post" event of this widget, or directly calls post()
+    on the underlying RDBDatasource (or IDatasource) object that is returned by Session.getDatasource().
+    </p>
+    <p>If "updateSQL" is blank, then SQL is generated to perform the UPDATE automatically.
+    You can control the key columns used with the "keyColumns" property, which is a comma-separated
+    list of column names.  Each name should be then name recognized by the back end database.
+    </p>
+    <p>If "updateSQL" is not blank, it is expanded with Webmacro as a template.
+    In the context are the following variables:
+    <table border='1' cellpadding='2' cellspacing='0'>
+      <tr>
+        <td>datasource</td><td>A reference to the underlying IDatasource</td>
+      </tr>
+      <tr>
+        <td>currentRow</td><td>A reference to the IDatasource.getCurrentRow(), which is a StringList</td>
+      </tr>
+    </table>
+    </p>
+    <p>
+    If the datasource is in INSERT state, then the SQL in "insertSQL" would be called, if available, otherwise
+    an auto-generated SQL statement is created.
+    </p>
+    <p>
+    If the "open" property is true, the result set will be retrieved when the datasource is loaded.
+    </p>
+    </componentHelp>
+
+    <properties>
+        <property name="basename">
+            <defaultValue>rdbdatasource</defaultValue>
+            <hidden>true</hidden>
+        </property>
+        <property name="columnTranslation"><defaultValue></defaultValue></property>
+        <property name="currentRowIndex"><defaultValue></defaultValue></property>
+        <property name="database">
+            <datatype>com.dynamide.datatypes.WidgetDatatype</datatype>
+            <defaultValue>
+              <key></key>
+              <interface>database</interface>
+            </defaultValue>
+        </property>
+
+        <property name="detailColumnClause">
+          <defaultValue></defaultValue>
+        </property>
+        <property name="detailKey">
+          <defaultValue></defaultValue>
+        </property>
+        <property name="detailTable">
+          <defaultValue></defaultValue>
+        </property>
+        <property name="masterKey">
+          <defaultValue></defaultValue>
+        </property>
+        <property name="masterDatasource">
+            <datatype>com.dynamide.datatypes.WidgetDatatype</datatype>
+            <defaultValue>
+              <key></key>
+              <interface>datasource</interface>
+            </defaultValue>
+        </property>
+
+        <property name="interface">
+            <defaultValue>datasource</defaultValue>
+            <readOnly>true</readOnly>
+        </property>
+        <property name="insertReturnsCount">
+            <datatype>boolean</datatype>
+            <defaultValue>true</defaultValue>
+        </property>
+        <property name="insertSQL">
+            <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+            <defaultValue></defaultValue>
+        </property>
+        <property name="keyColumns"><defaultValue></defaultValue></property>
+        <property name="lastCount"><defaultValue>0</defaultValue></property>
+        <property name="lastError"><defaultValue></defaultValue></property>
+        <property name="open">
+            <datatype>boolean</datatype>
+            <defaultValue>false</defaultValue>
+        </property>
+        <property name="reloadAfterPost">
+           <defaultValue>true</defaultValue>
+           <helpTip>If true, RDBDatasource.reload() is called after successful post()
+             calls.  Note: if post() succeeds, but reload() causes an error, the lastMessage belongs to reload()
+             and not to the post().
+           </helpTip>
+        </property>
+        <property name="sendEmptyColumns">
+           <defaultValue>true</defaultValue>
+           <helpTip>If true, columns that are empty strings will be sent as ''
+             if they are quotable, such as VARCHAR, or null if they are not, such as INT8.
+           </helpTip>
+        </property>
+        <property name="sql"><defaultValue></defaultValue></property>
+        <property name="type"><defaultValue>com.dynamide.rdbdatasource</defaultValue><readOnly>true</readOnly></property>
+        <property name="updateSQL">
+            <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+            <defaultValue></defaultValue>
+        </property>
+    </properties>
+
+  <event language="beanshell" name="com_dynamide_rdbdatasource_onImport"><![CDATA[
+    import java.util.*;
+    import com.dynamide.*;
+    import com.dynamide.db.*;
+    import com.dynamide.event.ScriptEvent;
+    import com.dynamide.util.*;
+  ]]></event>
+
+  <event language="beanshell" name="com_dynamide_rdbdatasource_onLoad"><![CDATA[
+    widget = event.sender;
+    //System.out.println("=============== rdbdatasource in com_dynamide_rdbdatasource_onLoad. "+widget.getID());
+    open = widget.get("open");  //only load if "open" was persisted as true. by default it is false.
+    if ( Tools.isTrue(open) ) {
+        widget.call("loadData");
+    } else {
+        widget.call("wireToDatabase");
+    }
+    widget.addChangeListener(widget); //allows us to listen on the com_dynamide_rdbdatasource_onPropertyChanged event.
+  ]]></event>
+
+  <event language="beanshell" name="com_dynamide_rdbdatasource_onPropertyChanged"><![CDATA[
+    /*   These are the call trees you can expect for various scenarios:
+     *          loadData
+     *            wireToDatabase
+     *              wireToObject
+     *          loadDataIfOpen
+     *            loadData
+     *              wireToDatabase
+     *                wireToObject
+     *          wireToObject
+     *          wireToDatabase
+     *            wireToObject
+     *
+     *   wireToObject ensures that we have a backing Java RDBDatasource object
+     */
+    widget = event.sender;
+    changeEvent = event.inputObject;
+    ////System.out.println("=============== rdbdatasource in com_dynamide_rdbdatasource_onPropertyChanged. ChangeEvent: "+changeEvent);
+    String propName = changeEvent.fieldName;
+    if (propName.equals("open")) {
+        String value = changeEvent.newValue.getStringValue();
+        if ( Tools.isTrue(value) ) {
+            widget.call("loadData");
+        } else {
+            ds = widget.getObject();
+            if ( ds != null ) {
+                ds.clear();
+            }
+        }
+        //System.out.println("************ open changed: ************"+changeEvent.newValue+" :: "+changeEvent.newValue.getClass().getName());
+    } else if (propName.equals("database")){
+        widget.call("wireToDatabase");
+    } else if (propName.equals("currentRowIndex")){
+        String value = changeEvent.newValue.getStringValue();
+        ds = widget.getObject();
+        if ( ds != null ) {
+            bRes = ds.seek(Tools.stringToIntSafe(value, 0));
+            session.logDebug("############# change prop currentRowIndex, seek: "+bRes);
+        }
+    } else if (propName.equals("sql")){
+        if ( Tools.isTrue(widget.getPropertyStringValue("open")) ) {
+            widget.call("loadData");
+        }
+    } else if (propName.equals("masterDatasource")) {
+        datasourceObject = widget.call("wireToObject");
+        datasourceObject.wireToMaster(); //THIS OVERRIDES loadData IF MASTER HAS UPDATES FOR US.
+    }
+  ]]></event>
+
+  <event language="beanshell" name="wireToObject"><![CDATA[
+    widget = event.sender;
+    //System.out.println("=============== rdbdatasource in wireToObject. "+widget.getID());
+    if ( widget.getObject() == null ) {
+        //Wire ourselves to the Java side object RDBDatasource that we wrap:
+        datasourceObject = new com.dynamide.db.RDBDatasource(session, session, widget.getID()); //also registers with Session.
+        datasourceObject.setSession(session);
+        datasourceObject.setID(widget.getID());
+        datasourceObject.setPropertyProvider(widget); //wire our properties to the RDBDatasource.
+        datasourceObject.setWidget(widget);           //wire our Widget to the RDBDatasource.
+
+        //eventually do this from enumerated type:
+        datasourceObject.registerColumnTypeMapper("bytea", "com.dynamide.db.mappers.Bytea");
+        // also have a standard typemapper per DB (mysql, postgresql) that is in the context and has
+        //  a property in the widget: useStdTypeMapper, and registerColumnTypeMapper calls OVERRIDE the standard ones.
+
+        widget.setObject(datasourceObject);           //wire the RDBDatasource to us for app programmer convenience.
+        widget.setNextGetter(datasourceObject);
+        datasourceObject.wireToMaster(); //THIS OVERRIDES loadData IF MASTER HAS UPDATES FOR US.
+    } else {
+        widget.logDebug("already wired. returning.");
+    }
+    event.outputObject = widget.getObject(); //RDBDatasource
+    //System.out.println("%%%%%%%%%%%%%%%%%%%%%% wireToObject returning event.getOutputObject(): "+event.getOutputObject());
+  ]]></event>
+
+  <event language="beanshell" name="wireToDatabase"><![CDATA[
+    widget = event.sender;
+    //System.out.println("=============== rdbdatasource in wireToDatabase. "+widget.getID());
+    datasourceObject = widget.getObject();
+    if ( datasourceObject == null ) {
+        datasourceObject = widget.call("wireToObject");
+    }
+    //System.out.println("=============== rdbdatasource in wireToDatabase, now looking for db: "+datasourceObject.getDatabase()+" datasourceObject: "+datasourceObject);
+    if ( datasourceObject.getDatabase() == null ) {
+    	//System.out.println("=============== rdbdatasource in wireToDatabase. getDatabase() was null.  Now trying to load one.)");
+        //Now connect up to the database widget:
+        String databaseWidgetID = widget.getPropertyStringValue("database");
+        Page page = widget.getPage();
+        dbWidget = page.find(databaseWidgetID);
+	//System.out.println("=============== rdbdatasource dbWidget: "+dbWidget);
+        if ( dbWidget != null ) {
+            RDBDatabase rdb = dbWidget.call("connect");
+            //db = dbWidget.getProperty("rdbdatabase").get("object");
+            if (rdb!=null){
+                //System.out.println("=============== rdbdatasource rdb: "+rdb);
+		datasourceObject.setDatabase(rdb);
+            } else {
+                session.logError("rdbdatabase.connect did not return a valid RDBDatabase object: "+rdb);
+            }
+            //Now load data if "open" is true:
+            if ( widget.getProperty("open").getValue().equals("true") ) {
+                //20080630     evt = widget.call("loadData");
+                //session.logDebug(" CALL "+widget.getID()+" loadData ScriptEvent:"+evt);
+            } else {
+	    	//System.out.println("=============== rdbdatasource open property was not true");        
+	    }
+        }
+    } else {
+        widget.logDebug("already wired. returning.");
+    }
+  ]]></event>
+
+  <event language="beanshell" name="loadData"><![CDATA[
+    Widget widget = event.sender;
+    n = new Long((new java.util.Date()).getTime()).toString();
+    //System.out.println("=============== rdbdatasource in loadData. "+widget.getID());
+    datasourceObject = widget.getObject();
+    //System.out.println("====== ds1 " +n);
+    if ( datasourceObject == null ) {
+    	//System.out.println("====== ds2 " +n);
+	    widget.call("wireToDatabase");
+	    datasourceObject = widget.getObject();
+	    //System.out.println("========ds2.1 datasourceObject: "+datasourceObject+" widget.getDotName: "+widget.getDotName()+" widget.getObject:::::"+widget.getObject());
+    }
+    widget.call("loadDataNoRecursion");
+  ]]></event>
+
+  <event language="beanshell" name="loadDataNoRecursion"><![CDATA[
+    Widget widget = event.sender;
+    //System.out.println("=============== rdbdatasource in loadDataNoRecursion. "+widget.getID());
+    datasourceObject = widget.getObject();
+    if ( datasourceObject == null ) {
+    	session.logError("datasource was null.  searched: "+widget.getDotName()+" session.getDatasources: "+session.getDatasources()
+                         +"\r\n widget.properties: "+widget.listProperties());
+        return;
+    }
+    if (datasourceObject.getDatabase() == null){
+        session.logError("widget.datasource.database was null: "+widget.getDotName()+" database property: "+widget.get("database"));
+        return;
+    }
+    sql = widget.getPropertyStringValue("sql");
+    if ( sql.trim().length()>0 ) {
+        try {
+            datasourceObject.load(); //uses sql, but does the expansion on it first.
+            widget.setProperty("open", "true");
+        } catch (Exception e)  {
+            widget.setErrorMessage("ERROR: couldn't open datasource: "+datasourceObject.get("lastError"));
+        }
+    }
+  ]]></event>
+
+
+  <event language="beanshell" name="loadDataIfOpen"><![CDATA[
+    Widget widget = event.sender;
+    //System.out.println("=============== rdbdatasource in loadDataIfOpen. "+widget.getID());
+    if ( widget.getProperty("open").getValue().equals("true") ) {
+        widget.call("loadData");
+    }
+  ]]></event>
+
+  <event language="beanshell" name="post"><![CDATA[
+    wid = event.sender.getID();
+    datasourceObject = session.getDatasource(wid);
+    if ( datasourceObject != null ) {
+        boolean OK = datasourceObject.post();
+        event.setOutputObject(""+OK);
+    } else {
+        event.setOutputObject("false");
+    }
+  ]]></event>
+
+  <event language="beanshell" name="edit"><![CDATA[
+    datasourceObject = session.getDatasource(event.sender.getID());
+    if ( datasourceObject != null ) {
+        datasourceObject.edit();
+    }
+  ]]></event>
+
+  <event language="beanshell" name="insert"><![CDATA[
+    datasourceObject = session.getDatasource(event.sender.getID());
+    if ( datasourceObject != null ) {
+        datasourceObject.insert();
+    }
+  ]]></event>
+
+  <event language="beanshell" name="cancel"><![CDATA[
+    datasourceObject = session.getDatasource(event.sender.getID());
+    if ( datasourceObject != null ) {
+        datasourceObject.cancel();
+    }
+  ]]></event>
+
+  <htmlsrc browser="*"><![CDATA[
+    ## if design mode, show widget...
+    #if ($designMode == "true"){
+        ## #if ($widget.open = "true"){
+        ##     #set $obj = $widget.getObject()
+        ##     #if ($obj == null){
+        ##         #set $obj = $widget.call("wire")
+        ##     }
+        ##     #if ($obj.getRowCount() == 0){
+        ##        $session.logDebug("com.dynamide.rdbdatasource calling reload() =================")
+        ##        $obj.reload()
+        ##     }
+        ## } #else {
+        ##     #set $obj = $widget.getObject()
+        ##     #if ($obj != null){
+        ##         $obj.clear()
+        ##     }
+        ## }
+        <table bgcolor="gray" border='1' cellpadding='0' cellspacing='0'>
+          <tr>
+            <td>$widget.ID #if ("$widget.open"=="true"){[open]}</td>
+          </tr>
+        </table>
+    }
+  ]]></htmlsrc>
+
+</widget>

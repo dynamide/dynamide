@@ -1,0 +1,12 @@
+<pre>
+Security Notes
+==============
+
+Protected resources should not be served up in /static
+  Instead, make them a resource that gets served up by the application.
+  
+Put application-level passwords in the context.xml for your home directory.
+
+Some passwords, etc. are in /conf/context.xml so this needs to be checked out
+  so that any application can't just do a context crawl to get to the data.
+</pre>

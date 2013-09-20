@@ -1,0 +1,569 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<dynamideForm>
+
+  <event language="beanshell" name="browse_onImport"><![CDATA[
+
+    void filterTableTypes(Session session, String filter){
+        System.out.println("in filterTableTypes");
+        ds = session.getDatasource("dsTables");
+        v = StringTools.parseSeparatedValues(filter, ",");
+        String[]types = Tools.vectorToStringArray(v);
+        if ( types.length == 0 ) {
+            types = null;
+        }
+        System.out.println("v: "+v);
+        conn = ds.getDatabase().getConnection();
+        rs = conn.getMetaData().getTables(null, null, "%", types);
+        ds.loadFromResultSetWReset(rs);
+        conn.close();
+        conn = null;
+    }
+
+  ]]></event>
+
+
+  <event language="beanshell" name="browse_onAction"><![CDATA[
+    page = event.currentPage;
+    page.setProperty("mode", "query");
+    session.setFieldValue("browse_executeUpdate_result", "");
+    if ( event.action.equals("showTables" ) ) {
+        ds = session.getDatasource("dsTables");
+        conn = ds.getDatabase().getConnection();
+        rs = conn.getMetaData().getTables(null, null, "%", null);
+        ds.loadFromResultSetWReset(rs);
+        conn.close();
+        conn = null;
+        page.setProperty("mode", "tables");
+    } else if ( event.action.equals("FilterTableTypes" ) ) {
+        filter = session.find("browse.editTableType.value");
+        filterTableTypes(session, filter);
+        page.setProperty("mode", "tables");
+    } else if ( event.action.equals("ClearTableTypesFilter" ) ) {
+        editTableType = session.find("browse.editTableType");
+        editTableType.setValue("");
+        filterTableTypes(session, "");
+        page.setProperty("mode", "tables");
+    } else if ( event.action.equals("showTableTypes" ) ) {
+        ds = session.getDatasource("dsAll");
+        conn = ds.getDatabase().getConnection();
+        rs = conn.getMetaData().getTableTypes();
+        ds.loadFromResultSetWReset(rs);
+        conn.close();
+        conn = null;
+        page.setProperty("mode", "results");
+    } else if ( event.action.equals("showQuery" ) ) {
+        dsAll = session.getDatasource("dsAll");
+        dsAll.clear();
+        page.setProperty("mode", "query");
+    } else if ( event.action.equals("Query" ) ) {
+        widget = event.sender.getWidgetByID("textareaSQL");
+        sql = widget.get("value");
+        ds = session.getDatasource("dsAll");
+        try {
+            ds.clear();
+            ds.load(sql);
+        } catch (Exception e)  {
+            widget.setErrorMessage("ERROR: "+e);
+        }
+        page.setProperty("mode", "query");
+    } else if ( event.action.equals("Execute" ) ) {
+        widget = event.sender.getWidgetByID("textareaSQL");
+        sql = widget.get("value");
+        ds = session.getDatasource("dsAll");
+        try {
+            ds.clear();
+            int count = ds.getDatabase().executeUpdate(sql);
+            session.setFieldValue("browse_executeUpdate_result", ""+count);
+        } catch (Exception e)  {
+            widget.setErrorMessage("ERROR: "+e);
+        }
+        page.setProperty("mode", "query");
+    } else if ( event.action.equals("showEval" ) ) {
+        page.setProperty("mode", "eval");
+    } else if ( event.action.equals("Eval" ) ) {
+        widget = event.sender.getWidgetByID("textareaEval");
+        sEval = widget.get("value");
+        ds = session.getDatasource("dsAll");
+        try {
+            rs = session.eval(sEval);
+            ds.clear();
+            ds.loadFromResultSetWReset(rs);
+        } catch (Exception e)  {
+            widget.setErrorMessage("ERROR: "+e);
+        }
+        page.setProperty("mode", "eval");
+    }
+  ]]></event>
+
+  <event language="beanshell" name="browse_dbgridTables_onHeaderClick"><![CDATA[
+    widget = event.sender;          //com.dynamide.datasource.xml
+    Map params = event.inputObject;
+    ds = session.getDatasource("dsTables");
+    col = params.get("column");
+  ]]></event>
+
+  <event language="beanshell" name="browse_dbgridTables_onClick"><![CDATA[
+    widget = event.sender;          //com.dynamide.datasource.xml
+    Map params = event.inputObject;
+    rowID = params.get("rowID");
+    column = params.get("column"); //presumably, different actions if user clicks on "AUTHOR".  For now, all go to editStory.
+    dsTables = session.getDatasource("dsTables");
+    try {
+        dsAll = session.getDatasource("dsAll");
+        dsAll.clear();
+        if ( column.equalsIgnoreCase("TABLE_NAME") ) {
+            System.out.println("clicked value: "+dsTables.getField(column, rowID));
+            TABLE_NAME = dsTables.getField(column, rowID).toString();
+            dsAll.setProperty("sql", "select * from "+TABLE_NAME+";");
+            dsAll.reload();
+            event.currentPage.setProperty("mode", "results");
+        } else if (column.equalsIgnoreCase("TABLE_TYPE")){
+            TABLE_TYPE = dsTables.getField("TABLE_TYPE", rowID).toString();
+            edit = session.find("browse.editTableType");
+            edit.setValue(TABLE_TYPE);
+            filterTableTypes(session, TABLE_TYPE);
+            event.currentPage.setProperty("mode", "tables");
+        }
+    } catch (Exception e)  {
+        System.out.println("ERROR in browse.browse_dbgridAll_onClick: "+e);
+    }
+  ]]></event>
+
+  <widgets>
+    <widget id="standardIncludes">
+      <properties>
+        <property name="name">
+          <value>standardIncludes</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.stdincludes</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="includes1">
+      <properties>
+        <property name="items">
+          <value>
+            <enumeration override="false" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/css/dynamide.css</item>
+            </enumeration>
+          </value>
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+        </property>
+        <property name="name">
+          <value>includes1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.includes</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="session1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.session</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="hiddenPageID">
+      <properties>
+        <property name="field">
+          <value>page</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.hidden</value>
+        </property>
+        <property name="value">
+          <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+          <value>$pageID</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="widgetstyle1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.widgetstyle</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="editTableType">
+      <properties>
+        <property name="caption">
+          <value>TABLE_TYPE</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="textareaSQL">
+      <properties>
+        <property name="caption">
+          <value>SQL</value>
+        </property>
+        <property name="columns">
+          <value>80</value>
+        </property>
+        <property name="rows">
+          <value>8</value>
+        </property>
+        <property name="captionWidth">
+          <value>100</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.textarea</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="textareaEval">
+      <properties>
+        <property name="caption">
+          <value>Beanshell</value>
+        </property>
+        <property name="columns">
+          <value>80</value>
+        </property>
+        <property name="rows">
+          <value>8</value>
+        </property>
+        <property name="captionWidth">
+          <value>100</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.textarea</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="submitTableType">
+      <properties>
+        <property name="action">
+          <value>FilterTableTypes</value>
+        </property>
+        <property name="caption">
+          <value>Filter</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="submitClearFilter">
+      <properties>
+        <property name="action">
+          <value>ClearTableTypesFilter</value>
+        </property>
+        <property name="caption">
+          <value>Clear Filter</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="submitSQL">
+      <properties>
+        <property name="action">
+          <value>Query</value>
+        </property>
+        <property name="caption">
+          <value>Query</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="submitExecuteSQL">
+      <properties>
+        <property name="action">
+          <value>Execute</value>
+        </property>
+        <property name="caption">
+          <value>Execute</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="submitEval">
+      <properties>
+        <property name="action">
+          <value>Eval</value>
+        </property>
+        <property name="caption">
+          <value>Eval</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="dbgridAll">
+      <properties>
+        <property name="cellpadding">
+          <value>2</value>
+        </property>
+        <property name="rowNumbers">
+          <value>true</value>
+        </property>
+        <property name="datasource">
+          <value>dsAll</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.dbgrid</value>
+        </property>
+        <property name="visibleColumns"><value>*</value></property>
+        <property name="visible">
+          <value>true</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="dbgridTables">
+      <properties>
+        <property name="cellpadding">
+          <value>2</value>
+        </property>
+        <property name="rowNumbers">
+          <value>true</value>
+        </property>
+        <property name="datasource">
+          <value>dsTables</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.dbgrid</value>
+        </property>
+        <property name="columns">
+            <datatype>com.dynamide.datatypes.EnumeratedDatatype</datatype>
+            <value>
+                <enumeration>
+                    <item datatype="com.dynamide.datatypes.ColumnDatatype">
+                        <key>TABLE_SCHEM</key>
+                        <cellClickable>false</cellClickable>
+                    </item>
+                    <item datatype="com.dynamide.datatypes.ColumnDatatype">
+                        <key>TABLE_NAME</key>
+                        <cellClickable>true</cellClickable>
+                    </item>
+                    <item datatype="com.dynamide.datatypes.ColumnDatatype">
+                        <key>TABLE_TYPE</key>
+                        <cellClickable>true</cellClickable>
+                    </item>
+                </enumeration>
+            </value>
+        </property>
+        <property name="visible">
+          <value>true</value>
+        </property>
+        <property name="visibleColumns">
+          <value></value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="rdbnavigator1">
+      <properties>
+        <property name="border">
+          <value>0</value>
+        </property>
+        <property name="datasource">
+          <value>dsAll</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.rdbnavigator</value>
+        </property>
+        <property name="showEditControls">
+          <value>false</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="database1">
+      <properties>
+        <property name="dbname">
+          <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+          <value>$session.jdbc_browser_database</value>
+        </property>
+        <property name="debugSQL">
+          <value>true</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.rdbdatabase</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="dsTables">
+      <properties>
+        <property name="database">
+          <value>database1</value>
+        </property>
+        <property name="sql">
+          <value></value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.rdbdatasource</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="dsAll">
+      <properties>
+        <property name="database">
+          <value>database1</value>
+        </property>
+        <property name="sql">
+          <value></value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.rdbdatasource</value>
+        </property>
+      </properties>
+    </widget>
+  </widgets>
+
+
+  <properties>
+    <property name="formAction">
+      <value></value>
+    </property>
+    <property name="formName">
+      <value></value>
+    </property>
+    <property name="lastSave">
+      <value>1050462205141</value>
+      <readOnly>true</readOnly>
+      <datatype>java.util.Date</datatype>
+    </property>
+    <property name="margin">
+      <value>0</value>
+      <eval>document.body.margin = "$page.margin";alert('hi');document.body.bgcolor='blue';</eval>
+    </property>
+    <property name="name">
+      <value>browse</value>
+      <readOnly>true</readOnly>
+    </property>
+    <property name="onLoad" isEvent="true">
+      <value>browse_onLoad</value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+    <property name="title">
+      <value>Dynamide JDBC Browser</value>
+      <intl>1</intl>
+    </property>
+    <property name="type">
+      <value>pagetypes/com.dynamide.form</value>
+      <readOnly>true</readOnly>
+    </property>
+    <property name="mode">
+      <value>query</value>
+    </property>
+  </properties>
+
+  <htmlsrc browser="*">
+  <![CDATA[
+<HTML>
+  <HEAD>
+    <TITLE>$page.title</TITLE>
+    <SPAN class="widget" id="standardIncludes"/>
+    <SPAN class="widget" id="includes1"/>
+    <SPAN class="widget" id="widgetstyle1"/>
+  <style>
+    BODY {margin: 10px; border: 0px; padding: 0px; }
+    .grab {color: green; text-decoration: underline; font: 14px; font-family: Arial, Helvetica; font-weight: bold; }
+    .grab:active {color: green; text-decoration: underline; font: 14px; font-family: Arial, Helvetica; font-weight: bold; }
+    .grab:hover {color: \#FF9933; text-decoration: underline; font: 14px; font-family: Arial, Helvetica; font-weight: bold; }
+  </style>
+  </HEAD>
+<BODY id="browse"
+  bottomMargin="0" bgColor="white" leftMargin="0" topMargin="0" rightMargin="0" name="browse">
+  <FORM name="mojoForm" accept-charset="UNKNOWN" action="$session.applicationPath" method="get" encType="application/x-www-form-urlencoded">
+
+    <center>
+    ##The navigator is not useful for this app.
+    ##<SPAN class="widget" id="rdbnavigator1"/>
+    ##<br />
+    <!--
+    <br />
+    <SPAN class="widget" id="rdbnavigator1"/>
+    -->
+    <br />
+    $page.link("action=showTables", "Show Tables")
+    <dm_nbsp/><dm_nbsp/>
+    $page.link("action=showTableTypes", "Show Table Types")
+    <dm_nbsp/><dm_nbsp/>
+    $page.link("action=showQuery", "Run a Query")
+    <dm_nbsp/><dm_nbsp/>
+    $page.link("action=showEval", "Eval JDBC")
+    <br />
+    <br />
+    #if ($page.mode == "query"){
+      <SPAN class="widget" id="textareaSQL"/>
+      <table border='0' cellpadding='5' cellspacing='0'>
+        <tr>
+          <td>
+            <SPAN class="widget" id="submitSQL"/>
+          </td>
+          <td>
+            <SPAN class="widget" id="submitExecuteSQL"/>
+          </td>
+        </tr>
+      </table>
+      <br />
+      #set $er = $session.browse_executeUpdate_result
+      #if ("$er" == ""){
+        <SPAN class="widget" id="dbgridAll"/>
+      } #else {
+        <b>Result: $er</b>
+      }
+      <br />$session.query_help
+
+    } #elseif ($page.mode == "eval"){
+      <SPAN class="widget" id="textareaEval"/>
+      <table border='0' cellpadding='5' cellspacing='0'>
+        <tr>
+          <td>
+            <SPAN class="widget" id="submitEval"/>
+          </td>
+        </tr>
+      </table>
+      <br />
+      <SPAN class="widget" id="dbgridAll"/>
+      <br />
+      $session.eval_help
+    } #elseif ($page.mode == "results"){
+      <SPAN class="widget" id="dbgridAll"/>
+    } #elseif ($page.mode == "tables"){
+      <table border='0' cellpadding='2' cellspacing='0'>
+        <tr>
+          <td>
+            <SPAN class="widget" id="editTableType"/>
+          </td>
+          <td>
+            <SPAN class="widget" id="submitTableType"/>
+          </td>
+          <td>
+            <SPAN class="widget" id="submitClearFilter"/>
+          </td>
+          <td>
+            See <a href="#help">help</a><dm_nbsp/>below.
+          </td>
+        </tr>
+      </table>
+      <br />
+      <SPAN class="widget" id="dbgridTables"/>
+      <br /><a name="help"></a>
+      $session.tables_help
+    }
+    </center>
+    <SPAN class="widget" id="dsAll"/>
+    <SPAN class="widget" id="dsTables"/>
+    <SPAN class="widget" id="database1"/>
+    <SPAN class="widget" id="session1"/>
+    <SPAN class="widget" id="hiddenPageID"/>
+    <br />
+  </FORM>
+
+  </BODY>
+</HTML>
+
+  ]]></htmlsrc>
+
+</dynamideForm>

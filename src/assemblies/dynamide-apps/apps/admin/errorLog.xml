@@ -1,0 +1,351 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<dynamideForm>
+
+  <event language="beanshell" name="dbgrid1_onClickNavigate"><![CDATA[
+    System.out.println("***************** in dbgrid1_onClickNavigate");
+    rowID = event.inputObject.get("rowID");
+    idx = Tools.stringToIntSafe(rowID, -1);
+    if (idx>-1) {
+        dsDetail = session.getDatasource("dsDetail");
+        dsDetail.setProperty("sql", "select ID, MESSAGE from errorlog where id = "+idx);
+        dsDetail.setProperty("open", "true");
+        //dsDetail.seek(idx);
+    }
+  ]]></event>
+
+  <event language="beanshell" name="updateDetail"><![CDATA[
+    System.out.println("***************** in errorLog_dsErrorlog_onRowChanged");
+    dsW = session.find("errorLog.dsErrorlog");
+    //System.out.println("**************** 1.05 "+dsW);
+    ds = dsW.getObject();
+    //System.out.println("**************** 1.1 "+ds);
+    String ID = ds.get("ID");
+    //int idx = ds.getCurrentRowIndex();
+    //System.out.println("**************** 2 "+idx);
+    if (!Tools.isBlank(ID)) {
+        //System.out.println("**************** 2.1 ");
+        dsDetail = session.getDatasource("dsDetail");
+        if (dsDetail == null){
+            //System.out.println("******************** dsDetail was null");
+        } else {
+            //System.out.println("**************** 2.2 "+dsDetail);
+            widgetDsDetail = dsDetail.getWidget();
+            widgetDsDetail.setProperty("sql", "select ID, MESSAGE from errorlog where id = "+ID+";");
+            ///System.out.println("**************** 3 "+widgetDsDetail.dumpProperties());
+
+            widgetDsDetail.setProperty("open", "true");
+            dsDetail.reload();
+            //dsDetail.seek(idx);
+            //System.out.println("**************** 4 ");
+        }
+
+    }
+  ]]></event>
+
+  <event language="beanshell" name="errorLog_dsErrorlog_onRowChanged"><![CDATA[
+    // event.sender.getPage().call("updateDetail");
+  ]]></event>
+
+  <event language="beanshell" name="errorLog_onLoad"><![CDATA[
+    //System.out.println("####@@@@#### errorLog_onLoad");
+    // event.sender.call("updateDetail");
+  ]]></event>
+
+  <widgets>
+    <widget id="dbgrid1">
+      <properties>
+        <property name="datasource">
+          <datatype>com.dynamide.datatypes.IDatasourceDatatype</datatype>
+          <value>dsErrorlog</value>
+        </property>
+        <property name="name">
+          <value>dbgrid1</value>
+        </property>
+        <property name="rowNumbersNavigate">
+          <value>true</value>
+        </property>
+        <property name="rowNumbers">
+          <value>true</value>
+        </property>
+        <property name="type">
+          <readOnly>true</readOnly>
+          <value>com.dynamide.dbgrid</value>
+        </property>
+        <property name="visibleColumns">
+            <datatype>com.dynamide.datatypes.Enumeration</datatype>
+            <value>
+            <enumeration override="false" final="false" itemDatatype="com.dynamide.datatypes.StringDatatype" defaultIndex="0">
+                <item>ID</item>
+                <item>SESSIONID</item>
+                <item>THREADID</item>
+                <item>APPLICATIONID</item>
+                <item>LEVEL</item>
+                <item>LOGIN</item>
+                <item>ACCOUNT</item>
+                <item>TIME</item>
+            </enumeration>
+            </value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="session1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.session</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="hiddenPageID">
+      <properties>
+        <property name="field">
+          <value>page</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.hidden</value>
+        </property>
+        <property name="value">
+          <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+          <value>$pageID</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="includes1">
+      <properties>
+        <property name="items">
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+          <value>
+            <enumeration override="false" final="false" defaultIndex="0">
+              <item>resources/css/dynamide.css</item>
+              <item>resources/js/page.js</item>
+            </enumeration>
+          </value>
+        </property>
+        <property name="name">
+          <value>includes1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.includes</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="label1">
+      <properties>
+        <property name="caption">
+          <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+          <value><![CDATA[<pre>ID: $page.dsDetail.get("ID") MESSAGE: #set $m=$page.dsDetail.MESSAGE
+          $session.StringTools.escapeForWebmacro($m)
+          </pre>]]></value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.label</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="macro1">
+      <properties>
+        <property name="basename">
+          <value>macro</value>
+        </property>
+        <property name="source">
+          <value>MeSSage:: $page.dsErrorlog.MESSAGE</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.webmacro</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="rdbdatabase1">
+      <properties>
+        <property name="dbname">
+          <value>dynamide</value>
+        </property>
+        <property name="debugSQL">
+          <value>true</value>
+        </property>
+        <property name="name">
+          <value>rdbdatabase1</value>
+        </property>
+        <property name="rdbdatabase">
+          <object>RDBDatabase:uri:[jdbc:postgresql:dynamide]context:[dynamide]</object>
+          <value>[object]</value>
+        </property>
+        <property name="type">
+          <readOnly>true</readOnly>
+          <value>com.dynamide.rdbdatabase</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="dsErrorlog">
+      <properties>
+        <property name="database">
+          <datatype>com.dynamide.datatypes.WidgetDatatype</datatype>
+          <value>
+            <key>rdbdatabase1</key>
+            <interface>database</interface>
+          </value>
+        </property>
+        <property name="lastCount">
+          <value>29</value>
+        </property>
+        <property name="lastError">
+          <value></value>
+        </property>
+        <property name="name">
+          <value>dsErrorlog</value>
+        </property>
+        <property name="open">
+          <datatype>boolean</datatype>
+          <value>true</value>
+        </property>
+        <property name="sql">
+          <value>SELECT ID, SESSIONID, THREADID, APPLICATIONID, LEVEL, LOGIN, ACCOUNT, TIME FROM errorlog;</value>
+        </property>
+        <property name="type">
+          <readOnly>true</readOnly>
+          <value>com.dynamide.rdbdatasource</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="dsDetail">
+      <properties>
+        <property name="database">
+          <datatype>com.dynamide.datatypes.WidgetDatatype</datatype>
+          <value>
+            <key>rdbdatabase1</key>
+            <interface>database</interface>
+          </value>
+        </property>
+
+        <property name="detailColumnClause">
+          <value>ID, MESSAGE</value>
+        </property>
+        <property name="detailKey">
+          <value>ID</value>
+        </property>
+        <property name="detailTable">
+          <value>errorlog</value>
+        </property>
+        <property name="masterKey">
+          <value>ID</value>
+        </property>
+        <property name="masterDatasource">
+          <value>dsErrorlog</value>
+        </property>
+
+        <property name="name">
+          <value>dsDetail</value>
+        </property>
+        <property name="open">
+          <datatype>boolean</datatype>
+          <value>true</value>
+        </property>
+        <property name="sql">
+          <value></value>
+        </property>
+        <property name="type">
+          <readOnly>true</readOnly>
+          <value>com.dynamide.rdbdatasource</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="rdbnavigator1">
+      <properties>
+        <property name="datasource">
+          <datatype>com.dynamide.datatypes.IDatasourceDatatype</datatype>
+          <value>dsErrorlog</value>
+        </property>
+        <property name="name">
+          <value>rdbnavigator1</value>
+        </property>
+        <property name="showEditControls">
+          <value>false</value>
+        </property>
+        <property name="type">
+          <readOnly>true</readOnly>
+          <value>com.dynamide.rdbnavigator</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="standardIncludes">
+      <properties>
+        <property name="name">
+          <value>standardIncludes</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.stdincludes</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="widgetstyle1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.widgetstyle</value>
+        </property>
+      </properties>
+    </widget>
+  </widgets>
+  <htmlsrc browser="*"><![CDATA[
+<HTML>
+  <HEAD>
+    <TITLE/>
+    <!-- VERSION: 12/27/2003.2 -->
+
+  </HEAD>
+  <BODY id="errorLog" onclick="bodyClicked(this)" bottomMargin="15" leftMargin="10" topMargin="15" rightMargin="10" name="errorLog">
+    <SPAN class="widget" id="widgetstyle1"/>
+    <SPAN class="widget" id="standardIncludes"/>
+    <SPAN class="widget" id="includes1"/>
+    <FORM accept-charset="UNKNOWN" action="mojoAction" method="get" encType="application/x-www-form-urlencoded">
+      <P/>
+      <SPAN class="widget" id="dsDetail"/>
+      <SPAN class="widget" id="session1"/>
+      <SPAN class="widget" id="hiddenPageID"/>
+      <SPAN class="widget" id="rdbdatabase1"/>
+      <SPAN class="widget" id="dsErrorlog"/>
+      <SPAN class="widget" id="dbgrid1"/>
+      <SPAN class="widget" id="rdbnavigator1"/>
+      <HR />
+<PRE><SPAN class="widget" id="label1"/></PRE>
+##<PRE><SPAN class="widget" id="macro1"/></PRE>
+    </FORM>
+  </BODY>
+</HTML>
+]]></htmlsrc>
+  <properties>
+    <property name="formAction">
+      <value>mojoAction</value>
+    </property>
+    <property name="formName">
+      <value></value>
+    </property>
+    <property name="lastSave">
+      <datatype>java.util.Date</datatype>
+      <readOnly>true</readOnly>
+      <value>1073747786825</value>
+    </property>
+    <property name="name">
+      <readOnly>true</readOnly>
+      <value>errorLog</value>
+    </property>
+    <property name="onAction" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value></value>
+    </property>
+    <property name="onLoad" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value></value>
+    </property>
+    <property name="onValidate" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value></value>
+    </property>
+    <property name="title">
+      <value></value>
+    </property>
+    <property name="type">
+      <readOnly>true</readOnly>
+      <value>pagetypes/com.dynamide.form</value>
+    </property>
+  </properties>
+</dynamideForm>

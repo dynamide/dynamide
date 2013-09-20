@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm  >
+<!-- Copyright (c) 2008 DYNAMIDE.COM -->
+
+<dynamideForm>
+
+<properties>
+    <property name="type"><value>pagetypes/com.dynamide.form</value></property>
+    <property name="bgcolor"><value>#A4BFDD</value></property>
+</properties>
+
+<htmlsrc><![CDATA[
+<html>
+
+#set $rm = $session.getResourceManager()
+    #set $time = $session.getTimestampLocale()
+    <head>
+        <title>web-apps.xml files installed</title>
+        $session.getInclude("resources/css/ide.css")
+        $session.getInclude("resources/css/admin.css")
+        $session.getInclude("resources/js/page.js")
+    </head>
+    <body bgcolor="#A4BFDD">
+    <form name="frmWebappsView" action="/dynamide/admin">
+                    #set $href = $session.getAppURL("next=adminMain")
+                    <a href="$href">Admin Main</a>
+		    <br />
+		    #set $href = $session.getAppURL("next=sessionsPage")
+                    <a href="$href">All Sessions</a>
+	<h2>web-apps.xml files installed</h2>
+	<p>Warning: this is only a log of apps loaded when the ResourceManager starts</p>
+	<p>If you reload homes or accounts, this list will not be accurate.</p>
+	<!-- This should be rewritten when 
+	  ResourceManager :: public WebAppEntry uriToApp(String uri)
+	  is implemented properly.
+	  -->
+     
+	#set $webappsMap = $rm.find("/WebAppsInitLog").getContexts()
+	<table border='1' cellpadding='4' cellspacing='0' bgcolor='white'>
+	<tr>
+	   <th>URI</th>
+	   <th>APPNAME</th>
+	   <th>ASSEMBLY</th>
+	   <th>INTERFACE</th>
+	   <th>HOME</th>
+	   <th>load-on-startup</th>	
+	</tr>
+        #foreach $fileEntry in $webappsMap.entrySet() {
+        <tr>
+	   <td colspan="6">
+	   <br />
+	   <br />
+	   <b>$fileEntry.getKey()</b>
+	   <br />
+	   <br />
+	   </td>
+        </tr>
+	   #set $weContext = $fileEntry.getValue()
+	   #foreach $appEntry in $weContext.getContexts().entrySet(){
+	   <tr>
+	   	#set $app = $appEntry.getValue()
+	   	<td>$appEntry.getKey()</td>
+		<td>$app.getAttribute("APPNAME")</td>		
+		<td>$app.getAttribute("ASSEMBLY")</td>
+		<td>$app.getAttribute("INTERFACE")</td>		
+		<td>$app.getAttribute("HOME")</td>
+		<td>$app.getAttribute("load-on-startup")</td>		
+	   </tr>
+	   }
+	}
+        </table>
+        <input type="hidden" id="SESSIONID" name="SESSIONID" value="$SESSIONID" />
+        <input type="hidden" id="action" name="action" value="show" />
+        <input type="hidden" id="page" name="page" value="webappsView" />
+    </form>
+    </body>
+</html>
+]]></htmlsrc>
+
+<widgets>
+</widgets>
+
+</dynamideForm>

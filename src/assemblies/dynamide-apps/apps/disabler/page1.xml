@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm >
+<!-- Copyright (c) 2003 DYNAMIDE.COM -->
+<dynamideForm>
+
+<properties>
+
+    <property name="type">
+      <value>pagetypes/com.dynamide.form</value>
+      <readOnly>true</readOnly>
+    </property>
+
+    <property name="title">
+      <value>Application Disabled</value>
+    </property>
+
+    <property name="margin">
+      <value>0</value>
+    </property>
+
+    <property name="bgcolor">
+      <value>white</value>
+    </property>
+
+
+  </properties>
+
+<htmlsrc isWebMacro='true'><![CDATA[
+  <HTML>
+    <HEAD>
+        <TITLE>$page.title</TITLE>
+    </HEAD>
+
+    <BODY id="page1" bgcolor="white">
+          <h2>APPLICATION NOT AVAILABLE: $session.applicationPath</h2>
+          <p>The application you requested is not available until further notice.
+          The application administrator has disabled it.
+          </p>
+      </BODY>
+    </HTML>
+  ]]></htmlsrc>
+
+  <widgets>
+  </widgets>
+
+</dynamideForm>

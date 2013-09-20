@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<application>
+  <event language="beanshell" name="application_onImport"><![CDATA[
+    import java.util.*;
+    import java.io.*;
+    import java.sql.*;
+    import org.jdom.*;
+
+    import com.dynamide.*;
+    import com.dynamide.util.*;
+    import com.dynamide.datatypes.*;
+    import com.dynamide.db.*;
+    import com.dynamide.resource.*;
+  ]]></event>
+
+  <event language="beanshell" name="application_onStart"><![CDATA[
+    session.logDebug("========== test-suite/dbgrid START ============");
+    session.loadPage("page1");
+  ]]></event>
+
+  <event language="beanshell" name="application_onClose"><![CDATA[
+  ]]></event>
+
+  <event language="beanshell" name="application_onAction"><![CDATA[
+  ]]></event>
+
+  <event language="beanshell" name="application_queryNextPage"><![CDATA[
+  ]]></event>
+
+  <pages>
+    <page name="page1"></page>
+  </pages>
+
+  <properties>
+    <property name="imports">
+      <value>
+        <enumeration override="false" defaultIndex="0">
+          <item datatype="com.dynamide.datatypes.Version">
+            <basename>com-dynamide-lib</basename>
+            <build></build>
+            <interface>1</interface>
+          </item>
+        </enumeration>
+      </value>
+      <datatype>com.dynamide.datatypes.Enumeration</datatype>
+      <helpTip>Imports defined for this Application</helpTip>
+    </property>
+    <property name="lastSave">
+      <value>1051401682448</value>
+      <readOnly>true</readOnly>
+      <datatype>java.util.Date</datatype>
+    </property>
+  </properties>
+</application>

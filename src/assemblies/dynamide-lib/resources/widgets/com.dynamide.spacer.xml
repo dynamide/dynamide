@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<widget>
+    <componentHelp>
+     <p>A spacer that works in all browsers.
+     </p>
+    </componentHelp>
+    <properties>
+        <property name="name"><defaultValue></defaultValue></property>
+        <property name="border"><defaultValue>0</defaultValue></property>
+        <property name="type">
+            <defaultValue>com.dynamide.spacer</defaultValue>
+            <readOnly>true</readOnly>
+        </property>
+        <property name="height"><defaultValue>0</defaultValue></property>
+        <property name="width"><defaultValue>50</defaultValue></property>
+        <property name="visible">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+    </properties>
+
+    <htmlsrc browser="*"><![CDATA[
+<!-- Spacer -->
+#set $transSrc = $session.getInclude("resources/images/transparent.gif")
+#set $bdr = " border='$widget.border' "
+<img $bdr src="$transSrc" height="$widget.height" width="$widget.width"/>
+]]></htmlsrc>
+</widget>

@@ -1,0 +1,44 @@
+## define $tree and $widget before calling.
+## the very root node should just be empty, except for child nodes.  Its text won't be displayed.
+## i.e., if you want one visible root node, just make one child under the root.
+    #set $transSrc = $session.getInclude("resources/images/transparent.gif")
+    #set $imgMinusSrc = $session.getInclude("resources/images/minus.jpg")
+    <table border='0' cellpadding='0' cellspacing='0'>
+    #foreach $thisLevelNode in $tree.getChildren() {
+        #set $childCount = $thisLevelNode.getChildCount()
+        <tr>
+        <td rowspan='2' width="$widget.spacing">
+            <img border='0' src="$transSrc" height='1' width="$widget.spacing"/>
+        </td>
+        <td>
+            #if ($childCount == 0) {
+                <a href="javascript:nada()">
+                    <img id="img$thisLevelNode.ID" border='0' src="$transSrc"/>$thisLevelNode.Description
+                    ## Todo: work the link value in here for display (not id, since that needs to be unique).
+                </a>
+            } #else {
+                <span id='$thisLevelNode.ID' onclick="expandit('img$thisLevelNode.ID','sp$thisLevelNode.ID')" class="open">
+                    <a href="javascript:nada()">
+                        <img id="img$thisLevelNode.ID" border='0' class="open" src="$imgMinusSrc"/>
+                        $thisLevelNode.Description
+                    </a>
+                </span>
+            }
+        </td>
+        <td><img border='0' src="$transSrc" height='1' width="$widget.spacing"/>  ## make this cellpadding...
+            $thisLevelNode.getNodeText()
+        </td>
+      </tr>
+      <tr>
+        <td colspan='2'>
+            <span id='sp$thisLevelNode.ID' class="open">
+            ## recurse into child-node, which will render one table...
+            ## you could do this if tree were static: $tree.dive($thisLevelNode.ID, $widget, $session)
+            #if ($childCount > 0){
+                $thisLevelNode.dive($thisLevelNode.ID, $widget, $session)
+            }
+            </span>
+        </td>
+      </tr>
+    }
+    </table>

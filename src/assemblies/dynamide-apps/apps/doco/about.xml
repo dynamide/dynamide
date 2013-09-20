@@ -1,0 +1,195 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Created with Dynamide from DYNAMIDE.COM -->
+<dynamideForm>
+  <widgets>
+    <widget id="hiddenPageID">
+      <properties>
+        <property name="field">
+          <value>page</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.hidden</value>
+        </property>
+        <property name="value">
+          <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+          <value>$pageID</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="logo1">
+      <properties>
+        <property name="flavor">
+          <value>box</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.dynamidelogo</value>
+        </property>
+      </properties>
+    </widget>
+  </widgets>
+  <htmlsrc browser="*"><![CDATA[
+<html>
+<body bgcolor='white'>
+<style>
+.mojo {
+  font-family: Tahoma, Sans Serif;
+}
+.points {
+  font-family: Tahoma, Sans Serif;
+  font-size: 9pt;
+}
+A {
+  font-family: Tahoma, Sans Serif;
+  font-size: 8pt;
+  color: red;
+  font-weight: bold;
+  text-decoration: underline;
+}
+A:hover {
+  font-family: Tahoma, Sans Serif;
+  font-size: 8pt;
+  color: black;
+  font-weight: bold;
+  text-decoration: underline;
+}
+.sec {
+  font-family: Tahoma, Sans Serif;
+  font-size: 12pt;
+  color: black;
+text-decoration: none;
+font-weight: normal;
+}
+.sec:hover {
+  font-family: Tahoma, Sans Serif;
+  font-size: 12pt;
+  color: red;
+  text-decoration: underline;
+  font-weight: normal;
+
+}
+.dm {
+  font-family: Tahoma, Sans Serif;
+  font-size: 9pt;
+  color: #666666;
+  font-weight: bold;
+}
+</style>
+<table border='0' cellpadding='0' cellspacing='0'>
+  <tr>
+    <td height="20" colspan="2">&#160;
+    </td>
+  </tr>
+  <tr>
+    <td width="40">&#160;
+    </td>
+    <td>
+    <img border='0' src='$session.href("resources/images/dynamide-logo-large.gif")' />
+    </td>
+  </tr>
+</table>
+<table border='0' cellpadding='10' cellspacing='0' width="700">
+  <tr>
+    <td width="120">&#160;
+    </td>
+    <td>
+    <br />
+    <p class="mojo">
+      <a href="/dynamide/doco/doc/help/dynamide-overview" class="sec">What is dynamide?</a>
+      <hr />
+     <span class='points'>A framework for creating and running dynamic web applications. <span class='dm'>dynamide</span><dm_nbsp/>has
+     reusable components to simplify dynamic web development.
+     <br />
+     <br />
+     <span class='dm'>dynamide</span><dm_nbsp/>applications use templating, Java objects,
+      and scriptable server-side events. <dm_nbsp/><dm_nbsp/><a href="/dynamide/doco/doc/help/dynamide-overview">more...</a></span>
+    </p>
+    <p class="mojo">
+      <a href="/dynamide/doco/doc/help/index" class="sec">Standards</a>
+      <hr />
+      <span class='points'><span class='dm'>dynamide</span><dm_nbsp/>runs on a standard J2EE platform, and can connect to any
+      JDBC database, such as MySQL or PostgreSQL.
+      <br />
+      <br />
+      <span class='dm'>dynamide</span><dm_nbsp/>manages and simplifies XML, XSL, WebMacro templates, Beanshell scripting of server-side events, and cross-browser
+      libraries, all in an Integrated Development Environment. <dm_nbsp/><dm_nbsp/><a href="/dynamide/doco/doc/help/index">more...</a>
+      </span>
+    </p>
+
+    <p class="mojo">
+      <a href="/dynamide/doco/doc/help/contact" class="sec">Hosting</a>
+      <hr />
+      <span class='points'><span class='dm'>dynamide</span><dm_nbsp/>applications can be hosted on dynamide's
+      network and application servers,
+      or on yours.  <dm_nbsp/><dm_nbsp/><a href="/dynamide/doco/doc/help/contact">more...</a></span>
+
+    </p>
+
+    <p class="mojo">
+      <a href="/dynamide/doco/doc/help/index" class="sec">Documentation</a>
+      <hr />
+      <span class='points'>Read the documentation and explore the help system.
+      <dm_nbsp/><dm_nbsp/><a href="/dynamide/doco/doc/help/index">more...</a></span>
+
+    </p>
+    <hr />
+
+    <CENTER>
+    <table border='0' cellpadding='10' cellspacing='0'>
+      <tr>
+        <td>
+         <a href="/dynamide/doco/doc/help/contact">Contact Us</a>
+        </td>
+        <td>
+         <a href="/dynamide/doco/doc/help/FAQ">FAQ</a>
+        </td>
+      </tr>
+    </table>
+    </CENTER>
+
+
+    </td>
+  </tr>
+</table>
+
+<br />
+<br />
+
+<CENTER>
+<span class="widget" id="logo1" />
+</CENTER>
+</body>
+</html>
+
+]]></htmlsrc>
+  <properties>
+    <property name="formAction">
+      <value></value>
+    </property>
+    <property name="formName">
+      <value></value>
+    </property>
+    <property name="lastSave">
+      <value>1027535371657</value>
+      <readOnly>true</readOnly>
+      <datatype>java.util.Date</datatype>
+    </property>
+    <property name="margin">
+      <value>0</value>
+      <eval>document.body.margin = "$page.margin";document.body.bgcolor='blue';alert('changed');</eval>
+    </property>
+    <property name="name">
+      <value>about</value>
+      <readOnly>true</readOnly>
+    </property>
+    <property name="title">
+      <value>About Dynamide</value>
+    </property>
+    <property name="type">
+      <value>pagetypes/com.dynamide.form</value>
+      <readOnly>true</readOnly>
+    </property>
+  </properties>
+</dynamideForm>
+
+

@@ -1,0 +1,21 @@
+ <XDtTagDef:tagDef namespace="Doc" handler="xdoclet.modules.doc.DocumentationTagsHandler"/>
+<h2><XDtDoc:currentNamespace/></h2>
+
+<p>Implemented in class <a href="../api/<XDtDoc:currentNamespaceTagsHandlerClassNameAsDirStructure/>.html"><XDtDoc:currentNamespaceTagsHandlerClassName namespace="<XDtDoc:currentNamespace/>"/></a>.</p>
+
+<XDtClass:forAllClasses>
+  <XDtClass:ifHasClassTag tagName="todo">
+  +++ <XDtClass:fullClassName/>
+      TODO: <XDtClass:classTagValue tagName="todo"/>
+  </XDtClass:ifHasClassTag>
+
+    <XDtMethod:forAllMethods>
+      <XDtMethod:ifHasMethodTag tagName="todo">
+        METHOD: <XDtMethod:methodName/>(<XDtParameter:parameterList/>)
+          todo: <XDtMethod:methodTagValue tagName="todo"/>
+          href= <XDtClass:fullClassName/>#<XDtMethod:methodName/>(<XDtParameter:parameterList/>) <XDtMethod:methodName/>
+
+      </XDtMethod:ifHasMethodTag>
+    </XDtMethod:forAllMethods>
+
+</XDtClass:forAllClasses>

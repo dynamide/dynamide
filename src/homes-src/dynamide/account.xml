@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!DOCTYPE account>
+<account>
+    <allowAssemblySearch>true</allowAssemblySearch>
+    <defaultAssemblies>
+        <ASSEMBLY>
+           <name>com-dynamide-apps</name>
+           <interface>1</interface>
+        </ASSEMBLY>
+    </defaultAssemblies>
+</account>

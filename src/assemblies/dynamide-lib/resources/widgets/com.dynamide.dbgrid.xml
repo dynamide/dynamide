@@ -1,0 +1,408 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<widget>
+    <componentHelp>
+     <p>A grid for viewing tabular data.  Will present any tabular data from any IDatasource registered with
+     the Session.
+     <br/>
+     Here are the rules for the grid:
+     <pre>
+     If "columns" is present
+        It is an EnumeratedDatatype of ColumnDatatype elements.
+        ColumnDatatype elements' properties are used in this order:
+            cellMacro wins over cell
+            if no cellMacro or cell is present, the datasource's value is used
+               for the cell
+            The "cell" property is written verbatim.
+            The "cellMacro" property is expanded with WebMacro first,
+               with the following variables in the context:
+                 \$row : a com.dynamide.util.StringList of the values of the row
+                         keyed by column key.
+                 \$column : the String key of the column
+                 \$cell   : the value of the cell from the datasource
+                 \$rowID   : the value of the row ID, 0-based
+            captionMacro wins over caption
+            If no captionMacro or caption is present, the column id is used.
+            The captionMacro has the following variables in the context:
+                 \$column : the String key of the column
+         "columns" doesn't appear in the default properties since
+         it is an enumerated type and the enumerated default properties are broken (12/9/2003 1:30AM)
+
+      Do NOT include a widget tag in the ColumnDatatype if there is no widget specification.  It is an error to have
+        an empty widget tag.
+
+      visibleColumns are always presented, then columns defined in "columns".  Set visibleColumns to
+        an empty string to avoid using the default columns list.  Set visibleColumns to * to
+        include all default columns.
+
+      <b>events</b>
+
+      Just add an event with the name of the dbgrid widget plus an underscore,
+      then the name of the event and it will get fired.
+      For example, if the grid is called dbgrid1, and the event you wish to hook is
+      "onClick", then the event must be named
+
+         dbgrid1_onClick
+
+      Details about events:
+
+        onClick
+          event.sender : the Widget object.
+          
+          event.sender.getObject() : the IDatasource object
+          
+          The event is fired with a Map as the inputObject, and the map contains two entries:
+             rowID -- a String containing the rowID from the datasource, zero-based index.
+             column -- a String containing the datasource key for this column.
+
+        onHeaderClick
+          The event is fired when the column title is clicked.  The event
+          is fired with a Map as the inputObject, and the map contains two entries:
+             column -- a String containing the datasource key for this column.
+             title -- a String containing the display title of the column. (The title
+                      is different from the column key if an internationalized lookup
+                      is present, for example).
+     </pre>
+     </p>
+    </componentHelp>
+
+    <properties>
+        <property name="align"><defaultValue>right</defaultValue></property>
+        <property name="basename">
+            <defaultValue>dbgrid</defaultValue>
+            <hidden>true</hidden>
+        </property>
+        <property name="border">
+            <defaultValue>1</defaultValue>
+        </property>
+        <property name="caption">
+          <defaultValue>edit</defaultValue>
+          <intl>1</intl>
+        </property>
+        <property name="cellpadding"><defaultValue>0</defaultValue></property>
+        <property name="cellspacing"><defaultValue>0</defaultValue></property>
+        <property name="class"><defaultValue></defaultValue></property>
+        <property name="datasource">
+            <datatype>com.dynamide.datatypes.IDatasourceDatatype</datatype>
+            <defaultValue></defaultValue>
+        </property>
+        <property name="enabled">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+        <property name="name"><defaultValue>edit</defaultValue></property>
+        <property name="rowNumbers"><defaultValue>false</defaultValue></property>
+        <property name="rowNumbersNavigate"><defaultValue>true</defaultValue></property>
+        <property name="rowBGColor"><defaultValue>white</defaultValue></property>
+        <property name="rowActiveBGColor"><defaultValue>#FFDD66</defaultValue></property>
+        <property name="showErrorAbove"><defaultValue>true</defaultValue></property>
+        <property name="textClass"><defaultValue></defaultValue></property>
+        <property name="textSize"><defaultValue>20</defaultValue></property>
+        <property name="textWidth"><defaultValue>30</defaultValue></property>
+        <property name="type"><defaultValue>com.dynamide.dbgrid</defaultValue><readOnly>true</readOnly></property>
+        <property name="visible">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+            <helpTip>Do not use this if you use visibleColumns property, it will create duplicates.</helpTip>
+        </property>
+        <property name="visibleColumns">
+            <defaultValue>
+                <enumeration final="false" itemDatatype="com.dynamide.datatypes.StringDatatype">
+                </enumeration>
+            </defaultValue>
+            <datatype>com.dynamide.datatypes.Enumeration</datatype>
+            <helpTip>Enter the column key values, one per line, of the columns that should be visible.</helpTip>
+        </property>
+        <!--<property name="visibleColumns"><defaultValue>*</defaultValue></property>-->
+        <property name="width"><defaultValue></defaultValue></property>
+    </properties>
+
+  <event language="beanshell" name="com_dynamide_dbgrid_onImport"><![CDATA[
+    import java.util.*;
+    import com.dynamide.*;
+    import com.dynamide.db.*;
+    import com.dynamide.util.*;
+  ]]></event>
+
+  <event language="beanshell" name="com_dynamide_dbgrid_onLoad"><![CDATA[
+    widget = event.sender;
+    widgetID = widget.getID();
+    page = widget.getPage();
+    page.registerAction(widgetID+"_onClick", widget, "com_dynamide_dbgrid_onClick", "");
+    page.registerAction(widgetID+"_onClickNavigate", widget, "com_dynamide_dbgrid_onClickNavigate", "");
+    page.registerAction(widgetID+"_onHeaderClick", widget, "com_dynamide_dbgrid_onHeaderClick", "");
+  ]]></event>
+
+
+  <event language="beanshell" name="com_dynamide_dbgrid_onClick"><![CDATA[
+    //Here we fire the event in the specific widget instance on a page.
+    widget = event.sender;
+    inputObject = new Hashtable();
+    inputObject.put("rowID", session.getQueryParam("rowID"));
+    inputObject.put("column", session.getQueryParam("column"));
+    event.setResultsFrom(widget.fireEvent(inputObject, "onClick"));
+  ]]></event>
+
+  <event language="beanshell" name="com_dynamide_dbgrid_onClickNavigate"><![CDATA[
+    //Here we fire the event in the specific widget instance on a page.
+    widget = event.sender;
+    idx = Tools.stringToIntSafe(event.getQueryParam("rowID"), -1);
+    if ( idx>-1 ) {
+        session.getDatasource(widget.get("datasource")).seek(idx);
+    }
+    System.out.println("################## seek: "+idx);
+  ]]></event>
+
+  <event language="beanshell" name="com_dynamide_dbgrid_onHeaderClick"><![CDATA[
+    //Here we fire the event in the specific widget instance on a page.
+    widget = event.sender;
+    inputObject = new Hashtable();
+    inputObject.put("column", session.getQueryParam("column"));
+    inputObject.put("title", session.getQueryParam("title"));
+    event.setResultsFrom(widget.fireEvent(inputObject, "onHeaderClick"));
+  ]]></event>
+
+
+    <htmlsrc browser="*"><![CDATA[
+    <style>
+    <!--
+        .columnNumbers {font-family: Arial,Helvetica,sans-serif; font-weight: bold; }
+        .columnTitles {font-family: Arial,Helvetica,sans-serif; font-weight: bold; }
+        ## You could do inline styles like this, except you need a hash, since underlines aren't allowed:
+        ##."$widget.name"columnTitles {font-family: Arial,Helvetica,sans-serif; font-weight: bold; }
+    -->
+    </style>
+
+    #macro dbgrid_link_header ($title, $colname, $linkHeaderColumns){
+        #if ($linkHeaderColumns != null && $linkHeaderColumns.indexOf("$colname")>-1){
+           #set $titleEsc = $session.ServletTools.encodeURLString("$title")
+           <a
+           class="columnTitles"
+           href="?action=$widget.ID\_onHeaderClick&page=$pageID&column=$colname&title=$titleEsc&SESSIONID=$SESSIONID">$title</a>
+        } #else {
+           $title
+        }
+    }
+
+    #macro dbgrid_link_header_by_col($caption, $colname, $captionClickable){
+        #if ("$captionClickable"=="true"){
+           #set $titleEsc = $session.ServletTools.encodeURLString("$caption")
+           <a
+           class="columnTitles"
+           href="?action=$widget.ID\_onHeaderClick&page=$pageID&column=$colname&title=$titleEsc&SESSIONID=$SESSIONID">$caption</a>
+        } #else {
+           $caption
+        }
+    }
+
+    #macro dbgrid_link ($colval, $rowID, $column, $linkColumns){
+        #set $therowID = $rowID - 1
+        #if ($linkColumns != null && $linkColumns.indexOf("$column")>-1){
+           <a href="?action=$widget.ID\_onClick&page=$pageID&column=$column&rowID=$therowID&SESSIONID=$SESSIONID">$colval</a>
+        } #else {
+           $colval
+        }
+    }
+
+    #macro dbgrid_link_by_col ($colval, $rowID, $column){
+       #set $therowID = $rowID - 1
+       <a href="?action=$widget.ID\_onClick&page=$pageID&column=$column&rowID=$therowID&SESSIONID=$SESSIONID">$colval</a>
+    }
+
+    #macro dbgrid_link_nav_by_col($colval, $rowID, $column){
+       #set $therowID = $rowID - 1
+       <a href="?action=$widget.ID\_onClickNavigate&page=$pageID&column=$column&rowID=$therowID&SESSIONID=$SESSIONID">$colval</a>
+    }
+
+    ##$session.logDebug("*************** dbgrid.render ")
+    #set $ds = $session.getDatasource($widget.datasource)
+    #if ($ds != null){
+        #if ("$ds.getRowCount()" == "0" && "$designMode" == "true"){
+            <SMALL>(Datasource has no rows)</SMALL>
+        }
+
+        #set $linkHeaderColumns = null
+        #set $linkHeaderColumnsEnum = $widget.getProperty("linkHeaderColumns")
+        #if ($linkHeaderColumnsEnum != null){
+            #set $linkHeaderColumns = $linkHeaderColumnsEnum.getValue()
+        }
+
+        #set $columns = null
+        #set $columnsEnum = $widget.getProperty("columns")
+        #if ($columnsEnum != null){
+            #set $columns = $columnsEnum.getValue()
+        }
+
+        <table border="$widget.border" class="$widget.class" cellpadding="$widget.cellpadding"
+               cellspacing="$widget.cellspacing" width="$widget.width">
+          <tr>
+            #if ($widget.rowNumbers == "true"){
+            <th class='columnTitles'>
+                <dm_nbsp/>
+            </th>
+            }
+            #set $showAllColumns = false
+            #set $visibleColumns = $widget.getProperty("visibleColumns").getValue()
+            #if ($visibleColumns.getClass().getName() == "com.dynamide.datatypes.EnumeratedDatatype"){
+                ## OK
+            } #else {
+                #set $vc = $widget.get("visibleColumns")
+                #if ($vc.equals("*")){
+                    #set $visibleColumns = $session.StringTools.parseSeparatedValues("", ",")
+                    #set $showAllColumns = true
+                } #else {
+                    #set $visibleColumns = $session.StringTools.parseSeparatedValues($vc, ",")
+                }
+            }
+            $session.logDebug(">>>>>>>>>>>>>>>>>>> visibleColumns: $visibleColumns.getClass().getName()")
+
+            ## #if ($columns = null){
+                #set $prefix = $widget.datasource
+                #set $cnl = $ds.getColumnNamesList()
+                #if ($visibleColumns.size()==0 && "$designMode" == "true"){
+                    <small>[visibleColumns] no visible columns</small>
+                }
+                #foreach $colname in $cnl {
+                    #set $ci = $visibleColumns.indexOf("$colname")
+                    #if ($showAllColumns || $ci>-1){
+                        #set $colnameLook = $session.lookupInternationalizedValue("$prefix\.$colname\.caption")
+                        #if ($colnameLook == null){
+                            #set $colnameLook = $colname
+                        }
+                        <th class='columnTitles'>#dbgrid_link_header($colnameLook, $colname, $linkHeaderColumns)</th>
+                    }
+                }
+            ## } #else {
+            #if ($columns != null){
+                #if ($columns.size()==0 && "$designMode" == "true"){
+                    <small>[columns] no visible columns</small>
+                }
+                #foreach $col in $columns.getCollection() {
+                    #set $caption = $col.caption
+                    #set $captionMacro = $col.captionMacro
+                    #set $captionClickable = $col.captionClickable
+                    #set $key = $col.key
+                    #set $column = $key
+
+                    #set $prefix = $widget.datasource
+                    #set $colnameLook = $session.lookupInternationalizedValue("$prefix\.$key\.caption")
+                    #if ($colnameLook != null){
+                        #set $caption = $colnameLook
+                    }
+                    #if ($captionMacro.trim().length()>0){
+                        #set $caption = $session.expandTemplate("$captionMacro", "dbgrid.dbgrid_link.gen.$key", $WEBMACRO_CONTEXT.getContext())
+                        #set $captionClickable = "false"
+                    }
+                    #if  ($session.Tools.isBlank($caption)){
+                        #set $caption = $key
+                    }
+                    <th class='columnTitles'>#dbgrid_link_header_by_col($caption, $key, $captionClickable)</th>
+                }
+            }
+          </tr>
+
+        #set $rowbg = $widget.rowBGColor
+        #set $rowabg = $widget.rowActiveBGColor
+
+        #set $linkColumns = null
+        #set $linkColumnsEnum = $widget.getProperty("linkColumns")
+        #if ($linkColumnsEnum != null){
+            #set $linkColumns = $linkColumnsEnum.getValue()
+        }
+
+        #set $currentRowNum = $ds.getCurrentRowIndex()
+        #set $rownum = 0
+        #foreach $row in $ds.iterator() {
+          <tr>
+            #set $bg = " bgcolor='$rowbg'"
+            #if ($rownum == $currentRowNum){
+                #set $bg = " bgcolor='$rowabg'"
+            }
+            #set $rownum = ($rownum + 1)
+            #if ($widget.rowNumbers == "true"){
+                <td class="columnNumbers" $bg>
+                    #if ($widget.rowNumbersNavigate == "true"){
+                        #dbgrid_link_nav_by_col($rownum, $rownum, "")
+                    } #else {
+                        $rownum
+                    }
+                </td>
+            }
+
+            ## #if ($columns == null){
+                #set $colIndex = 0
+                #foreach $colname in $row.keysList() {  ## not the keys of the db, the keys of the StringList, so all columns.
+                    #set $ci = $visibleColumns.indexOf("$colname")
+                    #if ($showAllColumns || $ci>-1){
+                        #set $colval = $row.get($colname)
+                        #if ("$colval" == ""){
+                            #set $colval = "<dm_nbsp/>"
+                        }
+                        <td $bg>#dbgrid_link($colval, $rownum, $colname, $linkColumns)</td>
+                        #set $colIndex = $colIndex + 1
+                    }
+                }
+            ## } #else {
+            #if ($columns != null){
+                #foreach $col in $columns.getCollection() {
+                    #set $cellMacro = $col.cellMacro
+                    #set $cell = $col.cell
+                    #set $key = $col.key
+                    #set $column = $key ## used in the cellMacro: $column, $row, $rowID
+                    #set $cellClickable = $col.cellClickable
+                    #set $rowID = $rownum - 1   ## used in cellMacro
+
+                    #set $colval = $row.get($key)
+                    #if ($colval == null){
+                        #set $colval = "NULL_KEY"
+                        $session.logError("Column not found in datasource row: '$key' in widget '$widget.getDotName()'")
+                    }
+
+                    #set $widgetEl = $col.getWidgetElement()
+                    #if ($widgetEl != null){
+                        #set $newWidget = $page.createWidgetFromElement($widgetEl, true, true)  ## false means don't add, so it will be gc'd.
+                        #set $rowIndex = ($rownum - 1)
+                        $newWidget.setProperty("fieldIndex", "$rowIndex")
+                        <td $bg>$newWidget.render()</td>
+                      ##  $newWidget.setPage(null) ## allow gc'ing
+                      ##  #set $newWidget = null
+                    } #elseif ($session.Tools.isBlank($cellMacro) && $session.Tools.isBlank($cell)){
+                        #if ("$cellClickable"=="true"){
+                            <td $bg>#dbgrid_link_by_col($colval, $rownum, $key)</td>
+                        } #else {
+                            <td $bg>$colval</td>
+                        }
+                    } #elseif ( ! $session.Tools.isBlank($cellMacro)) {
+                        #set $cell = $colval ## $cell is available to cellMacro
+                        #if ($cell == null){
+                            #set $cell = ""
+                        }
+                        #set $cell = $session.expandTemplate("$cellMacro", "dbgrid.dbgrid_cell.gen.$key", $WEBMACRO_CONTEXT.getContext())
+                        <td $bg>$cell</td>
+                    } #else {
+                        #if ($cell == null){
+                            #set $cell = "NULL"
+                        }
+                        #if ("$cellClickable"=="true"){
+                            #set $cellClickNavigate = $col.cellClickNavigate
+                            #if ("$cellClickNavigate"=="true"){
+                                <td $bg>#dbgrid_link_nav_by_col($cell, $rownum, $key)</td>
+                            } #else {
+                                <td $bg>#dbgrid_link_by_col($cell, $rownum, $key)</td>
+                            }
+                        } #else {
+                            <td $bg>$cell</td>
+                        }
+                    }
+                }
+            }
+          </tr>
+        }
+        </table>
+    } #else {
+        datasource not found: '$widget.datasource'
+    }
+    ]]></htmlsrc>
+</widget>

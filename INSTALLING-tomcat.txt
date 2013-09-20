@@ -1,0 +1,170 @@
+Steps to installing Dynamide in a Tomcat server.
+------------------------------------------------
+Ensure that web.xml is in {apps}/dynamide/WEB-INF/web.xml
+  this points an init-param to DYNAMIDE_HOME
+  These entries work for tomcat 6.0.14:
+      (There is no servlet defined here, it is defined in {tomcat}/conf/web.xml)
+      <servlet-mapping>
+      <servlet-name>DynamideServlet</servlet-name>
+      <url-pattern>/*</url-pattern>
+      </servlet-mapping>
+      
+      
+      <servlet-mapping>
+      <servlet-name>DynamideServlet</servlet-name>
+      <url-pattern>/*/</url-pattern>
+      </servlet-mapping>
+      
+      <servlet-mapping>
+      <servlet-name>DynamideServlet</servlet-name>
+      <url-pattern>/cache/*</url-pattern>
+      </servlet-mapping>
+
+
+  
+  
+Create an entry in {tomcat}/conf/server.xml
+    <Engine name="Catalina" defaultHost="localhost">
+    ...
+       <!-- Here is the host config for Dynamide. -->
+       <Host name="app1.dynamide.com"
+                   debug="0"
+                    appBase="webapps"
+                    unpackWARs="true"
+                    autoDeploy="true">
+                    <Context path=""
+                       docBase="dynamide"
+                       debug="0"
+                    />
+                 <Context path="/static" docBase="/home/dynamide/dynamide/build/ROOT/static"
+                  debug="0" />
+        </Host>
+        
+The next instructions apply to tomcat 6.0.14 but NOT to 6.0.20, 
+because they removed the shared/lib capability.
+(Be sure to change C:/dynamide to the dynamide home location.)
+
+  
+Create an entry in {tomcat}/conf/web.xml
+  <servlet>
+      <servlet-name>DynamideServlet</servlet-name>
+      <servlet-class>com.dynamide.DynamideServlet</servlet-class>
+                <init-param>
+			<param-name>DYNAMIDE_HOME</param-name>
+			<param-value>C:/dynamide</param-value>	
+		</init-param>
+  </servlet>
+
+  <servlet-mapping>
+      <servlet-name>DynamideServlet</servlet-name>
+      <url-pattern>/cache/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+      <servlet-name>DynamideServlet</servlet-name>
+      <url-pattern>/*</url-pattern>
+  </servlet-mapping>
+
+  Then, put dynamide.jar in a place like this:
+    C:\bin\apache-tomcat-6.0.14\shared\lib
+    and update {tomcat}/conf/catalina.properties:
+## the absolute doesn't seem to work, but the shared/lib does.
+shared.loader=file:///c:/dynamide/lib/*.jar,${catalina.base}/shared/lib/*.jar
+
+  
+  
+  
+  
+  
+  
+Optionally, if you leave the tomcat manager app installed, set yourself a manager role 
+in {tomcat}/conf/tomcat-users.xml
+    <tomcat-users>
+    <role rolename="manager"/>
+    <role rolename="standard"/>
+    <user username="MyName" password="MyPassword" roles="standard,manager"/>
+    </tomcat-users>
+    
+Then, make sure that in DYNAMIDE_HOME you have a full dynamide unzip of DYNAMIDE_HOME.zip.
+  (This directory should contain the following directories (and many other, but this lets 
+   you know you've got the full distribution, not just the files under ROOT/)
+    DYNAMIDE_HOME/bin/
+    DYNAMIDE_HOME/build/
+    DYNAMIDE_HOME/build/ROOT/
+    DYNAMIDE_HOME/build/ROOT/homes/
+    
+2010-04-17
+   all this is working on dreamhost, under user dynamide.
+   I then tried this:
+          :~/bin/apache-tomcat-6.0.20/conf$ vi web.xml 
+     I edited the default servlet to be dynamide and added a dynamide servlet to this file
+     I then removed the dynamide servlet from 
+          :~/bin/apache-tomcat-6.0.20/webapps/dynamide/WEB-INF$ vi web.xml 
+   But this didn't work.     
+
+2011-05-28
+     Here's what I did on a Mac OS X 10.6 installation with tomcat 7.0.14
+     This gives you a webapp that will allow other webapps to run in the same container.
+     Instructions above take over the whole tomcat instance.
+
+     Created a web app folder:
+     cd $TOMCAT_HOME/webapps
+     mkdir dynamide
+     mkdir dynamide/WEB-INF
+     mkdir dynamide/WEB-INF/lib
+
+     cp $DYNAMIDE_HOME/src/conf/webapps/dynamide/loggedOut.html  $TOMCAT_HOME/webapps/dynamide/
+     cp $DYNAMIDE_HOME/src/conf/webapps/dynamide/WEB-INF/web.xml  $TOMCAT_HOME/webapps/dynamide/WEB-INF/
+
+     Then for the static files, you must modify Tomcat's conf/server.xml file and add a context.
+     You could also serve this up using a frontend webserver such as Apache.  
+     This is why this context is not served up as part of the /dynamide context.
+
+     Consult this file:
+
+     You basically need a block like this:
+
+     <Host name="localhost"  appBase="webapps"   unpackWARs="true" autoDeploy="true">
+           <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
+                     prefix="localhost_access_log." suffix=".txt"
+                     pattern="%h %l %u %t &quot;%r&quot; %s %b" resolveHosts="false"/>
+           <Context path="/static" appBase=""
+                   docBase="/Users/laramie/src/dynamide/build/ROOT/static"
+                   debug="99" reloadable="true">
+           </Context>
+      </Host>
+
+
+     After all this, you should be able to surf to
+
+        http://localhost:8080/static/
+      and
+        http://localhost:8080/dynamide/doco
+        http://localhost:8080/dynamide/admin
+
+        The default app won't load under this configuration, though:
+          http://localhost:8080/dynamide/
+          
+          
+          ================ 2013-09-18 ===================
+          
+          <Host name="localhost"  appBase="webapps" unpackWARs="true" autoDeploy="true">
+                 <Context path="/static" docBase="/Users/laramie/dynamideco/dynamide/build/ROOT/static"  debug="0" />
+                 <Context path="/m" docBase="/Users/laramie/tmp/ROOT" debug="0" />
+           </Host>
+           
+           This last Context will map the default webapp to this docBase.  ROOT is 
+           
+           
+           
+           If you want listings for your /static files, then turn this on in tomcat's
+           apache-tomcat-7.0.42/conf/web.xml
+           
+           <servlet>
+                <servlet-name>default</servlet-name>
+                <servlet-class>org.apache.catalina.servlets.DefaultServlet</servlet-class>
+                <init-param>
+                    <param-name>listings</param-name>
+                    <param-value>true</param-value>
+                    ...
+

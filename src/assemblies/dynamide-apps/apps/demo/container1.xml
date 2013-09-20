@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<dynamideForm>
+  <widgets>
+    <widget id="breadcrumbs1">
+      <properties>
+        <property name="name">
+          <value>breadcrumbs1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.breadcrumbs</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="button1">
+      <properties>
+        <property name="caption">
+          <value>Click Me!</value>
+          <intl>1</intl>
+        </property>
+        <property name="onClick">
+          <value></value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.button</value>
+        </property>
+      </properties>
+    </widget>
+  </widgets>
+  <htmlsrc browser="*"><![CDATA[
+<HTML>
+  <HEAD/>
+  <BODY id="container1" contentEditable="true" onclick="widgetClicked(this)" name="container1">I am a container
+    <BR />
+    <SPAN class="widget" id="breadcrumbs1" onresizestart="javascript:event.cancelBubble=true;return false;" contentEditable="false" onclick="widgetClicked(this)">
+    <!-- generated at: 1022383266351 -->
+</SPAN>
+    <SPAN class="widget" id="button1" onresizestart="javascript:event.cancelBubble=true;return false;" contentEditable="false" onclick="widgetClicked(this)"></SPAN>
+  </BODY>
+</HTML>
+]]></htmlsrc>
+  <properties>
+    <property name="lastSave">
+      <value>1022383271468</value>
+      <readOnly>true</readOnly>
+      <datatype>java.util.Date</datatype>
+    </property>
+    <property name="margin">
+      <value>0</value>
+      <eval>document.body.margin = "$page.margin";</eval>
+    </property>
+    <property name="name">
+      <value>container1</value>
+    </property>
+    <property name="onAction" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+    <property name="onLoad" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+    <property name="onValidate" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+    <property name="title">
+      <value></value>
+    </property>
+    <property name="type">
+      <readOnly>true</readOnly>
+      <value>pagetypes/com.dynamide.page</value>
+    </property>
+  </properties>
+</dynamideForm>

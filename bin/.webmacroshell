@@ -1,0 +1,31 @@
+## Dynamide webmacroshell init file
+## Copyright (c) 2003 DYNAMIDE.COM
+##
+## The variable $shell is of type com.dynamide.util.WebMacroTools
+##   and you can call any public method of that class here.
+##
+## Uncomment the lines in this file to change the default behaviors of the shell.
+
+## Supresses echo of result of init  [default is to show it]
+##$shell.setQuietInit(true)
+
+## Uncomment the next line to disable the shell welcome message [default is to show it]
+## $shell.setNoCopyrightNotice(true)
+
+## Hide braces around display result  [default is to show them]
+##$shell.setBraces(false)
+
+## Hide the line numbers in history listings  [default is to show them]
+##$shell.setLineNumbers(false)
+
+## Pre-initialize any objects you always want available.
+## These will not be included in any saved scripts.
+#set $xdb = $shell.loadClass("com.dynamide.util.XDB")
+
+
+## The script in this file does not get added to the history list.
+## So if you want certain commands to be included at the top of your
+## scripts that are created when you save your shell session,
+## use $shell.include(String).  The special filename "~/" resolves
+## to your home directory.
+$shell.include("~/.webmacroshell.basescript")

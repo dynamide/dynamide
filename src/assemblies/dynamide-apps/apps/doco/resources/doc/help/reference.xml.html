@@ -1,0 +1,390 @@
+<reference>
+<!--
+### =========== TOC ==========================================================
+-->
+
+<toc>
+<pre>
+<h2>Dynamide Reference</h2>
+
+<p>A guide to syntax and objects available in various contexts in Dynamide.</p>
+
+<hr />
+The layout of the Dynamide RESOURCE_ROOT tree is described in the
+<a href="/dynamide/doco/doc/help/assemblies">Assembly Documentation</a> Within each
+Assembly, there is an apps directory, which contains web applications.  This
+reference starts with the application directory.  Please refer to the
+<a href="/dynamide/doco/doc/help/assemblies">Assembly Documentation</a> for information
+on how the Files and Objects below relate to the filesystem layout in
+Dynamide.
+
+<hr />
+<b>application</b> directory
+    Each application lives in a directory named after the application,
+    under "apps/" in the Assembly.
+    Each application directory contains:
+        application.xml
+        fielddefs.xml
+        zero to many [page].xml files
+        an optional "resources" directory with resource files.
+        See the "resources/ directory" section.
+
+<hr />
+<b>resources/</b> directory
+    Each application can have a resources directory, which should be named
+    "resources". You can name child directories of the project anything you
+    like, but if the directory is named "resources", then you can use
+    Dynamide imports, which search the resource tree for files, so that
+    common files can be factored out of the individual applications and into
+    your Account (home dir), or even into imported libraries. All the
+    Dynamide Widgets, for example, live in resources/widgets in the Dynamide
+    library Assembly, and can be imported into your projects.
+
+    Here are some resources that can go in the application resource directory:
+<BLOCKQUOTE>
+<table border='1'>
+       <tr><td> <B>resources/widgets</B></td><td>     Custom Widget xml files  </td></tr>
+<tr><td> <B>resources/css</B></td><td>            Cascading Style Sheet files  </td></tr>
+<tr><td> <B>resources/js</B></td><td>            Javascript files  </td></tr>
+<tr><td> <B>resources/html</B></td><td>            static HTML files  </td></tr>
+<tr><td> <b>resources/images</b></td><td>            image files  </td></tr>
+<tr><td> <b>resources/dialogs</b></td><td>            Dynamide page dialogs  </td></tr>
+<tr><td> <b>resources/intl/intlres-*.properties</b></td><td>            Internationalization lookup files  </td></tr>
+<tr><td></td><td>            XML/XSL files in any user-defined directory </td></tr>
+</table>
+</BLOCKQUOTE>
+See the <a href="/dynamide/doco/doc/help/assemblies">Assembly Documentation</a> for more information.
+
+
+<hr />
+<b><font color="blue">application.xml</font></b> File
+    <b>&lt;fields></b> Element
+        multiple <b>&lt;field></b> child Elements
+        -- OR --
+        one attribute: <a href="#details-fielddefs-file">filename="fielddefs.xml"</a>
+
+    <b>&lt;properties></b> Element
+        <b>&lt;property></b> Elements
+        special properties:
+             <a href="#details-poolable">poolable</a>
+             <a href="#details-publishParams">publishParams</a>
+
+    <b>&lt;event></b> Elements
+
+    <b>&lt;pages></b> Element
+        attribute: <a href="#details-default-page">default</a>
+        <a href="#details-page-element"><b>&lt;page></b></a>
+
+<hr />
+<b><font color="blue">fielddefs.xml</font></b> File
+    <b>&lt;field></b> Elements
+
+<hr />
+<b><font color="blue">[page].xml</font></b>
+
+    <b>&lt;properties></b> Element
+        <b>&lt;property></b> Elements
+
+    <b>&lt;widgets></b> Element
+        <b>&lt;widget></b> elements
+            <b>&lt;properties></b> Element
+                <b>&lt;property></b> Elements
+                (sets current property for *this* Widget instance)
+
+    <b>&lt;event></b> Element
+        attribute: language (currently supports: "beanshell", "tcl"
+        one CDATA child Element
+    <b>&lt;htmlsrc></b>
+        attributes:
+           isWebMacro "true" or "false"  If true, the source will be evaluated in WebMacro first
+           isXHTML    "true" or "false"  If true, the source will be loaded into a JDom DOM object
+                                         (tempate expansion such as WebMacro comes first)
+           href       relative unix-style file path to htmlsrc
+
+
+<hr />
+<b><font color="blue">[widget].xml</font></b> File
+
+    <b>&lt;properties></b> Element
+         <b>&lt;property></b> Elements
+         (defines supported properties for this widget type and default values)
+         special properties:
+             <a href="#details-widget-name">name</a>
+             <a href="#details-widget-type">type</a>
+
+    <b>&lt;event></b> Elements
+        attribute: language (currently supports: "beanshell", "tcl")
+        one CDATA child Element
+
+    <b>&lt;htmlsrc></b> Element
+        attributes:
+           isWebMacro "true" or "false"  If true, the source will be evaluated in WebMacro first
+           isXHTML    "true" or "false"  If true, the source will be loaded into a JDom DOM object
+                                         (tempate expansion such as WebMacro comes first)
+           href       relative unix-style file path to htmlsrc
+
+
+<hr />
+<b>&lt;event></b> Element
+  attribute: language ["beanshell", "tcl"]
+  one <b>&lt;CDATA></b> child Element
+      If the language is "beanshell", then the event contains valid Beanshell script,
+      an the following variables are defined:
+          com.dynamide.event.ScriptEvent <b>event</b>
+          com.dynamide.Session <b>session</b>
+
+<hr />
+<b>&lt;htmlsrc></b> Element (in Widget and Page xml files)
+    attribute: isWebmacro ["true", "false"]
+    attribute: isXHTML ["true", "false"]
+    attribute: href
+    valid html
+    valid xhtml
+    valid webmacro
+        WebMacro blocks can contain valid WebMacro, and have the following variables defined
+        \$session
+        \$page
+        \$parent
+        \$WEBMACRO_CONTEXT
+
+<hr />
+external htmlsrc files
+    valid html
+    valid xhtml
+    valid webmacro
+
+  <hr />
+</pre>
+</toc>
+
+<!--
+### =========== TYPES ========================================================
+-->
+<types>
+<pre>
+    <type id="Element">
+        <name>Element</name>
+        <description>Text representation is an XML Element.
+            Here is an element with a single text node as a child:
+            <example>
+               &lt;value>My Value&lt;/value>
+            </example>
+            Here is an element with a single attribute of "name", and no children:
+            <example>
+               &lt;page name="page1">&lt;/page>
+            </example>
+        </description>
+        <discussion>
+            The run-time representation will be an org.jdom.Element.  However, most Dynamide objects
+            use XML as their persistent storage, and modify their properties in memory, so manipulating
+            Dynamide objects such as Session, Page, and Widget by the DOM will not achieve the result you want.
+            Instead, use the Javadoc to find the methods and properties you wish to set.  These properties are
+            available for the length of the application session, or, if you are in development, you can call
+            various methods on the objects to save them to persistent storage, such as getFullXMLSource() and
+            saveToFile(...)
+        </discussion>
+    </type>
+
+    <type id="Attribute">
+        <name>XML Attribute</name>
+        <description>Text representation is an XML Element Attribute.
+            Here is an element with a single attribute of "name", where the value of the attribute is "page1":
+            <example>
+               &lt;page name="page1">&lt;/page>
+            </example>
+        </description>
+    </type>
+
+    <type id="boolean">
+        <name>boolean</name>
+        <description>Legal values are <b>true</b> or <b>false</b>.  As XML an attribute,
+        the attribute value must be surrounded by single or double quotes.
+        </description>
+    </type>
+
+    <type id="">
+        <name></name>
+        <description>
+        </description>
+    </type>
+</pre>
+</types>
+
+<!--
+### =========== DETAILS ========================================================
+-->
+
+<details>
+<pre>
+
+  <detail>
+    <name></name>
+    <type></type>
+    <default></default>
+    <values></values>
+    <description>
+    </description>
+    <example>
+    </example>
+  </detail>
+
+  <detail id="default-page">
+    <name>default page Element</name>
+    <type>Element</type>
+    <default>false</default>
+    <values>true, false</values>
+    <description>
+            If true, will be the default main page of the application.
+            If not specified, the value is "false".
+    </description>
+    <discussion>
+        a default page is served up when the application starts and the application_queryNextPage doesn't return a page.
+            If there is no default, and application_queryNextPage returns no page in particular, the page order
+            as specified by the order of the page Elements in the pages Element is used.
+    </discussion>
+    <example>
+    </example>
+  </detail>
+
+  <detail id="event">
+    <name>event</name>
+    <type>Element</type>
+    <default></default>
+    <values>CDATA child element, plus attribute: language ("beanshell", "tcl")</values>
+    <description>
+    </description>
+    <discussion>
+      The event runs inside a wrapped function call.  Variables defined in the event
+        fall out of scope at the end of the event.
+      Do not return any values with the return statement, simply use:
+        <example>return;</example>
+    </discussion>
+    <example>
+    </example>
+  </detail>
+
+  <detail id="fielddefs-file">
+    <name>fielddefs.xml file</name>
+    <type>Attribute</type>
+    <default></default>
+    <values>fielddefs.xml</values>
+    <description>
+            Points to the fielddefs.xml file, which should be in the project directory,
+            the same directory as application.xml.
+    </description>
+    <discussion>
+    </discussion>
+    <example>
+    </example>
+  </detail>
+
+  <detail id="page-element">
+    <name>page Element</name>
+    <type>Element</type>
+    <default></default>
+    <values></values>
+    <description>
+         page Elements, e.g.
+            &lt;page name="page1">&lt;/page>
+            If true, will be the default main page of the application.
+            If not specified, the value is "false".
+    </description>
+    <discussion>
+      </discussion>
+    <example>
+    </example>
+  </detail>
+
+  <detail id="pages-element">
+    <name>pages Element</name>
+    <type>Element</type>
+    <default></default>
+    <values></values>
+    <description>
+         pages Element
+           "page" child Elements are supported.
+           Lists the pages in the application.
+    </description>
+    <discussion>
+        child Elements of the page element are ignored.
+        the name attribute can contain relative path directories, if your pages live in directories.
+        For example, if you have a directory structure like:
+
+        apps/
+           myapp/
+              application.xml
+              main.xml
+              dir1/
+                  page1.xml
+              dir2/
+                  page1.xml
+
+        Then you can list:
+            <pages>
+              <page name="main"></page>
+              <page name="dir1/page1"></page>
+              <page name="dir2/page1"></page>
+            </pages>
+
+    </discussion>
+    <example>
+    </example>
+  </detail>
+
+  <detail id="poolable">
+    <name>poolable</name>
+    <type>boolean</type>
+    <default>false</default>
+    <values>true, false</values>
+    <description>
+          If true, the session will be re-useable at the end of the current http request.
+    </description>
+    <discussion>
+             The session should not store per-use
+                instance data, but should be reusable on each request.  The session is
+                useful for loading the pages is owns, so that serving pages is fast.
+                User instance data should be put in an IContext or subsession.  For the duration
+                of the request, the \$session variable is single threaded and available to
+                only one user and request, so the session can process information stored in
+                contexts, subsession, cookies, database connections, etc.  At the end of the
+                request, if the session's "poolable" property is still true, then the session
+                is repooled and will be handed out to the next request asking for the same URI.
+    </discussion>
+    <example>
+    </example>
+  </detail>
+
+  <detail id="publishParams">
+    <name>publishParams</name>
+    <type>Element</type>
+    <default></default>
+    <values></values>
+    <description>An XML representation of the com.dynamide.datatypes.PublishParamsDatatype type.
+    Fill in this structure if you wish to be able to publish your application automatically.
+    Published applications are collections of standard HTML files and can be served up from any web server.
+    </description>
+    <discussion>
+       <example>
+          &lt;property name="publishParams">
+            &lt;datatype>com.dynamide.datatypes.PublishParamsDatatype&lt;/datatype>
+            &lt;value>
+                &lt;URL>&lt;/URL>
+                &lt;URIPrefix>&lt;/URIPrefix>
+                &lt;protocolHostPort>&lt;/protocolHostPort>
+                &lt;defaultExtension>.html&lt;/defaultExtension>
+                &lt;publishPagesList>false&lt;/publishPagesList>
+                &lt;hideApplicationPath>false&lt;/hideApplicationPath>
+            &lt;/value>
+          &lt;/property>
+       </example>
+    </discussion>
+    <example>
+    </example>
+  </detail>
+
+
+
+ </pre>
+</details>
+
+</reference>

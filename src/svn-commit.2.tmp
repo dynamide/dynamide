@@ -1,0 +1,8 @@
+Added for mongo and rhino
+
+--This line, and those below, will be ignored--
+
+A    shell/javascript
+A    shell/javascript/script.js
+AM   shell/javascript/runRhino
+A    shell/javascript/README.txt

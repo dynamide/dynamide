@@ -1,0 +1,188 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<widget>
+
+    <componentHelp>
+        <p>An extension of the standard HTML SELECT form element.
+        If 'size' is 0 or 1, you will get a dropdown.  If 'size' is greater than 1,
+        you will get a listbox.  If you set 'multiple' to "true", the user
+        can multi-select items in the list, and it will be a listbox automatically.
+        </p>
+    </componentHelp>
+
+    <properties>
+        <property name="align">
+           <datatype>com.dynamide.datatypes.Enumeration</datatype>
+           <defaultValue>
+                <enumeration defaultIndex='1'><!-- default it to 'right' -->
+                    <value>left</value>
+                    <value>right</value>
+                </enumeration>
+            </defaultValue>
+        </property>
+        <property name="border">
+          <defaultValue>0</defaultValue>
+        </property>
+        <property name="caption">
+          <defaultValue></defaultValue>
+          <intl>1</intl>
+        </property>
+        <property name="captionClass"><defaultValue>caption</defaultValue></property>
+        <property name="captionNOBR">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+        <property name="captionPlacement"><defaultValue>left</defaultValue></property>
+        <property name="captionWidth"><defaultValue></defaultValue></property>
+        <property name="cellpadding"><defaultValue>0</defaultValue></property>
+        <property name="cellspacing"><defaultValue>0</defaultValue></property>
+        <property name="class"><defaultValue></defaultValue></property>
+        <property name="enabled">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+        <property name="field">
+           <datatype>com.dynamide.datatypes.LiveEnumeratedDatatype</datatype>
+           <defaultValue>
+                <enumeration defaultIndex='0'>
+                    <value></value>  <!-- make sure there is one empty value for autocreated fields -->
+                </enumeration>
+            </defaultValue>
+           <liveEvalString>session.getFieldNames();</liveEvalString>
+        </property>
+        <property name="items">
+           <datatype>com.dynamide.datatypes.EnumeratedDatatype</datatype>
+            <defaultValue>
+                <enumeration>
+                </enumeration>
+            </defaultValue>
+        </property>
+        <property name="onchange"><defaultValue></defaultValue></property>
+        <property name="name"><defaultValue>pagelist</defaultValue></property>
+        <property name="multiple"><defaultValue>false</defaultValue></property>
+        <property name="size"><defaultValue>1</defaultValue></property>
+        <property name="selectClass"><defaultValue></defaultValue></property>
+        <property name="tabindex"><defaultValue></defaultValue></property>
+        <property name="type">
+              <defaultValue>com.dynamide.select</defaultValue>
+              <readOnly>true</readOnly>
+        </property>
+        <property name="value"><defaultValue></defaultValue></property>
+        <property name="visible">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+    </properties>
+
+    <htmlsrc browser="*"><![CDATA[
+        ##$widget.setError(true)
+
+        ## this works if it is defined: #set $theEvent = $page.fireEvent("onMojo")
+        ##theEvent: $theEvent
+
+        #set $iserror = $widget.getError()
+        #if ($iserror == true){
+            #set $whichCaptionClass = "errorCaption"
+        } #else {
+            #set $whichCaptionClass = "$widget.captionClass"
+        }
+        <table border="0" cellpadding="0" cellspacing="0">
+            #if ($iserror == true){
+            <tr>
+               <td>
+                  <div class="errorCaption">
+                    $widget.getErrorMessage()
+                  </div>
+               </td>
+            </tr>
+            }
+            <tr>
+              <td>
+              <table border="$widget.border" class="$widget.class" cellpadding="$widget.cellpadding" cellspacing="$widget.cellspacing">
+               <tr>
+                 <td width="$widget.captionWidth" align="$widget.align">
+                    <div class="$whichCaptionClass">
+                      #if($widget.captionNOBR=="true"){<nobr>}$widget.caption<dm_nbsp/>#if($widget.captionNOBR=="true"){</nobr>}
+                    </div>
+                 </td>
+                #if ($widget.captionPlacement = "above"){
+                 </tr><tr>
+                 <td width="$widget.captionWidth" align="$widget.align" valign="$widget.valign">
+                } #else {
+                 <td>
+                }
+                    #set $fieldID = $widget.fieldID
+                    #if ($widget.enabled == "true"){
+                        #set $multiple = ""
+                        #if ($widget.multiple == "true") { #set $multiple = " multiple='true' " }
+
+                        #set $onchange = ""
+                        #if ($widget.onchange != "") { #set $onchange = " onchange='$widget.onchange' " }
+
+
+                            ##$widget.dumpProperties()
+                            ##widget ID: $widget.getObjectID()
+                            ##<br/> items.valueobject: $widget.getProperty("items").getValue().getObjectID()
+
+                        ##this is how it was:
+                        ##<select name="$fieldID" id="$fieldID" size='$widget.size' #if ($widget.tabindex != "") { tabindex='$widget.tabindex' } $multiple class="$widget.selectClass" >
+                        ##this is how I want it with the new named widgets rather than fieldnames:
+                        ##<select name="$widget.name\_" id="$widget.name\_" size='$widget.size' #if ($widget.tabindex != "") { tabindex='$widget.tabindex' } $multiple class="$widget.selectClass" >
+                        ##
+                        ##5/17/2003 10:13AM well, once again, I'm back to using the fieldID in the name:
+                        ## so this is back in:
+                        <select name="$fieldID" id="$fieldID" size='$widget.size' #if ($widget.tabindex != "") { tabindex='$widget.tabindex' } $multiple class="$widget.selectClass" $onchange>
+                            #set $items = $widget.getProperty("items")  ## Property
+                            #set $widgetValue = $widget.value
+                            #if ($widgetValue == ""){
+                                #set $enumDT = $items.getValue()  ## EnumeratedDatatype
+                                ## this works, too: #set $widgetValue = $enumDT.getValue($enumDT.getDefaultIndex())
+                                #set $widgetValue = $enumDT.getDefaultValue()
+                                ##$session.logDebug("======= select wv: $widgetValue");
+                            }
+                            ##$session.logDebug("======= select wv2: $widgetValue");
+                            #foreach $thing in $items.getEnumeration() {   ## Enumeration
+                                #if ($thing.getClass().getName()=="com.dynamide.datatypes.Caption"){
+                                    #set $oVal = $thing.key
+                                    #set $oText = $thing.text
+                                    #if ("$oVal" == "$widgetValue"){
+                                      <option SELECTED='1' value='$oVal'>$oText</option>
+                                    } #else {
+                                      <option value='$oVal'>$oText</option>
+                                    }
+                                } #else {
+                                    #if ("$thing.value" == "$widgetValue"){
+                                      <option SELECTED='1' value='$thing.value'>$thing.value</option>
+                                    } #else {
+                                      <option value='$thing.value'>$thing.value</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    } #else {
+                        <table border='1' cellpadding='0' cellspacing='0'>
+                          #foreach $thing in $widget.getProperty("items").getEnumeration() {
+                            <tr>
+                                <td>$thing.value</td>
+                            </tr>
+                          }
+                        </table>
+                    }
+                 </td>
+                </tr>
+              </table>
+              </td>
+              <td width='20'>
+                #if ( $iserror == true ) {
+                    <img src='$session.getInclude("resources/images/redstar.gif")'/>
+                } #else {
+                     <dm_nbsp/>
+                }
+              </td>
+            </tr>
+        </table>
+
+    ]]></htmlsrc>
+</widget>

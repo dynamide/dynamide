@@ -1,0 +1,24 @@
+<!--
+  To make a standard xsl stylesheet out of this unit, run it through XSLScript:
+  xslsdump reference.xsls
+  and send the output to reference.xsl
+-->
+X:transform {
+    X:import href="doco.xsl";
+
+    X:output method="xml" omit-xml-declaration="yes" indent="no";
+
+    X:preserve-space elements="*";
+
+    X:template = "detail" {
+        !!;
+    }
+
+    X:template = "discussion" {
+        <b>Discussion</b>
+        <blockquote>
+            !!;
+        </blockquote>
+    }
+
+}

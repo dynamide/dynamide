@@ -1,0 +1,158 @@
+<HTML>
+      <HEAD>
+        <TITLE>Test Dynamide Javascript</TITLE>
+
+        <STYLE></STYLE>
+
+        <link rel="stylesheet"  SRC="/com/dynamide/doc/dynamidedoco.css" href="/com/dynamide/doc/dynamidedoco.css"></link>
+
+    <SCRIPT Language="javascript" SRC="/com/dynamide/templates/en/js/scripts.js" >
+        //General Utilty Functions.
+    </SCRIPT>
+
+    <SCRIPT Language="javascript" SRC="/com/dynamide/templates/en/js/msdom.js" >
+        //IE DOM specific functions.
+    </SCRIPT>
+
+    <SCRIPT Language="javascript" SRC="/com/dynamide/templates/en/js/windowing.js" >
+        //Window and View functions.
+    </SCRIPT>
+
+    <SCRIPT Language="javascript" SRC="/com/dynamide/templates/en/js/page.js" >
+        //Functions that all Dynamide pages should use.
+    </SCRIPT>
+
+
+      </HEAD>
+
+      <BODY id="page1" name="page1" bgcolor="white" CONTENTEDITABLE="false" was="true">
+        <span class='widget' CONTENTEDITABLE='false' onclick='widgetClicked(this)' id='widgetstyle1'>
+
+        <STYLE>
+        .widget {border-color:red;
+                border-style:dotted;
+                border-top-width:1pt;
+                border-bottom-width:1pt;
+                border-right-width:1pt;
+                border-left-width:1pt;}
+        .widgetHidden {display: none;
+                 border-color:red;
+                border-style:dotted;
+                border-top-width:1pt;
+                border-bottom-width:1pt;
+                border-right-width:1pt;
+                border-left-width:1pt;}
+          </STYLE>
+
+        </span>
+
+        <script>
+        var sStyle = "document.body.style.backgroundColor =  'blue'; document.body.style.marginTop = 100;";
+
+        var testViewArray = new Object();
+
+        function setStyle(){
+          //document.parentWindow.eval(sStyle);
+          //document.body.style.backgroundColor = "blue";
+          alert('before');
+          var x = document.getElementByID('test');
+          alert(""+x);
+          if (x){
+             alert('x');
+             x.className = "widgetHidden";
+          }
+        }
+        </script>
+
+        <LINK href="/com/dynamide/apps/dynamide/demo/dynamide.css" type="text/css" rel="STYLESHEET"></LINK>
+
+
+  <h2>Test Dynamide Javascript</h2>
+        <p>
+        This page is for testing various functions in this page and in the following javascript includes:
+        <ul>/com/dynamide/templates/en/js/scripts.js</ul>
+        <ul>/com/dynamide/templates/en/js/page.js</ul>
+        </p>
+
+  <a name='scriptsTest'></a>
+  <br/>
+  <br/>
+  <hr class="hr30"/>
+  <div class="sechead">Test scripts.js</div>
+  <hr class="hr30"/>
+
+              <FORM name="mojoForm2" action="/dynamide/demo" method="get" encType="application/x-www-form-urlencoded">
+            <nobr><a href="javascript:popupNewViewNoReturn(testViewArray, document.forms['mojoForm2'].newurl.value, null, WINPARAMS_HELPPAGE, true);">popupNewViewNoReturn,  (anonymous, multiple, cascade), with url:&#160;</a><input type='text' name='newurl' id='newurl'/></nobr><br/>
+            <nobr><a href="javascript:popupNewViewNoReturn(testViewArray, document.forms['mojoForm2'].newurl.value, 'mywin', WINPARAMS_HELPPAGE);">popupNewViewNoReturn, winName=='mywin',  (singleton) same url as ^^^</a></nobr><br/>
+            <a href="javascript:removeView(testViewArray, 'mywin');">call removeView, winName=='mywin'</a><br/>
+        </FORM>
+            <br/>
+            <a href="javascript:testRemoveViews();">testRemoveViewObjects</a><br/>
+            <a href="javascript:testViews(testViewArray);">testViews</a><br/>
+            <a href="javascript:showAllViews(testViewArray);">testShowViewObjects</a><br/>
+            <a href="javascript:closeAllViews(testViewArray);">closeAllViews</a><br/>
+            <a href="javascript:listViewObjects(testViewArray);">listViewObjects</a><br/>
+
+
+  <a name='spandiv'></a>
+  <br/>
+  <br/>
+  <hr class="hr30"/>
+  <div class="sechead">Tests for SPAN versus DIV</div>
+  <hr class="hr30"/>
+  <br/>
+  SPAN:
+    <span class='widget'  bgcolor="blue">
+       <A HREF="#">mojo</A>
+    </span>
+    <span class='widget' bgcolor="green">
+       <A HREF="#">bar</A>
+
+    </span>
+    <br/>
+    <br/>
+    DIV:
+
+    <div class='widget'  bgcolor="blue">
+       <A HREF="#">mojo</A>
+    </div>
+    <div class='widget' bgcolor="green">
+       <A HREF="#">bar</A>
+
+    </div>
+
+  <a name='DOMTest'></a>
+  <br/>
+  <br/>
+  <hr class="hr30"/>
+  <div class="sechead">Tests for dynamic DOM manipulation</div>
+  <hr class="hr30"/>
+
+        <span ID="test"><p>This span should disappear when you click the "Make it disappear" link</p></span>
+
+        <FORM name="mojoForm" action="/dynamide/demo" method="get" encType="application/x-www-form-urlencoded">
+          <P ID="theP" align="left">
+            hi
+          </P>
+
+          <CENTER>
+            <span class='widget' CONTENTEDITABLE='false'  id='link1'>
+            <a href="javascript:setStyle();">Make it disappear</a>
+            </span>
+
+            <TABLE border="1" cellpadding="0" cellspacing="0" width="100%" >
+                <TR>
+                    <TD width="100%" title="mojo title">
+                        prop.Name
+                    </TD>
+                    <TD>
+                       <a style="" href="#" title="click me">got title?</a>
+                    </TD>
+                </TR>
+            </TABLE>
+          </CENTER>
+        </FORM>
+
+      </BODY>
+
+    </HTML>

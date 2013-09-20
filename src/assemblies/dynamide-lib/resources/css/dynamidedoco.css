@@ -1,0 +1,47 @@
+.codeIndent {margin-left:30px; color: blue; font: 0.9em; font-weight: bold; }
+.contentsItem {margin-left:30px; margin-top:4px; margin-bottom:20px; font: 1em Times,Roman,Arial,Helvetica,sans-serif; }
+.definitionCaption {font: 1.1em Arial,Helvetica,sans-serif; color: #006600;}
+.FAQContentsHead  {font: 1.4em Arial,Helvetica,sans-serif;  color: #006600;}
+.FAQList {padding: 0px; margin:0px; padding-left: 20px;}
+.greenborder {border-color: #B8E285;}
+.greenbox {
+          border-width: 9;
+          border-style: solid;
+          border-color: #B8E285;
+          color : #B8E285;
+          padding: 4px;
+        }
+.helpsechead {font: 1.2em Arial,Helvetica,sans-serif; color: #006600;}
+.hr30 {width: 30%; text-align: left;}
+.hrwide {width: 100%;}
+.lispaced {font: 1em Times,Roman,serif; margin-bottom: 20px; margin-right: 50px;}
+.menulink {font: 0.8em Arial,Helvetica,sans-serif;  color: green; text-decoration: none;}
+.menulink:active {font: 0.8em Arial,Helvetica,sans-serif;  text-decoration: underline;}
+.menulink:hover {font: 0.8em Arial,Helvetica,sans-serif;  text-decoration: underline;}
+.menulinkSelected {font: 0.8em Arial,Helvetica,sans-serif;  color: #FF9933;}
+.pageTitle  {font: 1.4em Helvetica,Arial,sans-serif;  color: #006600;}
+.pre-noindent {font: courier 0.85em;}
+.sechead {margin-left:15px; font: 1.1em Arial,Helvetica,sans-serif; }
+.sectionHead {font: 1.2em Arial,Helvetica,sans-serif;}
+.sectionHeadTOC {font: 1.1em Arial,Helvetica,sans-serif;  color: #006600;}
+.sectionItemTOC {padding: 0px; margin:0px; padding-left: 20px;}
+.spaced {margin-top: 5px;}
+.subhead {font-weight: bold; background-color: #E6DEC4}
+A {color: #31324E; text-decoration: underline; font: .9em;}
+A:active {color: green; text-decoration: underline}
+A:hover {color: #FF9933; text-decoration: underline}
+BODY {margin-left:3%; margin-right:3%;}
+code {color: blue; font: 0.9em; font-weight: bold; }
+h1 {font: 1.3em Arial,Helvetica,sans-serif; }
+h2 {font: 1.25em Arial,Helvetica,sans-serif; }
+h3 {font: 1.15em Arial,Helvetica,sans-serif; }
+h4 {font: 1.05em Arial,Helvetica,sans-serif; }
+li {font: 1em Times,Roman,serif; margin-right: 50px;}
+ol {font: 1em Times,Roman,serif;}
+p {font: 1em Times,Roman,Arial,Helvetica,sans-serif; }
+pre {margin-left:20px;}
+small {font: 7pt Times,Roman,Arial,Helvetica,sans-serif; }
+td {font: 1em Times,Roman,serif; }
+th {font: 1em Arial,Helvetica,sans-serif; }
+ul {font: 1em Times,Roman,serif;}
+

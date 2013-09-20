@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<application>
+
+  <fields href="fielddefs.xml" />
+
+  <pages>
+  </pages>
+
+  <properties>
+    <property name="applicationID">
+      <value></value>
+    </property>
+
+    <property name="defaultLanguageCode">
+      <value>en-us</value>
+    </property>
+
+    <property name="poolable">
+      <value>false</value>
+    </property>
+
+    <property name="publishParams">
+      <datatype>com.dynamide.datatypes.PublishParamsDatatype</datatype>
+      <value>
+          <URL></URL>
+          <URIPrefix></URIPrefix>
+          <outputDir></outputDir>
+          <protocolHostPort></protocolHostPort>
+          <defaultExtension>.html</defaultExtension>
+      </value>
+    </property>
+
+    <property name="title">
+      <value></value>
+    </property>
+
+    <property name="type">
+      <value>com.dynamide.Session</value>
+      <readOnly>true</readOnly>
+    </property>
+
+    <property name="onAction" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+
+    <property name="onStart" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+
+    <property name="onImport" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+
+    <property name="onClose" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+
+    <property name="queryNextPage" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+
+    <property name="beforePublish" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+
+    <property name="onPublish" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+
+    <property name="afterPublish" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+
+  </properties>
+
+</application>

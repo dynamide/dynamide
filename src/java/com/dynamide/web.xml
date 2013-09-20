@@ -1,0 +1,13 @@
+    <web-app id='/' app-dir='webapps/dynamide'>
+      <classpath id='WEB-INF/classes' source='WEB-INF/classes' compile='true'/>
+      <servlet-mapping url-pattern='/dynamide*' servlet-name='DynamideServlet'/>
+      <servlet servlet-name='DynamideServlet' servlet-class='com.dynamide.DynamideServlet'>
+        <init-param/>
+      </servlet>
+      <session-config>
+        <session-max>4096</session-max>
+        <session-timeout>30</session-timeout>
+        <enable-cookies>true</enable-cookies>
+        <enable-url-rewriting>false</enable-url-rewriting>
+      </session-config>
+    </web-app>

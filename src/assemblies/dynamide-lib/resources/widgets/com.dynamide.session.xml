@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<widget>
+    <properties>
+        <property name="type"><defaultValue>com.dynamide.session</defaultValue><readOnly>true</readOnly></property>
+        <property name="name"><defaultValue>Session</defaultValue></property> <!-- Use this as the default, but add a sequence #: button1-->
+        <property name="value"><defaultValue></defaultValue></property>
+    </properties>
+
+
+    <htmlsrc browser="*"><![CDATA[
+        <input type="hidden" name="SESSIONID" value="$SESSIONID"/>
+    ]]></htmlsrc>
+
+</widget>

@@ -1,0 +1,2 @@
+#set $t = $shell.loadClass("com.dynamide.util.Tools")
+$t.nowLocale()

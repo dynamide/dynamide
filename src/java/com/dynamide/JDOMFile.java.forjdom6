@@ -1,0 +1,171 @@
+package com.dynamide;
+//sample usage:
+//java com.dynamide.JDOMFile E:\wwwroot\Dynamide\demo\application.xml
+
+import java.io.*;
+
+import java.util.Iterator;
+import java.util.List;
+
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.Entity;
+import org.jdom.CDATA;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
+import org.jdom.output.XMLOutputter;
+
+import java.io.Writer;
+
+public class JDOMFile {
+    public JDOMFile(){
+        //no-arg constructor for subclasses,
+        //or for when you will initialize with readFromString.
+        this.m_saxDriverClassname = DEFAULT_SAX_DRIVER_CLASS;
+        m_builder = new SAXBuilder(m_saxDriverClassname);
+    }
+
+    public JDOMFile(String filename) throws IOException, JDOMException {
+        this(filename, DEFAULT_SAX_DRIVER_CLASS);
+    }
+
+    public JDOMFile(String filename, String saxDriverClassname) throws IOException, JDOMException {
+        this.m_saxDriverClassname = saxDriverClassname;
+        m_builder = new SAXBuilder(saxDriverClassname);
+        read(filename);
+    }
+
+    /** Default SAX Driver to use */
+    private static final String DEFAULT_SAX_DRIVER_CLASS =
+        "org.apache.xerces.parsers.SAXParser";
+
+    private String m_saxDriverClassname;
+
+    private SAXBuilder m_builder;
+
+    private String m_filename = "";
+
+    private Document m_doc;
+    public Document getDocument(){return m_doc;}
+
+    public Element getRootElement(){return m_doc.getRootElement();}
+
+    public Document read(String filename) throws IOException, JDOMException {
+        m_filename = filename;
+        // Build the JDOM Document
+        m_doc = m_builder.build(new File(filename));
+        return m_doc;
+    }
+
+    public Document readFromString(String source) throws IOException, JDOMException {
+        // Build the JDOM Document
+        m_doc = m_builder.build(new StringReader(source));
+        return m_doc;
+    }
+
+    public void reload()
+    throws IOException, JDOMException {
+        read(m_filename);
+    }
+
+    public void output(PrintStream out)
+    throws IOException, JDOMException {
+        output(m_doc.getRootElement(), out);
+    }
+
+    public void output(Element root, PrintStream out)
+    throws IOException, JDOMException {
+        XMLOutputter outputter = new XMLOutputter();
+        outputter.output(root, System.out);
+    }
+
+    public Element findFirstElement(String findName) {
+        return findFirstElement(getRootElement(), findName);
+    }
+
+    public static Element findFirstElement(Element current, String findName) {
+        if ( current != null ) {
+            if ( current.getName().equals(findName) ) {
+                return current;
+            }
+            List children = current.getChildren();
+            Iterator i = children.iterator();
+            while (i.hasNext()) {
+                Element child = (Element) i.next();
+                Element res = findFirstElement(child, findName);
+                if ( res !=null ) {
+                    return res;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static Element findFirstElementWithAttribute(Element current, String findName, String attrName, String attrValue) {
+        if ( current != null ) {
+            if ( current.getName().equals(findName) && getAttributeValue(current, attrName).equals(attrValue) ) {
+                return current;
+            }
+            List children = current.getChildren();
+            Iterator i = children.iterator();
+            while (i.hasNext()) {
+                Element child = (Element) i.next();
+                Element res = findFirstElementWithAttribute(child, findName, attrName, attrValue);
+                if ( res !=null ) {
+                    return res;
+                }
+            }
+        }
+        return null;
+    }
+
+    /** Safe to call: always returns a string, maybe empty, but never null.  If you want to know if
+     *  an attribute is not present, use the normal jdom.Element.getAttributeValue()
+     */
+    public static String getAttributeValue(Element element, String attrName){
+        String res = element.getAttributeValue(attrName);
+        if ( res == null  ) {
+            return "";
+        }
+        return res;
+    }
+
+
+    public void listNamedElement(Element root, PrintStream out, String elementName){
+        List events = root.getChildren(elementName);
+        out.println("This file has "+ events.size() +"elements named "+ elementName);
+        Iterator i = events.iterator();
+        while (i.hasNext()) {
+            Element event = (Element) i.next();
+            out.print("\t" + event.getText());
+        }
+    }
+
+    public static void main(String[] args) {
+        PrintStream out = System.out;
+        if (args.length != 1 && args.length != 2) {
+            out.println("Usage: com.dynamide.JDOMFile <myfile.xml>");
+            return;
+        }
+        // Load filename and SAX driver class
+        String filename = args[0];
+        String saxDriverClassname = DEFAULT_SAX_DRIVER_CLASS;
+        if (args.length == 2) {
+            saxDriverClassname = args[1];
+        }
+        // Create an instance of the tester and test
+        try {
+            JDOMFile reader = new JDOMFile(filename, saxDriverClassname);
+            reader.output(out);
+
+        } catch (JDOMException e) {
+            if (e.getRootCause() != null) {
+                e.getRootCause().printStackTrace();
+            } else {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}

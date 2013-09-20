@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<dynamideForm>
+  <widgets>
+    <widget id="session1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.session</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="hiddenPageID">
+      <properties>
+        <property name="field">
+          <value>page</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.hidden</value>
+        </property>
+        <property name="value">
+          <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+          <value>$pageID</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="edit1">
+      <properties>
+        <property name="align">
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+          <value>
+            <enumeration override="false" defaultIndex="1">
+              <item datatype="com.dynamide.datatypes.StringDatatype">left</item>
+            </enumeration>
+          </value>
+        </property>
+        <property name="datasource">
+          <datatype>com.dynamide.datatypes.IDatasourceDatatype</datatype>
+          <value>rdbdatasource1</value>
+        </property>
+        <property name="field">
+          <datatype>com.dynamide.datatypes.FieldDatatype</datatype>
+          <value>AUTHOR</value>
+        </property>
+        <property name="name">
+          <value>edit1</value>
+        </property>
+        <property name="type">
+          <readOnly>true</readOnly>
+          <value>com.dynamide.edit</value>
+        </property>
+        <property name="valign">
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+          <value>
+            <enumeration override="false" defaultIndex="1">
+              <item datatype="com.dynamide.datatypes.StringDatatype">bottom</item>
+            </enumeration>
+          </value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="linkstrip1">
+      <properties>
+        <property name="name">
+          <value>linkstrip1</value>
+        </property>
+        <property name="type">
+          <readOnly>true</readOnly>
+          <value>com.dynamide.linkstrip</value>
+        </property>
+      </properties>
+    </widget>
+  </widgets>
+  <htmlsrc browser="*"><![CDATA[
+<HTML>
+  <HEAD>
+    <TITLE/>
+    <!-- VERSION: 12/27/2003.2 -->
+
+  </HEAD>
+  <BODY id="page1" onclick="bodyClicked(this)" bottomMargin="15" leftMargin="10" topMargin="15" rightMargin="10" name="page1">
+    <P>Test Properties</P>
+    <!-- %% todo: change this to have form.action -->
+
+    <FORM accept-charset="UNKNOWN" action="mojoAction" method="get" encType="application/x-www-form-urlencoded">
+      <P/>
+      <SPAN class="widget" id="edit1"/>
+      <SPAN class="widget" id="linkstrip1"/>
+      <SPAN class="widget" id="session1"/>
+      <SPAN class="widget" id="hiddenPageID"/>
+    </FORM>
+  </BODY>
+</HTML>
+]]></htmlsrc>
+  <properties>
+    <property name="formAction">
+      <value>mojoAction</value>
+    </property>
+    <property name="formName">
+      <value></value>
+    </property>
+    <property name="lastSave">
+      <datatype>java.util.Date</datatype>
+      <readOnly>true</readOnly>
+      <value>1072971697087</value>
+    </property>
+    <property name="name">
+      <readOnly>true</readOnly>
+      <value>page1</value>
+    </property>
+    <property name="onAction" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value></value>
+    </property>
+    <property name="onLoad" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value></value>
+    </property>
+    <property name="onValidate" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value></value>
+    </property>
+    <property name="title">
+      <value></value>
+    </property>
+    <property name="type">
+      <readOnly>true</readOnly>
+      <value>pagetypes/com.dynamide.form</value>
+    </property>
+  </properties>
+</dynamideForm>

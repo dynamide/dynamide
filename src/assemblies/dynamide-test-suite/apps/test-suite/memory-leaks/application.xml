@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm >
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<application>
+
+<fields href="fielddefs.xml"></fields>
+
+<properties>
+  <property name="applicationID">
+      <value>com.dynamide.apps.testsuite.memoryleaks</value>
+  </property>
+</properties>
+
+  <event language="beanshell" name="application_onStart"><![CDATA[
+    System.out.println("\r\n\r\n\r\n=================== Starting /dynamide/test-suite/memory-leaks Session: "+event.session.getSessionID()+" ==============");
+    if (session.getField("bigpage")==null){
+        String content = event.session.getAppFileContent("bigpage.html");
+        session.setFieldValue("bigpage", content);
+    }
+  ]]></event>
+  
+
+<!--  <event language="beanshell" name="application_onImport">
+  <![CDATA[
+        import java.util.*;
+        import java.io.*;
+        import com.dynamide.*;
+        import com.dynamide.util.*;
+        import com.dynamide.datatypes.*;
+        import org.jdom.*;
+  ]]></event>
+
+  <event language="beanshell" name="application_onStart">
+  <![CDATA[
+        System.out.println("\r\n\r\n\r\n=================== Starting /dynamide/test-suite/memory-leaks Session: "+event.session.getSessionID()+" ==============");
+  ]]>
+  </event>
+
+  <event language="beanshell" name="application_queryNextPage">
+  <![CDATA[
+         //always show this one until more pages are added:
+         event.nextPageID = "page1";
+  ]]>
+  </event>
+-->
+  <pages>
+    <page name="page1"></page>
+  </pages>
+
+</application>

@@ -1,0 +1,118 @@
+package com.dynamide.resource;
+
+import java.util.*;
+
+import com.dynamide.security.User;
+import com.dynamide.security.Group;
+RootResource:context
+    permissions
+    assemblyRootFullPath=
+    homes=[]:context
+        acme:IResource
+            web-apps
+                apps=[]
+                    uri,appname,assembly
+
+/**
+ *     basically, a tree of these:
+ * <pre>
+
+    IResource
+        permissions: a single permissions object. once the permissions are locked, they can't be changed.
+                     but you can grant the permission to change other things, like attributes and children.
+               If attribute is com.dynamide.security.SecurityDecriptor, then it describes whether it is mutable.
+               -- OR: there is a standard attribute called permissions, that is scrutinized when setting or changing.
+               -- OR: only the Dynamide ResourceManager can set permissions
+ *                 typical implementation:
+ *                     setPermission(Permission perm) {
+ *                         resourceManager.setPermission(this, perm);
+ *                     }
+ *                    hhmmmmm, this won't work!
+ *      attributes : String keys and Object values
+        IResource children : (implements the Composite pattern)
+        Object resourceObject : a single value object for leafs
+
+    so context is just a Node
+    and a subcontext is a child node
+    but it has a non-rebindable attribute except by the class or permission that created it.
+
+    public IResource getSubContext...
+    or resourceManager.findContext(/foo/bar/
+    Context.getContext
+    /web-apps
+    /homes
+        laramie
+            web-apps
+            sessions
+                session
+                    get() ==> pages, widgets, properties
+                        page
+                            widgets
+  * </pre>
+  */
+
+public interface IResource {
+
+    /** Once permissions are set using lockPermissions, impls should not allow them to be changed.
+     * To change, you should rebind in the parent context.
+     * But you have to have permission to rebind, so that is safe (you need the 'rebindable' permission).
+     */
+    public void lockPermissions(java.security.Permissions permissions) throws SecurityException;
+
+    public Object getAttribute(String attributeName);
+    public void setAttribute(String attributeName, Object value) throws SecurityException;
+    /** Set the attributes en masse.
+     */
+    public void setAttributes(Map attributes) throws SecurityException;
+
+    /** For each IResource node, there is one resource object that can be associated, and it
+     *  will be the single value for any terminal node, that is, for a leaf.
+      */
+    public Object getResourceObject(String key); //return a non-attribute named object, or subcontext.
+
+    public void bindResource(String key, Object object)throws ObjectAlreadyBoundException;
+    public void rebindResource(String key, Object object)throws ObjectAlreadyBoundException;
+
+    /** Construct an array of strings, one for each context, starting from this object.
+     *  For example: find({"web-apps", "/Dynamide/demo"});
+     *  To search from the root, use ResourceManager.find(String[]).
+     */
+    public IResource find(String [] path);
+
+
+    //these are all attributes:
+
+    public User getUser();
+    public void setUser(User new_user) throws SecurityException;
+
+    public Group getGroup();
+    public void setGroup(Group new_group) throws SecurityException;
+
+    public long getTimeout();
+    public void setTimeout(long new_timeout) throws SecurityException;
+
+    public Object getPermission(String permissionName);
+
+    public ResourceType getResourceType();
+    public void setResourceType(ResourceType new_resourceType) throws SecurityException;
+
+
+    /** You either use the concrete com.dynamide.resource.ResourceDescriptor as a node in the context tree,
+     *  or you implement this IResource interface.
+     *  Then for getResource, return the "this" pointer to your implementation object.
+     *  Optionally, you can perform some other operation to get the actual resource, in which
+     *  case your concrete class is a proxy, lazy-loader, etc.
+     */
+    public Object getResource();
+
+
+    /** You either use the concrete com.dynamide.resource.ResourceDescriptor as a node in the context tree,
+     *  or you implement this IResource interface.
+     *  If your class is implementing this interface so that it can point to itself, then
+     *  setResource should quietly fail with a logWarn, or optionally throw a SecurityException.
+     */
+    public void setResource(Object new_value) throws SecurityException;
+
+    public String getKey();
+    public void setKey(String new_value);
+}

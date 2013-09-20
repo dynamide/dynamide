@@ -1,0 +1,17 @@
+source("../dynamideShell.bs");
+
+
+int startErr = DynamideLogAppender.getAppender().getErrorCount();
+String url = "/Dynamide/demo?SESSIONID=SESSIONTEST&USER=testuser&page=page1";
+Session session = Session.createSession("/Dynamide/demo", false, false, url);  //url calls session.setDebugURL
+session.logDebug("getQueryParam USER: "+session.getQueryParam("USER"));
+session.logDebug("session.USER: "+session.get("USER"));
+session.setBrowserID(ServletTools.BROWSER_DYNAMIDE_TEXT);
+Page p = session.getPageByID("page1");
+HandlerResult result = p.outputPage();
+print("result length: "+result.getResult().length());
+print(result.getResult());
+int endErr = DynamideLogAppender.getAppender().getErrorCount();
+print("Error count diff: "+(endErr-startErr));
+
+System.exit(0);

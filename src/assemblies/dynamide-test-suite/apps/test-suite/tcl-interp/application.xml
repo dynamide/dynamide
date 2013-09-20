@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<application>
+  <fields href="fielddefs.xml"></fields>
+  <pages>
+  </pages>
+
+  <event language="Tcl" name="application_onStart"><![CDATA[
+  puts [$event dump];
+  puts [$session dump];
+  $event setOutputObject Hello;
+  $event setCurrentPageID "MyPage";
+  set s "mojo";
+  ]]></event>
+  <properties>
+    <property name="type">
+      <value>com.dynamide.Session</value>
+      <readOnly>true</readOnly>
+    </property>
+  </properties>
+</application>

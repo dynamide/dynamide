@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<application>
+  <fields></fields>
+  <pages>
+    <page name="page1"></page>
+  </pages>
+  <properties>
+    <property name="applicationID">
+      <value>test-submit</value>
+    </property>
+    <property name="defaultLanguageCode">
+      <value>en-us</value>
+    </property>
+    <property name="lastSave">
+      <datatype>java.util.Date</datatype>
+      <readOnly>true</readOnly>
+      <value>1072971700281</value>
+    </property>
+    <property name="poolable">
+      <value>false</value>
+    </property>
+    <property name="title">
+      <value>Test Login</value>
+    </property>
+    <property name="type">
+      <readOnly>true</readOnly>
+      <value>com.dynamide.Session</value>
+    </property>
+  </properties>
+</application>

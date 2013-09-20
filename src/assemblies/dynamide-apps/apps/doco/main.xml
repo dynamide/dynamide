@@ -1,0 +1,390 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Created with Dynamide from DYNAMIDE.COM -->
+<!-- This replaces both com.dynamide.normalpage.xml and page.xml -->
+<dynamideForm>
+  <event language="beanshell" name="main_onLoad"><![CDATA[
+    o = session.getResourceManager().find("/homes/dynamide/appdata/doco/caching/xmltopic");
+    cache = "off";
+    if (o!=null) {
+        s = o.toString();
+        if (s.length() > 0) {
+            cache = s;
+        }
+    }
+    event.sender.get("xslDocs").setProperty("cache", cache); //xslDocs is a Widget.
+  ]]></event>
+
+  <widgets>
+    <widget id="designModeIncludes">
+      <properties>
+        <property name="items">
+          <value>
+            <enumeration override="false" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/js/scripts.js</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/js/msdom.js</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/css/dynamidedoco.css</item>
+            </enumeration>
+          </value>
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+        </property>
+        <property name="name">
+          <value>designModeIncludes</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.includes</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="session1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.session</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="hiddenPageID">
+      <properties>
+        <property name="field">
+          <value>page</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.hidden</value>
+        </property>
+        <property name="value">
+          <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+          <value>$pageID</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="includes1">
+      <properties>
+        <property name="items">
+          <value>
+            <enumeration override="false" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/css/dynamide.css</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/js/page.js</item>
+            </enumeration>
+          </value>
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+        </property>
+        <property name="name">
+          <value>includes1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.includes</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_linkstrip2">
+      <properties>
+        <property name="border">
+          <value>0px</value>
+        </property>
+        <property name="enabled">
+          <value>true</value>
+        </property>
+        <property name="bgcolor">
+          <value>#B8E28</value>
+        </property>
+        <property name="fontColor">
+          <value>#336699</value>
+        </property>
+        <property name="links">
+          <value>
+            <enumeration override="true" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>$session.getAppURL("","?next=about")</href>
+                <text>Home</text>
+                <key>about</key>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>$session.getAppURL("","/doc/help/index")</href>
+                <text>Help</text>
+                <key>/doc/help/index</key>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>$session.getAppURL("","/doc/help/dynamide-overview")</href>
+                <text>Overview</text>
+                <key>/doc/help/dynamide-overview</key>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>$session.getAppURL("","/doc/help/getting-started")</href>
+                <text>Quickstart</text>
+                <key>/doc/help/getting-started</key>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>$session.getAppURL("","/doc/help/FAQ")</href>
+                <text>FAQ</text>
+                <key>/doc/help/FAQ</key>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>$session.getAppURL("","/doc/help/glossary")</href>
+                <text>Glossary</text>
+                <key>/doc/help/glossary</key>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>$session.getAppURL("","/doc/help/feature-list")</href>
+                <text>Features</text>
+                <key>/doc/help/feature-list</key>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>$session.getAppURL("","/doc/help/security")</href>
+                <text>Security</text>
+                <key>/doc/help/security</key>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>$session.getAppURL("","/doc/help/dynamide-variables-methods")</href>
+                <text>Objects</text>
+                <key>/doc/help/dynamide-variables-methods</key>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>$session.getAppURL("","/doc/help/reference")</href>
+                <text>Reference</text>
+                <key>/doc/help/reference</key>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>/static/dynamide/javadoc/index.html</href>
+                <target>blank</target>
+                <text>javadoc</text>
+                <key>/static/dynamide/javadoc/index.html</key>
+              </item>
+             <!-- DON'T SHOW IDE:
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>/dynamide/ide?next=idehelp&amp;showDynamideHelp=1</href>
+                <target>blank</target>
+                <text>Widgets</text>
+                <key>Widgets</key>
+              </item>
+            -->
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>$session.getAppURL("","/doc/help/contact")</href>
+                <text>Contact Us</text>
+                <key>/doc/help/contact</key>
+              </item>
+            </enumeration>
+          </value>
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+        </property>
+        <property name="orientation">
+          <value>
+            <enumeration override="true" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.StringDatatype">vertical</item>
+            </enumeration>
+          </value>
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+        </property>
+
+        <property name="separator">
+         <value>border</value>
+        </property>
+
+        <property name="showTopBorder">
+          <value>false</value>
+        </property>
+
+        <property name="showBottomBorder">
+          <value>false</value>
+        </property>
+
+        <property name="tabindex">
+          <value>1</value>
+        </property>
+        <property name="targetID">
+          <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+          <value>
+          #set $xmlPageID = $session.find("main.xslDocs.xmlPageID")
+          ##$session.logDebug("main.xslDocs.xmlPageID: $xmlPageID")
+          #if ($xmlPageID){
+            $xmlPageID
+          }
+          </value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.linkstrip</value>
+        </property>
+        <property name="width">
+          <value>50</value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="widgetstyle1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.widgetstyle</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="dynamidelogo">
+      <properties>
+        <property name="flavor">
+          <value>plain</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.dynamidelogo</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="dynamidelogoBot">
+      <properties>
+        <property name="flavor">
+          <value>box</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.dynamidelogo</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="xslDocs">
+      <properties>
+        <property name="cache">
+          <value>inApplication</value>
+        </property>
+        <property name="expandResult">
+          <value>true</value>
+        </property>
+        <property name="targetID">
+          <value>/doc/help/glossary</value>
+        </property>
+        <property name="type">
+          <readOnly>true</readOnly>
+          <!--value>com.dynamide.xsl</value-->
+          <value>com.dynamide.xmltopic</value>
+        </property>
+        <property name="visible">
+          <datatype>boolean</datatype>
+          <value>true</value>
+        </property>
+        <property name="width">
+          <value>100</value>
+        </property>
+        <property name="xml">
+          <value>resources/doc/help/index.xml</value>
+        </property>
+        <property name="xsl">
+          <value>resources/doc/help/default.xsl</value>
+        </property>
+      </properties>
+    </widget>
+  </widgets>
+  <htmlsrc browser="*"><![CDATA[
+<HTML>
+  $session.println(" === doco main rendering page === $session.getThreadGroupID() :: $session.getThreadID()")
+  <HEAD>
+    <TITLE>$page.title</TITLE>
+  </HEAD>
+  <BODY id="main" onclick="widgetClicked(this)" bottomMargin="15" leftMargin="0" topMargin="15" rightMargin="0" name="main">
+    <SPAN class="widget" id="widgetstyle1"/>
+    <SPAN class="widget" id="designModeIncludes"/>
+    <SPAN class="widget" id="includes1"/>
+    <!-- %% todo: change this to have form.action -->
+    <FORM accept-charset="UNKNOWN" method="get" encType="application/x-www-form-urlencoded">
+      <P/>
+      <table width='100%'  border='0' cellpadding='0' cellspacing='0'>
+      <tr>
+        <td>
+        <span class="widget" id="dynamidelogo"/>
+        </td>
+
+        <td width='60'>
+        </td>
+
+        <td width='100%' valign='bottom'>
+          <CENTER><span class="pageTitle"><b>$page.title</b></span></CENTER>
+          <br />
+        </td>
+      </tr>
+<!--      <tr>
+         <td colspan='3' bgcolor='#B8E285' ALIGN='RIGHT' >
+            <table bgcolor='#B8E285' cellpadding='2' cellspacing='0' border='0' width='100%'>
+            <tr>
+            <td ALIGN='RIGHT'>
+                <table border='0' cellpadding='0' cellspacing='0' bgcolor='white' width='100%'>
+                <tr>
+                    <td align='right'>
+                        <div height="50" >
+                        <a class='menulink' href="?action=navigate&amp;targetPageID=doc/help/index&amp;SESSIONID=$SESSIONID">Dynamide Help</a><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/>
+                        <span class='menulinkSelected' ><b>$page.title</b></span><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/>
+                        </div>
+                    </td>
+                </tr>
+                </table>
+            </td>
+            </tr>
+            </table>
+
+         </td>
+      </tr>
+      -->
+    <tr>
+      <td colspan='3'>
+          <hr color='#B8E285'/>
+      </td>
+    </tr>
+    </table>
+    <br />
+    <table width='100%' border='0' cellpadding='0' cellspacing='0'>
+      <tr valign='top'>
+        <td width='100'>
+            <SPAN class="widget" id="com_dynamide_linkstrip2"/>
+        </td>
+        <td width='50'>
+        <dm_nbsp/>
+        </td>
+        <td>
+            <SPAN class="widget" id="xslDocs"/>
+        </td>
+      </tr>
+    </table>
+
+    <br />
+    <br />
+    <center><SPAN class="widget" id="dynamidelogoBot"/></center>
+    <SPAN class="widget" id="session1"/>
+    <SPAN class="widget" id="hiddenPageID"/>
+    </FORM>
+  </BODY>
+</HTML>
+]]></htmlsrc>
+  <properties>
+    <property name="formAction">
+      <value></value>
+    </property>
+    <property name="formName">
+      <value></value>
+    </property>
+    <property name="lastSave">
+      <value>1027535371657</value>
+      <readOnly>true</readOnly>
+      <datatype>java.util.Date</datatype>
+    </property>
+    <property name="margin">
+      <value>0</value>
+      <eval>document.body.margin = "$page.margin";document.body.bgcolor='blue';alert('changed');</eval>
+    </property>
+    <property name="name">
+      <value>main</value>
+      <readOnly>true</readOnly>
+    </property>
+    <property name="onAction" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+    <property name="onLoad" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+    <property name="onValidate" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+    <property name="title">
+      <value>Dynamide Help</value>
+    </property>
+    <property name="type">
+      <value>pagetypes/com.dynamide.form</value>
+      <readOnly>true</readOnly>
+    </property>
+  </properties>
+</dynamideForm>

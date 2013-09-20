@@ -1,0 +1,261 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm  >
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<!-- 5/23/2003 11:37PM copied from ide/evaltop.xml -->
+
+<dynamideForm>
+
+<properties>
+    <property name="type"><value>pagetypes/com.dynamide.form</value></property>
+    <property name="bgcolor"><value>#A4BFDD</value></property>
+</properties>
+
+<htmlsrc><![CDATA[
+<html>
+#set $SUBSESSIONID = $session.get("SUBSESSIONID")
+#set $subsession = $session.getSubsession()
+#set $subsessionURLPath = ""
+#if ($subsession){
+    #set $subsessionURLPath = $subsession.getURLPath()
+}
+
+    #set $time = $session.getTimestampLocale()
+    <head>
+        <title>Eval in Server-Side Interpreter</title>
+        $session.getInclude("resources/css/ide.css")
+        $session.getInclude("resources/css/admin.css")
+        $session.getInclude("resources/js/page.js")
+        <script language="javascript">
+            function textareaOnkeydown(){
+                if (event.keyCode == 120){
+                    document.forms[0].submit();
+                    return true;
+                }
+                //alert(event.keyCode);
+                return false;
+            }
+        </script>
+    </head>
+    <body bgcolor="#A4BFDD" onload="document.all.source.focus();">
+    <form name="frmEval" action="/dynamide/admin">
+    #set $href = "$session.applicationPath?USER=$session.USER"
+    <a href="$href">new session</a>
+        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+          <td valign="top">
+
+          #set $subsessionIDTitle = "[<dm_nbsp/><small><b>SESSIONID:</b><dm_nbsp/>$SUBSESSIONID<dm_nbsp/>]<br/>[<dm_nbsp/><dm_nbsp/><b>Path:<dm_nbsp/></b>$subsessionURLPath<dm_nbsp/>]</small>"
+
+
+          <table border="0" cellpadding="5" cellspacing="0">
+          <tr>
+              <td valign="top">
+                  <table border="0" cellpadding="5" cellspacing="0" ><tr><td valign="top">
+                  <b>Eval in Server-Side Interpreter</b>
+                  </td><td width="20"><dm_nbsp/></td><td>$subsessionIDTitle</td></tr>
+                  </table>
+              </td>
+              <td rowspan="2" valign='top' align="right">
+                  #macro evalLink($command, $caption){
+                      #set $url = $session.getAppURL("source=$command&amp;action=eval&amp;SUBSESSIONID=$SUBSESSIONID&amp;page=eval")
+                      <a href="$url">$caption</a>
+
+                  }
+                  <table border='1' cellpadding='5' cellspacing='0' bgcolor="white">
+                        <tr><th>QuickLinks</th></tr>
+                        <tr><td>#evalLink("session.listProperties();", "session.listProperties()")</td></tr>
+                        <tr><td>#evalLink("session.dumpHTML();", "session.dumpHTML()")</td></tr>
+                        <tr><td>#evalLink("session.listPages();", "session.listPages()")</td></tr>
+                        <tr><td>#evalLink("session.listFields();", "session.listFields()")</td></tr>
+                        <tr><td>#evalLink("session.listEvents();", "session.listEvents()")</td></tr>
+                        <tr><td>#evalLink("session.listAllEvents();", "session.listAllEvents()")</td></tr>
+                        ##<tr><td>#evalLink("page.listWidgets();", "page.listWidgets()")</td></tr>
+                  </table>
+              </td>
+          </tr>
+          <tr>
+              <td valign="bottom">
+                  #set $href = $session.getAppURL("next=sessionDetailPage")
+                  <a href="$href">Session Detail</a>
+                  <br />
+                  #set $href = $session.getAppURL("next=sessionsPage")
+                  <a href="$href">All Sessions</a>
+              </td>
+          </tr>
+          </table>
+          </td>
+        </tr>
+        <tr>
+          <td align="left" colspan="2">
+            #set $s = "print('h');"
+            #if ($source != null){
+                #set $s = $session.source
+            }
+            <hr/>
+            <br/>
+            <table border='0' cellpadding='0' cellspacing='0' width="700">
+              <tr>
+                <td align="left">
+                    <table border='0' cellpadding='0' cellspacing='0' >
+                      <tr>
+                        <td><b><label for='source' accesskey='s'><U>S</U>ource</label></b></td>
+                        <td width="10"><dm_nbsp/></td>
+                        <td  valign="center"><small>(F9 or Alt-e to eval)</small></td>
+                        <td width="30"><dm_nbsp/></td>
+                        <td align="right" valign="center">
+                            <span class="widget" id="submitEval"/>
+                        </td>
+                      </tr>
+                    </table>
+                </td>
+                <td align="right">
+                    <span class="widget" id="selectSize" />
+                </td>
+              </tr>
+            </table>
+
+            #set $rows = $session.getFieldValue("eval_selectSize")
+            #if ($rows == "") {
+                #set $rows = "10"
+            }
+
+            #if ($s == null){
+                #set $s = ""
+            }
+            <textarea class="codewindow" cols="110" rows="$rows" id="source" name="source"
+              onkeydown="javascript:textareaOnkeydown();"
+              value="">$s</textarea>
+        </td>
+        </tr>
+        </table>
+        #set $er = ""
+        #if ($evalResult != null){
+            #set $er = $session.evalResult
+        }
+        $er
+
+        <input type="hidden" id="SUBSESSIONID" name="SUBSESSIONID" value="$SUBSESSIONID" />
+        <input type="hidden" id="SESSIONID" name="SESSIONID" value="$SESSIONID" />
+        <input type="hidden" id="action" name="action" value="eval" />
+        <input type="hidden" id="page" name="page" value="eval" />
+    </form>
+    </body>
+</html>
+]]></htmlsrc>
+
+<widgets>
+
+       <widget id="submitEval">
+      <properties>
+        <property name="accesskey">
+          <value>e</value>
+        </property>
+        <property name="action">
+          <value>eval</value>
+        </property>
+        <property name="caption">
+          <value>Eval [alt-E]</value>
+        </property>
+        <property name="captionWidth">
+          <value>150</value>
+        </property>
+        <property name="class">
+          <value>dmbutton</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="selectSize">
+      <properties>
+        <property name="caption">
+          <value>Input Size</value>
+        </property>
+        <property name="items">
+          <value>
+            <enumeration override="false" defaultIndex="1"> <!-- default to second item (index 1) which is 10 rows. -->
+              <item datatype="com.dynamide.datatypes.StringDatatype">1</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">10</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">20</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">40</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">60</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">80</item>
+            </enumeration>
+          </value>
+          <datatype>com.dynamide.datatypes.EnumeratedDatatype</datatype>
+        </property>
+        <property name="multiple">
+          <value>false</value>
+        </property>
+        <property name="onchange">
+          <value>document.forms[0].submit();</value>
+        </property>
+        <property name="tabindex">
+          <defaultValue></defaultValue>
+        </property>
+        <property name="type">
+          <defaultValue>com.dynamide.select</defaultValue>
+          <readOnly>true</readOnly>
+          <value>com.dynamide.select</value>
+        </property>
+      </properties>
+    </widget>
+</widgets>
+
+<event language="beanshell" name="eval_onLoad"><![CDATA[
+    session.addField("source", new Field(session, session, "source", ""));
+    session.addField("evalResult", new Field(session, session, "evalResult", ""));
+    ss = session.find("eval.selectSize");
+    if ( ss != null ) {
+        System.out.println("ss.value:"+ss.getPropertyValue("items"));
+    } else {
+        System.out.println("============= Couldn't find eval.selectSize");
+    }
+]]></event>
+
+
+<event language="beanshell" name="eval_onAction"><![CDATA[
+    //This won't get called since I don't have a pageID  on this page.
+    event.println("in eval_onAction: "+event.action);
+
+    if (event.action.equals("eval")) {
+        Page thiPage = event.session.getPageByID("eval");
+        String USER = event.getQueryParam("USER");
+        String source = event.getQueryParam("source");
+        if ( source.length()==0 ) {
+            event.jumpToPage("eval");
+            return;
+        }
+        String SUBSESSIONID = event.getQueryParam("SUBSESSIONID");
+        if ( event.session.getSessionID().equals(SUBSESSIONID) ) {
+            evalResult = "Can't eval in current session: pick a different target subsession";
+            session.setFieldValue("evalResult", evalResult);
+            event.jumpToPage("eval");
+            return;
+        }
+        String evalResult;
+        if (source.length()==0){
+            evalResult = "ERROR: 'source' parameter was empty.";
+            event.println(evalResult);
+        } else {
+            try {
+                evalResult = Session.handleEval(SUBSESSIONID, source, session.get("USER"), event.request);
+            } catch (Throwable t){
+                System.out.println("############## eval.xml caught Throwable #############");
+                evalResult = "ERROR: "+StringTools.escape(t.toString());
+                event.prettyPrint = false;
+            }
+        }
+        session.setFieldValue("evalResult", evalResult);
+        if (evalResult.startsWith("ERROR")){
+            event.prettyPrint = false;
+            //evalResult = StringTools.escape(evalResult);
+        }
+    }
+    event.jumpToPage("eval");
+  ]]></event>
+
+
+</dynamideForm>

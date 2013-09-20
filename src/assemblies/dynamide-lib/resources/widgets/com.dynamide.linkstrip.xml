@@ -1,0 +1,361 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<!--
+    A default Link item would look like this:
+
+                    <item datatype="com.dynamide.datatypes.Link">
+                        <href></href>
+                        <text>Item</text>
+                        <key>item</key>
+                    </item>
+
+-->
+<widget>
+    <componentHelp>
+     <p>A strip of links for putting at the top or bottom of a page or section.
+     </p>
+     <p>There is a magic value for separator: "hr" uses HR's instead of css borders.
+     </p>
+     <p>You can only set 'tabindex' for the whole group.  The user can tab through all the links,
+     however, since they all receive the same tabindex.
+     </p>
+     <p>Note: in the IDE, the styles may not apply correctly until you refresh the page.
+     </p>
+    </componentHelp>
+    <properties>
+        <property name="basename">
+            <defaultValue>linkstrip</defaultValue>
+            <hidden>true</hidden>
+        </property>
+        <property name="bgcolor"><defaultValue>#336699</defaultValue></property>
+        <property name="bgcolorCurrent"><defaultValue></defaultValue></property>
+        <property name="border"><defaultValue>0px</defaultValue></property>
+        <property name="cellpadding"><defaultValue>0</defaultValue></property>
+        <property name="class"><defaultValue></defaultValue></property>
+        <property name="classCurrent"><defaultValue></defaultValue></property>
+        <property name="currentPointer"><defaultValue>&amp;#187;</defaultValue></property>
+        <property name="cellspacing"><defaultValue>0</defaultValue></property>
+        <property name="enabled">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+        <property name="fontColor"><defaultValue>white</defaultValue></property>
+        <property name="fontColorActive"><defaultValue>green</defaultValue></property>
+        <property name="fontColorHover"><defaultValue>#FF9933</defaultValue></property>
+        <property name="fontFamily"><defaultValue>Verdana, Geneva, Arial,Helvetica,sans-serif</defaultValue></property>
+        <property name="fontSize"><defaultValue>0.7em</defaultValue></property>
+        <property name="fontWeight"><defaultValue></defaultValue></property>
+        <property name="fontWeightCurrent"><defaultValue>bold</defaultValue></property>
+        <property name="levelIndent"><defaultValue>10</defaultValue></property>
+        <property name="linkTEST">
+            <value>
+               <href>theHref</href>
+               <text>theText</text>
+               <key>theKey</key>
+            </value>
+            <datatype>com.dynamide.datatypes.Link</datatype>
+        </property>
+        <property name="links">
+            <defaultValue>
+                <enumeration final="false" itemDatatype="com.dynamide.datatypes.Link">
+                </enumeration>
+            </defaultValue>
+            <datatype>com.dynamide.datatypes.Enumeration</datatype>
+        </property>
+        <property name="name"><defaultValue></defaultValue></property>
+        <property name="orientation">
+            <defaultValue>
+                <enumeration final="true" defaultIndex="0">
+                    <item datatype="java.lang.String">horizontal</item>
+                    <item datatype="java.lang.String">vertical</item>
+                </enumeration>
+            </defaultValue>
+            <datatype>com.dynamide.datatypes.Enumeration</datatype>
+            <helpTip>orientation: horizontal, vertical</helpTip>
+        </property>
+        <property name="separator">
+            <datatype>com.dynamide.datatypes.Enumeration</datatype>
+            <defaultValue>
+                <enumeration final="true" defaultIndex="0">
+                    <item datatype="java.lang.String">border</item>
+                    <item datatype="java.lang.String">hr</item>
+                    <item datatype="java.lang.String">none</item>
+                </enumeration>
+            </defaultValue>
+            <datatype>com.dynamide.datatypes.Enumeration</datatype>
+            <helpTip>separator: border, hr, none</helpTip>
+        </property>
+        <property name="separatorColor"><defaultValue>#00861f</defaultValue></property>
+        <property name="showTopBorder"><defaultValue>true</defaultValue></property>
+        <property name="showBottomBorder"><defaultValue>true</defaultValue></property>
+        <property name="spacing"><defaultValue>50</defaultValue></property>
+        <property name="tabindex"><defaultValue></defaultValue></property>
+        <property name="targetID">
+            <defaultValue></defaultValue>
+            <helpTip>Set this when you set the xml property to keep a linkstrip in sync, if you point the
+              linkstrip at this component with linkstrip.targetID,
+              for example: linkstrip.targetID == "main.xslDocs.xmlPageID"</helpTip>
+        </property>
+        <property name="type">
+            <defaultValue>com.dynamide.linkstrip</defaultValue>
+            <readOnly>true</readOnly>
+        </property>
+        <property name="underlineHover">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+        <property name="visible">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+        <property name="width"><defaultValue>150</defaultValue></property>
+    </properties>
+
+    <htmlsrc browser="*"><![CDATA[
+    #set $debugWidget = false
+    #if ($debugWidget){
+            widget.orientation: '$widget.orientation'
+            <br/>
+            widget.getAsStored("orientation"): $widget.get("orientation")
+            <br/>
+            things:
+            widget: $widget
+            <br/>
+            widget.getProperty("links"): $widget.getProperty("links")
+            <br/>
+            widget.getProperty("links").getValue(): $widget.getProperty("links").getValue()
+            widget.getProperty("links").getValue().getClass(): $widget.getProperty("links").getValue().getClass().getName()
+            <br/>
+            dump:
+            $widget.getProperty("links")
+            <br/>
+            #set $theEnum = $widget.getProperty("links").getEnumeration()
+            #foreach $it in $theEnum{
+                <br/>it-value: $it
+                <br/>it-value: $it.href
+            }
+            <br/>
+            widget.getProperty("links").getEnumeration(): $widget.getProperty("links").getEnumeration()
+    }
+
+    #set $underlineClause =  " text-decoration: none;"
+    #if ($widget.underlineHover == "true"){
+        #set $underlineClause = " text-decoration: underline;"
+    }
+    ## Stylesheet semicolons and curly braces must be escaped for webmacro
+    <style>
+    <!--
+       .linkstripLink$widget.Name \{
+          font-family: $widget.fontFamily\;
+          font-size: $widget.fontSize\;
+          #if ($widget.fontWeight != ""){font-weight: $widget.fontWeight\;}
+          color: $widget.fontColor\;
+          text-decoration: none\;
+       \}
+       .linkstripLinkCurrentTarget$widget.Name \{
+           color: $widget.fontColorHover \;
+           #if ($widget.bgcolorCurrent!=""){background-color: $widget.bgcolorCurrent \;}
+           font-family: $widget.fontFamily\;
+           font-size: $widget.fontSize\;
+           #if ($widget.fontWeight != ""){font-weight: $widget.fontWeightCurrent\;}
+           text-decoration: none\;
+       \}
+       .linkstripLink$widget.Name:hover \{color: $widget.fontColorHover \; $underlineClause\}
+       .linkstripLink$widget.Name:active \{color: $widget.fontColorActive\; \}
+       .linkSeparator$widget.Name \{
+            border-color : $widget.separatorColor\;
+            border-width: 0\;
+            color: $widget.separatorColor\;
+       \}
+       .linkSeparatorLine$widget.Name \{
+           border-width: 1px\;
+           border-right-width: 0\;
+           border-left-width: 0\;
+           border-top: 0\;
+           border-style: solid\;
+           border-color : $widget.separatorColor\;
+       \}
+       .linkSeparatorLineBoth$widget.Name \{
+           border-width: 1px\;
+           border-right-width: 0\;
+           border-left-width: 0\;
+           border-style: solid\;
+           border-color : $widget.separatorColor\;
+       \}
+       .linkstripBorder$widget.Name \{
+           border-width: $widget.border\;
+           border-style: solid\;
+           border-color : $widget.separatorColor\;
+           padding: 2px\;
+           margin: 2px\;
+           width: $widget.width;
+       \}
+
+     -->
+    </style>
+
+#set $tabindex = ""
+#if ($widget.tabindex != "") { #set $tabindex = " tabindex='$widget.tabindex' " }
+#set $foundTargetID = $widget.expand($widget.targetID).trim()
+##targetID: $widget.targetID
+##expanded: ' $widget.expand($widget.targetID).trim()'
+##string :: $session.getString("homePage.xmltopic1.targetID")
+##evalString: $evalString ^
+##evald: $evald ^
+#set $linksCollection = $widget.getProperty("links").getCollection()
+### =========================== Horizontal ===================================
+#if  ($widget.orientation = "horizontal") {
+        <table border='0' cellpadding='0' cellspacing='0' width="100%" bgcolor="$widget.bgcolor">
+          <tr>
+            <td valign='top'>
+                #if ($designMode == "true" && $linksCollection.size() == 0){
+                    <dm_nbsp/>
+                }
+                <table border='0' cellpadding='0' cellspacing='0'>
+                <tr>
+                    #foreach $thing in $linksCollection {
+                        #if ($thing.class == ""){
+                            #set $classClause = "class='linkstripLink$widget.Name'"
+                        } #else {
+                            #set $classClause = "class='$thing.class'"
+                        }
+                        #if ($thing.classCurrent == ""){
+                            #if ($widget.classCurrent == ""){
+                                #set $classClauseCurrent = "class='linkstripLinkCurrentTarget$widget.Name'"
+                            } #else {
+                                #set $classClauseCurrent = "class='$widget.classCurrent'"
+                            }
+                        } #else {
+                            #set $classClauseCurrent = "class='$thing.classCurrent'"
+                        }
+                        #set $isCurrentTarget =  (($thing.key.length() > 0) && ($thing.key == $foundTargetID))
+                        <td>
+                            #if ($designMode == "true" || $widget.enabled == "false"){
+                                <span $classClause>$thing.text</span>
+                            } #elseif ($isCurrentTarget) {
+                                <nobr><span class='linkstripLink$widget.Name'>&#187;</span><span $classClauseCurrent>$thing.text</span></nobr>
+                            } #else {
+                                <a href='$thing.href' target='$thing.target' $classClause $tabindex>$thing.text</a><dm_nbsp/>
+                            }
+                        </td>
+                        <td width="$widget.spacing"><dm_nbsp/></td>
+                    }
+                </tr>
+                </table>
+            </td>
+          </tr>
+        </table>
+} #else {
+### =========================== Vertical ===================================
+
+        #set $doTopHR = false
+        #set $doBottomHR = false
+        #set $doHR = false
+        #set $sepstyleCurrent = ""
+        #set $sepstyle = ""
+        #set $sep = ""
+        #if ($widget.separator == "hr"){
+            #set $doHR = true
+            #set $sepstyle = "linkSeparator$widget.Name"
+            #set $sepstyleCurrent = "$sepstyle"
+            #set $sep = "<hr class=\"linkSeparator$widget.Name\"/>"   ## used to do this: width=\"$widget.width\"
+            #if ($widget.showTopBorder == "true") {
+                #set $doTopHR = true
+            }
+            #if ($widget.showBottomBorder == "true") {
+                #set $doBottomHR = true
+            }
+        } #elseif ($widget.separator == "border") {
+            #set $sep = ""
+            #if ($widget.showTopBorder == "true") {
+                #set $sepstyle = "linkSeparatorLine$widget.Name"
+                #set $sepstyleCurrent = "linkSeparatorLineBoth$widget.Name"
+            } #else {
+                #set $sepstyle = "linkSeparatorLine$widget.Name"
+                #set $sepstyleCurrent = "$sepstyle"
+            }
+        } #else {
+            ## separator == "none", nothing to do.
+        }
+        ## This outer table allows use of a div, which allows the border to be painted correctly.
+        ## with a span, the top and bottom border will be overwritten by any table that this is in, or the widget span itself.
+        <table cellpadding='0' cellspacing='0' border="0" bgcolor="$widget.bgcolor">
+          <tr>
+            <td>
+                <div class="linkstripBorder$widget.Name">
+                #if ($designMode == "true" && $linksCollection.size() == 0){
+                    <dm_nbsp/>
+                }
+                  <table border="0" cellspacing="$widget.cellspacing" cellpadding="$widget.cellpadding" width="$widget.width" bgcolor="$widget.bgcolor">
+                    #set $i = 0
+                    #foreach $thing in $linksCollection {
+                        #set $i = $i + 1
+                        #set $linksSize = $linksCollection.size()
+                        #if ($thing.class == ""){
+                            #if ($widget.class == ""){
+                                #set $classClause = "class='linkstripLink$widget.Name'"
+                            } #else {
+                                #set $classClause = "class='$widget.class'"
+                            }
+                        } #else {
+                            #set $classClause = "class='$thing.class'"
+                        }
+
+                        #if ($thing.classCurrent == ""){
+                            #if ($widget.classCurrent == ""){
+                                #set $classClauseCurrent = "class='linkstripLinkCurrentTarget$widget.Name'"
+                            } #else {
+                                #set $classClauseCurrent = "class='$widget.classCurrent'"
+                            }
+                        } #else {
+                            #set $classClauseCurrent = "class='$thing.classCurrent'"
+                        }
+
+
+                        <tr>
+                            #set $isCurrentTarget =  (($thing.key.length() > 0) && ($thing.key == $foundTargetID))
+                            ##DEBUG:
+                            ##$isCurrentTarget : $thing.key : $foundTargetID
+                            #set $foo = ($i  == ($linksSize)) && $widget.showBottomBorder
+                            #if ($foo){
+                                #set $sepstyleCurrent = ""
+                            }
+                            #set $spacer = $session.StringTools.spacer($session, $thing.level, $widget.levelIndent)
+                            #set $tdbg = ""
+                            #if ($isCurrentTarget){
+                                #if ($widget.bgcolorCurrent!=""){
+                                   #set $tdbg = "bgcolor='$widget.bgcolorCurrent'"
+                                }
+                            }
+                            <td $tdbg align="left" class="$sepstyleCurrent">
+                                #if ($doTopHR){
+                                    $sep
+                                    #set $doTopHR = false     ## set so we don't come in here again.
+                                }
+                                #if ($designMode == "true" || $widget.enabled == "false" ){
+                                    <nobr>$spacer<span $classClause>$thing.text</span></nobr>
+                                } #elseif ($isCurrentTarget) {
+                                    <nobr>$spacer<span $classClauseCurrent>$widget.currentPointer</span>
+                                    <span $classClauseCurrent>$thing.text</span></nobr>
+                                } #else {
+                                    <nobr>$spacer<a href='$thing.href' target='$thing.target' $classClause $tabindex>$thing.text</a><dm_nbsp/></nobr>
+                                }
+                                ##<nobr>. B:$doBottomHR T:$doTopHR : $doHR : $i : $linksSize .</nobr>
+                                #if ($i < $linksSize){
+                                    $sep
+                                } #elseif (($i == $linksSize) && $doBottomHR){
+                                    $sep
+                                }
+                            </td>
+                        </tr>
+                        #set $sepstyleCurrent = "$sepstyle"
+                    }
+                  </table>
+                </div>
+            </td>
+          </tr>
+        </table>
+}
+    ]]></htmlsrc>
+</widget>

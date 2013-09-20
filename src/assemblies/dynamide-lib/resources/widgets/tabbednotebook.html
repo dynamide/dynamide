@@ -1,0 +1,433 @@
+<HTML>
+<HEAD>
+
+            <script language='javascript'
+                    src='/com/dynamide/sites/dynamide/templates/js/scripts.js'
+                   href='/com/dynamide/sites/dynamide/templates/js/scripts.js'></script>
+
+</HEAD>
+  <BODY BGCOLOR="#DDDDDD" onload="alert('loading');">
+    <form name='hi' action='/dynamide' method='post'>
+    <style>
+    .td {font-family: "Helvettica"; font-size: 8;}
+    .bodybg        {background-color: #DDDDDD; text-align: center; font-weight: bold; }
+    .activeTab        {background-color: #FFFFFF; text-align: center; font-weight: bold; }
+    .activeTabTop     {background-color: #FFFFFF; text-align: center; font-weight: normal;height: 1px; }
+    .activeTabRight   {background-color: #555555; text-align: center; font-weight: normal;height: 1px; }
+    .inactiveTab      {background-color: #99CC99; text-align: center; font-weight: normal; }
+    .inactiveTabTop   {background-color: #99CC99; text-align: center; font-weight: normal; height: 1px; }
+    .inactiveTabRight {background-color: #99CC99; text-align: center; font-weight: normal; height: 1px; }
+    .corner           {background-color: #99CC99; text-align: center; font-weight: normal; height: 1px; }
+    </style>
+        <!--
+        <td height='30' bgcolor='white' valign='top' align='left'><IMG border='0'  width='17 height='37'  SRC="/com/dynamide/sites/dynamide/templates/images/TLEFT.gif"/></td>
+        <td bgcolor='white' align='center' id="tab1.1"  class='activeTab'>
+          <span onclick="expandit('img1.2','sp1.2');expandit('img1.1','sp1.1');chtab('tab1.1');">My Tab</span>
+        </td>
+        -->
+
+
+        <!--
+        <td bgcolor='white' valign='top' align='right'><IMG border='0' width='17 height='37' SRC="/com/dynamide/sites/dynamide/templates/images/TRIGHT.gif"/></td>
+        -->
+<script>
+         var gMojo = "Well";
+</script>
+
+    <table border='0' cellpadding='0' cellspacing=  '0' bgcolor="#99CC99">
+      <tr  height='30' bgcolor="#00CC99">
+
+        <td valign='top' align='right' class='inactiveTab'><img border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif" height="1" width="1"/></td>
+        <td valign='top' align='right' class='inactiveTab'>&nbsp;</td>
+
+        <td id="tab1_3"  class='inactiveTab'>
+            <table border='0' cellpadding='0' cellspacing='0' width='100%' height='100%'>
+              <tr>
+                <td  valign='top' class='inactiveTabTop' colspan='2'><img border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif" height="2" width="1"/></td>
+              </tr>
+              <tr>
+                <td  valign='top' id='tab1_3_top'  class='inactiveTabTop'><img border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif" height="2" width="1"/></td>
+                <td  valign='top' id='tab1_3_corner' class='corner'><img border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif" height="2" width="1"/></td>
+              </tr>
+              <tr>
+                <td id='tab1_3_tab' valign='top' class='inactiveTab' >
+                    <div onclick="expandit('img1.1','sp1.1');expandit('img1.2','sp1.2');chtab('tab1_3');">
+                    My Tab
+                    </div>
+                </td>
+                <td  valign='top' id='tab1_3_right' class='inactiveTabRight'><img border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif" height="30" width="1"/></td>
+              </tr>
+            </table>
+        </td>
+
+        <td id="tab1_1"  class='activeTab'>
+            <table border='0' cellpadding='0' cellspacing='0' width='100%' height='100%'>
+              <tr>
+                <td  valign='top' class='inactiveTabTop' colspan='2'><img border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif" height="2" width="1"/></td>
+              </tr>
+              <tr>
+                <td  valign='top' id='tab1_1_top'   class='activeTabTop'><img border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif" height="2" width="1"/></td>
+                <td  valign='top' id='tab1_1_corner' class='corner'><img border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif" height="2" width="1"/></td>
+              </tr>
+              <tr>
+                <td valign='top' id='tab1_1_tab'  class='activeTab'  >
+                    <div onclick="expandit('img1.2','sp1.2');expandit('img1.1','sp1.1');chtab('tab1_1');">
+                    My Tab
+                    </div>
+                </td>
+                <td  valign='top' id='tab1_1_right' class='activeTabRight'><img border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif" height="30" width="1"/></td>
+              </tr>
+            </table>
+        </td>
+
+        <td id="tab1_2"  class='inactiveTab'>
+            <table border='0' cellpadding='0' cellspacing='0' width='100%' height='100%'>
+              <tr>
+                <td  valign='top' class='inactiveTabTop' colspan='2'><img border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif" height="2" width="1"/></td>
+              </tr>
+              <tr>
+                <td  valign='top' id='tab1_2_top'   class='inactiveTabTop'><img border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif" height="2" width="1"/></td>
+                <td  valign='top' id='tab1_2_corner' class='corner'><img border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif" height="2" width="1"/></td>
+              </tr>
+              <tr>
+                <td valign='top' id='tab1_2_tab' class='inactiveTab'  >
+                    <div onclick="expandit('img1.1','sp1.1');expandit('img1.2','sp1.2');chtab('tab1_2');">My Tab tab1_2</div>
+                </td>
+                <td  valign='top' id='tab1_2_right' class='inactiveTabRight'><img border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif" height="30" width="1"/></td>
+              </tr>
+            </table>
+        </td>
+
+
+        <td valign='top' align='right' class='inactiveTab'><img border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif" height="1" width="1"/></td>
+
+        <td valign='top' align='right' class='inactiveTab'>
+
+            <table border='0' cellpadding='0' cellspacing='0' width='100%' height='100%'>
+              <tr>
+                <td  height='2' valign='top' class='bodybg' colspan='2'><img border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif" height="4" width="2"/></td>
+              </tr>
+              <tr>
+                <td height='100%' valign='top' id='tab1_2_tab' class='activeTabRight'  ><img border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif" height="30" width="2"/></td>
+              </tr>
+            </table>
+
+
+        </td>
+
+
+
+      </tr>
+      <tr>
+        <td  height='300' width='400' colspan='6' bgcolor='white'>
+
+          <span class="widget" CONTENTEDITABLE="false" onresizestart="javascript:event.cancelBubble=true;return false;" id="com_dynamide_tree1">
+          <style>
+
+          <!--
+          .open {cursor: hand; color: red; display:''}
+          .closed {cursor: hand; color: blue; display:none}
+          -->
+
+          </style>
+          <script language="JavaScript1.2">
+
+          <!--
+          var ns6=document.getElementById&&!document.all?1:0
+          //These are just to force a preload.  They aren't used by ref. And they don't affect the image swapping.
+          img1src = new Image();
+          img1src.src = "/com/dynamide/sites/dynamide/templates/images/plus.jpg";
+          img2src = new Image();
+          img2src.src = "/com/dynamide/sites/dynamide/templates/images/minus.jpg";
+
+          function expandit(plusID, objID){
+            curobj = document.getElementById(objID);
+            if (curobj.className == "closed"){
+              curobj.className = "open"
+              showplus(plusID, "0");
+            } else {
+              curobj.className = "closed"
+              showplus(plusID, "1");
+            }
+          }
+          function showplus(plusname, p){
+            theImg=document.getElementById(plusname);
+            if (p=="1") {
+              theImg.setAttribute("src","/com/dynamide/sites/dynamide/templates/images/plus.jpg");
+            } else {
+              theImg.setAttribute("src","/com/dynamide/sites/dynamide/templates/images/minus.jpg");
+            }
+            var scr = "replus('"+plusname+"');"
+            setTimeout(scr, 1);
+          }
+
+          function replus(plusname){
+          theImg=document.getElementById(plusname);
+          theImg.setAttribute("src",theImg.getAttribute("src"));
+          }
+
+          function nada(){
+          }
+          function deactivateAllTabs(){
+            deactivateTab("tab1_1");
+            deactivateTab("tab1_2");
+            deactivateTab("tab1_3");
+          }
+          function deactivateTab(tabID){
+            document.getElementById(tabID).className = "inactiveTab";
+            setTabColorsInactive(tabID);
+          }
+          function setTabColorsActive(tabID){
+            document.getElementById(tabID+'_top').className = 'activeTabTop';
+            document.getElementById(tabID+'_right').className = 'activeTabRight';
+            document.getElementById(tabID+'_tab').className = 'activeTab';
+          }
+          function setTabColorsInactive(tabID){
+            var ntab = tabID+'_tab'
+            var nt = tabID+'_top'
+            var nr = tabID+'_right'
+            var foo_r = document.getElementById(nr)
+            var foo_t = document.getElementById(nt)
+            var foo_tab = document.getElementById(ntab)
+            //alert(dump(foo_r));
+            var was = nr+" "+foo_r.className+" "+nt+" "+foo_t.className;
+
+            foo_t.className = 'inactiveTabTop';
+            foo_r.className = 'inactiveTabRight';
+            foo_tab.className = 'inactiveTab';
+
+            var is = nr+" "+foo_r.className+" "+nt+" "+foo_t.className;
+            window.status = 'was: '+was+ ' is: '+is;
+          }
+          function chtab(tabID){
+            curobj = document.getElementById(tabID);
+            deactivateAllTabs();
+            curobj.className = "activeTab";
+            setTabColorsActive(tabID);
+          }
+          //-->
+
+          </script>
+
+          <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <td rowspan="2" width="50">
+                <img border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif" height="1" width="50"/>
+              </td>
+              <td>
+                <span id="1.1" onclick="expandit('img1.1','sp1.1')" class="closed">
+                <a href="javascript:nada()">
+                <img id="img1.1" border="0" class="open" src="/com/dynamide/sites/dynamide/templates/images/minus.jpg"/>
+                </a>
+                </span>
+              </td>
+              <td>
+                <img border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif" height="1" width="50"/>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <span id="sp1.1" class="closed">
+
+                <table border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td rowspan="2" width="50">
+                      <img border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif" height="1" width="50"/>
+                    </td>
+                    <td>
+                      <a href="javascript:nada()">
+                      <img id="img1.1.1" border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif"/>1.1.1
+                      </a>
+
+
+                      <span class="widget" CONTENTEDITABLE="false" onresizestart="javascript:event.cancelBubble=true;return false;"  id="com_dynamide_edit4">
+
+                      <table border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td>
+
+                            <table border="0" class="" cellpadding="0" cellspacing="0">
+                              <tr>
+                                <td width="100%" align="right" valign="center">
+                                  <div class="caption">edit:#160;</div>
+                                </td>
+                                <td>
+                                  <input type="text" class="" width="30" size="20" id="mojo4" name="mojo4" value=""/>
+                                </td>
+                              </tr>
+                            </table>
+
+                          </td>
+                          <td width="20">#160;</td>
+                        </tr>
+                      </table>
+
+                      </span>
+
+
+
+                    </td>
+                    <td>
+                      <img border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif" height="1" width="50"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <span id="sp1.1.1" class="open"></span>
+                    </td>
+                  </tr>
+                </table>
+
+                </span>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="2" width="50">
+                <img border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif" height="1" width="50"/>
+              </td>
+              <td>
+                <span id="1.2" onclick="expandit('img1.2','sp1.2')" class="open">
+                <a href="javascript:nada()">
+                <img id="img1.2" border="0" class="open" src="/com/dynamide/sites/dynamide/templates/images/minus.jpg"/>
+                </a>
+                </span>
+              </td>
+              <td>
+                <img border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif" height="1" width="50"/>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <span id="sp1.2" class="open">
+
+                <table border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td rowspan="2" width="50">
+                      <img border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif" height="1" width="50"/>
+                    </td>
+                    <td>
+                      <a href="javascript:nada()">
+                      <img id="img1.2.1" border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif"/>1.2.1
+                      </a>
+                    </td>
+                    <td>
+                      <img border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif" height="1" width="50"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <span id="sp1.2.1" class="open"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td rowspan="2" width="50">
+                     <img border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif" height="1" width="50"/>
+                    </td>
+                    <td>
+
+                      <a href="javascript:nada()">
+                      <img id="img1.2.2" border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif"/>1.2.2
+                      </a>
+                      <span class="widget" CONTENTEDITABLE="false" onresizestart="javascript:event.cancelBubble=true;return false;"  id="com_dynamide_edit2">
+
+                      <table border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td>
+
+                            <table border="0" class="" cellpadding="0" cellspacing="0">
+                              <tr>
+                                <td width="100%" align="right" valign="center">
+                                  <div class="caption">edit:#160;</div>
+                                </td>
+                                <td>
+                                  <input type="text" class="" width="30" size="20"
+                                  id="mojo1" name="mojo1" fooonblur='window.status=this.value;document.mojo2=this.value; gMojo=this.value;'
+                                  fooonfocus="window.status=document.mojo2+':'+gMojo;value=document.mojo2" value="hi"/>
+                                </td>
+                              </tr>
+                            </table>
+
+                          </td>
+                          <td width="20">#160;</td>
+                        </tr>
+                      </table>
+
+                      </span>
+
+                    </td>
+                    <td>
+                      <img border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif" height="1" width="50"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <span id="sp1.2.2" class="open"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td rowspan="2" width="50">
+                      <img border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif" height="1" width="50"/>
+                    </td>
+                    <td>
+                      <a href="javascript:nada()">
+                      <img id="img1.2.3" border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif"/>1.2.3
+                      </a>
+
+
+                      <span class="widget" CONTENTEDITABLE="false" onresizestart="javascript:event.cancelBubble=true;return false;"  id="com_dynamide_edit1">
+
+                      <table border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td>
+
+                            <table border="0" class="" cellpadding="0" cellspacing="0">
+                              <tr>
+                                <td width="100%" align="right" valign="center">
+                                  <div class="caption">edit:#160;</div>
+                                </td>
+                                <td>
+                                  <input type="text" class="" width="30" size="20" id="mojo3" name="mojo3" value="mojo3"/>
+                                </td>
+                              </tr>
+                            </table>
+
+                          </td>
+                          <td width="20">#160;</td>
+                        </tr>
+                      </table>
+
+                      </span>
+
+
+                    </td>
+                    <td>
+                      <img border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif" height="1" width="50"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <span id="sp1.2.3" class="open"></span>
+                    </td>
+                  </tr>
+                </table>
+
+                </span>
+              </td>
+            </tr>
+          </table>
+
+          </span>
+
+        </td>
+        <td  class='activeTabRight'><img border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif" height="2" width="1"/></td>
+
+      </tr>
+      <tr>
+        <td colspan='1' class='bodybg'><img border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif" height="2" width="2  "/></td>
+        <td colspan='7' class='activeTabRight'><img border="0" src="/com/dynamide/sites/dynamide/templates/images/transparent.gif" height="3" width="1"/></td>
+      </tr>
+    </table>
+    </form>
+
+  </BODY>
+</HTML>

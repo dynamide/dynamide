@@ -1,0 +1,3 @@
+#set $Tools = $shell.loadClass("com.dynamide.util.Tools")
+#set $StringTools = $shell.loadClass("com.dynamide.util.StringTools")
+.webmacroshell.basescript DONE

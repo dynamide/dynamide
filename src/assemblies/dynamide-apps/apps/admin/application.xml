@@ -1,0 +1,184 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<application>
+  <fields href="fielddefs.xml"></fields>
+  <event language="beanshell" name="application_onImport"><![CDATA[
+    import com.dynamide.*;
+    import com.dynamide.util.*;
+    import com.dynamide.Widget;
+    import com.dynamide.datatypes.*;
+    import com.dynamide.resource.*;
+  ]]></event>
+
+  <event language="beanshell" name="application_onStart"><![CDATA[
+    System.out.println("\r\n\r\n\r\n\r\n\r\n\r\n============== admin start ===================");
+    if (session.getField("jobslist")==null){
+        session.setFieldValue("jobslist", new Hashtable());
+    }
+    session.bindAttribute("Admin", new Admin(session));
+    session.call("application_setBaseURLs");
+  ]]></event>
+
+  <event language="beanshell" name="application_onAction"><![CDATA[
+    String ssid = event.getQueryParam("SUBSESSIONID");
+    if (ssid.trim().length() != 0){
+        event.session.setFieldValue("SUBSESSIONID", ssid);
+    }
+    String baseRedirectURL = event.session.get("applicationPath")
+                            +"?SESSIONID="+event.session.getSessionID()
+                            +"&USER="+event.session.get("USER");
+    String redirectToPageURL = baseRedirectURL+"&next=sessionsPage";
+
+    if (event.getQueryParam("closeAllSessions").equals("1")){
+        IContext sessions = session.getResourceManager().find("/homes/dynamide/sessions"); //%%
+        System.out.println("sessions: "+sessions);
+
+        Iterator it = sessions.getAttributes().values().iterator();   //change this to getContexts when you make Session IContext.
+        while ( it.hasNext() ) {
+            Session target = (Session)it.next();
+            if (session != target){
+                session.logInfo("Admin closing Session: "+target.toString());
+                target.close();
+            }
+        }
+        System.out.println("admin redirecting: "+redirectToPageURL);
+        session.getHandlerResult().redirectURL = redirectToPageURL;
+    } else if (event.action.equals("closeSubsession")){
+        Session sub = session.getResourceManager().getSession(event.getQueryParam("SUBSESSIONID"));
+        if ( sub != null ) {
+            session.logInfo("admin closing subsession: "+sub);
+            sub.close();
+        } else {
+            session.logWarn("admin can't close subsession because SUBSESSIONID did not find a session. query param: "+event.getQueryParam("SUBSESSIONID"));
+        }
+        System.out.println("admin redirecting: "+redirectToPageURL);
+        session.getHandlerResult().redirectURL = redirectToPageURL;
+        return;
+    } else if (event.action.equals("loadAllPages")){
+        Session sub = session.getResourceManager().getSession(event.getQueryParam("SUBSESSIONID"));
+        if ( sub != null ) {
+            sub.loadAllPages();
+        }
+        return;
+    }
+  ]]></event>
+  <event language="beanshell" name="application_onClose"><![CDATA[
+    com.dynamide.Admin admin = (com.dynamide.Admin)session.getAttribute("Admin");
+    if ( admin != null ) {
+        admin.close();
+    }
+  ]]></event>
+
+  <event language="beanshell" name="FOOapplication_queryNextPage"><![CDATA[
+         //if ( ! event.request.getProtocol().equals("https") ) {
+         //   show login again
+         //   return;
+         //}
+
+
+         //you can either do this here, or in each page as it is handled:
+         //System.out.println("page count: "+session.getVisitedPages().length);
+         //System.out.println("\r\n\r\n<hr/>in application_queryNextPage, event.currentPageID: "+event.currentPageID);
+        event.session.logHandlerProc("DEBUG", "query, session.getUSERAUTH: "+event.session.getUSERAUTH());
+        String USER = session.getQueryParam("USER");
+        print("Admin query param USER: "+USER);
+        if (session.getResourceManager().isUserLocalDeveloper(USER)){
+            session.setUSERAUTH("true");
+            event.session.logHandlerProc("DEBUG", "allowing: "+event.session.getUSERAUTH());
+            if (Tools.isBlank(event.nextPageID)){
+                event.nextPageID = "sessionsPage";
+            }
+            return;
+            // back-door hack.  no validation.
+        }
+
+         if(session.isBeforeFirstPage()){
+            event.session.logHandlerProc("DEBUG", "admin application jumping to adminLogin because session is before first page");
+            event.nextPageID = "adminLogin";
+            return;
+         }
+         if (session.getUSERAUTH().length()==0){
+            event.nextPageID = "adminLogin";
+            event.session.logHandlerProc("DEBUG", "application_queryNextPage returning login, since session.USER is not set.");
+            System.out.println("application_queryNextPage returning login, since session.USERAUTH is not set.");
+         }
+         event.session.logHandlerProc("DEBUG", "leaving query, session.getUser: "+event.session.getUSER());
+         //if (Tools.isBlank(event.nextPageID)){
+         //    session.logDebug("admin application jumping to sessionsPage because event.nextPageID was blank");
+         //    event.nextPageID = "sessionsPage";
+         //}
+  ]]></event>
+  <event language="beanshell" name="application_setBaseURLs"><![CDATA[
+    event.println("Yes, in application_setBaseURLs");
+    String ssid = event.getQueryParam("SUBSESSIONID");
+    if (ssid.trim().length() != 0){
+        //Set the SUBSESSIONID for the widget:
+        event.session.setFieldValue("SUBSESSIONID", ssid);
+        //System.out.println("Admin setting SUBSESSIONID: "+ssid);
+    }
+    String sessionDetailBaseURL
+       = "/dynamide/admin?next=sessionDetailPage&amp;SESSIONID="+event.session.getSessionID();
+
+    event.session.setFieldValue("sessionDetailBaseURL", sessionDetailBaseURL);
+
+    String consoleLogBaseURL = "/dynamide/admin?next=sessionConsoleLog&amp;SESSIONID="+event.session.getSessionID();
+    event.session.setFieldValue("consoleLogBaseURL", consoleLogBaseURL);
+
+    Page sessionConsoleLog = event.session.find("sessionConsoleLog");
+    sessionConsoleLog.setProperty("consoleLogBaseURL", consoleLogBaseURL);
+    sessionConsoleLog.setProperty("sessionDetailBaseURL", sessionDetailBaseURL);
+  ]]></event>
+  <pages>
+    <page name="audit"></page>
+    <page name="adminLogin"></page>
+    <page name="adminMain"></page>
+    <page name="sessionDetailPage"></page>
+    <page name="sessionConsoleLog"></page>
+    <page name="sessionsPage" default="true"></page>
+    <page name="eval"></page>
+    <page name="debugEvent"></page>
+    <page name="errorLog"></page>
+    <page name="expansionLog"></page>
+    <page name="uploadXML"></page>
+    <page name="webappsView"></page>
+  </pages>
+  <properties>
+    <property name="applicationID">
+      <value>com.dynamide.apps.admin</value>
+    </property>
+    <property name="defaultLanguage">
+      <value>en-us</value>
+    </property>
+    <property name="lastSave">
+      <datatype>java.util.Date</datatype>
+      <readOnly>true</readOnly>
+      <value>1056331554114</value>
+    </property>
+    <property name="onClose" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value></value>
+    </property>
+    <property name="onImport" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value>application_onImport</value>
+    </property>
+    <property name="onStart" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value></value>
+    </property>
+    <property name="queryNextPage" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value>application_queryNextPage</value>
+    </property>
+    <property name="poolable">
+      <value>false</value>
+    </property>
+    <property name="title">
+      <value>Dynamide Administration</value>
+    </property>
+    <property name="type">
+      <readOnly>true</readOnly>
+      <value>com.dynamide.Session</value>
+    </property>
+  </properties>
+</application>

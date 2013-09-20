@@ -1,0 +1,6 @@
+#set $x = $shell.loadClass("com.dynamide.util.XDB")
+$x.openXML("default", "C:\temp\dynamide-sandboxes\RESOURCE_ROOT\homes\dynamide\assemblies\com-dynamide-apps-1\apps\doco\resources\doc\help\FAQ.xml")
+$x.valueOf("//definition/caption/@id")
+$x.valueOfAll("f", "/")
+$x.valueOfAll("f", "/definition")
+$x.valueOfAll("f", "//definition")

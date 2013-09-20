@@ -1,0 +1,9 @@
+<html>
+<head>
+   <title>$title</title>
+   $session.getInclude("resources/css/ide.css")
+</head>
+<body bgcolor='\#A4BFDD'>
+$body
+</body>
+</html>

@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm >
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<dynamideForm>
+
+<properties>
+    <property name="type">
+      <value>pagetypes/com.dynamide.form</value>
+      <readOnly>true</readOnly>
+    </property>
+    <property name="title">
+      <value>Test Application: Log various Dynamide transformations</value>
+    </property>
+    <property name="margin">
+      <value>0</value>
+    </property>
+    <property name="bgcolor">
+      <value>white</value>
+    </property>
+    <property name="sampleProperty">
+      <value>Foo</value>
+    </property>
+    <property name="samplePropertyMacro">
+      <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+      <value>SESSIONID: $SESSIONID</value>
+    </property>
+  </properties>
+
+
+  <htmlsrc browser="*"><![CDATA[
+  <html>
+    <body>
+      TEST Transformations.
+      <br />\$SESSIONID in page source: $SESSIONID
+      <br />\$page.sampleProperty: $page.sampleProperty
+      <br />\$page.samplePropertyMacro: $page.samplePropertyMacro
+      <?php ?>
+    </body>
+  </html>
+  ]]></htmlsrc>
+
+  <widgets>
+  </widgets>
+
+</dynamideForm>

@@ -1,0 +1,7 @@
+source("C:/dynamide/src/shell/dynamideShell.bs");
+s = Session.createSession("/dynamide/test-suite/fields", "/dynamide/test-suite/fields");
+//print(s.handleURL("/dynamide/test-suite/fields?page=fieldErrors"));
+p = s.getPage("fieldErrors");
+print("\r\n\r\n\r\n=======================================================");
+print(p.outputPage());
+

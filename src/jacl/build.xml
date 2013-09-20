@@ -1,0 +1,82 @@
+<project name="dynamide" default="compile" basedir=".">
+  <!-- This will pull in both tcljava and jacl source trees -->
+  <!-- Jacl doesn't come with an Ant build file, and comes with no javadoc
+    ** so this Ant build compiles all, produces the jar files,  and produces javadoc.
+    **       Laramie Crocker (laramie_crocker @ yahoo.com) 6/23/2002 9:29AM
+  -->
+
+    <target name="init">
+        <property name="build" value="./build"/>
+        <property name="src" value="./src"/>
+        <property name="jacl.jar" value="${build}/jacl.jar"/>
+        <property name="tcljava.jar" value="${build}/tcljava.jar"/>
+        <property name="JAVADOCDIR" value="${build}/javadoc"/>
+    </target>
+
+
+    <target name="clean" depends='init'>
+        <delete file="${tcljava.jar}" />
+        <delete file="${jacl.jar}" />
+        <delete>
+            <fileset dir="${build}" includes="**/*.class"/>
+        </delete>
+    </target>
+
+
+  <target name="compile" depends="init">
+    <mkdir dir="${build}"/>
+    <mkdir dir="${build}/jacl"/>
+    <mkdir dir="${build}/tcljava"/>
+    <!-- This file is incorrectly named.  Rename it JaclLoadJavaCmd.java from source, and kill the old one. -->
+    <delete file="${src}/jacl/tcl/lang/JaclLoadJava.java" quiet="yes"/>
+    <javac
+          debug="off"
+          srcdir="${src}/jacl"
+          destdir="${build}/jacl"
+          classpath="${src}/jacl;./src/jacl/oro.jar"
+	/>
+    <javac
+          debug="off"
+          srcdir="${src}/tcljava"
+          destdir="${build}/tcljava"
+          classpath="${src}/tcljava"
+	/>
+
+    <copy todir="${build}/tcljava/tcl/lang/library">
+        <fileset dir="${src}/tcljava/tcl/lang/library"/>
+    </copy>
+    <copy todir="${build}/jacl/tcl/lang/library">
+        <fileset dir="${src}/jacl/tcl/lang/library"/>
+    </copy>
+
+    <unjar src="${src}/jacl/oro.jar" dest="${build}/jacl"/>
+
+    <echo>Creating jar file in ${jacl.jar}</echo>
+    <jar
+         jarfile="${jacl.jar}"
+         basedir="${build}/jacl"
+    />
+
+    <echo>Creating jar file in ${tcljava.jar}</echo>
+    <jar
+         jarfile="${tcljava.jar}"
+         basedir="${build}/tcljava"
+    />
+  </target>
+
+  <target name="javadoc" depends="compile">
+     <!-- This will pull in both tcljava and jacl source trees -->
+    <javadoc
+             sourcepath="${src}/jacl;${src}/tcljava"
+             destdir="${JAVADOCDIR}"
+             classpath="${build}/jacl;${build}/tcljava;oro.jar"
+             packagenames="tcl.lang,tcl.regex"
+             author="true"
+             version="true"
+             use="true"
+             maxmemory="256M"
+             >
+    </javadoc>
+  </target>
+
+</project>

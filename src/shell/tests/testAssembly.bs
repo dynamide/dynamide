@@ -1,0 +1,53 @@
+import com.dynamide.*;
+import com.dynamide.resource.*;
+import com.dynamide.util.*;
+
+ResourceManager rm = ResourceManager.createStandalone();
+session = Session.createSession("/dynamide/test-suite/test-resources");
+assembly = session.getAssembly();
+
+//turn this on to see a list of all the resources in assembly:
+print(assembly.listResourceNames("\r\n"));
+print("\r\n\r\n");
+
+print("\r\n Should be valid:");
+ic =    session.getApplicationResource("page1.xml");
+print("session.getApplicationResource(\"page1.xml\"); :"+ic);
+
+
+print("\r\n Should be null:");
+ic =    assembly.getResource("page1.xml", false);
+print("assembly.getResource(\"page1.xml\", false); :"+ic);
+
+print("\r\n Should be valid:");
+ic =    assembly.getResource("apps/test-suite/test-resources/page1.xml", false);
+print("assembly.getResource(\"apps/test-suite/test-resources/page1.xml\", false); :"+ic);
+
+print("\r\n Should be null:");
+ic =    assembly.getResource("dynamide.css", false);
+print("assembly.getResource(\"dynamide.css\", false); :"+ic);
+
+print("\r\n Should be null:");
+ic =    assembly.getResource("resources/css/dynamide.css", false);
+print("assembly.getResource(\"resources/css/dynamide.css\", false); :"+ic);
+
+print("\r\n Should be valid:");
+ic =    assembly.getResource("resources/css/dynamide.css", true);
+print("assembly.getResource(\"resources/css/dynamide.css\", true); :"+ic);
+
+print("\r\n Should be null:");
+ic =    assembly.getResource("resources/css/test-resources.css", true);
+print("assembly.getResource(\"resources/css/test-resources.css\", true); :"+ic);
+
+print("\r\n Should be null:");
+ic =    assembly.getResource("resources/css/test-resources.css", false);
+print("assembly.getResource(\"resources/css/test-resources.css\", false); :"+ic);
+
+print("\r\n Should be valid:");
+ic =    assembly.getApplicationResource("test-suite/test-resources", "resources/css/test-resources.css");
+print("assembly.getApplicationResource(\"test-suite/test-resources\", \"resources/css/test-resources.css\"); :"+ic);
+
+print("\r\n");
+
+
+System.exit(0);

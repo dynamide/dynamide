@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<widget>
+    <componentHelp>
+     <p>An input field for passing simple one-line strings to the server.  On the server the value is
+     retrieved using the "field" property.   Note that the field value will be a String "true" or "false",
+     although the Browser will send to Dynamide the values "on" when the box is checked,
+     and will send nothing when the box is unchecked.  Dynamide sends to the Browser the values "checked='1'" and
+     "checked='0'" depending on the field value.  Dynamide handles the "off" case by adding a hidden field to
+     all checkboxes, so that the existence of the checkbox on the form is known during the POST.
+     Rather than track the implementation of the query parameter handling for checkboxes, use Dynamide's
+     field values to see if checkboxes are checked.  You can do this in the page source with
+     \$widget.value or in Beanshell script with session.find("mypage.mywidget").get("value"), or
+     through Widget.getValue() or Field.getValue() if you have a reference to the Widget's Field.
+     <br/>The property "textSize" controls how wide the input control will be,
+     "textWidth" controls how many characters it will accept.
+     </p>
+    </componentHelp>
+
+    <properties>
+        <property name="align"><defaultValue>right</defaultValue></property>
+        <property name="basename">
+            <defaultValue>checkbox</defaultValue>
+            <hidden>true</hidden>
+        </property>
+        <property name="border">
+            <defaultValue>0</defaultValue>
+        </property>
+        <property name="caption">
+           <defaultValue>checkbox</defaultValue>
+           <intl>1</intl>
+        </property>
+        <property name="captionClass"><defaultValue>caption</defaultValue></property>
+        <property name="captionNOBR">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+        <property name="captionPlacement"><defaultValue>left</defaultValue></property>
+        <property name="captionWidth"><defaultValue></defaultValue></property>
+        <property name="cellpadding"><defaultValue>0</defaultValue></property>
+        <property name="cellspacing"><defaultValue>0</defaultValue></property>
+        <property name="class"><defaultValue></defaultValue></property>
+        <property name="enabled">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+        <property name="field">
+           <datatype>com.dynamide.datatypes.LiveEnumeratedDatatype</datatype>
+           <defaultValue>
+                <enumeration defaultIndex='0'>
+                    <value></value>  <!-- make sure there is one empty value for autocreated fields -->
+                </enumeration>
+            </defaultValue>
+           <liveEvalString>session.getFieldNames();</liveEvalString>
+        </property>
+        <property name="fieldIndex">
+            <defaultValue></defaultValue>
+        </property>
+        <property name="onclick"><defaultValue></defaultValue></property>
+        <property name="name"><defaultValue>checkbox</defaultValue></property>
+        <property name="showErrorAbove"><defaultValue>true</defaultValue></property>
+        <property name="tabindex"><defaultValue></defaultValue></property>
+        <property name="textClass"><defaultValue></defaultValue></property>
+        <property name="type">
+            <defaultValue>com.dynamide.checkbox</defaultValue>
+            <readOnly>true</readOnly>
+        </property>
+        <property name="visible">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+    </properties>
+
+    <htmlsrc browser="*"><![CDATA[
+        #set $iserror = $widget.getError()
+        #if ($iserror == true){
+            #set $whichCaptionClass = "errorCaption"
+        } #else {
+            #set $whichCaptionClass = "$widget.captionClass"
+        }
+        <table border="0" cellpadding="0" cellspacing="0">
+            #if ($iserror == true){
+              #if ($widget.showErrorAbove == true){
+                <tr>
+                <td>
+                    <div class="errorCaption">
+                        $widget.getErrorMessage()
+                    </div>
+                </td>
+                </tr>
+              }
+            }
+            <tr>
+              <td>
+              <table border="$widget.border" class="$widget.class" cellpadding="$widget.cellpadding" cellspacing="$widget.cellspacing">
+               <tr>
+                 <td width="$widget.captionWidth" align="$widget.align">
+                    <div class="$whichCaptionClass">
+                      #if($widget.captionNOBR=="true"){<nobr>}$widget.caption<dm_nbsp/>#if($widget.captionNOBR=="true"){</nobr>}
+                    </div>
+                 </td>
+                #if ($widget.captionPlacement = "above"){
+                 </tr><tr>
+                 <td width="$widget.captionWidth" align="$widget.align" valign="$widget.valign">
+                } #else {
+                 <td>
+                }
+                    #set $fieldID = "$widget.fieldID"
+                    #set $checked = " "
+                    #if ($widget.value == "on" || $widget.value == "true" ) {
+                        #set $checked = " checked='1' "
+                    }
+                    #set $onclick = $widget.onclick
+                    #if ($onclick != ""){
+                        #set $onclick = " onclick=\"$onclick\" "
+                    }
+                    #if ($widget.enabled == "true"){
+                        <input type="checkbox" class="$widget.textClass" id="$fieldID" name="$fieldID" $onclick $checked #if ($widget.tabindex != "") { tabindex='$widget.tabindex' } />
+                        <input type="hidden" id="checkbox_$fieldID" name="checkbox_$fieldID"
+                                    value='checkbox:verify' />
+                    } #else {
+                        $widget.value
+                    }
+                 </td>
+                </tr>
+              </table>
+              </td>
+              <td width='20'>
+                #if ( $iserror == true ) {
+                    <img src='$session.getInclude("resources/images/redstar.gif")'/>
+                } #else {
+                    <dm_nbsp/>
+                }
+              </td>
+            </tr>
+        </table>
+    ]]></htmlsrc>
+</widget>

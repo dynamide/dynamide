@@ -1,0 +1,38 @@
+## This example shows how to generate code blocks from
+## simple inputs.  This is to save typing, but is more powerful
+## than, say Multi-Edit templates or macros.
+#macro t1($key,$indent){
+$(indent)Element text = new Element("$key");
+$(indent)text.addContent(getAsStored("$key"));
+$(indent)container.addContent($key);
+}
+#set $classname = "PublishParamsDatatype"
+#set $list = ["publishURI", "publishPrefixURI", "publishOutputDir"]
+
+##this example uses inline code :
+    public void init(Element element, String ownerID){
+
+#foreach $thing in $list {
+        set("$thing", JDOMFile.safeGetElementChildText(element, "$thing"));
+}
+    }
+
+
+##this example uses macro:
+#set $indent = "        "
+    public void addXMLContentTo(Element container){
+
+#foreach $thing in $list {
+        #t1($thing, $indent)
+}
+    }
+
+
+    public String toString(){
+        return "$classname: "
+
+#foreach $thing in $list {
+              +" $thing="+getAsStored("$thing")
+}
+        ;
+    }

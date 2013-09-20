@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!DOCTYPE web-apps>
+<!-- Make sure all slashes are UNIX-style: '/' -->
+<web-apps>
+
+
+  <!--
+       You can find documentation on this file in the Dynamide doco application:
+
+        /doco/doc/help/assemblies
+
+       Here you describe the apps that are in this assembly, and what URI's should be associated with them.
+       URI is the URI the user will see in the browser.
+       APPNAME is the name of the application relative to $ASSEMBLY/apps/
+
+       Imports are defined in each application's application.xml.
+
+  -->
+
+  <!-- ================================================================================================ -->
+  <!-- NOTE: Only global overrides need to be in this file.  Each Account and each
+       assembly can define its own web-apps. -->
+  <!-- ================================================================================================ -->
+
+  <!-- ********************************************
+       ** Default the / url to the doco app.
+       ** Note: This must be done to prevent
+       ** accounts from grabbing / in Hosted mode.
+       ********************************************
+  -->
+  
+  <app>
+    <URI>/</URI>
+    <APPNAME>doco</APPNAME>
+    <ASSEMBLY>
+       <name>com-dynamide-apps</name>
+       <interface>1</interface>
+    </ASSEMBLY>
+    <HOME>dynamide</HOME>
+  </app>
+
+  <!--This is how you disable an application, just point it to the disabler app.-->
+  <app>
+    <URI>/dynamide/ide</URI>
+    <APPNAME>disabler</APPNAME>
+    <ASSEMBLY>
+       <name>com-dynamide-apps</name>
+       <interface>1</interface>
+    </ASSEMBLY>
+    <HOME>dynamide</HOME>
+  </app>
+
+
+
+</web-apps>

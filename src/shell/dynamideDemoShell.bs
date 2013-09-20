@@ -1,0 +1,26 @@
+import com.dynamide.event.*;
+
+source("dynamideShell.bs");
+
+
+
+s=newSession("/Dynamide/demo");
+print("session ==> s");
+p=s.getPageByID("page1");
+print("page ==> p");
+
+p.listProperties();
+
+print("\r\n\r\nThere are some object set up already:");
+print("s: a Session for the application \"/Dynamide/demo\"");
+print("p: the page \"page1\" for that application");
+print("   Here are some example of commands you can use:");
+print("       s.listProperties()");
+print("       s.listPages()");
+print("       s.dump()");
+print("       s.get(<any property, field, widget>)");
+print("");
+print("       p.listProperties()");
+print("       p.listWidgets()");
+print("       p.dump()");
+print("       p.outputPage()");

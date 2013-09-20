@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<property name="publishURLs">
+  <value>
+    <enumeration override="true" defaultIndex="0">
+        <item>$session.applicationPath/contact</item>
+        <item>$session.applicationPath/faq</item>
+        <item>$session.applicationPath/index</item>
+    </enumeration>
+  </value>
+  <datatype>com.dynamide.datatypes.Enumeration</datatype>
+</property>

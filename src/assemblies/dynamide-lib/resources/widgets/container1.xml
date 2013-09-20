@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<dynamideForm>
+
+<properties>
+    <property name="name"><defaultValue>com_dynamide_container1</defaultValue></property>
+    <property name="type"><value>composite</value></property>
+</properties>
+
+<htmlsrc><![CDATA[
+<html>
+<body CONTENTEDITABLE='false'>
+    I am a container<br/>
+    <SPAN class="widget" id="breadcrumbs1"></SPAN>
+    <SPAN class="widget" id="button1"></SPAN>
+</body>
+</html>
+]]></htmlsrc>
+
+<widgets>
+    <widget id="breadcrumbs1">
+      <properties>
+        <property name="class">
+          <defaultValue></defaultValue>
+        </property>
+        <property name="name">
+          <value>breadcrumbs1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.breadcrumbs</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="button1">
+      <properties>
+        <property name="caption">
+          <value>Click Me!</value>
+          <intl>1</intl>
+        </property>
+        <property name="class">
+          <defaultValue>dmbutton</defaultValue>
+        </property>
+        <property name="field">
+          <defaultValue></defaultValue>
+        </property>
+        <property name="height">
+          <defaultValue>200</defaultValue>
+        </property>
+        <property name="name">
+          <defaultValue>button</defaultValue>
+        </property>
+        <property name="onClick">
+          <value></value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.button</value>
+        </property>
+        <property name="width">
+          <defaultValue>100</defaultValue>
+        </property>
+      </properties>
+    </widget>
+</widgets>
+
+</dynamideForm>

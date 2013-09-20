@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+
+<fields>
+   <field name="SUBSESSIONID">
+       <property name="value">
+          <value></value>
+       </property>
+   </field>
+</fields>

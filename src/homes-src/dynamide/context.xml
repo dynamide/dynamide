@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE context>
+<context>
+    <appdata>
+        <swarm>
+            <debugSQL value="true"/>
+            <email
+              sendAnnounce="true"
+              schwarmanizer-from-email="Schwarmanizer@b-rant.com"
+              schwarmanizer-admin-email="schwarmanizer-admin@b-rant.com"
+              schwarmanizer-announce-email="schwarmanizer-announce@b-rant.com"
+              schwarmanizer-announce-interval="90"
+            />
+            <groups>
+                <group1 dbname="net_roots_demo" groupID="demo" admin-email="schwarmanizer@b-rant.com" />
+                <group2 dbname="net_roots_eb4dean" groupID="eb4dean" admin-email="schwarmanizer@b-rant.com"/>
+                <group3 dbname="net_roots_evolve" groupID="evolve" admin-email="dan@drob.org" />
+                <group4 dbname="net_roots_advokit" groupID="advokit" admin-email="dan@drob.org" />
+                <group5 dbname="net_roots_unity" groupID="unity" admin-email="dan@drob.org" />
+                <group6 dbname="net_roots_dfatech" groupID="dfatech" admin-email="dfatech@b-rant.com" />
+                <group7 dbname="net_roots_pyhtp" groupID="pyhtp" admin-email="pat_k@mail2pat.com" />
+                <group8 dbname="net_roots_n8" groupID="n8" admin-email="nrushfinn@yahoo.com" />
+            </groups>
+         </swarm>
+         <doco>
+            <!--<caching
+               xmltopic="off"
+            />-->
+            <caching
+               xmltopic="inApplication"
+            />
+         </doco>
+        <mailinglist>
+            <groups>
+                <PartyForAmerica description="PartyForAmerica.com"
+                                 admin-email="PartyForAmerica@b-rant.com"
+                                 successURL="http://www.PartyForAmerica.com/"
+                                 header="data/mailinglist/PartyForAmerica.com/header.shtml">
+                 </PartyForAmerica>
+            </groups>
+         </mailinglist>
+        <join>
+            <groups>
+                <cfd description="CaliforniaForDemocracy.com"
+                     admin-email="CaliforniaForDemocracy@b-rant.com"
+                     successURL="http://www.CaliforniaForDemocracy.com/"
+                     header="data/join/cfd/header.shtml">
+                 </cfd>
+            </groups>
+         </join>
+
+    </appdata>
+    <conf>
+        <!-- just to show that multiple elements can be in this context.
+        -->
+    </conf>
+</context>

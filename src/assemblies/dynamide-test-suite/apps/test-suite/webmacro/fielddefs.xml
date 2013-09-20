@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+
+<fields>
+   <field name="qty">
+       <property name="value"><value>3000</value></property>
+   </field>
+</fields>

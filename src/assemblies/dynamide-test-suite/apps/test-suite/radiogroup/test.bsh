@@ -1,0 +1,23 @@
+/*
+  test with:
+  bsh %DYNAMIDE_HOME%\build\ROOT\homes\dynamide\assemblies\com-dynamide-apps-1\apps\test-suite\radiogroup\test.bsh
+*/
+
+source("dynamideShell.bs");
+s = newSession("/dynamide/test-suite/radiogroup");
+w = s.find("page1.com_dynamide_radiogroup1");
+print("Widget prop selectedIndex: "+w.get("selectedIndex"));
+print("Widget prop showErrorAbove: "+w.get("showErrorAbove"));
+print("Widget prop items: "+w.get("items"));
+
+p = Profiler.getSharedProfiler();
+p.enter("radiogroup test");
+s.handleURL("/dynamide/test-suite/radiogroup?next=page1");
+p.leave("radiogroup test");
+p.enter("radiogroup test2");
+s.handleURL("/dynamide/test-suite/radiogroup?next=page1");
+p.leave("radiogroup test2");
+p.enter("radiogroup test3");
+s.handleURL("/dynamide/test-suite/radiogroup?next=page1");
+p.leave("radiogroup test3");
+print(p.getOutputString());

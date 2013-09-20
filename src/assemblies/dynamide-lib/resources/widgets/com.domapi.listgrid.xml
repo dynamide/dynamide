@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<widget>
+    <properties>
+        <property name="type"><defaultValue>com.domapi.listgrid</defaultValue><readOnly>true</readOnly></property>
+    </properties>
+
+
+    <htmlsrc browser="*"><![CDATA[
+
+  <script type="text/javascript" src="/domapi/src/core_c.js"></script>
+  <script type="text/javascript"><!--
+    core.loadUnit("listgrid");
+    core.loadUnit("color");  //optional
+    onload=function(){
+      elm1=Listgrid(null,null,null,250,80,350,220);
+      elm1.addCol("Brand",100);
+      elm1.addCol("Year",60);
+      elm1.addCol("Color",120);
+      elm1.addRow("Cadillac,1999,red");
+      elm1.addRow("Ford,2002,blue");
+      elm1.addRow("Chrysler,1997,black");
+      elm1.addRow("Chevy,1980,white");
+      elm1.addRow("Dodge,1999,black");
+      elm1.addRow("Toyota,2000,green");
+      elm1.addRow("Mercedes,1994,yellow");
+      elm1.addRow("BMW,1988,orange");
+      elm1.addRow("Rolls Royce,1965,purple");
+      elm1.addRow("Huyndai,1999,pink");
+      elm1.addRow("KIA,2001,navy");
+      elm1.addRow("Honda,1998,maroon");
+      elm1.addRow("Volvo,1992,cyan");
+      elm1.addRow("Volkswagon,1999,brown");
+      elm1.addRow("Audi,2002,silver");
+      label1=core.createElm(null,250,40,200,30);
+      label1.style.font=core.themes.system.font;
+      elm1.onchange=function(){
+        label1.setText("Selcount="+this.selcount+"<br />Row index="+core.getNodeIndex(this.selected))
+      };
+      elm1.onchange();
+      // ***** relative test
+      elm2=Listgrid(core.getElm("t1").rows[1].cells[1],null,null,null,null,250,150);
+      elm2.addCol("Brand",100);
+      elm2.addCol("Year",60);
+      elm2.addCol("Color",120);
+      elm2.addRow("Cadillac,1999,red");
+      elm2.addRow("Ford,2002,blue");
+      elm2.addRow("Chrysler,1997,black");
+      elm2.addRow("Chevy,1980,white");
+      elm2.addRow("Dodge,1999,black");
+      elm2.addRow("Toyota,2000,green");
+      elm2.addRow("Mercedes,1994,yellow");
+      elm2.addRow("BMW,1988,orange");
+      elm2.addRow("Rolls Royce,1965,purple");
+      elm2.addRow("Huyndai,1999,pink");
+      elm2.addRow("KIA,2001,navy");
+      elm2.addRow("Honda,1998,maroon");
+      elm2.addRow("Volvo,1992,cyan");
+      elm2.addRow("Volkswagon,1999,brown");
+      elm2.addRow("Audi,2002,silver");
+      exampleInit();
+    }
+  //-->
+  </script>
+  <script type="text/javascript" src="examples_c.js"></script>
+
+
+
+    ]]></htmlsrc>
+
+</widget>

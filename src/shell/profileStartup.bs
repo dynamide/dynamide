@@ -1,0 +1,11 @@
+import com.dynamide.*;
+
+source("c:/dynamide/src/shell/dynamideShell.bs");
+DynamideObject.useProfiler();
+System.out.println("Doing two sessions.............");
+String uri = "/dynamide/test-suite/core";
+newSession(uri);
+newSession(uri);
+DynamideObject.printProfiler();
+
+System.exit(0);

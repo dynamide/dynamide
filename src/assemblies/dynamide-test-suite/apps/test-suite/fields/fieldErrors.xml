@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm >
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<dynamideForm>
+
+  <event language="beanshell" name="fieldErrors_onAction"><![CDATA[
+  ]]></event>
+
+  <event language="beanshell" name="fieldErrors_beforeOutput"><![CDATA[
+    System.out.println("in fieldErrors_beforeOutput **************@@@");
+    Widget w = event.session.find("fieldErrors.edit1");
+    w.setErrorMessage("Error in zipcode");
+  ]]></event>
+
+  <event language="beanshell" name="fieldErrors_afterOutput"><![CDATA[
+    System.out.println("in fieldErrors_afterOutput **************@@@");
+  ]]></event>
+
+<properties>
+
+    <property name="type">
+      <value>pagetypes/com.dynamide.form</value>
+      <readOnly>true</readOnly>
+    </property>
+
+    <property name="title">
+      <value>Test Application - Page 1</value>
+    </property>
+
+    <property name="margin">
+      <value>0</value>
+    </property>
+
+    <property name="bgcolor">
+      <value>white</value>
+    </property>
+
+    <property name="testOutput">
+      <value>false</value>
+    </property>
+
+  </properties>
+
+
+<htmlsrc><![CDATA[
+<HTML>
+    <BODY id="fieldErrors" bottomMargin="0" leftMargin="0" topMargin="0" rightMargin="0" bgcolor="white">
+           <h2>Tests for Fields</h2>
+                widget:$page.getWidgetByID("edit1").getID()
+                <br />field.id:$page.getWidgetByID("edit1").getField().id<br />
+                ##$page.getWidgetByID("edit1").getField().dumpHTML()
+                $page.getWidgetByID("edit1").getField().dump()
+                $session.println("in page, before render: **************\r\n")
+                $session.println($page.getWidgetByID("edit1").getField().dump())
+                <hr />================================
+                <SPAN class="widget" id="edit1"/>
+      </BODY>
+</HTML>
+]]></htmlsrc>
+
+  <widgets>
+    <widget id="edit1">
+      <properties>
+        <property name="border">
+          <value>3</value>
+        </property>
+        <property name="caption">
+          <intl>1</intl>
+          <value></value>
+        </property>
+        <property name="captionNOBR">
+          <value>true</value>
+        </property>
+        <property name="captionWidth">
+          <value>0</value>
+        </property>
+        <property name="textClass">
+          <value>pfaedit</value>
+        </property>
+        <property name="datasource">
+          <value></value>
+        </property>
+        <property name="field">
+          <value>ZIPCODE</value>
+        </property>
+        <property name="padError">
+          <value>false</value>
+        </property>
+        <property name="textWidth">
+          <value>5</value>
+        </property>
+        <property name="textSize">
+          <value>10</value>
+        </property>
+        <property name="type">
+          <readOnly>true</readOnly>
+          <value>com.dynamide.edit</value>
+        </property>
+      </properties>
+    </widget>
+  </widgets>
+
+</dynamideForm>
+
+
+
+
+

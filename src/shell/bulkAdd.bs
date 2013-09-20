@@ -1,0 +1,29 @@
+import com.dynamide.Widget;
+
+//This is an example of how to do bulk widget creation without the GUI.
+
+source("c:/dynamide/src/shell/dynamideShell.bs");
+s=newSession("/dynamide/test-suite/simple-datasource");
+p=s.find("navigate");
+
+void nw(Widget w, String caption, String fld){
+        w=p.createWidget("com.dynamide.edit");
+        w.setProperty("caption", caption);
+        w.setProperty("field", fld);
+        w.setProperty("datasource", "DYNAMIDE_WEBAPPS");
+        w.setID("edit"+fld);
+}
+nw(w,"Home", "HOME");
+nw(w,"Build", "BUILD");
+nw(w,"Interface", "INTERFACE");
+
+p.commitInMemoryChangesToDOM();
+p.getFullXMLSource();
+p.saveToFile();
+
+void n(Widget w, String c, String fld){
+    print("<td><span class='widget' id='edit"+fld+"'/></td>\r\n");
+}
+n(w,"Home", "HOME");
+n(w,"Build", "BUILD");
+n(w,"Interface", "INTERFACE");

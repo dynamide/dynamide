@@ -1,0 +1,113 @@
+<HTML>
+ <head>
+<SCRIPT>
+ function PROCParserXmlMsxmlVersion() {
+ // e.g. <HTML>
+ // e.g.  <BODY onLoad=' PROCParserXmlMsxmlVersion();'>
+ // e.g.  </BODY>
+ // e.g. </HTML>
+ var XMLDOM = FNInitializeNewTreeJ();
+ var MSXML2 = FNInitializeNewTreeJ();
+ var MSXML2_6 = FNInitializeNewTreeJ();
+ var MSXML3 = FNInitializeNewTreeJ();
+ var MSXML4 = FNInitializeNewTreeJ();
+ var objDOM = FNInitializeNewTreeJ();
+ var xmlDoc = FNInitializeNewTreeJ();
+ var s = FNInitializeNewStringS();
+ xmlDoc = "<?xml version=\"1.0\"?><FOOBAR>Hello</FOOBAR>";
+ try
+     {
+         objDOM = new ActiveXObject("Microsoft.XMLDOM");
+         objDOM.async=false;
+         	  if (objDOM.loadXML(xmlDoc)) XMLDOM = true ;
+     }
+     catch (e){
+         XMLDOM = false ;
+     }
+ try
+     {
+         objDOM = new ActiveXObject("Msxml2.DOMDocument");
+         objDOM.async=false;
+         	  if (objDOM.loadXML(xmlDoc)) MSXML2 = true ;
+     }
+     catch (e){
+         MSXML2 = false ;
+     }
+ try
+     {
+         objDOM = new ActiveXObject("Msxml2.DOMDocument.2.6");
+         objDOM.async=false;
+         	  if (objDOM.loadXML(xmlDoc)) MSXML2_6 = true ;
+     }
+     catch (e){
+         MSXML2_6 = false ;
+     }
+ try
+     {
+         objDOM = new ActiveXObject("Msxml2.DOMDocument.3.0");
+         objDOM.async=false;
+         	  if (objDOM.loadXML(xmlDoc)) MSXML3 = true ;
+     }
+     catch (e){
+         MSXML3 = false ;
+     }
+ try
+     {
+         objDOM = new ActiveXObject("Msxml2.DOMDocument.4.0");
+         objDOM.async=false;
+         	  if (objDOM.loadXML(xmlDoc)) MSXML4 = true ;
+     }
+     catch (e){
+         MSXML4 = false ;
+     }
+ s = '<h3>Your Browser:</h3><pre>'+navigator.appName + "\n"+navigator.appVersion+ "\n</pre>"
+ s += '<h3>The following parsers are installed:</h3><pre>\n'
+ s += 'XMLDOM : ' + XMLDOM + '\n'
+ s += 'MSXML2 : ' + MSXML2 + '\n'
+ s += 'MSXML2.6 : ' + MSXML2_6 + '\n'
+ s += 'MSXML3 : ' + MSXML3 + '\n'
+ s += 'MSXML4 : ' + MSXML4 +"</pre>";
+ document.write(s) ;
+}
+</SCRIPT>
+
+<SCRIPT LANGUAGE = "JavaScript">
+function FNInitializeNewTreeJ() {
+ return( FNInitializeNewObjectJ() );
+}
+</SCRIPT>
+
+<SCRIPT LANGUAGE = "JavaScript">
+function FNInitializeNewStringS() {
+ return( FNStringEmptyS() );
+}
+</SCRIPT>
+
+<SCRIPT LANGUAGE = "JavaScript">
+function FNInitializeNewObjectJ() {
+ return( FNObjectNullJ() );
+}
+</SCRIPT>
+
+<SCRIPT LANGUAGE = "JavaScript">
+function FNStringEmptyS() {
+ return( "" );
+}
+</SCRIPT>
+
+<SCRIPT LANGUAGE = "JavaScript">
+function FNObjectNullJ() {
+ return( null );
+}
+</SCRIPT>
+
+
+
+
+ </head>
+
+
+ <BODY onLoad=' PROCParserXmlMsxmlVersion();'>
+ </BODY>
+</HTML>
+

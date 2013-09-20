@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<fields>
+   <field name="tables_help">
+       <property name="value">
+      <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+      <value><![CDATA[
+      <table width='500' border='1' cellpadding='10' cellspacing='0'>
+        <tr>
+          <td>
+    <p>By clicking a TABLE_NAME, you can browse the result set for that object, if available.
+    (Note: objects like TABLE, VIEW, SEQUENCE will return a result set when queried, but
+     object like INDEX may not.)</p>
+
+    <p>By clicking a TABLE_TYPE, you set the filter for viewing only that type.</p>
+
+    <p>You can filter the JDBC call DatabaseMetaData.getTables with
+    a list of table types.   Get the table types your database supports
+    by clicking "Show Table Types" above.  Enter the filter into the "TABLE_TYPE Filter"
+    box and click "Filter".  The filter should be a comma-separated list of table types
+    as reported in "Show Table Types" in the "TABLE_TYPE" column.  The filter should not
+    contain whitespace.   The filter is case-sensitive.
+    </p>
+    <p>For example for PostgreSQL, the filter could be:
+
+            <table border='1' cellpadding='2' cellspacing='0'>
+              <tr>
+                <td>TABLE
+                </td>
+              </tr>
+            </table>
+
+            or:
+
+            <table border='1' cellpadding='2' cellspacing='0'>
+              <tr>
+                <td>TABLE,VIEW</td>
+              </tr>
+            </table>
+
+            </p>
+          </td>
+        </tr>
+      </table>
+          ]]></value>
+          <intl>1</intl>
+       </property>
+   </field>
+
+
+   <field name="eval_help">
+       <property name="value">
+      <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+      <value><![CDATA[
+      <table width='500' border='1' cellpadding='0' cellspacing='0'>
+        <tr>
+          <td>
+    <p>Example of how to use "Eval":
+    <br />Paste this code into the SQL textarea and hit the "Eval" button.
+    </p>
+    <pre>ds = session.getDatasource("dsAll");
+conn = ds.getDatabase().getConnection();
+rs = conn.getMetaData().getCatalogs();
+return rs;</pre>
+<p>Any JDBC call that return a ResultSet can be used.
+    </p>
+          </td>
+        </tr>
+      </table>
+          ]]></value>
+          <intl>1</intl>
+       </property>
+   </field>
+
+
+   <field name="query_help">
+       <property name="value">
+      <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+      <value><![CDATA[
+      <table width='500' border='1' cellpadding='0' cellspacing='0'>
+        <tr>
+          <td>
+    <p>Enter a SQL query into the text area and click "Query" to run a query
+    that returns a ResultSet, or click "Execute" to execute a statement
+    that returns an integer.</p>
+    <p>To discover which tables, views, etc., are in this database, click "Show Tables".
+    "Show Tables" lists database-dependent object types, which can be listed by clicking
+    "Show Table Types".
+    </p>
+    <p>You can run any valid Beanshell (Java) that returns a ResultSet using "Eval JDBC".
+    </p>
+          </td>
+        </tr>
+      </table>
+          ]]></value>
+          <intl>1</intl>
+       </property>
+   </field>
+
+
+   <field name="jdbc_browser_database">
+       <property name="value">
+           <value>net_roots_demo</value>
+       </property>
+   </field>
+
+
+</fields>

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+export LIB=/Users/laramie/dynamideco/dynamide/build/defaultWebapp/ROOT/WEB-INF/lib
+
+##export CLASSPATH=.:$HOME/lib/bsh-2.0b4.jar
+export CLASSPATH=.
+
+export CLASSPATH=$CLASSPATH:$LIB/rhino-driver-mongodb-rhino-2.0.5.jar
+export CLASSPATH=$CLASSPATH:$LIB/java-driver-mongodb-rhino-2.11.2.jar
+export CLASSPATH=$CLASSPATH:$LIB/json-rhino.jar
+export CLASSPATH=$CLASSPATH:$LIB/js.jar
+
+echo CLASSPATH: $CLASSPATH
+echo 
+
+java -cp $CLASSPATH org.mozilla.javascript.tools.shell.Main $*
+

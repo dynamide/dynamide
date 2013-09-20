@@ -1,0 +1,7 @@
+import org.webmacro.datatable.*;
+import com.dynamide.db.*;
+
+ResourceManager rm = ResourceManager.getRootResourceManager();
+RDBDatabase db = rm.openDatabase("dynamide-mysql");
+rs = org.webmacro.datatable.ResultSetDataTable.create(db.getConnection(), "select * from swarm_actions_detail");
+print("result: "+rs);

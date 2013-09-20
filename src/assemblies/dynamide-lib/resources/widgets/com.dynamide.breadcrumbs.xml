@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<widget>
+    <componentHelp>
+     <p>Tracks where the user has been in the current session, and provides hyperlinks to previous pages.
+     <br/>Example:
+     <br/>
+        <table border='0'><tr><td><small><a href="#"><b>page1</b></a> <b>&gt;</b> <a href="#"><b>page2</b></a> <b>&gt;</b> <b>pageDone</b>
+        </small></td></tr></table>
+     </p>
+    </componentHelp>
+    <properties>
+        <property name="class"><defaultValue></defaultValue></property>
+        <property name="enabled">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+        <property name="fontColor"><defaultValue>black</defaultValue></property>
+        <property name="fontSize"><defaultValue>8pt</defaultValue></property>
+        <property name="fontWeight"><defaultValue>bold</defaultValue></property>
+        <property name="name"><defaultValue></defaultValue></property>
+        <property name="type">
+            <defaultValue>com.dynamide.breadcrumbs</defaultValue>
+            <readOnly>true</readOnly>
+        </property>
+        <property name="visible">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+    </properties>
+
+    <htmlsrc browser="*"><![CDATA[
+        <!-- generated at: $session.loadClass("com.dynamide.util.Tools").now().toString() -->
+        #if ($widget.class == ""){
+            #set $widgetStyleClass = "$widget.Name"
+            ## Stylesheet semicolons and curly braces must be escaped for webmacro
+            <style><!--
+            .$widgetStyleClass \{
+                font-family: Verdana, Geneva, Arial,Helvetica,sans-serif\;
+                font-size: $widget.fontSize\;
+                font-weight: $widget.fontWeight\;
+                color: $widget.fontColor\;
+            \}
+            --></style>
+        } #else {
+            #set $widgetStyleClass = $widget.class
+        }
+
+
+        ##This is funky.  The session should not present any links after the current page, but it does.
+        #set $doit = true
+        <small>#foreach $link in $session.VisitedPages {
+            #if ($link == $session.pageID){
+                <dm_nbsp/><span class="$widgetStyleClass">$page.title</span>  ##was $session.pageID
+                #set $doit = false
+            } #else {
+                #set $pageCaption = $session.getPageByID($link).title
+                #if ($doit){
+                    #if ($designMode == "true" || $widget.enabled == "false"){
+                        #set $thelink = "<u>$widget.caption</u>"
+                    } #else {
+                        #set $thelink = "<a class='$widgetStyleClass' href='?SESSIONID=$session.SESSIONID&amp;next=$link'>$pageCaption</a>"
+                    }
+                    $thelink<dm_nbsp/><b class="$widgetStyleClass">&gt;</b><dm_nbsp/>
+                }
+                ## was $link as the link caption.
+            }
+        }</small>
+    ]]></htmlsrc>
+</widget>

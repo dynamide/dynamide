@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<widget>
+    <properties>
+        <property name="basename">
+            <defaultValue>callout</defaultValue>
+            <hidden>true</hidden>
+        </property>
+        <property name="border">
+            <defaultValue>1</defaultValue>
+        </property>
+        <property name="borderColor">
+            <defaultValue>#00861F</defaultValue>
+        </property>
+        <property name="caption">
+            <defaultValue>callout</defaultValue>
+            <intl>1</intl>
+        </property>
+        <property name="captionField">
+            <defaultValue></defaultValue>
+        </property>
+        <property name="datasource">
+            <datatype>com.dynamide.datatypes.IDatasourceDatatype</datatype>
+            <defaultValue></defaultValue>
+        </property>
+        <property name="flavor">
+            <defaultValue>tab</defaultValue>
+        </property>
+        <property name="field">
+           <datatype>com.dynamide.datatypes.LiveEnumeratedDatatype</datatype>
+           <defaultValue>
+                <enumeration defaultIndex='0'>
+                    <value></value>  <!-- make sure there is one empty value for autocreated fields -->
+                </enumeration>
+            </defaultValue>
+           <liveEvalString>session.getFieldNames();</liveEvalString>
+        </property>
+        <property name="fontColor">
+            <defaultValue>#00861F</defaultValue>
+        </property>
+        <property name="fontSize">
+            <defaultValue>8pt</defaultValue>
+        </property>
+        <property name="labelBorder">
+            <defaultValue>1</defaultValue>
+        </property>
+        <property name="labelBorderRight">
+            <defaultValue>1</defaultValue>
+        </property>
+        <property name="type">
+            <defaultValue>com.dynamide.callout</defaultValue>
+            <readOnly>true</readOnly>
+        </property>
+        <property name="width">
+            <defaultValue>300</defaultValue>
+        </property>
+    </properties>
+
+
+<htmlsrc browser="*"><![CDATA[
+
+
+#if ($widget.flavor == "tab"){
+    <style>
+        .greenboxlabel$widget.Name \{
+           #if ($widget.labelBorder > 0) {
+                border-width: 1px\;
+                border-bottom-width: 0\;
+                border-style: solid\;
+           }
+           border-right-width: $widget.labelBorderRight\;
+           font-weight: bold\;
+           font-family : verdana, sans-serif\;
+           color : $widget.fontColor\;
+           font-size: $widget.fontSize\;
+            padding-left: 4px\;
+            padding-right: 4px\;
+         \}
+        .greenbox$widget.Name \{
+          border-width: $widget.border\;
+          border-style: solid\;
+          border-color: $widget.borderColor\;
+          text-align: left\;
+          font-size : $widget.fontSize\;
+          font-family : verdana, sans-serif\;
+          color : $widget.fontColor\;
+          padding: 4px\;
+          width: $widget.width\;
+        \}
+    </style>
+    <table border='0' cellpadding='0' cellspacing='0'>
+    <tr>
+    <td>
+        <table border='0' cellpadding='0' cellspacing='0'>
+        <tr>
+            <td>
+                <div class="greenboxlabel$widget.Name">$widget.caption</div>
+            </td>
+        </tr>
+        </table>
+        <table border='0' cellpadding='0' cellspacing='0'>
+        <tr>
+            <td>
+                <div class="greenbox$widget.Name" >
+                    $widget.value
+                </div>
+            </td>
+        </tr>
+        </table>
+    </td>
+    </tr>
+    </table>
+} #elseif ($widget.flavor == "colorbar") {
+
+  <style>
+    .colorbarBody$widget.Name \{ font-family: verdana, Arial, Helvetica, sans-serif\; font-size: 12px\; font-style: normal\; line-height: normal\; font-weight: normal\; color: $widget.fontColor  \}
+    .colorbarTD$widget.Name \{ font-family: verdana, Arial, Helvetica, sans-serif\; font-size: 12px\; font-style: normal\; line-height: normal\; font-weight: normal\; background-color: \#FFFFFF\; text-align: left\; color: \#000000 \}
+    .colorbarCaption$widget.Name \{ font-family: verdana, Arial, Helvetica, sans-serif\; font-size: 13px\; font-style: normal\;
+                        line-height: normal\; font-weight: bold\;
+                        background-color: $widget.borderColor\; text-align: left\; color: \#FFFFFF \}
+  </style>
+  <TABLE class="colorbarCaption$widget.Name"  width="$widget.width" cellpadding="3" cellspacing="1">
+    <TR>
+        #set $theCaption = "$widget.caption"
+        #if ("$widget.captionField" != ""){
+            #set $theCaption = $widget.getFieldStringValue("$widget.captionField")
+        }
+        <TD class="colorbarCaption$widget.Name">$theCaption</TD>
+    </TR>
+    <TR>
+        <TD class="colorbarTD$widget.Name" height="36">
+            <table border="0" cellspacing="3">
+            <tr>
+                <td class="colorbarBody$widget.Name">
+                $widget.value
+                </td>
+            </tr>
+            </table>
+
+        </TD>
+    </TR>
+  </TABLE>
+} #else {
+    no flavor defined for callout.
+}
+
+]]></htmlsrc>
+
+</widget>

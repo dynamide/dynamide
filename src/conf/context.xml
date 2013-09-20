@@ -1,0 +1,227 @@
+<?xml version="1.0"?>
+<!DOCTYPE context>
+<!--
+  Use this file to initialize the Root ResourceManager context
+  with any data that should be available to the whole server or process.
+
+  The file ${DYNAMIDE_ROOT}/homes/$account/context.xml
+  will also be pulled in for each account.
+-->
+<context>
+    <conf>
+        <!-- The idea here is to allow exactly one user to be a local developer, everyone else should use accounts.
+	     You need to be on the host physically for this to work.
+	-->
+	<localDeveloper
+            host="e1705"
+            user="laramie"
+            password="c"
+        />
+	<ResourceManager
+           jobMasterInterval="60000"
+           defaultLoggingDB="dynamide"
+	   loggingClass="com.dynamide.resource.Html"
+        />
+
+        <dynamide-default-lib
+            basename="com-dynamide-lib"
+            interface="1"
+        />
+        <email-server host="localhost" port="25" />
+
+        <DBConnectionPool
+           maxConnections="31"
+           idleTimeout="30"
+           checkoutTimeout="60" />
+
+        <!-- %% todo: make a virtual host table, so that request.getServerName isn't used.
+        -->
+
+        <!--
+        *     WARNING: /conf/secure affects the entire installation of
+        *     Dynamide, disabling https redirects.
+        *
+        *     You can set the /conf/secure node to have
+        *        protocol="https"
+        *     or
+        *        protocol="http"
+        *     If it is protocol="http" then the application is INSECURE.  But this is
+        *     useful for local debugging, if you don't have squid or Apache or Tomcat, etc.
+        *     set up to do SSL decription for you.
+        *
+        *     You must use one of http or https, but you may also use the host and port attributes
+        *     to redirect to a different host and port.
+        *
+        *     Defaults:
+        *        protocol: https
+        *        port:     443
+        *        host:     The one the request came in on
+        *
+        -->
+        <secure protocol="http" port="" host="apps.dynamide.com"/>
+
+        <VirtualHost-hide
+            id="app1.dynamide.com"
+            protocol="https"
+            host="secure.dynamide.com"
+            port="443"
+            protoHostPort="https://secure.dynamide.com"
+        />
+
+        <VirtualHost-hidealso
+            id="app1.dynamide.com"
+            protocol="https"
+            host="secure.dynamide.com"
+            port=""
+            protoHostPort="https://secure.dynamide.com"
+        />
+
+        <databases>
+            <net_roots_demo
+               account="dynamide"
+               name="net_roots_demo"
+               uri="jdbc:postgresql:net_roots_demo"
+               driverName="org.postgresql.Driver"
+               user="laramie"
+               password="cooper"
+            />
+            <net_roots_eb4dean
+               account="dynamide"
+               name="net_roots_eb4dean"
+               uri="jdbc:postgresql:net_roots_eb4dean"
+               driverName="org.postgresql.Driver"
+               user="laramie"
+               password="cooper"
+            />
+            <net_roots_evolve
+               account="dynamide"
+               name="net_roots_evolve"
+               uri="jdbc:postgresql:net_roots_evolve"
+               driverName="org.postgresql.Driver"
+               user="laramie"
+               password="cooper"
+            />
+            <net_roots_unity
+               account="dynamide"
+               name="net_roots_unity"
+               uri="jdbc:postgresql:net_roots_unity"
+               driverName="org.postgresql.Driver"
+               user="laramie"
+               password="cooper"
+            />
+            <net_roots_advokit
+               account="dynamide"
+               name="net_roots_advokit"
+               uri="jdbc:postgresql:net_roots_advokit"
+               driverName="org.postgresql.Driver"
+               user="laramie"
+               password="cooper"
+            />
+            <net_roots_dfatech
+               account="dynamide"
+               name="net_roots_dfatech"
+               uri="jdbc:postgresql:net_roots_dfatech"
+               driverName="org.postgresql.Driver"
+               user="laramie"
+               password="cooper"
+            />
+
+            <dynamide
+               debugSQL="true"
+               account="dynamide"
+               name="dynamide"
+               uri="jdbc:postgresql:dynamide"
+               driverName="org.postgresql.Driver"
+               user="laramie"
+               password="cooper"
+            />
+
+            <dynamide-mysql
+               account="dynamide"
+               name="dynamide"
+               uri="jdbc:mysql:///dynamide"
+               driverName="org.gjt.mm.mysql.Driver"
+               user="laramie"
+               password="cooper"
+            />
+
+            <soldierstories
+               account="dynamide"
+               name="soldierstories"
+               uri="jdbc:postgresql:soldierstories"
+               driverName="org.postgresql.Driver"
+               user="laramie"
+               password="cooper"
+            />
+            
+            <gitlocal
+               account="laramie"
+               name="gitlocal"
+               uri="jdbc:postgresql:gitlocal"
+               driverName="org.postgresql.Driver"
+               user="laramie"
+               password="cooper"
+            />
+
+            
+            <citizensvote
+               account="dynamide"
+               name="citizensvote"
+               uri="jdbc:postgresql:citizensvote"
+               driverName="org.postgresql.Driver"
+               user="laramie"
+               password="cooper"
+            />
+
+            <pfa
+               account="dynamide"
+               name="pfa"
+               uri="jdbc:postgresql:pfa"
+               driverName="org.postgresql.Driver"
+               user="laramie"
+               password="cooper"
+            />
+
+            <net_roots_pyhtp
+               account="dynamide"
+               name="net_roots_pyhtp"
+               uri="jdbc:postgresql:net_roots_pyhtp"
+               driverName="org.postgresql.Driver"
+               user="laramie"
+               password="cooper"
+            />
+
+            <net_roots_n8
+               account="dynamide"
+               name="net_roots_n8"
+               uri="jdbc:postgresql:net_roots_n8"
+               driverName="org.postgresql.Driver"
+               user="laramie"
+               password="cooper"
+                />
+
+            <anarchia
+               account="dynamide"
+               name="anarchia"
+               uri="jdbc:postgresql:anarchia"
+               driverName="org.postgresql.Driver"
+               user="root"
+               password="cooper"
+                />
+
+            <retro
+               account="dynamide"
+               name="retro"
+               uri="jdbc:postgresql:retro"
+               driverName="org.postgresql.Driver"
+               user="root"
+               password="cooper"
+                />
+
+
+
+         </databases>
+    </conf>
+</context>
+
+

@@ -1,0 +1,3 @@
+source("C:/dynamide/src/shell/dynamideShell.bs");
+s = Session.createSession("/dynamide/admin", "/dynamide/admin?USER=laramie");
+print(s.handleURL("/dynamide/admin?USER=laramie&next=debugEvent"));

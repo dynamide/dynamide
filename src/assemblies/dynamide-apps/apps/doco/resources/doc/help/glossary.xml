@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideDoco>
+<dynamideDoco pageTitle="Glossary">
+
+<definition>
+    <caption id="Assembly">Assembly</caption>
+
+    <text>
+    An assembly is a directory for your project.  Assemblies organize your applications for source control
+    and deployment.  Users have no perception of Assemblies.  Currently,
+    the Assembliy setup is automatic.  If you specify a Assembly name that is not in
+    use, Dynamide will create that Assembly when you create the first project.  Assemblies
+    allow you to easily share libraries of components between a group of applications.
+    Physically, an Assembly is a zip file or directory
+    containing an assembly.xml file in the root, and all required resources
+    to  define a set of applications or to define a library.
+    </text>
+</definition>
+
+<definition>
+    <caption id="Application">Application</caption>
+
+    <text>An application is a series of web pages that serve a common purpose.
+     You can have multiple applications within an <a href='#Assembly'>Assembly</a>.  Applications
+    always start with the same URI, such as <code>/myapp</code>  or <code>/foo/myOtherApp</code>.
+    </text>
+</definition>
+
+<definition>
+    <caption id="Session">Session</caption>
+
+    <text>When a user uses an application, they get a Session until
+    the Session times out. (The timeout is configurable.)  All values in the Session
+    are saved in memory on the webserver until the application decides to persist
+    them.  Multiple users using the same URI would get multiple Sessions.
+     Sessions are usefull for remembering user state, such as shopping cart fields.
+     Valuable data should be persisted to a datastore, but the Session can
+    pool datastore connections, etc.
+    </text>
+</definition>
+
+<definition>
+    <caption id="Page">Page</caption>
+
+    <text>A Page object produces a web page.  The contents of the web page can be dynamically
+    altered by Dynamide and your application code.  You can have an application with one Page object that
+    is modified by the data available and the user's actions.  When the Page's contents are very different,
+    it is best to design a separate Page object for each base page, and use Dynamide's page flow features to present the pages
+    in the correct order.  Pages are defined in XML files in the application directory.  The file contains
+    elements for Page properties, HTML source, ServerSide Events, and properties of Widgets dropped on the page.
+    </text>
+</definition>
+
+<definition>
+    <caption id="Widget">Widget</caption>
+
+    <text>A Widget is a component that contains a layout template, properties, and method.
+    Widgets are added to Pages.  They can be coded by hand, or built using the Dynamide IDE.
+    </text>
+</definition>
+
+
+<definition>
+    <caption id="URI">URI</caption>
+
+    <text>
+    A URI is the path portion of a URL. For example, given the URL
+    <code>        http://myhost:80/foo/bar?param=value</code>
+    the URI is
+    <code>        /foo/bar</code>
+    </text>
+</definition>
+
+
+<definition>
+    <caption id="Monolythic Assembly">Monolythic Assembly</caption>
+
+    <text>All the resources needed to run everything in an assembly -- an assembly that requires no
+    imports.  Does not include Java jar files. To create a file with
+    all required  jar files, create a WAR file from a Monolythic Assembly.  See also: <a href='#Assembly'>Assembly</a>
+    </text>
+</definition>
+
+<definition>
+    <caption id="WAR file">WAR file</caption>
+
+    <text> standard J2EE <B>W</B>eb <B>AR</B>chive.  Contains
+    all the files needed to deploy a web application to a J2EE application server.
+     These include the resource files plus all required Java jar files.
+    </text>
+</definition>
+
+<definition>
+    <caption id="Hosted Mode">Hosted Mode</caption>
+
+    <text> Using an account within Dynamide running
+    on DYNAMIDE.COM's site. See also: <a href='#Self-Hosted Mode'>Self-Hosted Mode</a>
+
+    </text>
+ </definition>
+
+<definition>
+    <caption id="Self Hosted Mode">Self Hosted Mode</caption>
+
+    <text>  Running the Dynamide server
+    on your site.  See also: <a href='#Hosted Mode'>Hosted Mode</a>
+
+    </text>
+</definition>
+
+</dynamideDoco>

@@ -1,0 +1,10 @@
+CONTEXT DUMP:
+    ##set $contextDump = "$WEBMACRO_CONTEXT.getContext().getMap().entrySet()"
+    #set $WMC = $WEBMACRO_CONTEXT.getContext().getMap().entrySet().toString()
+    #set $WMC = $WMC.substring(1, $WMC.length()-1)
+    #set $contextDump = $session.StringTools.parseSeparatedValues($WMC, ",")
+        <table border='1' cellspacing='0' cellpadding='0'>
+        #foreach $row in $contextDump {
+            <tr><td>$row </td></tr>
+        }
+        </table>

@@ -1,0 +1,587 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<dynamideForm>
+
+  <event language="beanshell" name="page1_onLoad"><![CDATA[
+  ]]></event>
+
+  <event language="beanshell" name="page1_datasource1_beforePost"><![CDATA[
+    System.out.println("@@@@@@@@@@@@@@@@@ in page1_datasource1_beforePost @@@@@@@@@@@@@");
+    widget = event.sender;          //com.dynamide.datasource.xml
+    datasource = event.inputObject; //com.dynamide.db.RDBDatasource.java
+    //datasource = widget.getObject(); //com.dynamide.db.RDBDatasource.java
+
+    row = datasource.getCurrentRow();
+    //or, directly:
+    val = datasource.getField("MAILJOBSTART").getStringValue();
+    if ( val.length()==0 ) {
+        datasource.setFieldValue("MAILJOBSTART", "2003-11-18 00:35:34.517");
+        //else datasource.getField("MAILJOBSTART").set("value", null);
+    }
+    if ( datasource.get("LASTUPDATE").length()==0 ) {
+        datasource.setFieldValue("LASTUPDATE", "2003-11-18 00:35:34.517");
+    }
+    if ( datasource.get("SWARM_ACTION").length()==0 ) {
+        datasource.setFieldValue("SWARM_ACTION", "2");
+    }
+
+  ]]></event>
+
+  <widgets>
+    <widget id="standardIncludes">
+      <properties>
+        <property name="name">
+          <value>standardIncludes</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.stdincludes</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="includes1">
+      <properties>
+        <property name="items">
+          <value>
+            <enumeration override="false" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/css/dynamide.css</item>
+            </enumeration>
+          </value>
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+        </property>
+        <property name="name">
+          <value>includes1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.includes</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="session1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.session</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="hiddenPageID">
+      <properties>
+        <property name="field">
+          <value>page</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.hidden</value>
+        </property>
+        <property name="value">
+          <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+          <value>$pageID</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="widgetstyle1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.widgetstyle</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="database1">
+      <properties>
+        <property name="dbname">
+          <value>net_roots_demo</value>
+        </property>
+        <property name="debugSQL">
+          <value>true</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.rdbdatabase</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="datasource1">
+      <properties>
+        <property name="database">
+          <value>database1</value>
+        </property>
+        <property name="insertSQL">
+            <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+            <value></value>
+        </property>
+        <property name="keyColumns">
+          <value>ID</value>
+        </property>
+        <property name="open">
+          <value>true</value>
+        </property>
+        <property name="HIDE_reloadAfterPost">
+          <value>true</value>
+        </property>
+        <property name="sql">
+          <value>select * from swarm_actions_detail order by ID;</value>
+        </property>
+        <property name="sendEmptyColumns">
+          <value>false</value>
+        </property>
+        <property name="tableName">
+          <value>swarm_actions_detail</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.rdbdatasource</value>
+        </property>
+        <property name="updateSQL">
+            <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+            <value>
+            </value>
+            <HIDEvalue>
+            UPDATE swarm_actions_detail set login='$datasource.ID'
+            WHERE ID='$currentRow.ID';
+            </HIDEvalue>
+        </property>
+      </properties>
+    </widget>
+    <widget id="editLABEL">
+      <properties>
+        <property name="align">
+          <value>right</value>
+        </property>
+        <property name="border">
+          <value></value>
+        </property>
+        <property name="caption">
+          <value>Label</value>
+        </property>
+        <property name="captionClass">
+          <value>caption</value>
+        </property>
+        <property name="captionWidth">
+          <value>100</value>
+        </property>
+        <property name="cellpadding">
+          <value>0</value>
+        </property>
+        <property name="cellspacing">
+          <value>0</value>
+        </property>
+        <property name="class">
+          <value></value>
+        </property>
+        <property name="datasource">
+          <value>datasource1</value>
+        </property>
+        <property name="enabled">
+          <value>true</value>
+        </property>
+        <property name="field">
+          <value>LABEL</value>
+        </property>
+        <property name="textClass">
+          <value></value>
+        </property>
+        <property name="textSize">
+          <value>20</value>
+        </property>
+        <property name="textWidth">
+          <value>30</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="textareaTEXT">
+      <properties>
+        <property name="caption">
+          <value>Comment</value>
+        </property>
+        <property name="captionWidth">
+          <value>100</value>
+        </property>
+        <property name="datasource">
+          <value>datasource1</value>
+        </property>
+        <property name="field">
+          <value>TEXT</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.textarea</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="dbgrid1">
+      <properties>
+        <property name="rowNumbers">
+          <value>false</value>
+        </property>
+        <property name="datasource">
+          <value>datasource1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.dbgrid</value>
+        </property>
+        <property name="columns">
+            <datatype>com.dynamide.datatypes.EnumeratedDatatype</datatype>
+            <value>
+                <enumeration>
+                    <item datatype="com.dynamide.datatypes.ColumnDatatype">
+                        <cellMacro></cellMacro>
+                        <inheritBGColor></inheritBGColor>
+                        <key>ID</key>
+                        <visible></visible>
+                    </item>
+                    <item datatype="com.dynamide.datatypes.ColumnDatatype">
+                        <caption>by caption el</caption>
+                        <captionMacro></captionMacro>
+                        <captionClickable>true</captionClickable>
+                        <cell>author cell</cell>
+                        <cellMacro>my cell for column: $column cell: $cell</cellMacro>
+                        <inheritBGColor></inheritBGColor>
+                        <key>TEXT</key>
+                        <visible></visible>
+                    </item>
+                    <item datatype="com.dynamide.datatypes.ColumnDatatype">
+                        <caption></caption>
+                        <captionMacro>captionMacroTitle2</captionMacro>
+                        <captionClickable></captionClickable>
+                        <cellMacro>cell for TITLE: $cell</cellMacro>
+                        <inheritBGColor></inheritBGColor>
+                        <key>LABel</key>
+                        <visible></visible>
+                    </item>
+                    <item datatype="com.dynamide.datatypes.ColumnDatatype">
+                        <captionClickable></captionClickable>
+                        <cellClickable>true</cellClickable>
+                        <inheritBGColor></inheritBGColor>
+                        <key>TEXT</key>
+                        <visible></visible>
+                    </item>
+                    <item datatype="com.dynamide.datatypes.ColumnDatatype">
+                        <caption><![CDATA[<dm_nbsp/>]]></caption>
+                        <captionClickable>false</captionClickable>
+                        <cellMacro><![CDATA[<a href="?rowID=$rowID">edit</a>]]></cellMacro>
+                        <key>ID</key>
+                    </item>
+                    <item datatype="com.dynamide.datatypes.ColumnDatatype">
+                        <caption><![CDATA[<dm_nbsp/>]]></caption>
+                        <captionClickable>false</captionClickable>
+                        <cellClickable>true</cellClickable>
+                        <cell>edit</cell>
+                        <key>ID</key>
+                    </item>
+                    <item datatype="com.dynamide.datatypes.ColumnDatatype">
+                        <caption><![CDATA[<dm_nbsp/>]]></caption>
+                        <cellClickable>true</cellClickable>
+                        <cellClickNavigate>true</cellClickNavigate>
+                        <cell>nav</cell>
+                        <key>ID</key>
+                    </item>
+                </enumeration>
+            </value>
+        </property>
+        <property name="visibleColumns">
+          <value></value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="dbgrid2">
+      <properties>
+        <property name="rowNumbers">
+          <value>true</value>
+        </property>
+        <property name="datasource">
+          <value>datasourceSoldierstories</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.dbgrid</value>
+        </property>
+        <property name="columns">
+            <datatype>com.dynamide.datatypes.EnumeratedDatatype</datatype>
+            <value>
+                <enumeration>
+                    <item datatype="com.dynamide.datatypes.ColumnDatatype">
+                        <key>TITLE</key>
+                        <cellClickable>true</cellClickable>
+                        <widget id="submitNewStory_gen">
+                          <properties>
+                            <property name="action">
+                              <value>newStory</value>
+                            </property>
+                            <property name="caption">
+                              <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+                              <value>$source.value</value>
+                            </property>
+                            <property name="type">
+                              <value>com.dynamide.submit</value>
+                            </property>
+                          </properties>
+                        </widget>
+                    </item>
+                    <item datatype="com.dynamide.datatypes.ColumnDatatype">
+                        <key>AUTHOR</key>
+                        <cellClickable>true</cellClickable>
+                        <widget id="editNewStory_gen_edit">
+                          <properties>
+                            <property name="caption">
+                              <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+                              <value>Author $widget.value</value>
+                            </property>
+                            <property name="datasource">
+                              <value>datasource1</value>
+                            </property>
+                            <property name="field">
+                              <value>AUTHOR</value>
+                            </property>
+                            <property name="fieldIndex">
+                              <value>-1</value>
+                            </property>
+                            <property name="type">
+                              <value>com.dynamide.edit</value>
+                            </property>
+                          </properties>
+                        </widget>
+                    </item>
+                    <item datatype="com.dynamide.datatypes.ColumnDatatype">
+                        <key>AUTHOR</key>
+                        <cellClickable>true</cellClickable>
+                        <widget id="editNewStory_gen_cb">
+                          <properties>
+                            <property name="caption">
+                              <value>CB</value>
+                            </property>
+                            <property name="datasource">
+                              <value>datasource1</value>
+                            </property>
+                            <property name="field">
+                              <value>ID</value>
+                            </property>
+                            <property name="fieldIndex">
+                              <value>-1</value>
+                            </property>
+                            <property name="type">
+                              <value>com.dynamide.checkbox</value>
+                            </property>
+                          </properties>
+                        </widget>
+                    </item>
+                    <item datatype="com.dynamide.datatypes.ColumnDatatype">
+                        <caption><![CDATA[<dm_nbsp/>]]></caption>
+                        <cellClickable>true</cellClickable>
+                        <cell>edit</cell>
+                        <key>ID</key>
+                    </item>
+                    <item datatype="com.dynamide.datatypes.ColumnDatatype">
+                        <caption>ID</caption>
+                        <cellClickable>false</cellClickable>
+                        <cell></cell>
+                        <key>ID</key>
+                    </item>
+                </enumeration>
+            </value>
+        </property>
+        <property name="visibleColumns">
+            <datatype>com.dynamide.datatypes.EnumeratedDatatype</datatype>
+            <value>
+                <enumeration>
+                    <item datatype="java.lang.String">TITLE</item>
+                    <item datatype="java.lang.String">AUTHOR</item>
+                </enumeration>
+            </value>
+        </property>
+        <property name="linkColumns">
+            <datatype>com.dynamide.datatypes.EnumeratedDatatype</datatype>
+            <value>
+                <enumeration>
+                    <item>TITLE</item>
+                    <item>AUTHOR</item>
+                </enumeration>
+            </value>
+        </property>
+        <property name="linkHeaderColumns">
+            <datatype>com.dynamide.datatypes.EnumeratedDatatype</datatype>
+            <value>
+                <enumeration>
+                    <item datatype="java.lang.String">ID</item>
+                    <item datatype="java.lang.String">TITLE</item>
+                    <item datatype="java.lang.String">AUTHOR</item>
+                    <item datatype="java.lang.String">TEXT</item>
+                </enumeration>
+            </value>
+        </property>
+        <property name="width">
+          <value>80%</value>
+        </property>
+
+      </properties>
+    </widget>
+    <widget id="rdbnavigator1">
+      <properties>
+        <property name="datasource">
+          <value>datasource1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.rdbnavigator</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="submit1">
+      <properties>
+        <property name="action">
+          <value>doSubmitThing</value>
+        </property>
+        <property name="caption">
+          <value>Submit Me!</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="databaseSoldierstories">
+      <properties>
+        <property name="dbname">
+          <value>soldierstories</value>
+        </property>
+        <property name="debugSQL">
+          <value>true</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.rdbdatabase</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="datasourceSoldierstories">
+      <properties>
+        <property name="database">
+          <value>databaseSoldierstories</value>
+        </property>
+        <property name="tableName">
+          <value>stories</value>
+        </property>
+        <property name="keyColumns">
+          <value>ID</value>
+        </property>
+        <property name="open">
+          <value>true</value>
+        </property>
+        <property name="sql">
+          <value>select * from stories;</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.rdbdatasource</value>
+        </property>
+        <property name="hideinsertSQL">
+            <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+            <value>
+            INSERT into stories (author, text, title)
+            VALUES ('$currentRow.AUTHOR', '$currentRow.TITLE', '$currentRow.TEXT');
+            </value>
+        </property>
+        <property name="updateSQL">
+            <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+            <value></value>
+        </property>
+      </properties>
+    </widget>
+
+
+  </widgets>
+
+  <htmlsrc isWebMacro="true" browser="*"><![CDATA[
+  <HTML>
+  <HEAD>
+    <TITLE>$page.title</TITLE>
+    <SPAN class="widget" id="standardIncludes"/>
+    <SPAN class="widget" id="includes1"/>
+    <SPAN class="widget" id="widgetstyle1"/>
+  <style>
+    BODY {margin: 10px; border: 0px; padding: 0px; }
+    .grab {color: green; text-decoration: underline; font: 14px; font-family: Arial, Helvetica; font-weight: bold; }
+    .grab:active {color: green; text-decoration: underline; font: 14px; font-family: Arial, Helvetica; font-weight: bold; }
+    .grab:hover {color: \#FF9933; text-decoration: underline; font: 14px; font-family: Arial, Helvetica; font-weight: bold; }
+  </style>
+  </HEAD>
+<BODY id="page1"
+  bgColor="white" name="page1">
+  <FORM name="mojoForm" accept-charset="UNKNOWN" action="$session.applicationPath" method="get" encType="application/x-www-form-urlencoded">
+    <SPAN class="widget" id="datasource1"/>
+    <SPAN class="widget" id="database1"/>
+    <SPAN class="widget" id="session1"/>
+    <SPAN class="widget" id="hiddenPageID"/>
+    <h2>Custom Columns</h2>
+    <p>See: $session.link("next=page1", "grid with automatic columns")
+    </p>
+    <p>See: $session.link("next=pageGridColumns&mode=widgetGrid", "grid with generated Widgets")
+    </p>
+    <p>In the top portion are wired fields.  Press submit to update the current row.
+    In the bottom portion is a dbgrid and an rdbnavigator.  Use INSERT to insert a row,
+    then use POST to post changes either to inserts or edits made with controls on the top.
+    For a new session <a href="?USER=laramie">click here</a>.
+
+    </p>
+    <table border='0' cellpadding='4' cellspacing='0'>
+      <tr>
+        <td>
+    <SPAN class="widget" id="editLABEL"/>
+        </td>
+      </tr>
+      <tr>
+        <td>
+    <SPAN class="widget" id="textareaTEXT"/>
+        </td>
+      </tr>
+      <tr>
+        <td>
+    <center>
+    <SPAN class="widget" id="submit1"/>
+    </center>
+        </td>
+      </tr>
+    </table>
+    <hr />
+    <center>
+    <SPAN class="widget" id="rdbnavigator1"/>
+    #if ($session.getQueryParam("mode") == "widgetGrid"){
+        <br />
+        <SPAN class="widget" id="dbgrid2"/>
+    } #else {
+        <br />
+        <SPAN class="widget" id="dbgrid1"/>
+    }
+    </center>
+
+  </FORM>
+  </BODY>
+</HTML>
+]]></htmlsrc>
+  <properties>
+    <property name="formAction">
+      <value></value>
+    </property>
+    <property name="formName">
+      <value></value>
+    </property>
+    <property name="lastSave">
+      <value>1050462205141</value>
+      <readOnly>true</readOnly>
+      <datatype>java.util.Date</datatype>
+    </property>
+    <property name="margin">
+      <value>0</value>
+      <eval>document.body.margin = "$page.margin";alert('hi');document.body.bgcolor='blue';</eval>
+    </property>
+    <property name="name">
+      <value>page1</value>
+      <readOnly>true</readOnly>
+    </property>
+    <property name="onLoad" isEvent="true">
+      <value>page1_onLoad</value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+    <property name="title">
+      <value>dbgrid test</value>
+      <intl>1</intl>
+    </property>
+    <property name="type">
+      <value>pagetypes/com.dynamide.form</value>
+      <readOnly>true</readOnly>
+    </property>
+  </properties>
+</dynamideForm>

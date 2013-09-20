@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<widget>
+    <componentHelp>
+     <p>A tree control for IE5.5+ and NS 6+.</p>
+    </componentHelp>
+    <properties>
+        <property name="class"><defaultValue></defaultValue></property>
+        <property name="name"><defaultValue></defaultValue></property>
+        <property name="spacing"><defaultValue>50</defaultValue></property>
+        <property name="type">
+            <defaultValue>com.dynamide.tree</defaultValue>
+            <readOnly>true</readOnly>
+        </property>
+        <property name="visible">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+    </properties>
+
+    <htmlsrc browser="*"><![CDATA[
+
+    ## This file also depends heavily on com.dynamide.treenode.wm
+
+    ## Stylesheet semicolons and curly braces must be escaped for webmacro
+    <style><!--
+        .open \{cursor: hand\; color: red\; display:''\}
+        .closed \{cursor: hand\; color: blue\; display:none\}
+    --></style>
+    <script language="JavaScript1.2">
+    <!--
+    var ns6=document.getElementById&&!document.all?1:0
+
+    #set $imgPlusSrc = $session.getInclude("resources/images/plus.jpg")
+    #set $imgMinusSrc = $session.getInclude("resources/images/minus.jpg")
+    //These are just to force a preload.  They aren't used by ref. And they don't affect the image swapping.
+    img1src = new Image();
+    img1src.src = "$imgPlusSrc";
+    img2src = new Image();
+    img2src.src = "$imgMinusSrc";
+
+    function expandit(plusID, objID){
+      curobj = document.getElementById(objID);
+      if (curobj.className == "closed"){
+        curobj.className = "open"
+        showplus(plusID, "0");
+      } else {
+        curobj.className = "closed"
+        showplus(plusID, "1");
+      }
+    }
+    function showplus(plusname, p){
+      theImg=document.getElementById(plusname);
+      if (p=="1") {
+          theImg.setAttribute("src","$imgPlusSrc"); ##imgPlusSrc defined above
+      } else {
+          theImg.setAttribute("src","$imgMinusSrc"); ##imgMinusSrc defined above
+      }
+      var scr = "replus('"+plusname+"');"
+      setTimeout(scr, 1);
+    }
+
+    function replus(plusname){
+      theImg=document.getElementById(plusname);
+      theImg.setAttribute("src",theImg.getAttribute("src"));
+    }
+
+    function nada(){
+    }
+    //-->
+    </script>
+
+
+    ##Hmmm, something like this:
+    #set $tree = $session.loadWidetBean("com.dynamide.widgetbeans.TreeBean")
+    #if ($tree != null){
+        #set $root = $tree.createTestTree()
+        $root.dive("1",$widget, $session)    ##The bean relies heavily on resources/widgets/com.dynamide.treenode.wm
+    }
+
+    ]]></htmlsrc>
+</widget>

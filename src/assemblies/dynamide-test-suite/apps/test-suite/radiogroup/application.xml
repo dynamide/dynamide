@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm >
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<application>
+
+  <fields href="fielddefs.xml"></fields>
+
+<properties>
+    <property name='imports'>
+            <datatype>com.dynamide.datatypes.Enumeration</datatype>
+            <value>
+                <enumeration defaultIndex='0'>
+                    <item datatype="com.dynamide.datatypes.Version">
+                        <basename>com-dynamide-lib</basename>
+                        <interface>1</interface>
+                        <build>59+</build>
+                    </item>
+                    <item datatype="com.dynamide.datatypes.Version">
+                        <basename>com-foobar-lib</basename>
+                        <interface>2</interface>
+                        <build>8+</build>
+                    </item>
+                    <item datatype="com.dynamide.datatypes.Version">
+                        <basename>com-acme-apps</basename>
+                        <interface>1</interface>
+                        <build>9+</build>
+                    </item>
+                </enumeration>
+            </value>
+            <helpTip>Imports defined for this Application</helpTip>
+        </property>
+    <property name='applicationID'>
+            <value>test-suite-radiogroup</value>
+        </property>
+  </properties>
+
+  <event language="beanshell" name="application_onImport">
+  <![CDATA[
+        import java.util.*;
+        import java.io.*;
+        import com.dynamide.*;
+        import com.dynamide.util.*;
+        import com.dynamide.datatypes.*;
+        import org.jdom.*;
+  ]]></event>
+
+  <event language="beanshell" name="application_onStart">
+  <![CDATA[
+        //System.out.println("\r\n\r\n\r\n=================== Starting /dynamide/test2 Session: "+event.session.getSessionID()+" ==============");
+  ]]>
+  </event>
+
+  <event language="beanshell" name="application_queryNextPage">
+  <![CDATA[
+         //always show this one until more pages are added:
+         event.nextPageID = "page1";
+  ]]>
+  </event>
+
+  <pages>
+    <page name="page1"></page>
+  </pages>
+
+</application>

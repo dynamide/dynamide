@@ -1,0 +1,4 @@
+ ## here is an example of how to create a Dynamide Session from webmacro,
+ ## give a reference to a ResourceManager object, $res:
+
+ #set $session = $res.createSession("/dynamide/doco");

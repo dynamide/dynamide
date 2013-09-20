@@ -1,0 +1,179 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Created with Dynamide from DYNAMIDE.COM -->
+<dynamideForm>
+
+
+<properties>
+    <property name="title">
+      <value>Sessions</value>
+      <intl>1</intl>
+      <eval>
+      document.title = "$page.title";
+
+      </eval>
+    </property>
+    <property name="sessionDetailBaseURL">
+      <defaultValue></defaultValue>
+      <value></value>
+    </property>
+    <property name="type">
+      <value>pagetypes/com.dynamide.page</value>
+      <readOnly>true</readOnly>
+    </property>
+</properties>
+
+<event language="beanshell" name="xsessionsPage_beforeOutput">
+<![CDATA[
+    event.session.fireApplicationEvent("application_setBaseURLs");
+    System.out.println("in sessionsPage_beforeOutput");
+
+]]>
+</event>
+
+<event language="beanshell" name="xsessionsPage_onAction">
+<![CDATA[
+    System.out.println("in sessionsPage_onAction");
+    content = "<html><body>Foooo Barrrr Example Content</body></html>";
+    event.returnSource(content);
+]]>
+</event>
+
+<event language="beanshell" name="sessionsPage_beforeOutput">
+<![CDATA[
+//mojo
+]]>
+</event>
+
+<event language="beanshell" name="sessionsPage_onAction">
+<![CDATA[
+]]>
+</event>
+
+<htmlsrcfoo browserid="mojo"><![CDATA[
+<HTML>
+<HEAD>
+
+NOTE: browserid trick doesn't work.
+    <TITLE>static</TITLE>
+</HEAD>
+<BODY bgcolor='#A4BFDD'>
+static page 1.4
+</BODY>
+</HTML>
+]]></htmlsrcfoo>
+
+<htmlsrc><![CDATA[
+<HTML>
+<HEAD>
+    <TITLE>$page.title</TITLE>
+    $session.getInclude("resources/css/ide.css")
+    $session.getInclude("resources/css/admin.css")
+</HEAD>
+<BODY bgcolor='#A4BFDD'>
+#macro nbsp($c){
+#if($c==""){<dm_nbsp/>}#else{$c}
+}
+    <table border="0" cellpadding="0" cellspacing="0" >
+    <tr>
+    <td valign="top">
+     <b>Sessions</b>
+     #set $href=$session.getAppURL("next=sessionsPage")
+     #set $hrefMain=$session.getAppURL("next=adminMain")
+     #set $hrefAudit=$session.getAppURL("next=audit")
+     <dm_nbsp/><dm_nbsp/><dm_nbsp/>[<a href="$href">refresh</a>]
+     <dm_nbsp/>[<a href="$hrefAudit">Audit</a>]
+     <dm_nbsp/>[<a href="$hrefMain">Admin Main</a>]
+
+    </td>
+    </tr>
+    </table>
+    <hr/>
+    <table border="0" cellpadding="5" cellspacing="0">
+      <tr>
+        <td valign="top" colspan='2'>
+            #set $sortAsc = $session.getQueryParam("sortAsc")
+            #set $newSortOrder = "1"
+            #if ($sortAsc == "1"){
+                #set $newSortOrder = "0"
+            }
+            <table bgcolor="white" border='1' cellpadding='4' cellspacing='0'>
+            <TR bgcolor="#BBBBBB">
+            <TH>$session.link("sortKey=USER&amp;sortAsc=$newSortOrder", "User")</TH>
+            ##<TH>Machine</TH>
+            <TH>$session.link("sortKey=applicationPath&amp;sortAsc=$newSortOrder", "Program")</TH>
+            <TH>Info</TH>
+            <TH>ID</TH>
+            <TH>Close</TH>
+            <TH>$session.link("sortKey=currentPageID&amp;sortAsc=$newSortOrder", "Current Page")</TH>
+            <TH>$session.link("sortKey=modeString&amp;sortAsc=$newSortOrder", "Modes")</TH>
+            <TH>$session.link("sortKey=pooled&amp;sortAsc=$newSortOrder", "Pool")</TH>
+            <TH>$session.link("sortKey=hits&amp;sortAsc=$newSortOrder", "Hits")</TH>
+            <TH>$session.link("sortKey=startTime&amp;sortAsc=$newSortOrder", "Running")</TH>
+            <TH>$session.link("sortKey=lastAccessTime&amp;sortAsc=$newSortOrder", "Last Access")</TH>
+            </TR>
+
+            #set $sortKey = $session.getQueryParam("sortKey")
+            #set $ss = $session.getResourceManager().find("/homes/dynamide/sessions")
+            #set $sortedMap = $session.getAttribute("Admin").sortSessionTable($ss, $sortKey, $sortAsc )
+            #foreach $t in $sortedMap.entrySet() {
+                #set $s = $t.getValue()
+                ##set $targetID = $t.getKey()
+                #set $targetID = $s.getSessionID()
+                #set $adminRowColor = "white"
+                #if ($targetID == $SESSIONID){
+                    #set $adminRowColor="#DDDDDD"
+                }
+                <tr bgcolor="$adminRowColor">
+                <!--<td><b><i>key: $t.getKey()</i></b>
+                </td>-->
+                     <td>#nbsp($s.USER)
+                ##</td><td>$s.getHostName()
+                </td><td>$s.getAttachToLink()
+                </td><td>$session.link("next=sessionDetailPage&amp;showSessionObjectDetail=1&amp;SUBSESSIONID=$(targetID)", "info")
+                </td><td><a href="javascript:alert('SESSIONID: $(targetID)');">ID</a>
+                </td><td>
+                   #if ("$SESSIONID" == "$targetID"){
+                       $session.link("action=Close", "close")
+                   } #else {
+                       $session.link("action=closeSubsession&amp;SUBSESSIONID=$(targetID)", "close")
+                   }
+                </td><td>#nbsp($s.getCurrentPageID())
+                </td><td><code>$s.getModeListing()</code>
+                </td><td>#if ($s.getString("poolable") == "true") {
+                            #if ($s.getPooled()) {
+                                <b><font color="green">true</font></b>
+                            } #else {
+                                <b><font color="red">busy</font></b>
+                            }
+                        } #else {
+                           false
+                        }
+                </td><td>$s.getHits()
+                </td><td>$session.Tools.formatUptime($s.getStartTime())
+                </td><td>$session.Tools.dateLongToLocale($s.getLastAccessTime())
+                </td>
+                </tr>
+            }
+            </table>
+
+            <br/>
+        </td>
+      </tr>
+    </table>
+    <br />
+    <a href="#top">top</a>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+     <dm_nbsp/>[$session.link("closeAllSessions=1", "Close All (other) Sessions")]
+
+</BODY>
+</HTML>
+]]></htmlsrc>
+
+
+<widgets>
+</widgets>
+</dynamideForm>

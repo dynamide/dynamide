@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm >
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<application>
+  <properties/>
+  <fields href="wrong-fielddefs.xml"></fields>
+</application>

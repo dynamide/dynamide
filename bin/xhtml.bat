@@ -1,0 +1,1 @@
+@\dynamide\bin\bsh.bat C:\dynamide\bin\xhtml.bs %*

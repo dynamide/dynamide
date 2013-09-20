@@ -1,0 +1,98 @@
+<!--
+  To make a standard xsl stylesheet out of this unit, run it through XSLScript:
+  xslsdump doco.xsls
+  and send the output to doco.xsl
+
+  Note you could also have the default rule use
+    processing-instruction()
+
+  You must define your own top level xsl and import this file.
+
+-->
+X:transform {
+
+    X:preserve-space elements="*";
+
+    X:output method="xml" omit-xml-declaration="yes" indent="no";
+
+    X:template = "exampleHTML" {
+        <blockquote>
+        <table border='1' cellpadding='25' cellspacing='0' bgcolor="#DDDDDD">
+          <tr>
+            <td>
+                !!;
+            </td>
+          </tr>
+        </table>
+        </blockquote>
+    }
+
+    X:template = "example" {
+        <style>
+        .nospace \{font-size: 0.8em; margin:0; padding:0; border:0;  \}
+        </style>
+
+        <blockquote>
+        <table border='1' cellpadding='5' cellspacing='0' bgcolor="#DDDDDD">
+          <tr>
+            <td>
+             <pre class='nospace'><font color='brown'><xsl:value-of select="."/></font></pre>
+            </td>
+          </tr>
+        </table>
+        </blockquote>
+    }
+
+    X:template = "definition" {
+         <p>
+         !!;
+         </p>
+         <table border='0' cellpadding='0' cellspacing='20'>
+           <tr>
+             <td height='5' width='5' bgcolor='green'>
+             </td>
+             <td height='5' width='5' bgcolor='green'>
+             </td>
+             <td height='5' width='5' bgcolor='green'>
+             </td>
+             <td height='5' width='5' bgcolor='green'>
+             </td>
+           </tr>
+         </table>
+    }
+
+    X:template = "definition/caption" {
+        <a>
+            <xsl:attribute name="name"><xsl:value-of select="./@id"/></xsl:attribute>
+        </a>
+        <span class='definitionCaption'>
+        !!;
+        </span>
+    }
+
+    X:template = "definition/caption"  mode="toc" {
+        <a>
+            <xsl:attribute name="href">#<xsl:value-of select="./@id"/></xsl:attribute>
+            <xsl:value-of select="."/>
+        </a><br/>
+    }
+
+    X:template = "definition/text"  mode="toc" {
+    }
+
+    X:template = "definition/text" {
+        <div class='contentsItem'>
+        !!;
+        </div>
+    }
+
+
+    X:template = "*|@*|text()|comment()|processing-instruction()" {
+        <xsl:copy>
+          <xsl:copy-of select="@*" />
+          !!;
+        </xsl:copy>
+    }
+
+
+}

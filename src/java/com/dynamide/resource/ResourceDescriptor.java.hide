@@ -1,0 +1,85 @@
+package com.dynamide.resource;
+
+import java.util.*;
+
+import com.dynamide.security.User;
+import com.dynamide.security.Group;
+
+import com.dynamide.resource.Pool;
+import com.dynamide.resource.IResource;
+import com.dynamide.resource.ResourceType;
+
+
+public class ResourceDescriptor
+implements IResource {
+
+    public ResourceDescriptor(){
+    }
+
+
+    public void setPermissions(java.security.Permissions permissions)
+    throws SecurityException {
+
+    }
+
+    public void lockPermissions(java.security.Permissions permissions)
+    throws SecurityException {
+
+    }
+
+    private Object m_resource = null;
+    public Object getResource(){return m_resource;}
+    public void setResource(Object new_value)
+    throws SecurityException {
+        m_resource = new_value;
+    }
+
+    private String  m_key = "";
+    public String  getKey(){return m_key;}
+    public void setKey(String  new_value){m_key = new_value;}
+
+    private User m_user = new User(User.ANONYMOUS);
+    public User getUser(){
+        return m_user;
+    }
+    public void setUser(User new_user)
+    throws SecurityException {
+        m_user = new_user;
+    }
+
+    private Group m_group = new Group(Group.ANONYMOUS);
+    public Group getGroup(){
+        return m_group;
+    }
+    public void setGroup(Group new_group)
+    throws SecurityException {
+        m_group = new_group;
+    }
+
+    private long m_timeout = Pool.DEFAULT_POOL_TIMEOUT;
+    public long getTimeout(){
+        return m_timeout;
+    }
+    public void setTimeout(long new_timeout)
+    throws SecurityException {
+        m_timeout = new_timeout;
+    }
+
+    public Object getPermission(String permissionName){
+        Object obj;
+        if ( m_resourceType != null && (obj = m_resourceType.getPermission(permissionName)) != null ) {
+            return obj;
+        }
+        return null;
+    }
+
+    private ResourceType m_resourceType = new ResourceType("StringResource");
+    public ResourceType getResourceType(){
+        return m_resourceType;
+    }
+    public void setResourceType(ResourceType new_resourceType)
+    throws SecurityException {
+        m_resourceType = new_resourceType;
+    }
+
+}

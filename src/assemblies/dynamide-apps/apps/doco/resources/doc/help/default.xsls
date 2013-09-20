@@ -1,0 +1,25 @@
+<!--
+  To make a standard xsl stylesheet out of this unit, run it through XSLScript:
+  xslsdump doco.xsls
+  and send the output to doco.xsl
+
+  Use this file to make Dynamide doco if you have no special xsl requirements.
+  This file calls the standard doco.xsls to pull in global definitions.
+  It is assumed that you will take the output and wrap html and body tags around it,
+  by using the com.dynamide.xsl widget on a page.
+
+  Note: in Xalan, xsl:include works, while xsl:import ignores things I import.  It does read the file, however.
+  So I've changed to include.
+-->
+X:transform {
+    X:include href="doco.xsl";
+
+   X:preserve-space elements="*";
+
+    X:output method="xml" omit-xml-declaration="yes" indent="no";
+
+    X:template = "/dynamideDoco" {
+        <!--link rel="stylesheet"  SRC="/com/dynamide/doc/dynamidedoco.css" href="/com/dynamide/doc/dynamidedoco.css"></link-->
+        !!;
+    }
+}

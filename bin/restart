@@ -1,0 +1,4 @@
+$DYNAMIDE_HOME/bin/resin-dynamide.sh restart; tail -f /export/logs/dynamide/resin.out
+
+
+

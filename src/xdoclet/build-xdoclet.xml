@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+
+<project name="XDoclet Examples" default="laramie" basedir=".">
+    <property name="xdoclet.lib.dir" value="c:/bin/xdoclet/lib"/>
+    <property name="dynamide.lib.dir" value="../../lib"/>
+    <property name="dynamide.src.dir" value="../../src/java"/>
+    <property name="dynamide.output.dir" value="../../build"/>
+
+    <!-- Include the build-dist properties. Since properties are immutable,
+    this will not override available properties. You do not have to include
+    this in your own build file. -->
+    <property file="build-dist.properties"/>
+
+    <!-- =================================================================== -->
+    <!-- Define the class path                                               -->
+    <!-- =================================================================== -->
+    <path id="samples.class.path">
+        <fileset dir="${xdoclet.lib.dir}">
+            <include name="*.jar"/>
+        </fileset>
+        <fileset dir="${dynamide.lib.dir}">
+            <include name="*.jar"/>
+        </fileset>
+        <pathelement location="${dynamide.output.dir}/classes" />
+    </path>
+
+    <!-- =================================================================== -->
+    <!-- Initialise                                                          -->
+    <!-- =================================================================== -->
+    <target name="init">
+        <tstamp>
+            <format property="TODAY" pattern="d-MM-yy"/>
+        </tstamp>
+        <taskdef
+            name="xdoclet"
+            classname="xdoclet.DocletTask"
+            classpathref="samples.class.path"
+            />
+    </target>
+
+    <!-- =================================================================== -->
+    <!-- Prepares the directory structure                                    -->
+    <!-- =================================================================== -->
+    <target name="prepare" depends="init">
+        <mkdir dir="${dynamide.output.dir}/xdoclet"/>
+        <mkdir dir="${dynamide.output.dir}/web-xdoclet"/>
+    </target>
+
+
+    <!-- =================================================================== -->
+    <!-- Process Dynamide                                                   -->
+    <!-- =================================================================== -->
+    <target name="all" depends="prepare">
+
+        <echo>lib: ${dynamide.lib.dir}</echo>
+        <delete dir="${dynamide.output.dir}/xdoclet/all"/>
+        <mkdir  dir="${dynamide.output.dir}/xdoclet/all"/>
+
+        <xdoclet
+            destdir="${dynamide.output.dir}/xdoclet/all"
+            mergedir="parent-fake-to-debug"
+            excludedtags="@version,@author"
+            addedtags="@xdoclet-generated at ${TODAY},@copyright The XDoclet Team,@author XDoclet,@version ${version},@todo,@dynamide.keymethod"
+            force="$false"
+            verbose="true"
+
+            >
+            <fileset dir="${dynamide.src.dir}">
+                <include name="**/Session.java"/>
+                <exclude name="**/*Tools.java"/>
+            </fileset>
+            <template destinationFile="{0}.txt"
+                      destDir="${dynamide.output.dir}/xdoclet/all"
+                      templateFile="./keymethods.xdt">
+            </template>
+
+
+        </xdoclet>
+
+    </target>
+
+    <target name="key" depends="prepare">
+
+        <delete dir="${dynamide.output.dir}/xdoclet/key"/>
+        <mkdir  dir="${dynamide.output.dir}/xdoclet/key"/>
+
+        <xdoclet
+            destdir="${dynamide.output.dir}/xdoclet/key"
+            excludedtags="@version,@author"
+            addedtags="@xdoclet-generated at ${TODAY},@copyright The XDoclet Team,@author XDoclet,@version ${version},@todo,@dynamide.keymethod"
+            force="$false"
+            verbose="true"
+            >
+            <fileset dir="${dynamide.src.dir}">
+                <include name="com/dynamide/Session.java"/>
+                <exclude name="**/*Tools.java"/>
+            </fileset>
+            <template destinationFile="{0}.txt"
+                      destDir="${dynamide.output.dir}/xdoclet/key"
+                      templateFile="./keymethods.xdt">
+            </template>
+
+
+        </xdoclet>
+
+    </target>
+
+
+
+
+</project>

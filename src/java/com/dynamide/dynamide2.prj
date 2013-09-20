@@ -1,0 +1,30 @@
+FILES.DB
+FN=C:\doc.lar\Laramie.todo
+FN=C:\java\com\dynamide\gui\IDE.java
+FN=C:\java\com\dynamide\gui\IDEMain.java
+FN=c:\temp\scratch.txt
+FN=com\dynamide\build.xml
+FN=com\dynamide\gui\AbstractView.java
+ASSOCIATE.DB
+URL.DB
+VERSION.DB
+NUM=13
+PROJECT.CFG
+/GS=!PrjRootPath=
+/GS=!PrjFtpHost=
+/GS=!PrjFtpUser=
+/GS=!PrjFtpPass=
+/GS=!PrjFtpRoot=/
+/GS=!PrjSearchPath=C:\java\com\dynamide\ C:\java\com\dynamide\event C:\java\com\dyanmide\gui C:\java\com\dynamide\doc C:\java\com\dynamide\doc\internal C:\java\Dynamide\demo
+/GI=!PrjFtpMode=0
+/GS=TagPath=C:\java\com\dynamide\
+/GS=!Wl_CCPath=
+/GS=!PrjBuildEnv=
+/GS=!PrjDebugEnv=
+/GS=!PrjReleaseMake=
+/GS=!PrjDebugMake=Dynamide Ant (debug)
+/GS=!PrjReleaseBuild=
+/GS=!PrjDebugBuild=
+/GS=!PrjDebug=Run Dynamide IDE
+/GI=!PrjSortStyle=1
+/GI=!PrjSortAscend=1

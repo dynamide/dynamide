@@ -1,0 +1,310 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<application>
+  <fields href="fielddefs.xml"></fields>
+  <pages>
+    <page name="main" default="true"></page>
+    <page name="about" ></page>
+  </pages>
+
+  <properties>
+    <property name="applicationID">
+      <value>com.dynamide.apps.doco</value>
+    </property>
+
+    <property name="poolable">
+      <value>true</value>
+    </property>
+
+    <property name="poolMax">
+      <value></value>
+    </property>
+
+
+    <property name="publishParams">
+      <datatype>com.dynamide.datatypes.PublishParamsDatatype</datatype>
+      <value>
+          <URL></URL>
+          <URIPrefix></URIPrefix>
+          <protocolHostPort></protocolHostPort>
+          <defaultExtension>.html</defaultExtension>
+          <publishPagesList>false</publishPagesList>
+          <hideApplicationPath>false</hideApplicationPath>
+      </value>
+    </property>
+
+    <property name="publishURLs">
+      <value>
+        <enumeration override="true" defaultIndex="0">
+            <item>$session.applicationPath/index</item>
+            <item>$session.applicationPath/doc/help/assemblies</item>
+            <item>$session.applicationPath/doc/help/dynamide-overview</item>
+            <item>$session.applicationPath/doc/help/dynamide-variables-methods</item>
+            <item>$session.applicationPath/doc/help/FAQ</item>
+            <item>$session.applicationPath/doc/help/feature-list</item>
+            <item>$session.applicationPath/doc/help/getting-started</item>
+            <item>$session.applicationPath/doc/help/glossary</item>
+            <item>$session.applicationPath/doc/help/index</item>
+            <item>$session.applicationPath/doc/help/internal/cvs-tags</item>
+            <item>$session.applicationPath/doc/help/security</item>
+        </enumeration>
+      </value>
+      <datatype>com.dynamide.datatypes.Enumeration</datatype>
+    </property>
+
+
+
+
+    <!-- examples:
+       <value></value> - don't use a prefix at all.  The Application URI will be the base URI e.g. /dynamide/demo
+       <value>/myprefix</value>  - use /myprefix, e.g. /myprefix/dynamide/demo
+    -->
+    <!--publishParams.URI is if you wish to replace the normal applicationPath.  TODO: figure
+        out how to make this absent.   May need a separate boolean property, or just use ""
+        as the property value if you want the empty string.
+    -->
+    <property name="publishResourceRootTEST">
+      <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+      <value>$session.getRootResourceManager().getResourceRoot()</value>
+    </property>
+
+    <property name="beforePublish" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+
+    <property name="onPublish" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+
+    <property name="afterPublish" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+
+    <property name="defaultLanguageCode">
+      <value>en-us</value>
+    </property>
+    <property name="lastSave">
+      <value>1027535032860</value>
+      <readOnly>true</readOnly>
+      <datatype>java.util.Date</datatype>
+    </property>
+    <property name="onAction" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+    <property name="onClose" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+    <property name="onImport" isEvent="true">
+      <value>application_onImport</value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+    <property name="onStart" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+    <property name="title">
+      <value>Doco Title</value>
+    </property>
+    <property name="type">
+      <value>com.dynamide.Session</value>
+      <readOnly>true</readOnly>
+    </property>
+  </properties>
+
+  <event language="beanshell" name="application_beforePublish"><![CDATA[
+       System.out.println("================  in application_beforePublish");
+       session.setStdoutEcho(true);
+  ]]></event>
+
+  <event language="beanshell" name="application_afterPublish"><![CDATA[
+       System.out.println("================ DONE publishing app. in application_afterPublish");
+  ]]></event>
+
+  <event language="beanshell" name="application_onPublishOld"><![CDATA[
+        System.out.println("=============== application_onPublish =============");
+        rm = session.getResourceManager();
+        publishParams = session.getPublishParams();
+        String publishURIPrefix = publishParams.getURIPrefix();
+        String publishProtocolHostPort = publishParams.getProtocolHostPort();
+        String publishDefaultExtension = publishParams.getDefaultExtension();
+        String publishOutputDir = publishParams.getOutputDir();
+        String pagePublishOutputDir = publishOutputDir;
+
+        //stored there by the Session:
+        String publishPrefix = session.getFieldStringValue("publishPrefix");
+
+        main = session.getPageByID("main");
+        Widget xslDocs = event.session.find("main.xslDocs");
+        String appURL = session.getApplicationPath(); // e.g. "/dynamide/doco"
+        String[] paths = {"/doc/help/assemblies",
+                          "/doc/help/dynamide-overview",
+                         "/doc/help/dynamide-variables-methods",
+                         "/doc/help/FAQ",
+                         "/doc/help/feature-list",
+                         "/doc/help/getting-started",
+                         "/doc/help/glossary",
+                         "/doc/help/index",
+                         "/doc/help/internal/cvs-tags",
+                         "/doc/help/security"};
+       int len = paths.length;
+       String holdStatus = session.getPublishStatus();
+       workflowResult = event.inputObject;
+       workflowResult.addStatusMessage("Publishing /dynamide/doco");
+       for (int i=0; i<len; i++){
+            String relativePath = paths[i];
+            xslDocs.setProperty("xmlPageID", relativePath);
+            navigate(relativePath);
+            String content = main.outputPageResult();
+            File pubfile = FileTools.saveFile(pagePublishOutputDir, appURL+relativePath+publishDefaultExtension, content);
+            workflowResult.addStatusMessage("\r\n<br />"+pubfile.getCanonicalPath());
+            session.addPublishStatusLine(pubfile.getCanonicalPath());
+       }
+       workflowResult.addStatusMessage("\r\n<br />"+com.dynamide.util.Tools.nowLocale());
+       workflowResult.setSkipChildren(true);      //children of Session are Pages, this app only has main, and we just did it.
+       workflowResult.setDoDefaultForThis(false); //we just did all the processing for this -- don't do the default.
+       workflowResult.addStatusMessage("\r\n<br />Processed all xml pages for 'main'");
+       //session.setPublishStatus(holdStatus);
+  ]]></event>
+
+
+  <event language="beanshell" name="application_onImport"><![CDATA[
+    import java.util.*;
+    import java.io.*;
+    import com.dynamide.*;
+    import com.dynamide.event.ScriptEvent;
+    import com.dynamide.util.*;
+    import com.dynamide.datatypes.*;
+
+    void navigate(String targetPageID){
+        if (targetPageID.length()>0){
+            //event.println("in navigate::"+targetPageID);
+            Widget xslDocs = event.session.find("main.xslDocs");
+            String xml = FileTools.joinURI("resources/",targetPageID)+".xml";
+            xslDocs.setProperty("xml", xml); //set the "xml" property of the widget.
+            xslDocs.setProperty("xmlPageID", targetPageID); //set the targetPageID property of the widget so that it can interact with the linkstrips.
+
+            String xslSheet = FileTools.joinURI("resources/",targetPageID) + ".xsl";  // for example: "resources/doc/help/glossary.xsl";
+            String xslfilename = event.session.findAppFilename(xslSheet);
+
+            //%% fix this, by changing SearchLocations to return an empty string if not found.
+            if ( (xslfilename != null && !xslfilename.startsWith("ERROR")) && (new File(xslfilename).exists())) {
+                xslDocs.setProperty("xsl", FileTools.joinURI("resources",targetPageID)+".xsl"); //set the "xml" property of the widget.
+                //System.out.println("xsl: "+xslfilename);
+            } else {
+                xslDocs.setProperty("xsl", "resources/doc/help/default.xsl");
+                //System.out.println("xsl: "+"resources/doc/help/default.xsl");
+            }
+
+            String title = "";
+            String xmlname = event.session.findAppFilename(xml);
+            if ( (xmlname != null && !xmlname.startsWith("ERROR")) && (new File(xmlname).exists())) {
+                try {
+                    jdf = new com.dynamide.JDOMFile(null, xmlname);
+                    title = jdf.getRootElement().getAttributeValue("pageTitle");
+                } catch  (Exception e){
+                    title = "ERROR";
+                }
+                if (title == null || title.length()==0){
+                    title = targetPageID;
+                }
+            } else {
+                title = "File not found: "+ targetPageID;
+            }
+            event.session.find("main").setProperty("title", title);
+            event.session.logDebug("doco setting page title: "+title);
+        }
+    }
+  ]]></event>
+
+  <event language="beanshell" name="application_onStart"><![CDATA[
+    System.out.println(" === doco on start ===");
+    session.setStdoutEcho(true);
+
+    //This forces the resource to be in cache.
+    //I hardcoded /cache/doco/resources... into default.xsl
+    //%% There has got to be a better way!
+    session.getInclude("resources/css/dynamidedoco.css");
+
+    Widget xslDocs = event.session.find("main.xslDocs");
+    xslDocs.setProperty("xmlPageID", "/doc/help/index");
+    //todo: %% make main.call("setXmlPageID", "/doc/help/index") happen
+    if (session.getApplicationPath().equals("/")){
+        if (event != null){
+            //event.sendRedirect("https://secure.dynamide.com/dynamide/doco?next=about");
+            event.sendRedirect("/dynamide/doco?next=about");
+            return;
+        } else {
+            System.out.println("\r\n\r\n\r\n\r\n\r\n***************************\r\nevent is null in doco app\r\n**********************");
+        }
+    }
+    if (session.getApplicationPath().equals("/dynamide/doco")){
+        event.jumpToPage("about");
+        return;
+    }
+  ]]></event>
+
+  <event language="beanshell" name="application_onAction"><![CDATA[
+    //session.logDebug("=============== application_onAction xmlPageID: "+session.find("main.xslDocs").get("xmlPageID"));
+
+    String targetPageID = event.getQueryParam("targetPageID");
+    String pathInfo = event.session.get("pathInfo");
+    //session.logDebug("application_onAction pathInfo: "+pathInfo);
+    //session.logDebug("application_onAction getApplicationPath: "+session.getApplicationPath());
+
+    //The pathInfo will begin with a slash, so the targetPageID should, too: /doc/help/index
+
+    //let a specified targetPage win, but if none present, use pathInfo:
+    if (targetPageID.length()==0){
+        if (pathInfo.length()>0){
+            targetPageID = pathInfo;
+            //session.logDebug("using pathInfo: "+targetPageID);
+        } else {
+            event.jumpToPage("about");
+            return;
+            //5/14/2004 9:28AM  targetPageID = "/doc/help/index";
+        }
+    }
+
+    if (event.action.equals("showSource")){
+        try {
+            String path = event.getQueryParam("path");
+            if (path == null) {
+                returnSource("path parameter is required");
+                return;
+            } else {
+                String okPath = event.session.findResourceFilename(path);
+                File theFile = new File(okPath);
+                if (theFile != null) {
+                    if (!theFile.isDirectory()){
+                        FileInputStream fis = new FileInputStream(theFile);
+                        byte[] theData = new byte[(int) theFile.length()];
+                        fis.read(theData);
+                        fis.close();
+                        String body = new String(theData);
+                        body = StringTools.escape(body);
+                        event.returnSource(body);
+                        return;
+                    } else {
+                        event.returnSource("File was a directory: "+path);
+                        return;
+                    }
+                } else {
+                    event.returnSource("File not found: "+path+"");
+                    return;
+                }
+            }
+        } catch (Exception e) {  // can't find the file
+                event.returnSource("<ERROR>"+e+"</ERROR>");
+                return;
+        }
+    }
+    navigate(targetPageID);
+  ]]></event>
+
+</application>

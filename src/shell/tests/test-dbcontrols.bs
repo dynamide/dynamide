@@ -1,0 +1,41 @@
+//test with : bsh tests\test-RDBDatasource.bs -d net_roots_demo -testIterator
+if (bsh.args.length == 0){
+    //print("\r\n  Usage: bsh test-dbcontrols.bs -d <database> \r\n");
+    //System.exit(1);
+}
+
+
+source("dynamideShell.bs");
+import com.dynamide.*;
+import com.dynamide.util.*;
+import com.dynamide.db.*;
+
+session = Session.createSession("/dynamide/test-suite/dbcontrols");
+
+Opts opts = new Opts(bsh.args);
+dbname=opts.getOption("-d");
+
+p = session.loadPage("page1");
+p.outputPage();
+
+ds1 = p.getWidgetByID("datasource1");
+
+ds = session.getDatasource("datasource1");
+print(ds1.getPropertyStringValue("datasource"));
+print(ds1.getPropertyStringValue("datasource"));
+
+ds1.call("edit");
+edit = p.getWidgetByID("edit1");
+edit.setValue("test"+Tools.now());
+ds1.call("post");
+print("UPDATE count: "+ds.getProperty("lastCount"));
+print("UPDATE lastError: "+ds.getProperty("lastError"));
+
+ds1.call("insert");
+print(session.getDatasources());
+ds.setFieldValue("ID", "999");
+edit = p.getWidgetByID("edit1");
+edit.setValue("test"+Tools.now());
+ds1.call("post");
+print("INSERT count: "+ds.getProperty("lastCount"));
+print("INSERT lastError: "+ds.getProperty("lastError"));

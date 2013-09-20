@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm  >
+<!-- Copyright (c) 2001, 2002, 2003 DYNAMIDE.COM -->
+
+<dynamideForm>
+
+<properties>
+    <property name="auditable"><value>false</value></property>
+    <property name="type"><value>pagetypes/com.dynamide.page</value></property>
+    <property name="bgcolor"><value>#A4BFDD</value></property>
+</properties>
+
+<htmlsrc browser="*"><![CDATA[
+<html>
+<head>
+$session.getInclude("resources/css/ide.css")
+$session.getInclude("resources/css/admin.css")
+</head>
+<body bgcolor="#A4BFDD">
+#macro cell($contents){
+    #if ($contents==""){<dm_nbsp/>}#else{$contents}
+}
+#macro test($auditResult){
+  <table bgcolor="white" border='0' cellpadding='0' cellspacing='0' width="95%">
+  <tr>
+    <td>
+        <table width="100%" border='1' cellpadding='4' cellspacing='0'>
+            <tr><td colspan="5">Audit: <b>$auditResult.Name</b><dm_nbsp/> Tests: $auditResult.TestCount Failures: $auditResult.FailCount</td></tr>
+            <tr>
+               <th>Result</th>
+               <th>Event Code</th>
+               <th>Sender</th>
+               <th align="left">Test</th>
+            </tr>
+            #foreach $item in $auditResult.List {
+               <tr>
+                <td valign="top">#if ($item.Passed){PASS} #else {<font color="red"><b>FAIL</b></font>}</td>
+                <td valign="top">#cell($item.ResultCodeStr)</td>
+                <td valign="top">$item.SenderID</td>
+                <td valign="top" width="100%">#cell($item.TestID)</td>
+                ##<td valign="top">$item.ApplicationPath</td>
+                ##<td valign="top">$item.QueryParams</td>
+               </tr>
+               #if ($item.ErrorMessage.length()!=0){
+               <tr>
+                <td valign="top"><dm_nbsp/></td>
+                <td colspan="3" valign="top">#cell($item.ErrorMessage)</td>
+               </tr>
+               }
+            }
+        </table>
+    </td>
+  </tr>
+  </table>
+  <br/>
+}
+
+#set $qp = "?USER=audit"
+
+#set $audit = $session.loadClass("com.dynamide.util.Audit")
+
+#set $a1 = $audit.audit("/dynamide/admin", "$qp")
+#set $a2 = $audit.audit("/dynamide/demo", "$qp")
+#set $a3 = $audit.audit("/dynamide/doco", "$qp")
+#set $a4 = $audit.audit("/dynamide/ide", "$qp")
+#set $a5 = $audit.audit("/dynamide/test-suite/upload", "$qp")
+
+#set $totalTests  = ($a1.TestCount+$a2.TestCount+$a3.TestCount+$a4.TestCount+$a5.TestCount)
+#set $totalFailCount = ($a1.FailCount+$a2.FailCount+$a3.FailCount+$a4.FailCount+$a5.FailCount)
+
+<h2>Dynamide Audit</h2>
+Tests: $totalTests Failures: $totalFailCount
+<br/>
+<br/>
+
+#test($a1)
+#test($a2)
+#test($a3)
+#test($a4)
+#test($a5)
+
+</body>
+</html>
+]]></htmlsrc>
+
+<htmlsrc browser="DYNAMIDE_TEXT"><![CDATA[
+<text>
+#macro showAuditResult($auditResult){
+#if ($auditResult != null){
+#foreach $item in $auditResult.List {
+$item.toString()
+
+}
+}
+}
+#set $qp = "?USER=audit"
+#set $audit = $session.loadClass("com.dynamide.util.Audit")
+#set $doOne_URL = $session.getQueryParam("doOne_URL")
+#set $doOne_Params = $session.getQueryParam("doOne_Params")
+#set $a1 =  null
+#set $a2 =  null
+#set $a3 =  null
+#set $a4 =  null
+#set $a5 =  null
+#set $a6 =  null
+#if ("$doOne_URL" == ""){
+    #set $debug = false
+    #if ($debug) {
+        #set $a1 = $audit.audit("/dynamide/admin", "$qp")
+        #set $a2 = $audit.createEmptyAuditResult("/dynamide/demo", "$qp")
+        #set $a3 = $audit.createEmptyAuditResult("/dynamide/doco", "$qp")
+        #set $a4 = $audit.createEmptyAuditResult("/dynamide/ide", "$qp")
+        #set $a5 = $audit.createEmptyAuditResult("/dynamide/test-suite/upload", "$qp")
+        #set $a6 = $audit.createEmptyAuditResult("/swarm", "?USER=laramie")
+    } #else {
+        #set $a1 = $audit.audit("/dynamide/admin", "$qp")
+        #set $a2 = $audit.audit("/dynamide/demo", "$qp")
+        #set $a3 = $audit.audit("/dynamide/doco", "$qp")
+        #set $a4 = $audit.audit("/dynamide/ide", "$qp")
+        #set $a5 = $audit.audit("/dynamide/test-suite/upload", "$qp")
+        #set $a6 = $audit.audit("/swarm", "?USER=laramie")
+    }
+    #set $totalTests  = ($a1.TestCount+$a2.TestCount+$a3.TestCount+$a4.TestCount+$a5.TestCount+$a6.TestCount)
+    #set $totalFailCount = ($a1.FailCount+$a2.FailCount+$a3.FailCount+$a4.FailCount+$a5.FailCount+$a6.FailCount)
+} #else {
+    #set $a1 = $audit.audit("$doOne_URL", "$doOne_Params")
+    #set $totalTests  = $a1.TestCount
+    #set $totalFailCount = $a1.FailCount
+}
+
+===============================================
+               Dynamide Audit
+===============================================
+
+#showAuditResult($a1)
+#showAuditResult($a2)
+#showAuditResult($a3)
+#showAuditResult($a4)
+#showAuditResult($a5)
+#showAuditResult($a6)
+===============================================
+ Tests: $totalTests Failures: $totalFailCount
+===============================================
+</text>
+]]></htmlsrc>
+
+<widgets>
+</widgets>
+
+
+</dynamideForm>

@@ -1,0 +1,1206 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideDoco>
+<!--
+     *************************************************************************
+     ***   WARNING: all webmacro examples in this application must
+     ***   be escaped, since the result of the xsl transform is passed through
+     ***   webmacro.  However, examples should be in CDATA sections, and not
+     ***   have < and > changed to &lt; and &gt;
+     *************************************************************************
+
+-->
+<dynamideDoco pageTitle="Objects, Variables, and Methods in Dynamide">
+
+<style>th \{font: 16px Arial,Helvetica,sans-serif; font-weight: bold; \}
+</style>
+<h4>This is a listing of all the key methods for doing development in Dynamide: </h4>
+<a href="#ServerSideEvent">In the ServerSide Event context (ScriptEvent object)</a><br />
+<a href="#WidgetExpansion">In the Widget expansion context</a><br />
+<a href="#Session">In the Session Object</a><br />
+<a href="#WidgetAndPage">Common methods in Widget and Page</a><br />
+<a href="#WidgetAuthors">Special Methods for Widget Authors</a><br />
+<a href="#FileTools">In the com.dynamide.util.FileTools class</a><br />
+<a href="#StringTools">In the com.dynamide.util.StringTools class</a><br />
+<a href="#Tools">In the com.dynamide.util.Tools class</a><br />
+<a href="#Miscellaneous">Miscellaneous</a><br />
+
+<h4>To see the actual arguments and return values, see the Javadoc for the following classes: </h4>
+<a href="/static/dynamide/javadoc/com/dynamide/Session.html">Session</a><br />
+<a href="/static/dynamide/javadoc/com/dynamide/Page.html">Page</a><br />
+<a href="/static/dynamide/javadoc/com/dynamide/Widget.html">Widget</a><br />
+<a href="/static/dynamide/javadoc/com/dynamide/event/ScriptEvent.html">ScriptEvent</a><br />
+<a href="/static/dynamide/javadoc/com/dynamide/resource/Assembly.html">Assembly</a><br />
+<a href="/static/dynamide/javadoc/com/dynamide/util/FileTools.html">FileTools</a><br />
+<a href="/static/dynamide/javadoc/com/dynamide/util/Tools.html">Tools</a><br />
+<a href="/static/dynamide/javadoc/com/dynamide/util/StringTools.html">StringTools</a><br />
+     <br />
+     <br />
+<hr />
+
+<a name="ServerSideEvent"></a><h3> In the ServerSide Event context (ScriptEvent object)</h3>
+
+<p>Note: in the ScriptEvent object, most member variables are public, so
+you have the choice of using the Java Bean syntax [event.getCurrentPage()],
+or the more Javascript-like syntax [event.currentPage]</p>
+
+<p>See the <a href="/static/dynamide/javadoc/com/dynamide/event/ScriptEvent.html">
+  javadoc<dm_nbsp/></a>
+   for all the method and field names.</p>
+
+<p></p>
+
+<table width="100%" border="1" cellpadding="5" cellspacing="0">
+     <thead><tr valign="Top">
+       <th width="20%">
+    Variable/Method Name
+       </th>
+       <th width="80%">
+    Use
+       </th>
+     </tr>
+     </thead><tbody>
+       <tr valign="Top">
+         <td width="20%"><a href="/static/dynamide/javadoc/com/dynamide/event/ScriptEvent.html">
+  event</a>
+         </td>
+         <td width="80%">
+      <p>The com.dynamide.event.ScriptEvent that contains information about
+ the event being fired, and the request that triggered it. <dm_nbsp/>Not available
+ from Widget Expansion.</p>
+                </td>
+       </tr>
+       <tr valign="Top">
+         <td width="20%">
+      <p>event.pageID</p>
+         </td>
+         <td width="80%">
+      <p>The pageID of the page that this ServerSide event is associated with.
+<dm_nbsp/>The event code is stored on that page. <dm_nbsp/>The event is usually fired
+as a result of that page being just seen by the client. <dm_nbsp/>In some cases,
+it is prior to showing or rendering the page, such as the onLoad event.<br />
+         </p>
+         </td>
+       </tr>
+       <tr>
+         <td valign="Top">event.session<br />
+         </td>
+         <td valign="Top">The com.dynamide.Session object.<br />
+         </td>
+       </tr>
+       <tr>
+         <td valign="Top">event.request<br />
+         </td>
+         <td valign="Top">The HttpServletRequest.<br />
+         </td>
+       </tr>
+       <tr>
+         <td valign="Top">event.evalErrorMsg<br />
+         </td>
+         <td valign="Top">Marked public, this is actually for internal use,
+ and will be overwritten.<br />
+         </td>
+       </tr>
+       <tr valign="Top">
+         <td width="20%">event.nextPageID<br />
+         </td>
+         <td width="80%">This is consulted in determining the normal flow
+of  pages. <dm_nbsp/>You can set it to direct page flow to that page.<br />
+         </td>
+       </tr>
+       <tr valign="Top">
+         <td width="20%">event.resultSrc<br />
+         </td>
+         <td width="80%">A String containing a whole HTML page (should be
+valid  XHTML) including the &lt;HTML&gt; tags. <dm_nbsp/>Set this and set resultAction
+ to event.RA_RETURN_SOURCE, or simply call event.returnSource(myString) where
+ myString is a String you have constructed with the whole page source.<br />
+         </td>
+       </tr>
+       <tr valign="Top">
+         <td width="20%">event.sender<br />
+         </td>
+         <td width="80%">The source object that fired the event. <dm_nbsp/> This
+ is not the resultSrc html.<br />
+         </td>
+       </tr>
+       <tr valign="Top">
+         <td width="20%">event.action<br />
+         </td>
+         <td width="80%">A pre-defined field for use by the application programmer
+ to direct page flow and actions on the client side. <dm_nbsp/>com.dynamide.submit
+ buttons, for example, set the action. <dm_nbsp/>So each button can have a different
+ action even on the same page. <dm_nbsp/>Links can have actions, too.<br />
+         </td>
+       </tr>
+       <tr>
+         <td valign="Top">event.resultAction<br />
+         </td>
+         <td valign="Top">This is set automatically by the methods returnSource(String
+ src), jumpToPage(String pageID) and Field.setError(boolean) and Field.setErrorMessage(String).<br />
+         <br />
+   Set to one of these values:
+      <table cellpadding="4" cellspacing="0" border="1" width="100%" bgcolor="#99ff99">
+           <tbody>
+             <tr>
+               <td valign="Top">event.RA_DEFAULT<br />
+               </td>
+               <td valign="Top">Continue with default action<br />
+               </td>
+             </tr>
+             <tr>
+               <td valign="Top">event.RA_SHOW_ERRORS<br />
+               </td>
+               <td valign="Top">Interrupt flow by re-showing page with errors
+ flagged<br />
+               </td>
+             </tr>
+             <tr>
+               <td valign="Top">event.RA_JUMP_TO_PAGE<br />
+               </td>
+               <td valign="Top">Interrupt flow by directly showing named
+page<br />
+               </td>
+             </tr>
+             <tr>
+               <td valign="Top">event.RA_RETURN_SOURCE<br />
+               </td>
+               <td valign="Top">Interrupt flow by directly showing dynamically
+ constructed page in event.resultSrc, which should be valid XHTML, including
+ the &lt;html&gt; tag.<br />
+               </td>
+             </tr>
+
+        </tbody>
+      </table>
+         <br />
+         <br />
+         </td>
+       </tr>
+       <tr>
+         <td valign="Top">event.currentPage<br />
+         </td>
+         <td valign="Top">com.dynamide.Page object that is active when the
+event fires. <dm_nbsp/>For onLoad, the currentPage is the page being loaded;
+for onAction, it is the page the user just saw, etc.<br />
+         </td>
+       </tr>
+       <tr>
+         <td valign="Top">event.currentPageID<br />
+         </td>
+         <td valign="Top">The ID of the currentPage object, as a String.<br />
+         </td>
+       </tr>
+       <tr>
+         <td valign="Top">event.jumpToPage(String nextPageID)<br />
+         </td>
+         <td valign="Top">Call this method to set the target pageID and to
+set the event.resultAction at once. <dm_nbsp/>This method does not exit the current
+event handler procedure -- you still need to use a Java "return" statement.<br />
+         </td>
+       </tr>
+       <tr>
+         <td valign="Top">event.returnSource(String src)<br />
+         </td>
+         <td valign="Top">Call this method to set the event.resultSrc and
+to  set the event.resultAction at once. <dm_nbsp/>This method does not exit the
+current  event handler procedure -- you still need to use a Java "return"
+statement.<br />
+         </td>
+       </tr>
+
+  </tbody>
+</table>
+   <br />
+
+<h3><br />
+   </h3>
+
+<a name="WidgetExpansion"></a><h3>In the Widget expansion context</h3>
+
+<table width="100%" border="1" cellpadding="5" cellspacing="0">
+     <thead><tr valign="Top">
+       <th width="20%">
+    Context Variable Name
+       </th>
+       <th width="40%">
+    Use
+       </th>
+     </tr>
+     </thead><tbody>
+       <tr valign="Top">
+         <td width="20%">
+      <p>\$pageID</p>
+         </td>
+         <td width="80%">
+      <p>The String pageID. <dm_nbsp/>For widgets in containers, will be the container's
+ID.<br />
+         </p>
+         </td>
+       </tr>
+       <tr valign="Top">
+         <td width="20%">
+      <p>\$page<br />
+         </p>
+         </td>
+         <td width="80%">
+      <p>The page or container that this widget is sitting on. <dm_nbsp/>For containers,
+the original Page object from design-time is hidden.<br />
+         </p>
+         </td>
+       </tr>
+       <tr valign="Top">
+         <td width="20%">
+      <p>\$parent<br />
+         </p>
+         </td>
+         <td width="80%">
+      <p>If widget is in a container, then \$page will be the container, and
+ \$parent will be the page or container the container is in. <dm_nbsp/>For top-level
+ pages, \$parent will be null.<br />
+         </p>
+         </td>
+       </tr>
+       <tr valign="Top">
+         <td width="20%">
+      <p>\$request<br />
+         </p>
+         </td>
+         <td width="80%">
+      <p>The HttpServletRequest. <dm_nbsp/>It is safer to use \$event.getQueryParam(String)
+ since this returns an empty string if the param is not found. <dm_nbsp/>Use the
+ \$request directly if you need HttpServletRequest functionality that is not
+ surfaced by Dynamide. However, you must check that it is not null.  In batch mode, or jobs, or
+ running automated unit testing, the request will be null.<br />
+         </p>
+         </td>
+       </tr>
+       <tr valign="Top">
+         <td width="20%">
+      <p>\$WEBMACRO<br />
+         </p>
+         </td>
+         <td width="80%">
+      <p>The instance of org.webmacro.Webmacro used to do the rendering<br />
+         </p>
+         </td>
+       </tr>
+       <tr>
+         <td valign="Top">\$WEBMACRO_CONTEXT.getContext()<br />
+         </td>
+         <td valign="Top">The Webmacro context with all the context variables.
+ Normally, you can just use webmacro syntax, like \#set \$foo = "bar", but sometimes
+ you need access to the context itself, either to pass to \$session.expandContainer,
+ or to call the webmacro context's API directly.<br />
+         <br />
+    You can also use&#160;<dm_nbsp/> \$session.setFieldValue and \$session.addField and
+ \$session.addValueBean to add values and objects to the Session.<br />
+         <br />
+    Note that \$session.getWebmacro and \$session.getContext return new instances
+ of these things. <dm_nbsp/>You typically want the current one, which is what
+\$WEBMACRO_CONTEXT.getContext() is for.</td>
+       </tr>
+       <tr>
+         <td valign="Top">\$session<br />
+         </td>
+         <td valign="Top">The com.dynamide.Session object that contains all
+ the session and state.<br />
+         </td>
+       </tr>
+       <tr>
+         <td valign="Top">\$widget<br />
+         </td>
+         <td valign="Top">The current com.dynamide.Widget in memory, with
+all  default values and current values.<br />
+         </td>
+       </tr>
+       <tr>
+         <td valign="Top">\$designMode<br />
+         </td>
+         <td valign="Top">"true" if in designMode, that is, in the IDE. <dm_nbsp/>"false"
+ at runtime. Widgets can render themselves differently so that they can be
+ designed. <dm_nbsp/>For example, the com.dynamide.hidden widget displays its
+name and value in designMode, but hides itself at runtime. <dm_nbsp/><br />
+         </td>
+       </tr>
+       <tr>
+         <td valign="Top"><br />
+         </td>
+         <td valign="Top"><br />
+         </td>
+       </tr>
+
+  </tbody>
+</table>
+   <br />
+
+<h3><br />
+  </h3>
+
+<a name="Session"></a><h3>In the Session Object</h3>
+  <p>The session object is available as shown above, either as \$session or as
+event.session. <dm_nbsp/>All the methods here are accessible from that reference
+to Session.</p>
+
+<p>See the <a href="/static/dynamide/javadoc/com/dynamide/Session.html">javadoc</a><dm_nbsp/>
+   for all the method and field names.</p>
+
+<table width="100%" border="1" cellpadding="5" cellspacing="0">
+    <thead><tr valign="Top">
+      <th width="20%">
+    Variable or Method Name
+      </th>
+      <th width="40%">
+    Use
+      </th>
+    </tr>
+    </thead><tbody>
+      <tr>
+       <td valign="Top">get(String what)<br />
+       </td>
+       <td valign="Top">Returns an Object if it finds something with that
+name. <dm_nbsp/>Can return a property: session.getPropertyValue("title") is equivalent
+to \$session.title because of Webmacro introspection rules. (Note: use getPropertyStringValue if you
+need a String as the return type.)<br />
+       </td>
+     </tr>
+     <tr valign="Top">
+        <td width="20%">find(String dottedName)<br />
+
+      <p></p>
+        </td>
+        <td width="80%">
+      <p>Find any named object in the tree. <dm_nbsp/>e.g. session.find("page1.widget1")
+will return a reference to widget1 on page1. <dm_nbsp/>Widgets live on Pages,
+Pages and Fields are global.<br />
+        </p>
+        </td>
+      </tr>
+      <tr>
+        <td valign="Top">getFieldValue(String name)<br />
+        </td>
+        <td valign="Top"><br />
+        </td>
+      </tr>
+     <tr>
+       <td valign="Top">getStringTools()<br />
+       </td>
+       <td valign="Top">Returns an instance of com.dynamide.util.StringTools<br />
+       </td>
+      <td valign="Top"><br />
+       </td>
+     </tr>
+     <tr>
+       <td valign="Top">getTimestampLocale()<br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+     </tr>
+     <tr>
+       <td valign="Top">getCurrentLanguageCode()<br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+     </tr>
+     <tr>
+       <td valign="Top">getVisitedPages()<br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+     </tr>
+     <tr>
+       <td valign="Top">getValueBeanHelper()<br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+     </tr>
+     <tr>
+       <td valign="Top">getTemplateDirs()<br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+     </tr>
+      <tr>
+       <td valign="Top">getApplicationProperties()<br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+     </tr>
+     <tr>
+       <td valign="Top">getFieldNames()<br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+     </tr>
+     <tr>
+       <td valign="Top">eval(String)<br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+     </tr>
+     <tr>
+       <td valign="Top">loadClass()<br />
+       </td>
+       <td valign="Top">This won't appear in a restricted version of Dynamide,
+such as one deployed in a shared environment.<br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+     </tr>
+     <tr>
+      <td valign="Top">loadWidgetBean(...)<br />
+      </td>
+      <td valign="Top">Load a class for use by a widget.<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+       <td valign="Top">getFieldValue(String fieldName)<br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+     </tr>
+     <tr>
+       <td valign="Top">setFieldValue(String fieldName, String value)<br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+     </tr>
+     <tr>
+       <td valign="Top">findSession(String subsessionID)<br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+     </tr>
+     <tr>
+       <td valign="Top">getPages()<br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+     </tr>
+     <tr>
+       <td valign="Top">getPageByID(String id)<br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+     </tr>
+     <tr>
+       <td valign="Top">findPageByID(String id)<br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+     </tr>
+     <tr>
+       <td valign="Top">getField(String name)<br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+     </tr>
+     <tr>
+       <td valign="Top">getInclude(String resourceShortName)<br />
+       </td>
+       <td valign="Top">Manufactures an include statement suitable for HTML
+based on the type of resource, by file extension. See also SearchLocations.getURI(...)<br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+     </tr>
+    <tr>
+      <td valign="Top">createField(...)<br />
+      </td>
+      <td valign="Top">Adds a Field object, throws exception if name exists.
+<dm_nbsp/>See addField().<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">addField(...)<br />
+      </td>
+      <td valign="Top">Adds Field object, removing duplicate name if necessary
+. See createField().<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">findField(...)<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">addValueBean(...)<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">getValueBean(...)<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">pageVisited(...)<br />
+      </td>
+      <td valign="Top">To mark this page as having been seen by the client.
+<dm_nbsp/>Done automatically if you use pageID as a hidden field or in the URL.<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">lookupInternationalizedValue(...)<br />
+      </td>
+      <td valign="Top">Done automatically if you set the language code for
+the applicatio<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+
+  </tbody>
+</table>
+ <br />
+
+<p><a name="WidgetAndPage"></a><h3>Common methods in Widget and Page</h3>
+    Page descends from Widget, so gets all the Widget methods.</p>
+
+<p>See the javadoc for
+<a href="/static/dynamide/javadoc/com/dynamide/AbstractWidget.html">AbstractWidget</a>,<dm_nbsp/>
+<a href="/static/dynamide/javadoc/com/dynamide/Widget.html">Widget</a>,<dm_nbsp/>
+and <a href="/static/dynamide/javadoc/com/dynamide/Page.html">Page</a><dm_nbsp/>
+for all the method and field names.</p>
+
+<table width="100%" border="1" cellpadding="5" cellspacing="0">
+  <thead><tr valign="Top">
+    <th width="20%">
+    Variable or Method Name
+    </th>
+    <th width="40%">
+    Use
+    </th>
+  </tr>
+  </thead><tbody>
+    <tr valign="Top">
+      <td width="20%">getName()<br />
+      </td>
+      <td width="80%">
+      <p>Same as getID()<br />
+      </p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">getID()<br />
+      </td>
+      <td valign="Top">The unique name within the Page the widget is on<br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">getObjectID()<br />
+      </td>
+      <td valign="Top">Returns a unique name that contains a unique identifier,
+which will be different for each run. <dm_nbsp/>Useful to see if two objects
+are identical at runtime.<br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">getDotName()<br />
+      </td>
+      <td valign="Top">The fully qualified name of <dm_nbsp/>the widget, with
+its page name prepended. <dm_nbsp/>Unique within an application, unless a logic
+error makes more than one instance with the same name.<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">getProperties()<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">getPropertyValue<br />
+      </td>
+      <td valign="Top">Gets the value as a String<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">getFilename()<br />
+      </td>
+      <td valign="Top">Gets the real filename of the resource. <dm_nbsp/>Don't
+depend on this name, since the resoure may be loaded from a jar file, RDB
+or XML Database.<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">get(String)<br />
+      </td>
+      <td valign="Top">Gets a property value<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">Widget.getError()<br />
+      </td>
+      <td valign="Top">get the error string set by Widget.setError()<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">Widget.setError()<br />
+      </td>
+      <td valign="Top">Set an error in a widget, which will cause the page
+to re-display, flagging the widget. <dm_nbsp/>You can do this from Field, too.</td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">Widget.isValueTrue(String val)<br />
+      </td>
+      <td valign="Top">Evaluate if a String is true, using sloppy English
+rules: "T*" "Y*", 1 all return true, case insensitively. <dm_nbsp/>"on" and "off"
+both yeild false.<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br />
+<br />
+
+<p><a name="WidgetAuthors"></a><h3>Special Methods for Widget Authors</h3>
+   These methods are public, but will most probably be useful for Widget
+Authors, not Application Developers. <dm_nbsp/>Page descends from Widget, so
+gets all the Widget methods.</p>
+
+
+<p>See the javadoc for
+<a href="/static/dynamide/javadoc/com/dynamide/Session.html">Session</a>,<dm_nbsp/>
+<a href="/static/dynamide/javadoc/com/dynamide/AbstractWidget.html">AbstractWidget</a>,<dm_nbsp/>
+<a href="/static/dynamide/javadoc/com/dynamide/Widget.html">Widget</a>,<dm_nbsp/>
+and <a href="/static/dynamide/javadoc/com/dynamide/Page.html">Page</a><dm_nbsp/>
+for all the method and field names.</p>
+
+<br />
+<table width="100%" border="1" cellpadding="5" cellspacing="0">
+  <thead><tr valign="Top">
+    <th width="20%">
+    Variable or Method Name
+    </th>
+    <th width="40%">
+    Use
+    </th>
+  </tr>
+  </thead><tbody>
+    <tr valign="Top">
+      <td width="20%">Session.getContainer(...)<br />
+      </td>
+      <td width="80%">
+      <p><br />
+      </p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">Session.expandContainer(...)<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">Session.renderWidgetHelp(...)<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">Session.getApplicationPropertyEditor(...)<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">Session.getPagePropertyEditor(...)<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">Session.getWidgetPropertyEditor(...)<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">Session.internationalize(...)<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">Session.getDesignMode()<br />
+      </td>
+      <td valign="Top">Returns true if in designMode, useful for desig-tiime-only
+components.<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">Session.fireWidgetMethod(...)<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">SearchLocations.getURL(...)<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">Page.getWidgets()<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">Page.getWidgetByID(...)<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">Widget.setProperty(...)<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">Widget.getNamedObject(...)<br />
+      </td>
+      <td valign="Top">Get any object from a widget, put therel with Widget.setNamedObject(...)<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">Widget.setNamedObject(...)<br />
+      </td>
+      <td valign="Top">Put any object into a widget, for retrieval with Widget.getNamedObject(...)<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">Widget.getAsStored()<br />
+      </td>
+      <td valign="Top">Gets value as it was in the Page file, not how it was
+set at runtime.<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">Page.expandTemplate(...)<br />
+      </td>
+      <td valign="Top">
+      Expands Strings which are valid Webmacro syntax.  Adds \$page and \$pageID to the context, then calls Session.expandTemplate(...)
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">Session.expandTemplate(...)<br />
+      </td>
+      <td valign="Top">
+      Expands Strings which are valid Webmacro syntax.  Adds default variables to the context, such as \$session.
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top"><br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br />
+<br />
+<a name="FileTools"></a><h3>In the com.dynamide.util.FileTools class</h3>
+   This is a utility class that contains useful File<dm_nbsp/> functions.<br />
+<br />
+<p>See the javadoc for
+<a href="/static/dynamide/javadoc/com/dynamide/util/FileTools.html">FileTools</a><dm_nbsp/>
+for all the method and field names.</p>
+
+<table width="100%" border="1" cellpadding="5" cellspacing="0">
+  <thead><tr valign="Top">
+    <th width="20%">
+    Variable or Method Name
+    </th>
+    <th width="40%">
+    Use
+    </th>
+  </tr>
+  </thead><tbody>
+    <tr valign="Top">
+      <td width="20%">list(...)<br />
+      </td>
+      <td width="80%">
+      <p>Return a Map of files and/or directories in a directory in various
+formats<br />
+      </p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">join(...)<br />
+      </td>
+      <td valign="Top">Correctly build a pathname from a directory and file
+name<br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">createDirectory(...)</td>
+      <td valign="Top"><br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">delete(...)<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">copyFile(...)<br />
+      </td>
+      <td valign="Top">Copies one file to another on disk<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">openFile(...)<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">readFile(...)<br />
+      </td>
+      <td valign="Top">Read contents of file into a String<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">generateBackupName(...)<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">backup(...)<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">fileExists(...)<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">directoryExists(...)<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">loadPropertiesFromFile(...)<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">savePropertiesToFile(...)<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br />
+<a name="StringTools"></a><h3>In the com.dynamide.util.StringTools class</h3>
+  This is a utility class that contains useful String functions.<br />
+<br />
+<p>See the javadoc for
+<a href="/static/dynamide/javadoc/com/dynamide/util/StringTools.html">StringTools</a><dm_nbsp/>
+for all the method and field names.</p>
+
+<table width="100%" border="1" cellpadding="5" cellspacing="0">
+  <thead><tr valign="Top">
+    <th width="20%">
+    Variable or Method Name
+    </th>
+    <th width="40%">
+    Use
+    </th>
+  </tr>
+  </thead><tbody>
+    <tr valign="Top">
+      <td width="20%">escape(String source)<br />
+      </td>
+      <td width="80%">
+      <p><br />
+      </p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">escapeAmpersands(String source)<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">searchAndReplaceAll(...)<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">parseSeparatedValues(...)<br />
+      </td>
+      <td valign="Top">Returns a Vector of values, more convenient and faster
+than StringTokenizer.<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+    <tr>
+      <td valign="Top">substring(...)<br />
+      </td>
+      <td valign="Top">Adds more flavors than String.substring(...)<br />
+      </td>
+      <td valign="Top"><br />
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br />
+<br />
+
+<h3> </h3>
+<a name="Tools"></a><h3>In the com.dynamide.util.Tools class</h3>
+   The session object is available as shown above, either as \$session or
+as  event.session. <dm_nbsp/>All the methods here are accessible from that reference
+ to Session.<br />
+ <br />
+<p>See the javadoc for
+<a href="/static/dynamide/javadoc/com/dynamide/util/Tools.html">Tools</a><dm_nbsp/>
+for all the method and field names.</p>
+
+
+<table width="100%" border="1" cellpadding="5" cellspacing="0">
+   <thead><tr valign="Top">
+     <th width="20%">
+    Variable or Method Name
+     </th>
+     <th width="40%">
+    Use
+     </th>
+   </tr>
+   </thead><tbody>
+     <tr valign="Top">
+       <td width="20%">now()<br />
+       </td>
+       <td width="80%">
+      <p><br />
+       </p>
+       </td>
+     </tr>
+     <tr>
+       <td valign="Top">stringToInt(...)<br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+     </tr>
+     <tr>
+       <td valign="Top">stringToIntSafe(...)<br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+     </tr>
+     <tr>
+       <td valign="Top">listToVector(...)<br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+     </tr>
+     <tr>
+       <td valign="Top">enumerationToString(...)<br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+     </tr>
+     <tr>
+       <td valign="Top">vectorToString(...)<br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+     </tr>
+     <tr>
+       <td valign="Top">errorToString(...)<br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+       <td valign="Top"><br />
+       </td>
+     </tr>
+
+  </tbody>
+</table>
+ <br />
+ <br />
+
+<h3></h3>
+<br />
+ <!--a href="/com/dynamide/doc/help/server-side-event-object.html"-->
+ <br />
+
+<a name="Miscellaneous"></a><h3>Miscellaneous<br />
+    </h3>
+
+<p>In ClientSide Javascript, these are not available, except that on a page
+ with widgets, you can get the Fields by name:</p>
+
+<p><code>     var theValue = getFieldValue("customer1");</code></p>
+
+<p>This calls, in IE:</p>
+
+<p><code>     document.all.customer1.value</code></p>
+
+<p>(For complex widgets, that contain multiple fields, there should still
+ be a fieldname associated with each field.)</p>
+
+<p>This javascript function allways returns a valid string.  If the field
+ is not found, it just returns the empty string.</p>
+
+<p><br />
+   <!--
+<br />
+ </p>
+
+<p>Methods:</p>
+
+<p>event.getQueryParam(String)</p>
+
+<p>event.session</p>
+
+<p><br />
+<br />
+ </p>
+   -->
+   </p>
+
+</dynamideDoco>

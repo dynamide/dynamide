@@ -1,0 +1,578 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm  >
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<!-- 5/23/2003 11:37PM copied from ide/evaltop.xml -->
+
+<dynamideForm>
+
+<properties>
+    <property name="type"><value>pagetypes/com.dynamide.form</value></property>
+    <property name="bgcolor"><value>#A4BFDD</value></property>
+</properties>
+
+<htmlsrc><![CDATA[
+<html>
+    #set $SUBSESSIONID = $session.get("SUBSESSIONID")
+    #set $subsession = $session.getSubsession()
+    #set $subsessionURLPath = ""
+    #if ($subsession){
+        #set $subsessionURLPath = $subsession.getURLPath()
+    }
+    #set $time = $session.getTimestampLocale()
+    <head>
+        <title>Test-Fire Server-Side Event</title>
+        $session.getInclude("resources/css/ide.css")
+        $session.getInclude("resources/css/admin.css")
+        $session.getInclude("resources/js/page.js")
+        <script language="javascript">
+            function hookF9(){
+                if (event.keyCode == 120){
+                    document.forms[0].submit();
+                    return true;
+                }
+                //alert(event.keyCode);
+                return false;
+            }
+        </script>
+    </head>
+    <body bgcolor="#A4BFDD" onkeydown="javascript:hookF9();">
+    <form name="frmEval" action="/dynamide/admin">
+    #set $href = "$session.applicationPath?USER=$session.USER"
+    <a href="$href">new session</a>
+        <table border="0" width="100%" cellpadding="0" cellspacing="0" >
+          <tr>
+            <td valign="top" colspan="2">
+                #set $subsessionIDTitle = "[<dm_nbsp/><small><b>SESSIONID:</b><dm_nbsp/>$SUBSESSIONID<dm_nbsp/>]<br/>[<dm_nbsp/><dm_nbsp/><b>Path:<dm_nbsp/></b>$subsessionURLPath<dm_nbsp/>]</small>"
+                <table border="0" cellpadding="5" cellspacing="0">
+                <tr>
+                    <td valign="top">
+                        <table border="0" cellpadding="5" cellspacing="0" ><tr><td valign="top">
+                        <b>Test-Fire Server-Side Event</b>
+                        </td><td width="20"><dm_nbsp/></td><td>$subsessionIDTitle</td></tr>
+                        </table>
+                    </td>
+                    <td rowspan="2" valign='top' align="right">
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="bottom">
+                        #set $href = $session.getAppURL("next=sessionDetailPage")
+                        <a href="$href">Session Detail</a>
+                    </td>
+                </tr>
+                </table>
+                <hr/>
+                <br/>
+            </td>
+          </tr>
+        <tr>
+            <td width="100"><span class="widget" id="imagespace"/></td>
+            <td align="left">
+                <table border='1' cellpadding='5' cellspacing='0' bgcolor="white">
+                  <tr>
+                    <td>
+                        <table border='0' cellpadding='2' cellspacing='0'>
+                           <tr><td><span class="widget" id="selectTargetPageID"/></td></tr>
+                           <tr><td><span class="widget" id="selectTargetEvents"/></td></tr>
+                           <tr><td><span class="widget" id="editDebugURL"/></td></tr>
+                           <tr><td><span class="widget" id="textareaInputObjectEval"/></td></tr>
+
+                           ## More HACK!!  The value of the select does not come up initially, until after the first post.
+                           ##But we want to hide the row in case it is application, or "", which is the init, which we
+                           ## init to application.
+                           #set $selectTargetPageID = $session.find("debugEvent.selectTargetPageID")
+                           #if ($selectTargetPageID != null){
+                             #set $val = "$selectTargetPageID.value"
+                             #if ($val == "application" || $val == ""){
+                               <tr><td><span class="widget" id="selectCurrentPageID"/></td></tr>
+                             }
+                           }
+
+                           <tr><td><span class="widget" id="selectNextPageID"/></td></tr>
+                           ##<tr><td><span class="widget" id="editSourceDotName"/></td></tr>
+                           <tr><td><span class="widget" id="editAction"/></td></tr>
+                           <tr><td><span class="widget" id="submitFireEvent"/></td></tr>
+                        </table>
+                    </td>
+                  </tr>
+                </table>
+            </td>
+        </tr>
+        </table>
+        #set $er = ""
+        #if ($evalResult != null){
+            #set $er = $session.evalResult
+        }
+        #if ($er != ""){
+        <p>
+        <hr/>
+        <b>Result</b>
+        <hr/>
+        </p>
+        $er
+        <hr/>
+        } #else {
+        <br/>
+        <br/>
+        }
+
+        <a name="debugURL"></a>
+        <table border='1' cellpadding='5' cellspacing='0' bgcolor="white">
+          <tr>
+                <td>
+                    <b>Input parameters</b>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                <b>Debug URL:</b> You can enter a URL, complete with CGI parameters,
+                e.g.
+                <br/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><code>/dynamide/demo?parameter1=Foo&amp;parameter2=Bar</code>
+                <br/>
+                so that you can make calls such as
+                <br/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><code>event.getQueryParam("parameter1")</code><br/>
+                 in your event.
+                <br/><br/>NOTE: You do not need to add action=, pageID= or next= in the URL.  These are automatically
+                set in the ScriptEvent object by this test.  The URL is for <b>additional</b><dm_nbsp/> parameters you might wish to send.
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                <a name="inputObjectEval"></a>
+                <b>inputObject Eval:</b> You can enter valid Beanshell syntax, with the last
+                object being the return value, to load the inputObject in the inbound ScriptEvent
+                object.  Normally you would construct this object prior to calling the event from Java or Beanshell.
+                Since this web page is text-based, you can use the Eval area to create the object.
+                <br/>
+                <br/>
+                <b>Example:</b>
+<pre>A = "This value is ignored";
+B = "Hello, world!";
+return B;</pre>
+                The value of variable "B" becomes the ScriptEvent.inputObject.
+            </td>
+          </tr>
+
+          <!--
+          <tr>
+                <td>
+                <a name="inputObjectEval"></a>
+                <b>source DotName:</b><dm_nbsp/><i><b>Optional.</b></i><dm_nbsp/> The ScriptEvent.sender object is the object that fires the event
+                in Dynamide.  Usually, a Page fires a page event sending itself as the source,
+                and the Session object fires an application event,
+                sending itself as the source.  These are the defaults when you choose the application or pageID
+                from the "Target" dropdown.  However, you can enter any other object DotName and it will then
+                be used for the source object.
+                The following values will all result in the Session object
+                being used for the source object:
+                    <ul>
+                    <li>session</li>
+                    <li>application</li>
+                    </ul>
+                <b>Example:</b>
+<pre>page1.widget1</pre>
+                An empty value will default to using the Session for application events, and the Page for
+                page events.
+            </td>
+          </tr>
+          -->
+
+        </table>
+
+        <input type="hidden" id="SUBSESSIONID" name="SUBSESSIONID" value="$SUBSESSIONID" />
+        <input type="hidden" id="SESSIONID" name="SESSIONID" value="$SESSIONID" />
+        <input type="hidden" id="page" name="page" value="debugEvent" />
+    </form>
+    </body>
+  </html>
+]]></htmlsrc>
+
+<widgets>
+    <widget id="selectTargetPageID">
+      <properties>
+        <property name="caption">
+          <value>Target</value>
+        </property>
+        <property name="captionWidth">
+          <value>150</value>
+        </property>
+        <!--
+        <property name="value">
+           <datatype>com.dynamide.datatypes.LiveEnumeratedDatatype</datatype>
+           <value>
+                <enumeration defaultIndex='0'>
+                    <value>application2</value>
+                </enumeration>
+            </value>
+           <liveEvalString>if (session.getSubsession()!=null){i=3; return session.getSubsession().getObjects();}
+           </liveEvalString>
+        </property>
+        -->
+        <!-- This is weird: value supplies the initial value, while items supplies the list.
+             That is all pretty good, except there is no way right now to get the value from the
+             default of the enumertated type "items".
+
+        If this is in, the fields don't win on the page post somehow, and this continues to win.
+        <property name="value">
+           <value>application</value>
+        </property>
+        -->
+
+        <property name="items">
+           <datatype>com.dynamide.datatypes.LiveEnumeratedDatatype</datatype>
+           <value>
+                <enumeration defaultIndex='0'>
+                    <value>application3</value>  <!-- make sure there is one empty value for autocreated fields -->
+                </enumeration>
+            </value>
+           <liveEvalString>if (session.getSubsession()!=null){i=4;return session.getSubsession().getObjects();}</liveEvalString>
+           <!--<liveEvalString>this is broken: v=session.getPaletteList();v.add("mojo");v.keys();</liveEvalString>   -->
+        </property>
+        <property name="multiple">
+          <value>false</value>
+        </property>
+        <property name="onchange">
+          <value>document.forms[0].submit();</value>
+        </property>
+        <property name="type">
+          <defaultValue>com.dynamide.select</defaultValue>
+          <readOnly>true</readOnly>
+          <value>com.dynamide.select</value>
+        </property>
+<!--
+        <property name="mojovalue">
+          <mojovalue>$source.getProperty("items").getValue().getDefaultValue()</mojovalue>
+        </property>
+-->
+      </properties>
+    </widget>
+
+    <widget id="selectTargetEvents">
+      <properties>
+        <property name="caption">
+          <value>Event</value>
+        </property>
+        <property name="captionWidth">
+          <value>150</value>
+        </property>
+        <property name="items">
+           <datatype>com.dynamide.datatypes.EnumeratedDatatype</datatype>
+           <value>
+                <enumeration defaultIndex='0'>
+                </enumeration>
+            </value>
+        </property>
+        <property name="multiple">
+          <value>false</value>
+        </property>
+        <property name="tabindex">
+          <defaultValue></defaultValue>
+        </property>
+        <property name="type">
+          <defaultValue>com.dynamide.select</defaultValue>
+          <readOnly>true</readOnly>
+          <value>com.dynamide.select</value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="editDebugURL">
+      <properties>
+        <property name="caption">
+          <datatype>com.dynamide.datatypes.HTMLDatatype</datatype>
+          <value><a href="#debugURL">Debug URL</a></value>
+        </property>
+        <property name="captionWidth">
+          <value>150</value>
+        </property>
+        <property name="textSize">
+          <value>80</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+        </property>
+        <property name="value">
+          <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+          <value>#if ($session.getSubsession()!=null){$session.getSubsession().get("applicationPath")}</value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="editSourceDotName">
+      <properties>
+        <property name="caption">
+          <datatype>com.dynamide.datatypes.HTMLDatatype</datatype>
+          <value><a href="#editSourceDotName">Source DotName</a></value>
+        </property>
+        <property name="captionWidth">
+          <value>150</value>
+        </property>
+        <property name="textSize">
+          <value>80</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+        </property>
+        <property name="value">
+          <value></value>
+        </property>
+      </properties>
+    </widget>
+
+
+    <widget id="selectCurrentPageID">
+      <properties>
+        <property name="caption">
+          <value>Current PageID</value>
+        </property>
+        <property name="captionWidth">
+          <value>150</value>
+        </property>
+        <property name="items">
+           <datatype>com.dynamide.datatypes.LiveEnumeratedDatatype</datatype>
+           <value>
+                <enumeration defaultIndex='0'>
+                </enumeration>
+            </value>
+           <liveEvalString>if (session.getSubsession()!=null){i=6;return session.getSubsession().getPages();}</liveEvalString>
+        </property>
+        <property name="multiple">
+          <value>false</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.select</value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="selectNextPageID">
+      <properties>
+        <property name="caption">
+          <value>"next" PageID</value>
+        </property>
+        <property name="captionWidth">
+          <value>150</value>
+        </property>
+        <property name="items">
+           <datatype>com.dynamide.datatypes.LiveEnumeratedDatatype</datatype>
+           <value>
+                <enumeration defaultIndex='0'>
+                </enumeration>
+            </value>
+           <liveEvalString>if (session.getSubsession()!=null){i=7;return session.getSubsession().getPages();}</liveEvalString>
+        </property>
+        <property name="multiple">
+          <value>false</value>
+        </property>
+        <property name="type">
+          <defaultValue>com.dynamide.select</defaultValue>
+          <readOnly>true</readOnly>
+          <value>com.dynamide.select</value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="editAction">
+      <properties>
+        <property name="caption">
+         <value>Action</value>
+        </property>
+        <property name="captionWidth">
+          <value>150</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+        </property>
+        <property name="value">
+          <value></value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="textareaInputObjectEval">
+      <properties>
+        <property name="caption">
+          <datatype>com.dynamide.datatypes.HTMLDatatype</datatype>
+          <value><a href="#inputObjectEval">inputObject Eval</a></value>
+        </property>
+        <property name="captionWidth">
+          <value>150</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.textarea</value>
+        </property>
+      </properties>
+    </widget>
+
+
+    <widget id="submitFireEvent">
+      <properties>
+        <property name="accesskey">
+          <value>f</value>
+        </property>
+        <property name="action">
+          <value>fireEvent</value>
+        </property>
+        <property name="caption">
+          <value>Fire Event [alt-F]</value>
+        </property>
+        <property name="captionWidth">
+          <value>150</value>
+        </property>
+        <property name="class">
+          <value>dmbutton</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="imagespace">
+      <properties>
+        <property name="height">
+          <value>1</value>
+        </property>
+        <property name="src">
+          <value>resources/images/transparent.gif</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.img</value>
+        </property>
+        <property name="width">
+          <value>20</value>
+        </property>
+      </properties>
+    </widget>
+
+
+
+</widgets>
+
+<event language="beanshell" name="onImport"><![CDATA[
+
+    void updateSelectTargetEvents(targetSession){
+        if (targetSession==null){
+            return;
+        }
+        selectTargetEvents = session.find("debugEvent.selectTargetEvents");
+        editSourceDotName = session.find("debugEvent.editSourceDotName");
+        System.out.println("selectTargetEvents"+selectTargetEvents);
+        enumObj = selectTargetEvents.getProperty("items").getValue();
+        enumObj.clear();
+        which = session.getFieldStringValue("debugEvent_selectTargetPageID");
+        if (which != null){
+            //OH, WHAT A HACK!  The first time in, which is empty, but it shouldn't be
+            if (which.equals("application") || which.length()==0 ){
+                System.out.println("updateSelectTargetEvents application: '"+which+"'");
+                enumObj.addStrings(targetSession.getEvents());
+                if (which.length()==0){
+                    editSourceDotName.setProperty("value", "application");
+                } else {
+                    editSourceDotName.setProperty("value", which);
+                }
+            } else {
+                System.out.println("updateSelectTargetEvents page "+which);
+                page = targetSession.getPageByID(which);
+                if (page!= null) enumObj.addStrings(page.getEvents());
+                editSourceDotName.setProperty("value", which);
+            }
+        } else {
+            System.out.println("updateSelectTargetEvents 'which' was null");
+        }
+    }
+]]></event>
+
+<event language="beanshell" name="debugEvent_onLoad"><![CDATA[
+    session.addField("source", new Field(session, session, "source", ""));
+    session.addField("evalResult", new Field(session, session, "evalResult", ""));
+    w = event.currentPage.getWidgetByID("selectTargetPageID");
+    v = w.get("value");
+    session.setFieldValue("debugEvent_selectTargetPageID", v);
+    System.out.println("v::::::::::::::::: "+v);
+
+    sid = session.get("SUBSESSIONID");
+    subsession = session.getSubsession();
+    session.logDebug("debugEvent_onLoad SUBSESSIONID: "+SUBSESSIONID);
+    if (subsesison!=null){
+        session.logDebug("debugEvent_onLoad subsession: "+subsession);
+        updateSelectTargetEvents(subsession);
+    } else {
+        session.logDebug("subsession is null in debugEvent_onLoad");
+    }
+]]></event>
+
+<event language="beanshell" name="debugEvent_onAction"><![CDATA[
+    import com.dynamide.event.*;
+
+    String SUBSESSIONID = session.getFieldStringValue("SUBSESSIONID");
+    targetSession = session.getResourceManager().getSession(SUBSESSIONID);
+
+    if (event.action.length()>0) {
+        if ( event.session.getSessionID().equals(SUBSESSIONID) ) {
+            evalResult = "Can't eval in current session: pick a different target subsession";
+            session.setFieldValue("evalResult", evalResult);
+            event.jumpToPage("debugEvent");
+            return;
+        }
+
+        event.prettyPrint = false;
+        variables = new com.dynamide.util.StringList();
+        System.out.println(" template: "+targetSession.expandTemplate(variables, session.getFieldStringValue("debugEvent_textareaInputObjectEval"), "debugEvent"));
+
+        if ( targetSession!=null ) {
+            try {
+                ScriptEvent targetEvent;
+                url = session.getFieldStringValue("debugEvent_editDebugURL");
+                if ( url.length()>0 ) {
+                    targetSession.setDebugURL(url);
+                }
+                try {
+                        obj = session.getFieldStringValue("debugEvent_selectTargetPageID");
+                        System.out.println("debugEvent_selectTargetPageID:'"+obj+"' "+obj.getClass().getName());
+                        if (session.getFieldStringValue("debugEvent_selectTargetPageID").equals("application")){
+                            targetEvent = targetSession.debugApplicationEvent(
+                                                       session.getFieldStringValue("debugEvent_textareaInputObjectEval"),
+                                                       session.getFieldStringValue("debugEvent_selectTargetEvents"),
+                                                       session.getFieldStringValue("debugEvent_selectCurrentPageID"),
+                                                       session.getFieldStringValue("debugEvent_selectNextPageID"),
+                                                       session.getFieldStringValue("debugEvent_editAction"),
+                                                       ""//don't use this until we have widget events: session.getFieldStringValue("debugEvent_editSourceDotName")
+                                                     );
+                        } else {
+                            targetEvent = targetSession.debugPageEvent(
+                                                       session.getFieldStringValue("debugEvent_selectTargetPageID"),
+                                                       //targetSession.expandTemplate(variables, session.getFieldStringValue("debugEvent_textareaInputObjectEval"), "debugEvent"),
+                                                       session.getFieldStringValue("debugEvent_textareaInputObjectEval"),
+                                                       session.getFieldStringValue("debugEvent_selectTargetEvents"),
+                                                       session.getFieldStringValue("debugEvent_selectCurrentPageID"),
+                                                       session.getFieldStringValue("debugEvent_selectNextPageID"),
+                                                       session.getFieldStringValue("debugEvent_editAction"),
+                                                       ""//don't use this until we have widget events: session.getFieldStringValue("debugEvent_editSourceDotName")
+                                                     );
+                        }
+
+                } finally {
+                    targetSession.setDebugURL("");
+                }
+                if (targetEvent instanceof ScriptEvent){
+                    session.setFieldValue("evalResult", targetEvent.dumpHTML());
+                } else {
+                    session.setFieldValue("evalResult", targetEvent.toString());
+                }
+            } catch (Throwable t){
+                evalResult = "ERROR: "+StringTools.escape(t.toString());
+                session.setFieldValue("evalResult", evalResult);
+                event.prettyPrint = false;
+            }
+        } else {
+            session.setFieldValue("evalResult", "SUBSESSION not found: "+SUBSESSIONID);
+        }
+    }
+    updateSelectTargetEvents(targetSession);
+    event.jumpToPage("debugEvent");
+  ]]></event>
+
+
+</dynamideForm>

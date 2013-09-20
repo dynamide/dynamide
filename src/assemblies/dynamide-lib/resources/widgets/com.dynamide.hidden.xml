@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<widget>
+    <componentHelp>
+     <p>A hidden field for maintaining variables between page hits and for communicating variables from
+     server to client and back.
+     </p>
+    </componentHelp>
+
+    <properties>
+        <property name="basename">
+            <defaultValue>hidden</defaultValue>
+            <hidden>true</hidden>
+        </property>
+        <property name="type"><defaultValue>com.dynamide.hidden</defaultValue><readOnly>true</readOnly></property>
+        <property name="name"><defaultValue>hidden</defaultValue></property>
+        <property name="value"><defaultValue></defaultValue></property>
+        <!-- if field does not map to a field, just use field as the id. -->
+        <property name="field">
+           <datatype>com.dynamide.datatypes.LiveEnumeratedDatatype</datatype>
+           <defaultValue>
+                <enumeration defaultIndex='0'>
+                    <value></value>  <!-- make sure there is one empty value for autocreated fields -->
+                </enumeration>
+            </defaultValue>
+           <liveEvalString>session.getFieldNames();</liveEvalString>
+        </property>
+    </properties>
+
+    <htmlsrc browser="*"><![CDATA[
+        #if ($designMode == "true"){
+            <table border='4' cellpadding='0' cellspacing='0' bgcolor='\#aaaaaa'>
+              <tr>
+                <td><small><b>hidden:</b><br/>$widget.ID<br/>$widget.value</small></td>
+              </tr>
+            </table>
+        }
+        #set $fieldID = $widget.fieldID
+        <input  type="hidden" id="$fieldID" name="$fieldID" value="$widget.value" />
+    ]]></htmlsrc>
+</widget>

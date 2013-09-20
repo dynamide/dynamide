@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<widget>
+    <componentHelp>
+    <p>This datasource component simply allows you to use the Session as your datasource.
+    This is the default behavior if you have no datasource anyway: the session is searched.
+    But by having a thin widget wrapper, you can change the type of this widget to
+    some other kind of datasource, and all widgets wired to this datasource automatically
+    get the new data, and don't need to have their properties reset.  Widgets bind
+    to this wiget by name, so as long as you don't change the name property, all
+    the widgets will stay attached.
+    </p>
+    </componentHelp>
+
+    <properties>
+    </properties>
+
+  <event language="beanshell" name="com_dynamide_sessiondatasource_onImport"><![CDATA[
+    import com.dynamide.Session;
+    import com.dynamide.event.ScriptEvent;
+  ]]></event>
+
+
+
+  <event language="beanshell" name="com_dynamide_sessiondatasource_onLoad"><![CDATA[
+  ]]></event>
+
+  <htmlsrc browser="*"><![CDATA[
+    #if ($widget.getObject()==null){
+        $widget.setObject($session)
+    }
+    ## if design mode, show widget...
+    #if ($designMode == "true"){
+        <table bgcolor="gray" border='1' cellpadding='0' cellspacing='0'>
+          <tr>
+            <td>$widget.ID</td>
+            <td>Session: $widget.getObject()</td>
+          </tr>
+        </table>
+    }
+  ]]></htmlsrc>
+
+</widget>

@@ -1,0 +1,1222 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideDoco>
+<dynamideDoco pageTitle="Assemblies">
+
+<style type="text/css">
+    <!--
+    .unimplemented \\{margin: 30pt; font-weight: bold; font-size: 14pt; color: blue; font-style: italic;\}
+    -->
+</style>
+
+    <p>See the
+    $session.link("", "/doc/help/glossary", "Glossary")
+    <dm_nbsp/> for definitions of terms used here.</p>
+
+    <b>
+    <div class="unimplemented">
+    Note: this page describes features which are not entirely implemented.  Some work, some don't.
+    As of this writing, assemblies and the assembly.xml and web-apps.xml files are working.
+    Imports are working, but not with all the version number features.  Account directories
+    are supported, but accounts must be created manually.  Also, the topic on this page
+    are a little jumbled.  Please bear with us.
+    </div>
+    </b>
+
+    <h2>Assembly Details</h2>
+    <p>When you install an assembly containing applications into a home
+    directory, the app automatically is accessible via the home name plus the
+    application name within the assembly.  Mappings are searched first, then
+    direct searching  is tried, if it is turned on.   If you do not map a URI
+    to the app, the URI would be <br />
+         /\{homedir-name\}/\{assembly-name\}/apps/\{appname\}<br />
+    unless you turn off direct searching of applications.
+    For a production server, you would want direct searching turned off,
+    and only allow applications that were explicitly mapped in the web-apps file to be accessed.
+    Note that <b><i>none</i></b> of
+    these scenarios result in files being directly accessible via the URL.
+     These just define search locations for the Application to find its base directory.
+     The Application still uses a ResourceManager to load all files.</p>
+
+     <p>Some of the examples below assume that your account name is "acme".  This is
+     an imaginary account, used for the examples only, and would be available
+     on a real installation only if the Dynamide administrator created an "acme" account.
+     However, the account "dynamide" is created automatically, and is used by Dynamide
+     itself.  Only the Dynamide administrator has access to this account.
+     (Dynamide shares many resources publicly, however, as explained below.)
+     In Self-Hosted Mode, you or someone in your organization would be the
+     Dynamide administrator.
+     </p>
+
+     <p>The webapps.xml file is used to map URI's to apps within assemblies.</p>
+
+    <table border="1" cellpadding="0" cellspacing="0">
+      <tbody>
+        <tr>
+          <th>web-apps.xml</th>
+        </tr>
+
+        <tr>
+          <td>
+            <table width="100%" border="1" cellspacing="0" cellpadding="4">
+              <tbody>
+                <tr>
+                  <td valign="Top">/demo<br />
+                   </td>
+
+                  <td valign="Top">/homes/acme/com-acme-apps-7/apps/demo<br />
+                   </td>
+                </tr>
+
+                <tr>
+                  <td valign="Top">/catalog<br />
+                   </td>
+
+                  <td valign="Top">/homes/acme/com-acme-apps-7/apps/catalog<br />
+                   </td>
+                </tr>
+
+                <tr>
+                  <td valign="Top">/dynamide/ide<br />
+                   </td>
+
+                  <td valign="Top">/homes/dynamide/com-dynamide-apps-60/apps/ide<br />
+                   </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <br />
+     The above mapping behaves differently in Self-Hosted Mode and Hosted Mode:<br />
+
+
+    <ul>
+      <li>In Self-Hosted Mode: http://www.acme.com/demo</li>
+
+      <li>In Hosted Mode:<dm_nbsp/> http://apps.dynamide.com/acme/demo<dm_nbsp/></li>
+    </ul>
+    Without the mapping, the following default URL obtains:<br />
+
+
+    <ul>
+      <li>Self-Hosted Mode: http://www.acme.com/acme/com-acme-apps-7/apps/demo</li>
+
+      <li>Hosted Mode: http://apps.dynamide.com/acme/com-acme-apps-7/apps/demo</li>
+    </ul>
+    Of course, in Self-Hosted Mode, you can name the accounts anything, such as /dev, /qa, and so on.<br />
+     For example<br />
+
+
+    <ul>
+      <li>http://www.acme.com/qa/com-acme-apps-7/apps/demo<br />
+      </li>
+    </ul>
+    The com-dynamide-apps assembly contains the following assembly.xml file:<br />
+     <br />
+
+
+    <table border="1" cellpadding="0" cellspacing="0">
+      <tbody>
+        <tr>
+          <th>assembly.xml</th>
+        </tr>
+
+        <tr>
+          <td>
+            <table cellpadding="2" cellspacing="2" border="1" width="100%">
+              <tbody>
+                <tr>
+                  <td valign="Top">basename<br />
+                   </td>
+
+                  <td valign="Top">com-dynamide-apps<br />
+                   </td>
+                </tr>
+
+                <tr>
+                  <td valign="Top">interface<br />
+                   </td>
+
+                  <td valign="Top">1<br />
+                   </td>
+                </tr>
+
+                <tr>
+                  <td valign="Top">build<br />
+                   </td>
+
+                  <td valign="Top">59<br />
+                   </td>
+                </tr>
+
+                <tr>
+                  <td valign="Top">imports<br />
+                   </td>
+
+                  <td valign="Top">com-dynamide-lib,1,59+<br />
+                   </td>
+                </tr>
+
+                <tr>
+                  <td valign="Top"><br />
+                   </td>
+
+                  <td valign="Top"><b>...</b><br />
+                   </td>
+                </tr>
+
+                <tr>
+                  <td valign="Top">monitor<br />
+                   </td>
+
+                  <td valign="Top">com.dynamide.AssemblyMonitor<br />
+                   </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <span class="unimplemented">To save some implementation time, and some figuring out of fancy parsing, just implement the version sequences as child elements:
+<pre>
+    &lt;imports&gt;
+          &lt;import&gt;
+                &lt;basename&gt;com-dynamide-lib&lt;/basename&gt;
+                &lt;interface&gt;
+                    &lt;version&gt;1&lt;/version&gt;
+                &lt;/interface&gt;
+                &lt;builds&gt;
+                    &lt;version&gt;1&lt;/version&gt;
+                    &lt;version&gt;3&lt;/version&gt;
+                    &lt;version&gt;*&lt;/version&gt;
+                    &lt;version&gt;5&lt;/version&gt;
+                    &lt;version&gt;7&lt;/version&gt;
+                    &lt;version&gt;*&lt;/version&gt;
+                &lt;/builds&gt;
+          &lt;/import&gt;
+    &lt;imports&gt;
+
+</pre>
+
+    Implies builds versions 1, 3-5, 7+ <br />
+     The default for builds is *. <br />
+     It is questionable whether to allow interface numbers to use open-ended ranges. And open ended build ranges may also be lax. If you allow them, make a utility that reports on all apps that are running with future versions of imports. It should also
+    show you which apps need to be tested because new interfaces are available. It should then let you upgrade to the new interface.  <br />
+</span>
+
+     Note that the assembly has a basename and a build number. <dm_nbsp/>These two items determine the globally unique identifier for this assembly. <dm_nbsp/>The interface number is for clients that wish to bind to this library as long as the interface doesn't
+    change. <dm_nbsp/>The interface is the sum of all Objects and API calls that the interface makes visible (public). <dm_nbsp/>Typically, changing method signatures or removing Objects or API calls would mandate a new interface number. <dm_nbsp/>Dynamide doesn't
+    check the interface, the library author is responsible for determining if two versions have the same effective interface, since the interface to a Dynamide assembly includes widgets, pagetypes, editors, designers, properties, events, Javascript
+    functions, Java objects, and Java methods, <dm_nbsp/>mosts of which cannot be validated with a compiler.<br />
+     <br />
+     An import can be based on a basename, an interface version string, and a build version string. <dm_nbsp/>Version strings can be absolute numbers, ranges, or open-ended ranges. <dm_nbsp/>"3" means just version 3, "1-2" means version 1 through 2, "1+" means
+    all versions later than 1.<br />
+     <br />
+     An Assembly can contain a <b>web-apps.xml</b> file. <dm_nbsp/>This file can be merged into the master web-apps.xml file. <dm_nbsp/>There is no implementation for this yet, but the rule would be to allow URI's if they don't cause conflicts.<br />
+     <span class="unimplemented">I think that the web-apps should be an element inside an assembly.xml file</span> <br />
+     An Assembly can be zipped up into a zip file, in order to move it to another host. <dm_nbsp/>The Assembly directory name should not be included in the path of the included files. That is, within the zip file, the root directory should be the assembly
+    directory. <dm_nbsp/>The name of the zip file will be used to extract it to a directory with that name. <dm_nbsp/><br />
+     Here's an example:<br />
+     <br />
+     Directory:
+
+    <ul>
+      <li><b>com-acme-catalog-8</b>/ -- Acme's catalog assembly, build 8</li>
+        <ul>
+          <li>assembly.xml</li>
+          <li><b>apps/</b></li>
+            <ul>
+              <li><b>app1/</b></li>
+                <ul>
+                  <li>application.xml</li>
+                  <li>page1.xml<br />
+                  </li>
+                </ul>
+
+                <ul>
+                  <li><b>resources</b></li>
+                    <ul>
+                      <li><b>css</b></li>
+                        <ul>
+                          <li>app1.css<br />
+                          </li>
+                        </ul>
+                    </ul>
+                </ul>
+            </ul>
+        </ul>
+    </ul>
+    Zip file:<br />
+
+
+    <blockquote>
+      <br />
+
+
+      <table cellpadding="0" cellspacing="0" border="1">
+        <tbody>
+          <tr>
+            <td valign="Top">
+              <div align="Center">
+                <b>com.acme-catalog-8.zip</b><br />
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td valign="Top">
+              <table cellpadding="2" cellspacing="2" border="1">
+                <tbody>
+                  <tr>
+                    <th valign="Top">Filename<br />
+                     </th>
+
+                    <th valign="Top">Path<br />
+                     </th>
+                  </tr>
+
+                  <tr>
+                    <td valign="Top">assembly.xml<br />
+                     </td>
+
+                    <td valign="Top">/<br />
+                     </td>
+                  </tr>
+
+                  <tr>
+                    <td valign="Top">application.xml<br />
+                     </td>
+
+                    <td valign="Top">/apps/app1<br />
+                     </td>
+                  </tr>
+
+                  <tr>
+                    <td valign="Top">page1.xml<br />
+                     </td>
+
+                    <td valign="Top">/apps/app1<br />
+                     </td>
+                  </tr>
+
+                  <tr>
+                    <td valign="Top">app1.css<br />
+                     </td>
+
+                    <td valign="Top">/apps/app1/resources/css<br />
+                     </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <br />
+      <br />
+    </blockquote>
+    However, the name that counts is the basename in the assembly.xml file, together with the interface and build version numbers. To avoid confusion with Java package names, <dm_nbsp/>make the basename using dashes, using all <dm_nbsp/>lower-case letters, and
+    include library name plus the build number. <dm_nbsp/>Use a new, single integer build number for each build or assembly release, not major-minor-build-bugfix. <dm_nbsp/>Bugfixes back in the realease series would have to have a higher build number for
+    Dynamide to be able to decide to use it preferentially. <dm_nbsp/>If you change the functionality, consider using a new interface number. <br />
+     <br />
+     For example, Dynamide used to distribute com-dynamide-apps-59, which is all the applications as of build 59. <dm_nbsp/>The widgets and other shareable resources are assembled into com-dynamide-lib-59. <dm_nbsp/>The interface version number is specified in the
+    assembly.xml file, so is not used in the assembly zip file name. <dm_nbsp/>When the assembly is registered, Dynamide will use the values in the assembly.xml file, not the assembly zip file or directory name. <dm_nbsp/>Those names are just to avoid conflict
+    with other assemblies installed on the same host.<br />
+     <br />
+     <b>Applications define imports of Assemblies. <dm_nbsp/></b>Assemblies can thus import multiple versions of the same Assembly. <dm_nbsp/>The search path is <i>per-Application</i>, not <i>per-Assembly</i>.<br />
+     <br />
+     Widgets and Applications can require Java interfaces, and assembly interface numbers. <dm_nbsp/>The Application decides which Java interface or assembly interface version to bind to. <dm_nbsp/>The widget declares that it "requires" a certain interface
+    level. <dm_nbsp/>If this level is not available, the widget refuses to load, and logs an ERROR. <dm_nbsp/>This can be captured with automated testing. <dm_nbsp/>Test mode is turned on so that widgets don't <dm_nbsp/>open DB connections, etc., and all pages and all
+    widgets are loaded and rendered. Errors and Warnings can be inspected. <dm_nbsp/>For a successful test, ERROR count <i><b>must</b></i> be zero, and WARNING count <i><b>should</b></i> be zero.<br />
+     <br />
+     Imports are specified in the Dynamide objects.<br />
+     <br />
+     An application specifies imports in application.xml:<br />
+     Here's an example from an application that imports com-dynamide-lib, interface version 1, and any builds including build 59 or higher. <dm_nbsp/>It also imports com-acme-apps interface version 1, all builds.<br />
+     <br />
+
+<pre>
+    &lt;application&gt;
+        &lt;properties&gt;
+            &lt;property name='imports'&gt;
+                &lt;datatype&gt;com.dynamide.datatypes.Enumeration&lt;/datatype&gt;
+                &lt;value&gt;
+                   &lt;enumeration override="true"&gt;
+                       &lt;item datatype="com.dynamide.datatypes.Version"&gt;
+                           &lt;basename&gt;com-dynamide-lib&lt;/basename&gt;
+                           &lt;interface&gt;1&lt;/interface&gt;
+                           &lt;build&gt;59+&lt;/build&gt;
+                       &lt;/item&gt;
+                       &lt;item&gt;
+                           &lt;basename&gt;com-acme-apps&lt;/basename&gt;
+                           &lt;interface&gt;1&lt;/interface&gt;
+                           &lt;build&gt;1+&lt;/build&gt;
+                       &lt;/item&gt;
+                   &lt;/enumeration&gt;
+                &lt;/value&gt;
+                &lt;helpTip&gt;items: a list of Strings.&lt;/helpTip&gt;
+            &lt;/property&gt;
+          <b>...</b>
+        &lt;properties&gt;
+          <b>...</b>
+    &lt;/application&gt;
+
+</pre>
+    <br />
+    Imported interface numbers are use preferentially in the order listed -- the first interface
+    listed in the interfaces element is used first, if found, else the second one listed, and so on.
+    <br />
+     Imports affect the search path for resources. <dm_nbsp/>Each application
+     has its own instance of the ResourceManager, which searches for resources.
+     <dm_nbsp/>The ResourceManager has a list of places to search, similar to a search path in a command shell.
+    <dm_nbsp/>The search order is:<br />
+     <br />
+
+
+    <ol>
+      <li>relative to the application directory</li>
+
+      <li>relative to the assembly directory</li>
+
+      <li>relative to the imported assembly directories, in the order that assemblies are imported, within the
+      account "assemblies" directory first, then within the shared, global "assemblies" directory.</li>
+    </ol>
+    Assemblies may be imported from an account home directory, or from the shared assembly directory,
+    called \$RESOURCE_ROOT/assemblies/.<br />
+     <br />
+     Finally, Dynamide discovers where the root of the assemblies is and how to handle virtual
+     server host names by how Resin is configured with this file:<br />
+     <br />
+
+
+    <table border="1" cellpadding="0" cellspacing="0">
+      <tbody>
+        <tr>
+          <th>resin.conf</th>
+        </tr>
+
+        <tr>
+          <td>names virtual server mappings<br />
+           names Dynamide Root directory<br />
+           </td>
+        </tr>
+      </tbody>
+    </table>
+    <br />
+
+    <hr />
+
+    <h2>Use Cases</h2>
+
+    <ul>
+      <li><b>Add an application</b></li>
+        <ul>
+          <li>Hosted Mode:</li>
+
+            <ul>
+              <li>In hosted mode, all assemblies live under a home directory for an account. <dm_nbsp/>Each organization and each user has an account, so /john and /acme would be available if <dm_nbsp/>user "john" signed up as a developer with organization
+              "acme". <dm_nbsp/>John would develop in /john, and push to production in /acme.<br />
+              </li>
+            </ul>
+
+            <ul>
+              <li>Description<br />
+              </li>
+            </ul>
+
+            <ul>
+                <ul>
+                  <li>In the hosted version of Dynamide, you can only install applications in your account directory. <dm_nbsp/>This means all URI's begin with your account name:</li>
+
+                  <li><dm_nbsp/><dm_nbsp/><dm_nbsp/> /acme/catalog</li>
+
+                  <li>for example:</li>
+
+                  <li><dm_nbsp/><dm_nbsp/><dm_nbsp/> http://www.dynamide.com/acme/catalog</li>
+                </ul>
+
+              <li>Actions:</li>
+
+                <ul>
+                  <li>Dynamide will resolve the account name and look in that account's home directory, and consult the web-apps file there to find the application.</li>
+
+                  <li>Note: within your application code you refer to \$application.URI so that you never have to hardcode the URI.<br />
+                  </li>
+                </ul>
+            </ul>
+        </ul>
+
+        <ul>
+          <li>Self-Hosted Mode</li>
+
+            <ul>
+              <li>You come up with whatever application URI's you want:</li>
+
+                <ul>
+                  <li><dm_nbsp/><dm_nbsp/><dm_nbsp/> /catalog</li>
+
+                  <li>for example:</li>
+
+                  <li><dm_nbsp/><dm_nbsp/><dm_nbsp/> http://www.acme.com/catalog</li>
+                </ul>
+            </ul>
+
+            <ul>
+              <li>Developers have accounts on the server. <dm_nbsp/>Developers develop within their home directories, then push to the Q/A or Production directories. <dm_nbsp/>So user "john" develops /john/demo, then pushes to /demo.</li>
+
+              <li>You can create accounts for roles and groups instead of individuals if you wish to manage concurrent access issues yourself. <dm_nbsp/>For example, you could have a "qa" account for doing Q/A testing on the same machine as development, then
+              only allow one administrator to "push" files into /qa/ at a time. <dm_nbsp/>Similarly, you could define /dev/ if you had one developer creating pages and the application files in the Dynamide IDE, another developer designing the XSL files, and
+              another developer in charge of <dm_nbsp/>CSS files and images. <dm_nbsp/>Since they all update the /dev/demo application, their changes are in sync in one sandbox, but you come up with some communication or responsibility scheme so that files are
+              not overwritten.<br />
+              </li>
+            </ul>
+
+            <ul>
+              <li>Action</li>
+
+                <ul>
+                  <li>Dynamide will consult the global web-apps file to find the application</li>
+                </ul>
+            </ul>
+        </ul>
+
+      <li><b>Promote a resources directory to a library using assemblies</b></li>
+
+        <ul>
+          <li>create an assembly directory, mark it with a version and id, copy the resources directory.<br />
+          </li>
+        </ul>
+
+      <li><b>Create an assembly with multiple applications</b></li>
+
+        <ul>
+          <li>package up the current assembly, with sibling applications that may or may not have dependencies.<br />
+          </li>
+        </ul>
+
+      <li><b>Create assemblies with independent applications</b></li>
+
+        <ul>
+          <li>split out apps into assemblies, but assumes that apps don't depend on each other.</li>
+
+          <li>copy apps/\{app\} directory, including apps/\{app\}/resources.</li>
+
+          <li>copy /resources directory.<br />
+          </li>
+        </ul>
+
+      <li><b>Share resources between applications</b></li>
+
+        <ul>
+          <li>make a "resources" directory at the assembly level, move resource from apps/\{app\}/resources to this new directory.<br />
+          </li>
+        </ul>
+
+      <li><b>Create Monolythic assemblies</b></li>
+
+        <ul>
+          <li>All the files in this assembly, plus any imported assemblies.</li>
+
+          <li>Does not include Java jar files.</li>
+
+          <li>Suitable for installing on a Dynamide server that has all the correct Java jar files installed, but may not<dm_nbsp/> have any other assemblies installed.<br />
+          </li>
+        </ul>
+
+      <li><b>Create Dependent assemblies</b></li>
+
+        <ul>
+          <li>Just the files in this assembly, but not any imports</li>
+
+          <li>Suitable for installing on a Dynamide server that has the import assemblies already installed.<br />
+          </li>
+        </ul>
+
+      <li><b>Create WAR files<dm_nbsp/></b></li>
+
+        <ul>
+          <li>These require Monolythic Assemblies</li>
+
+          <li>A WAR file will be produced which is a full deployment image of your assembly, including all Dynamide assemblies and all required jar files.<br />
+          </li>
+        </ul>
+
+      <li><b>Deploy a WAR file to a Resin host</b></li>
+
+      <li><b>Deploy an assembly to a Dynamide host</b></li>
+
+      <li><b>Map URI's to deployed applications in assemblies</b></li>
+
+      <li><b>Specify that an application requires certain interfaces</b></li>
+
+      <li><b>Specify that an application requires certain build numbers</b><br />
+      </li>
+    </ul>
+    <hr />
+
+    <h2>Directories in Dynamide application server environment</h2>
+
+    <p>Here is the layout of Dynamide's resources, including your installed assemblies.<br />
+    </p>
+
+    <ul>
+      <li><b>RESOURCE_ROOT</b><br />
+      </li>
+
+        <ul>
+          <li><b>assemblies</b></li>
+
+            <ul>
+              <li><b>com-dynamide-lib-59</b> -- common assembly with resources available to all users, version 59</li>
+
+                <ul>
+                  <li><b>resources</b> <dm_nbsp/>-- all assemblies have a resources directory , they are not shown for the rest of the shared assemblies here.<br />
+                  </li>
+                </ul>
+
+              <li><b>com-dynamide-lib-60</b> -- common assembly with resources available to all users, version 60</li>
+
+              <li><b>com-widgetco-10</b><dm_nbsp/> -- WidgetCo's assembly, version 10, available for import. Contains re-usable widgets..</li>
+            </ul>
+
+            <ul>
+              <li><b>com-widgetco-11</b> -- WidgetCo's<dm_nbsp/> assembly, version 11.<br />
+              </li>
+
+              <li><b>com.foobar-lib-20</b> -- Foobar's assembly, available for<dm_nbsp/> import</li>
+            </ul>
+
+          <li><b>homes</b></li>
+
+            <ul>
+              <li><b>dynamide</b></li>
+
+                <ul>
+                  <li><b>assemblies</b><br />
+                  </li>
+                </ul>
+
+                <div style="margin-left: 2em">
+                  <ul>
+                    <li><b>com-dynamide-apps-59</b> -- common assembly with applications available to users who subscribe to the IDE, etc.<br />
+                    </li>
+                  </ul>
+                </div>
+            </ul>
+
+            <ul>
+              <li><b>acme</b></li>
+
+                <ul>
+                  <li><b>assemblies</b></li>
+
+                    <ul>
+                      <li><b>com-acme-lib-4</b> --Library of widgets, shared only among acme's assemblies.<br />
+                      </li>
+                    </ul>
+                </ul>
+
+                <div style="margin-left: 2em">
+                  <ul>
+                    <li><b>com-acme-catalog-6</b> -- build 6 of the catalog applications, available for Q/A testing<br />
+                    </li>
+                  </ul>
+                </div>
+            </ul>
+
+            <ul>
+              <li><b>joe</b></li>
+
+                <ul>
+                  <li><b>assemblies</b></li>
+
+                    <ul>
+                      <li><b>com-acme-lib-4</b> --Library of widgets, shared only among Joe's assemblies.<br />
+                      </li>
+                    </ul>
+                </ul>
+            </ul>
+
+            <div style="margin-left: 4em">
+              <ul>
+                <li><b>com-acme-catalog-7</b> -- Joe's development assembly, build 7</li>
+              </ul>
+
+              <ul>
+                <li><b>com-acme-catalog-8</b> -- Joe's development assembly, build 8</li>
+              </ul>
+
+              <div style="margin-left: 2em">
+                <ul>
+                  <li><b>apps</b></li>
+                </ul>
+
+                <div style="margin-left: 2em">
+                  <ul>
+                    <li><b>app1</b></li>
+                  </ul>
+
+                  <div style="margin-left: 2em">
+                    <ul>
+                      <li><b>resources</b><br />
+                      </li>
+                    </ul>
+                  </div>
+
+                  <ul>
+                    <li><b>app2</b></li>
+                  </ul>
+
+                  <div style="margin-left: 2em">
+                    <ul>
+                      <li><b>resources</b></li>
+                    </ul>
+                  </div>
+                </div>
+
+                <ul>
+                  <li><b>resources</b></li>
+                </ul>
+
+                <div style="margin-left: 2em">
+                  <ul>
+                    <li><b>css</b> -- Cascading Style Sheets</li>
+                  </ul>
+                </div>
+
+                <div style="margin-left: 2em">
+                  <ul>
+                    <li><b>js</b> -- Javascript</li>
+                  </ul>
+                </div>
+
+                <div style="margin-left: 2em">
+                  <ul>
+                    <li><b>widgets</b> -- Widget Library</li>
+                  </ul>
+
+                  <div style="margin-left: 2em">
+                    <ul>
+                      <li><b>pagetypes</b></li>
+                    </ul>
+
+                    <ul>
+                      <li><b>editors</b></li>
+                    </ul>
+
+                    <ul>
+                      <li><b>designers</b><br />
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div style="margin-left: 2em">
+                  <ul>
+                    <li><b>xsl</b> -- XSLT stylesheets</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+        </ul>
+    </ul>
+
+    <p>All searches and named resources are relative to the search path.  Typically, resources
+    are kept in the "resources" directories. <dm_nbsp/>Since there are
+    multiple "resources" directories, they are searched in order as defined
+    <dm_nbsp/>by the ResourceManager's resource path. <dm_nbsp/>Normally,
+    this is \{assembly\}/apps/\{app\}/resources/, \{assembly\}/resources,
+    \{imported-assembly\}/resources, \{imported-assembly\}/resources, ... and
+    so on through the list of imported-assemblies. <dm_nbsp/>In this scheme,
+    apps in imported assemblies cannot be searched for resources.
+    <dm_nbsp/>Instead, you must load up the app within your assembly or the
+    imported assembly, and delegate to it.</p>
+
+    <p>For example, to import a file called foo.css, from your application "app1"
+    in your "joe" account, as shown above, you could use a call such as
+    <pre>
+        \$session.getInclude("resources/css/foo.css")
+    </pre>
+    Which would search in the following locations if your application imported com-dynamide-lib-59:
+    <pre>
+        RESOURCE_ROOT/homes/joe/com-acme-catalog-8/apps/app1/resources/css/foo.css
+        RESOURCE_ROOT/homes/joe/com-acme-catalog-8/resources/css/foo.css
+        RESOURCE_ROOT/assemblies/com-dynamide-lib-59/resources/css/foo.css
+    </pre>
+    </p>
+
+    <p>Note: user "joe" cannot access files from assemblies in the home
+    directory of user "acme", even though Joe works for acme. <dm_nbsp/>In
+    hosted mode, Joe must obtain copies of assemblies and place them in
+    <b>RESOURCE_ROOT/homes//joe/assemblies/</b> , or arrange to have them installed in
+    <b>RESOURCE_ROOT/assemblies</b>. <dm_nbsp/>To protect access to assemblies, write a
+    monitor class and name it in the assembly.xml file in the "monitor"
+    field. <dm_nbsp/>The monitor can accept, deny, and log access.<dm_nbsp/>
+    Without a monitor, in Hosted Mode, putting assemblies in
+    <b>RESOURCE_ROOT/assemblies</b><dm_nbsp/> is less contained, since other organizations have
+    access to the assemblies.</p>
+
+    <p>Other users can access applications installed in /homes/dynamide, but
+    not via the filesystem, only through URLs, such as<dm_nbsp/>
+    /dynamide/ide. <dm_nbsp/>The apps in dynamide can access files anywhere
+    in the tree because the SecurityManager installed by the ResourceManager
+    specifically allows it.</p> <hr />
+
+    <h2>Mapping URI's to Applications (web-apps.xml)</h2>
+
+    <p><br />
+    </p>
+
+    <p>The web-apps.xml file supports loading apps on Servlet engine startup:
+<example><![CDATA[<web-apps>
+<app>
+  <URI>/mail-job</URI>
+  <APPNAME>mail-job</APPNAME>
+  <ASSEMBLY>
+     <name>com-foo-apps</name>
+     <interface>1</interface>
+  </ASSEMBLY>
+  <HOME>foo</HOME>
+  <load-on-startup>true</load-on-startup>
+</app>
+</web-apps>]]></example>
+The load-on-startup element specifies that this app should be started when the Sevlet engine
+starts up.  This element is optional.  If absent, it is equivalent to "false".
+    </p>
+
+    <p>A URI is the path portion of a URL. For example, given the URL<br />
+     <dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/> http://myhost:80/foo/bar?param=value<br />
+     the URI is<br />
+     <dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/> /foo/bar<br />
+    </p>
+
+    <p>In the web-apps.xml file you describe the apps that are in this assembly, and what URI's should be associated with them.<dm_nbsp/> If you are running in "Hosted Mode", the URI's will be prepended with the account name.<dm_nbsp/> For example, account
+    "acme" with an app named "demo",<br />
+     <dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/> /demo<br />
+     will become<br />
+     <dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/> /~acme/demo<br />
+     in hosted mode.<br />
+    <br />
+     Also, if you are running in either Hosted Mode or Self-Hosted Mode, a user's sandbox will also be accessible by using this URI naming scheme.<dm_nbsp/> For example, if user "joe" has the same application installed in an assembly in his home directory,
+    then this application is available via:<br />
+     <dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/> /~joe/demo<br />
+    <br />
+     In Self-Hosted Mode, the administrator has permission to alter the global web-apps.xml file, and so can remap any URI's.<br />
+    <br />
+     The context for URI mapping is chained.<dm_nbsp/> The root web-apps.xml is read first, then all the web-apps.xml files from the account home dirs, then from each assembly.<dm_nbsp/> Conflicts are dissallowed and reported.<dm_nbsp/> ".." and <dm_nbsp/>path.separator
+    are not allowed.<dm_nbsp/> All APPNAME values are taken to be relative to the directory with web-apps.xml.<br />
+    <br />
+
+      <span class="unimplemented">Note: still to be worked out -- The
+      WebAppEntry class in memory fills in the assembly name and home name,
+      based on where it picked up the web-apps.xml file. This object is in
+      the Dynamide context. But the contexts are
+    searched in order, so a global web-apps.xml that specifies that a url
+    maps to a certain assembly wins over the same url found in any assembly,
+    since the global one specifies the assembly.</span><br />
+     web-apps.xml files within assemblies don't use the ASSEMBLY element, or
+     the HOME element. Those elements are used or updated when the assembly
+     is installed. The following examples show the web-apps.xml files,
+     relative to \$\{RESOURCE_ROOT\}.  Note that the elements present are different in
+     each location.  The assembly for this example is "com-acme-catalog-6".
+    </p>
+
+<p>File: <b>homes/acme/assemblies/com-acme-catalog-6/web-apps.xml</b></p>
+<example><![CDATA[<web-apps>
+ <app>
+  <URI>/Shop/Catalog</URI>
+  <APPNAME>catalog</APPNAME>
+ </app>
+</web-apps>]]></example>
+
+  <!--
+  <pre><font color='black'>
+      <b>&lt;web-apps&gt;</b><br />
+          <b>&lt;app&gt;<br />
+                  &lt;URI&gt;<font color="\#006600">/Shop/Catalog</font>&lt;/URI&gt;<br />
+                  &lt;APPNAME&gt;<font color="\#006600">catalog</font>&lt;/APPNAME&gt;</b><br />
+          <b>&lt;/app&gt;</b><br />
+      <b>&lt;/web-apps&gt;</b><br />
+
+      </font>
+      </pre>
+  -->
+  <p>but once installed in a user's home directory, it should look like this, with the &lt;ASSEMBLY> element:</p>
+  <!--
+    <style>
+    .red \{font-color: \#006600; font-weight: bold;\}
+    .green \{font-color: \#006600; font-weight: bold;\}
+    .blue \{font-color: \#006600; font-weight: bold;\}
+    .e \{font-weight: bold;\}
+    </style>
+
+<pre><font color='black'>
+<b>&lt;web-apps&gt;</b><br />
+      <b>&lt;app&gt;</b><br />
+       &lt;URI&gt;<div class='red'>/Shop/Catalog</div>&lt;/URI&gt;
+       &lt;APPNAME&gt;<span class='red'>catalog</span>&lt;/APPNAME&gt;<br />
+                  <span class='red'>&lt;ASSEMBLY&gt;</span>
+                     <span class='red'>&lt;name&gt;</span>
+                      <span class='red'>com-acme-catalog-6</span>
+                     <span class='red'>&lt;/name&gt;</span>
+
+                     <span class='red'>&lt;interface&gt;</span>
+                      <span class='red'>1</span>
+                     <span class='red'>&lt;/interface&gt;</span>
+
+                  <span class='red'>&lt;ASSEMBLY&gt;</span>
+                  <span class='red'>com-acme-catalog-6</span>
+                  <span class='red'>&lt;/ASSEMBLY&gt;</span>
+
+              &lt;/app&gt;
+              <b>&lt;/web-apps&gt;</b><br />
+              </font>
+              </pre>
+  -->
+<p>File: <b>homes/acme/web-apps.xml</b></p>
+
+<example><![CDATA[<web-apps>
+ <app>
+  <URI>/Shop/Catalog</URI>
+  <APPNAME>catalog</APPNAME>
+  <ASSEMBLY>
+      <name>com-acme-catalog-6</name>
+      <interface>1</interface>
+  </ASSEMBLY>
+ </app>
+</web-apps>]]></example>
+
+
+  <p>and if installed in Self-Hosted Mode, all entries should be filled in. Note that the &lt;HOME> entry is now present.</p>
+   <!--
+  <pre>
+  <font color='black'>
+                <b>&lt;web-apps&gt;</b><br />
+                  <b>&lt;app&gt;<br />
+                  &lt;URI&gt;<font color="\#006600">/Shop/Catalog</font>&lt;/URI&gt;<br />
+                  &lt;APPNAME&gt;<font color="\#006600">catalog</font>&lt;/APPNAME&gt;<br />
+                  <font color="\#cc0000">&lt;ASSEMBLY&gt;</font></b><font color="\#006600"><b>com-acme-catalog-6</b></font><b><font color="\#cc0000">&lt;/ASSEMBLY&gt;</font><br/>
+                  <font color="\#3333ff">&lt;HOME&gt;</font><font color="\#006600">acme</font><font color="\#3333ff">&lt;/HOME&gt;</font><br />
+                  &lt;/app&gt;</b>
+              <b>&lt;/web-apps&gt;</b>
+      </font></pre>
+   -->
+
+<p>File: <b>homes/web-apps.xml</b></p>
+
+<example><![CDATA[<web-apps>
+ <app>
+  <URI>/Shop/Catalog</URI>
+  <APPNAME>catalog</APPNAME>
+  <ASSEMBLY>
+      <name>com-acme-catalog-6</name>
+      <interface>1</interface>
+  </ASSEMBLY>
+  <HOME>acme</HOME>
+ </app>
+</web-apps>]]></example>
+
+    <p>There are currently no tools to perform these installations -- simply edit the files and promote them into the correct directories.</p>
+
+    <p><i>AN IMPORTANT POINT: <b>URI's inside the web-apps.xml file in an assembly are not consulted at runtime</b>. They are there to help the manual and automated (not implemented) processes that install the applications. The result of the installation
+    is updating of the global web-apps.xml file, or the one in homes/\$account, depending on the action taken by the administrator and the administrator's permissions.</i></p>
+
+    <p>To sumarize, here is a series of web-apps.xml files for a Self-Hosted Mode host:<br />
+    </p>
+
+    <ul>
+      <li><b>RESOURCE_ROOT</b>/<br />
+      </li>
+
+        <ul>
+          <li><b>assemblies/</b></li>
+
+          <li><b>homes/</b></li>
+
+            <ul>
+              <li><i>web-apps.xml</i><br />
+              </li>
+            </ul>
+
+            <ul>
+              <li><b>acme/</b></li>
+
+                <ul>
+                  <li><i>web-apps.xml</i><br /></li>
+                  <li><i>account.xml</i><br /></li>
+                </ul>
+
+                <ul>
+                  <li><b>assemblies/</b></li>
+
+                    <ul>
+                      <li><b>com-acme-lib-4/</b></li>
+
+                      <li><b>com-acme-catalog-6/</b></li>
+                    </ul>
+                </ul>
+
+                <div style="margin-left: 4em">
+                  <ul>
+                    <li><i>web-apps.xml</i></li>
+
+                    <li><b>apps</b></li>
+
+                      <ul>
+                        <li><b>catalog</b><br />
+                        </li>
+                      </ul>
+                  </ul>
+                </div>
+            </ul>
+        </ul>
+    </ul>
+
+    <p>The precedence is :<br />
+     <dm_nbsp/><dm_nbsp/><dm_nbsp/> First: <dm_nbsp/><b>homes/web-apps.xml</b><br />
+     <dm_nbsp/><dm_nbsp/><dm_nbsp/> Second: <b>homes/acme/web-apps.xml</b><br />
+     <dm_nbsp/><dm_nbsp/><dm_nbsp/> Third: <dm_nbsp/><b>homes/acme/assemblies/com-acme-catalog-6/web-apps.xml</b></p>
+
+
+     <p>The "account.xml" file shown above controls whether assembly searching is allowed,
+     and what the default interface numbers are for assemblies when searches are performed.  Since a URL
+     might allow you to search for an application in an account, but not specify the assembly interface number,
+     this file associates an assembly name with the default interface number to use for the lookup.</p>
+    <p><br />
+     When you log in, you get assigned roles, and permissions. <dm_nbsp/>Dynamide objects require role permissions.<br />
+    </p>
+
+    <p>Roles:<br />
+     <dm_nbsp/><dm_nbsp/><dm_nbsp/> ROOT_ADMIN<br />
+     <dm_nbsp/><dm_nbsp/><dm_nbsp/> LOCAL_ADMIN<br />
+     <dm_nbsp/><dm_nbsp/><dm_nbsp/> DEVELOPER<br />
+     <dm_nbsp/><dm_nbsp/><dm_nbsp/> USER</p>
+
+    <p>Permissions:<br />
+     <dm_nbsp/><dm_nbsp/><dm_nbsp/> WRITE<br />
+     <dm_nbsp/><dm_nbsp/><dm_nbsp/> READ</p>
+
+    <p>Objects:<br />
+     <dm_nbsp/><dm_nbsp/><dm_nbsp/> ROOT_WEBAPPS<br />
+     <dm_nbsp/><dm_nbsp/> HOME_WEBAPPS<br />
+     <dm_nbsp/><dm_nbsp/><dm_nbsp/> ASSEMBLY_WEBAPPS <dm_nbsp/><dm_nbsp/></p>
+
+    <p>In Hosted Mode, only the Dynamide host administrator gets ROOT_ADMIN.<br />
+     In Self-Hosted Mode, you can appoint a list of users to participate in the ROOT_ADMIN role.</p>
+
+    <p>Here are the permissions related to the web-apps.xml file:<br />
+    </p>
+
+    <table cellpadding="2" cellspacing="2" border="1">
+      <tbody>
+        <tr>
+          <td valign="Top"><b>Object</b><br />
+           </td>
+
+          <th valign="Top">Example File<br />
+           </th>
+
+          <th valign="Top">Write Access Requires<br />
+           </th>
+
+          <th valign="Top">Read Access Requires<br />
+           </th>
+        </tr>
+
+        <tr>
+          <td valign="Top">ROOT_WEBAPPS<br />
+           </td>
+
+          <td valign="Top">homes/web-apps.xml<br />
+           </td>
+
+          <td valign="Top">ROOT_ADMIN.WRITE</td>
+
+          <td valign="Top">USER.READ<br />
+           </td>
+        </tr>
+
+        <tr>
+          <td valign="Top">HOME_WEBAPPS<br />
+           </td>
+
+          <td valign="Top">homes/acme/web-apps.xml<br />
+           </td>
+
+          <td valign="Top">LOCAL_ADMIN.WRITE<br />
+           </td>
+
+          <td valign="Top">USER.READ<br />
+           </td>
+        </tr>
+
+        <tr>
+          <td valign="Top">ASSEMBLY_WEBAPPS<br />
+           </td>
+
+          <td valign="Top">homes/acme/assemblies/com-acme-catalog-6/web-apps.xml<br />
+           </td>
+
+          <td valign="Top">DEVELOPER.WRITE<br />
+           </td>
+
+          <td valign="Top">USER.READ<br />
+           </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p><br />
+    </p>
+    <hr />
+
+    <h2>Directories in Dynamide Source Distribution</h2>
+
+    <ul>
+      <li><b>bin</b> -- shell scripts</li>
+
+      <li><b>build</b> -- Ant destination for output</li>
+
+        <ul>
+          <li><b>doc</b> -- Static documentation for distribution</li>
+
+            <ul>
+              <li><b>javadoc</b> -- Generated javadoc</li>
+            </ul>
+        </ul>
+
+      <li><b>doc</b> -- Static documentation</li>
+
+        <ul>
+          <li><b>internal</b> -- Static documentation on Dynamide internals</li>
+        </ul>
+
+      <li><b>lib</b> -- jar files</li>
+
+      <li><b>src</b> -- Source tree for building dynamide, including resources</li>
+
+        <ul>
+          <li><b>jacl</b> -- Modified files to be merged into Jacl source tree</li>
+
+          <li><b>java</b> -- Java source files to build dynamide.jar</li>
+
+          <li><b>jsp</b> -- Utility jsp's that can be run from App Server</li>
+
+          <li><b>conf</b> -- Configuration files for Dynamide</li>
+
+          <li><b>assemblies</b><dm_nbsp/> -- XML files, and other text-based files. <dm_nbsp/>Current versions of Dynamide libs and applications. <dm_nbsp/>Use CVS and Ant to build multiple assembly version targets for distribution.</li>
+
+            <ul>
+              <li><b>dynamide-lib</b> -- current version of Dynamide resources (Widget sources, javascript, CSS, etc.)</li>
+
+                <ul>
+                  <li><b>resources</b></li>
+
+                    <ul>
+                      <li><b>css</b> -- Cascading Style Sheets</li>
+
+                      <li><b>js</b> -- Javascript</li>
+
+                      <li><b>widgets</b> -- Widget Library</li>
+
+                      <li><b>xsl</b> -- XSLT stylesheets</li>
+                    </ul>
+                </ul>
+
+              <li><b>dynamide-apps</b> -- current version of Dynamide applications.<br />
+              </li>
+
+                <ul>
+                  <li><b>apps</b><br />
+                  </li>
+                </ul>
+
+                <ul>
+                  <li><b>resources</b></li>
+
+                    <ul>
+                      <li><b>...</b></li>
+                    </ul>
+                </ul>
+            </ul>
+        </ul>
+    </ul>
+    <hr />
+
+    <h2>Directories in Dynamide WAR-file Distribution</h2>
+
+    <ul>
+      <li><b>WEB-INF</b> -- Ant destination for output</li>
+
+        <ul>
+          <li><strike><b>resources</b> -- XML files, and other text-based files</strike></li>
+
+            <ul>
+              <li><strike><b>conf</b> -- Configuration files for Dynamide</strike></li>
+
+              <li><strike><b>sites</b> -- Installed sites, including Dynamide resource versions</strike></li>
+
+                <ul>
+                  <li><strike><b>dynamide</b> -- current version of Dynamide resources (Widget sources, javascript, CSS, etc.)</strike></li>
+
+                    <ul>
+                      <li><strike><b>templates</b></strike></li>
+
+                        <ul>
+                          <li><strike><b>css</b> -- Cascading Style Sheets</strike></li>
+                        </ul>
+
+                        <ul>
+                          <li><strike><b>js</b> -- Javascript</strike></li>
+                        </ul>
+
+                        <ul>
+                          <li><strike><b>widgets</b> -- Widget Library</strike></li>
+                        </ul>
+
+                        <ul>
+                          <li><strike><b>xsl</b> -- XSLT stylesheets</strike></li>
+                        </ul>
+                    </ul>
+                </ul>
+
+              <li><strike><b>users</b> -- Installed Users</strike></li>
+            </ul>
+
+          <li><b>lib</b> -- jar files</li>
+        </ul>
+
+      <li><b>doc</b> -- Static documentation</li>
+
+        <ul>
+          <li><b>javadoc</b> -- Generated javadoc</li>
+        </ul>
+
+        <ul>
+          <li><b>internal</b> -- Static documentation on Dynamide internals</li>
+        </ul>
+
+      <li><b>jsp</b> -- Utility jsp's that can be run from App Server</li>
+    </ul>
+
+    <p><strike>Note: you may have sites outside of the war file also. You may install these where you wish, accessible to the Resin box via the (possibly network) filesystem These are configured through the conf/web-apps.xml. You point to your
+    conf/web-app.xml with a serlet parameter in resin.conf. You can have multiple web-apps.xml files in the same folder, just name them differently and register them in the resin.conf file. You would do this if Q/A and Dev happened to point at the same
+    source, for example.<dm_nbsp/></strike></p>
+    <br />
+     <br />
+
+    <hr />
+    These are the task involved in installing a new WAR file. <br />
+     back up conf file <br />
+     install war file <br />
+     merge conf file changes in <br />
+     point conf to local sites file <br />
+     sites/yoursite/conf contains a backup of conf. (maybe a local conf for all of this site?) <br />
+     secure file system resources <br />
+     set any non-standard ports you use <br />
+     check resin.conf file <br />
+     Site file has db connection strings, url mappings
+</dynamideDoco>

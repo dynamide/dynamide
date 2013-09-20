@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideDoco>
+<dynamideDoco pageTitle="Glossary">
+
+<P>&quot;event&quot; object</P>
+<P>The event object contains information about the current ServerSide
+Event. You can get information about the CGI parameters sent from the
+browser, the client's browser and platform, and the client's Session
+object.  Most importantly, you can set the results of the event
+through this object.  ServerSide Event handlers do not have a return
+value &#150; instead you set the result properties of the event
+object.</P>
+
+</dynamideDoco>

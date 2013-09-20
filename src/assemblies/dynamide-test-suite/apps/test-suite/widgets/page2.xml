@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm >
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<dynamideForm>
+
+
+<properties>
+
+    <property name="type">
+      <value>pagetypes/com.dynamide.form</value>
+      <readOnly>true</readOnly>
+    </property>
+
+    <property name="title">
+      <value>Test Widgets</value>
+    </property>
+
+    <property name="margin">
+      <value>0</value>
+    </property>
+
+    <property name="bgcolor">
+      <value>white</value>
+    </property>
+
+
+  </properties>
+
+
+<htmlsrc><![CDATA[
+<HTML>
+    <HEAD>
+        <TITLE>$session.title - $page.title
+        </TITLE>
+        $session.getInclude("resources/js/page.js")
+        $session.getInclude("resources/css/dynamide.css")
+    </HEAD>
+
+    <BODY id="page2" bottomMargin="0" leftMargin="0" topMargin="0" rightMargin="0" bgcolor="white">
+        <SPAN class="widget" id="widgetstyle1" onclick="widgetClicked(this)"></SPAN>
+        <FORM name="mojoForm" action="/dynamide/test2" method="get" encType="application/x-www-form-urlencoded">
+           <h2>Tests for Dynamide</h2>
+           <p>Test the \$session.variable expansion: </p>
+                \$session.mojo: $session.mojo
+
+                <SPAN class="widget" id="button2" onclick="widgetClicked(this)"></SPAN>
+                <SPAN class="widget" id="session1" />
+        </FORM>
+      </BODY>
+    </HTML>
+  ]]></htmlsrc>
+
+  <widgets>
+      <widget id="widgetstyle1">
+      <properties>
+        <property name="name">
+          <value>hidden</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.widgetstyle</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="session1">
+      <properties>
+        <property name="name">
+          <value>session1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.session</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="button2">
+      <properties>
+        <property name="action">
+          <value>doSubmitThing</value>
+        </property>
+        <property name="caption">
+          <value>Submit Me!</value>
+        </property>
+        <property name="class">
+          <defaultValue>dmbutton</defaultValue>
+        </property>
+        <property name="field">
+          <defaultValue>field</defaultValue>
+        </property>
+        <property name="name">
+          <defaultValue>Submit</defaultValue>
+        </property>
+        <property name="onClick" isEvent="true">
+          <defaultValue></defaultValue>
+        </property>
+        <property name="text">
+          <defaultValue></defaultValue>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="qty1">
+      <properties>
+        <property name="align">
+          <value>right</value>
+        </property>
+        <property name="border">
+          <value></value>
+        </property>
+        <property name="caption">
+          <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+          <value>edit me $session \$session \\$session #300 \#300 \\#300 </value>
+        </property>
+        <property name="captionClass">
+          <value>caption</value>
+        </property>
+        <property name="captionWidth">
+          <value>100</value>
+        </property>
+        <property name="cellpadding">
+          <value>0</value>
+        </property>
+        <property name="cellspacing">
+          <value>0</value>
+        </property>
+        <property name="class">
+          <value></value>
+        </property>
+        <property name="enabled">
+          <value>true</value>
+        </property>
+        <property name="name">
+          <value>qty1</value>
+        </property>
+        <property name="showErrorAbove">
+          <defaultValue>true</defaultValue>
+        </property>
+        <property name="textClass">
+          <value></value>
+        </property>
+        <property name="textSize">
+          <value>20</value>
+        </property>
+        <property name="textWidth">
+          <value>30</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+        </property>
+      </properties>
+    </widget>
+  </widgets>
+
+</dynamideForm>

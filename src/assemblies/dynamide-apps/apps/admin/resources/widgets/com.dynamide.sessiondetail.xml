@@ -1,0 +1,389 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<!--
+     This page works with &#160; and doesn't need <dm_nbsp/>, probably because it is only
+     expanded once.  When it is part of a real session make the replacements.
+-->
+<widget>
+<properties>
+    <property name="type"><defaultValue>com.dynamide.sessiondetail</defaultValue><readOnly>true</readOnly></property>
+    <property name="name"><defaultValue>sessiondetail</defaultValue></property>
+    <property name="subsessionID"><defaultValue></defaultValue></property>
+</properties>
+
+<htmlsrc browser="*"><![CDATA[
+    <!-- com.dynamide.sessiondetail -->
+
+
+    arg: this will blow up:
+    #set $subsession = $request.getParameter("SUBSESSIONID")
+
+
+
+
+
+
+    WARNING: these don't work, and should be moved to the IDE app:
+    <br/>
+    <a href='/dynamide?action=showInternationalizationForm&SESSIONID=$SUBSESSIONID&language=en-us'>Internationalize (en-us)</a>
+    <a href='/dynamide?action=showInternationalizationForm&SESSIONID=$SUBSESSIONID&language=en-uk'>Internationalize (en-uk)</a>
+    <a href='/dynamide?action=showInternationalizationForm&SESSIONID=$SUBSESSIONID&language=es'>Internationalize (es)</a>
+    <br/>
+    #set $contextDumpHTML = $subsession.dumpContext($WEBMACRO_CONTEXT.getContext())
+
+    #set $sessionIDTitle = "[&#160;<small><b>SESSIONID:</b>&#160;$SUBSESSIONID&#160;]<br/>[&#160;&#160;<b>Path:&#160;</b>$subsession.getURLPath()&#160;]</small>"
+
+    #set $which = $request.getParameter("which")
+    #set $pageID = $request.getParameter("page")
+    #set $page = null
+    #if ($pageID != null){
+        #set $page = $subsession.getPageByID($pageID)
+    }
+
+    #set $pagesTable = "<table border='1' bgcolor='white' cellspacing='0' cellpadding='5'><tr><th>Session Pages</th></tr>"
+    #foreach $pagename in $subsession.Pages {
+        #set $rowcolor = ""
+        #if ($pageID != null && $pageID == $pagename){
+            #set $rowcolor = "bgcolor='\#aadd00'"
+        }
+        #set $pagesTableRow = "<tr><td $rowcolor><a href='/dynamide?showSessionObjectDetail=$SUBSESSIONID&which=page&page=$pagename'>$pagename</a></td></tr>"
+        #set $pagesTable = "$pagesTable$pagesTableRow"
+    }
+    #set $pagesTable = "$pagesTable</table>"
+
+    #set $SessionHandlerLogLink = "<a href='/dynamide?showSessionObjectDetail=$SUBSESSIONID&which=requestRequestLog'>Request Handler Log</a>"
+    #set $SessionConsoleLogLink = "<a href='/dynamide?showSessionConsoleLog=1&SESSIONID=$SUBSESSIONID'>Session Console Log</a>"
+    #set $SessionLogLinks = "$SessionHandlerLogLink <br/> $SessionConsoleLogLink"
+
+    #if ($page != null && $which == "page"){
+        <table border="0" cellpadding="0" cellspacing="0" >
+        <tr>
+        <td valign="top">
+            <table border="0" cellpadding="5" cellspacing="0" ><tr><td>
+            <b>Page Detail</b></td><td width="30">&#160;</td><td>$sessionIDTitle</td></tr>
+            </table>
+        </td>
+        <td rowspan="2">
+            $pagesTable
+        </td>
+        </tr>
+        <tr>
+        <td valign="bottom">
+            <a href='/dynamide?showSessionObjectDetail=$SUBSESSIONID&which='>Session Detail</a>
+            <br/>$SessionLogLinks
+            <br/>
+            <small>On this page:</small>  <a href="#pageproperties">properties</a>
+            <a href="#widgets">widgets</a>
+        </td>
+        </tr>
+        </table>
+        <hr/>
+        <a name="pageproperties"></a>
+        <a href="#top">top</a>
+        <a href="#widgets">widgets</a>
+        #set $pgobjid = $page.getObjectID()
+        <TABLE bgcolor='white' border="1" cellpadding="3" cellspacing="0" >
+        <tr><th colspan='2'>Properties for Page \"$page.getName()\" [$pgobjid]</th></tr>
+            <TR>
+                <TH>
+                    Name
+                </TH>
+                <TH>
+                    Value
+                </TH>
+            </TR>
+
+            <TR>
+                <TD>
+                    Source:
+                </TD>
+                <TD>
+                    $page.getFilename()
+                </TD>
+            </TR>
+            <TR>
+                <TD>
+                    Default&#160;Properties:
+                </TD>
+                <TD>
+                    <a href="/dynamide?showSessionObjectDetail=$SUBSESSIONID&which=pageWidgetType&page=$pageID">Page WidgetType</a>
+                </TD>
+            </TR>
+
+                #foreach $prop in $page.Properties {
+                    <TR>
+                        <TD>
+                            $prop.Name
+                        </TD>
+                        <TD>
+                            $prop.dumpHTML()
+                        </TD>
+                    </TR>
+                }
+            </TABLE>
+
+        <br/>
+        <a name="widgets"></a>
+        <a href="#top">top</a>
+        <a href="#pageproperties">properties</a>
+        <table bgcolor='white' border="$widget.border" cellpadding="5" cellspacing="1">
+            <tr><th colspan='2'>Widgets on Page \"$page.getName()\"</th></tr>
+            <TR>
+                <TH>
+                    Name
+                </TH>
+                <TH>
+                    Value
+                </TH>
+            </TR>
+            #foreach $W in $page.Widgets {
+                <TR>
+                    <TD><a href='/dynamide?showSessionObjectDetail=$SUBSESSIONID&which=widget&widgetID=$W.getID()&page=$page.getName()'>$W.getID()</a></TD>
+                    #set $wv = $W.value
+                    #if ($wv.length() == 0){
+                        #set $wv = "&#160;"
+                    }
+                    <TD>$wv</TD>
+                </TR>
+            }
+        </table>
+        <a href="#top">top</a>
+        <a href="#pageproperties">properties</a>
+        <a href="#widgets">widgets</a>
+
+
+    } #else #if ($page != null && $which == "widget") {
+        <table border="0" cellpadding="5" cellspacing="0" >
+        <tr>
+        <td valign="top">
+            <table border="0" cellpadding="5" cellspacing="0" ><tr><td  valign="top">
+            <b>Widget Detail</b></td><td width="20">&#160;</td><td>$sessionIDTitle</td></tr>
+            </table>
+        </td>
+        <td rowspan="2">
+            $pagesTable
+        </td>
+        </tr>
+        <tr>
+        <td valign="bottom">
+        <a href='/dynamide?showSessionObjectDetail=$SUBSESSIONID&which='>Session Detail</a>
+        <br/><a href='/dynamide?showSessionObjectDetail=$SUBSESSIONID&which=page&page=$page.getName()'>Properties for Parent \($page.getName()\)</a>
+        <br/>$SessionLogLinks
+        </td>
+        </tr>
+        </table>
+        <hr/>
+
+        #set $wgname = $request.getParameter("widgetID")
+        #set $detailWidget = $page.getWidgetByID($wgname)
+        #set $wgobjid = $detailWidget.getObjectID()
+        <TABLE bgcolor='white' border="1" cellpadding="1" cellspacing="0" >
+            <tr><th colspan='3'>
+                <table border='0' cellpadding='0' cellspacing='0'>
+                <tr>
+                    <td valign='bottom'>Properties for Widget &#160;</td>
+                    <td valign='bottom'>
+                        <table border='1' cellpadding='0' cellspacing='0'>
+                        <tr>
+                            <td bgcolor='\#aadd00'>$wgname</td>
+                        </tr>
+                        </table>
+                    </td>
+                    <td valign='bottom'>&#160;[$wgobjid]
+                    </td>
+                </tr>
+                </table>
+            </th></tr>
+            #if ($detailWidget ==  null || $detailWidget == "") {
+              ##Leave table empty
+            } #else {
+                <TR>
+                    <TH colspan='3'><font color="green">Special Properties</font></TH>
+                </TR>
+                <TR>
+                    <TH>
+                        Name
+                    </TH>
+                    <TH colspan='2'>
+                        Value
+                    </TH>
+                </TR>
+                <TR>
+                    <TD>
+                        Source:
+                    </TD>
+                    <TD colspan='2'>
+                        $detailWidget.getFilename()
+                        #set $widgettype = $detailWidget.getWidgetType()
+                        #if ($widgettype != null){
+                            <br/>
+                            $widgettype.getFilename()
+                        }
+                    </TD>
+                </TR>
+                <TR>
+                    <TD>
+                        Default&#160;Properties:
+                    </TD>
+                    <TD>
+                        <a href="/dynamide?showSessionObjectDetail=$SUBSESSIONID&which=widgetWidgetType&page=$pageID&widgetID=$wgname">Widget WidgetType</a>
+                    </TD>
+                </TR>
+                <TR>
+                    <TD>
+                        Field&#160;Object:
+                    </TD>
+                    <TD colspan='2'>
+                        #if ($detailWidget.getField() != null){
+                            $detailWidget.getField()
+                        }
+                        &#160;
+                    </TD>
+                </TR>
+                <TR>
+                    <TD>
+                        Value:
+                    </TD>
+                    <TD colspan='2'>
+                        $detailWidget.value &#160;
+                    </TD>
+                </TR>
+                <TR>
+                    <TH colspan='3'><font color="green">Normal Properties</font></TH>
+                </TR>
+                <TR>
+                    <TH>
+                        Name
+                    </TH>
+                    <TH>
+                        Value
+                    </TH>
+                    <TH>
+                        intl
+                    </TH>
+                </TR>
+                #foreach $prop in $detailWidget.Properties {
+                    <TR>
+                        <TD>
+                            $prop.Name
+                        </TD>
+                        <TD>
+                            $prop.dumpHTML()
+                        </TD>
+                        <TD>
+                            $prop.intl $prop.getDotName()
+                        </TD>
+                    </TR>
+                }
+            }
+            </TABLE>
+        <a href="#top">top</a>
+
+    } #else #if ($page != null && $which == "pageWidgetType") {
+        #set $wt = $page.getWidgetType()
+        <TABLE bgcolor='white' border="1" cellpadding="0" cellspacing="0" >
+            <tr><th>
+                Default Properties for WidgetType: $wt.getPropertyValue("type")
+            </th></tr>
+            <tr><td>
+                $wt.dumpHTML()
+            </td></tr>
+        </TABLE>
+    } #else #if ($page != null && $which == "widgetWidgetType") {
+        #set $wgname = $request.getParameter("widgetID")
+        #set $detailWidget = $page.getWidgetByID($wgname)
+        #set $wt = $detailWidget.getWidgetType()
+        <TABLE bgcolor='white' border="1" cellpadding="0" cellspacing="0" >
+            <tr><th>
+            DefaultProperties for WidgetType: $wt.getPropertyStringValue("type")
+            </th></tr>
+            <tr><td>
+                $wt.dumpHTML()
+            </td></tr>
+        </TABLE>
+    } #else #if ($which == "widgetTypePool") {
+        <table border="0" cellpadding="5" cellspacing="0" ><tr><td valign="top">
+          <b>Widget Type Pool</b></td><td width="20">&#160;</td><td>$sessionIDTitle</td></tr>
+        </table>
+        <a href='/dynamide?showSessionObjectDetail=$SUBSESSIONID&which='>Session Detail</a>
+        <br/>$SessionLogLinks
+        <hr/>
+        $subsession.dumpWidgetTypePool()
+        <a href="#top">top</a>
+    } #else #if ($which == "requestRequestLog") {
+        <table border="0" cellpadding="5" cellspacing="0" ><tr><td valign="top">
+          <b>Session Handler Request</b></td><td width="20">&#160;</td><td>$sessionIDTitle</td></tr>
+        </table>
+        <a href='/dynamide?showSessionObjectDetail=$SUBSESSIONID&which='>Session Detail</a>
+        <br/>$SessionConsoleLogLink
+        <hr/>
+        $subsession.printHandlerProcLog()
+        <a href="#top">top</a>
+    } #else { ## Just show Session:
+
+        <table border="0" cellpadding="5" cellspacing="0" >
+        <tr>
+        <td valign="top">
+            <table border="0" cellpadding="5" cellspacing="0" ><tr><td valign="top">
+            <b>Session Detail</b></td><td width="20">&#160;</td><td>$sessionIDTitle</td></tr>
+            </table>
+        </td>
+        <td rowspan="2">
+            $pagesTable
+        </td>
+        </tr>
+        <tr>
+        <td valign="bottom">
+            $SessionLogLinks
+        </td>
+        </tr>
+        </table>
+        <hr/>
+        <table bgcolor='white' border='1' cellspacing='0' cellpadding='5'>
+        <tr><th colspan='2'>Session Properties</th></tr>
+        <tr><td>WWWRoot              </td><td> $subsession.getWWWRoot()</td></tr>
+        <tr><td>TemplateDirs         </td><td> $subsession.getTemplateDirs()</td></tr>
+        ## obviated, there are multiple now.<tr><td>PaletteDir           </td><td> $subsession.getPaletteDir()</td></tr>
+        <tr><td>RelativeProjectPath  </td><td> $subsession.getURLPath()</td></tr>
+        <tr><td>WidgetTypePool       </td><td> <a href='/dynamide?showSessionObjectDetail=$SUBSESSIONID&which=widgetTypePool'>View</a></td></tr>
+        <tr>
+           <td>VisitedPages</td>
+           <td>
+                <table border='1' cellspacing='0' cellpadding='2'>
+                <tr>
+                        #foreach $pagestring in $subsession.getVisitedPages() {
+                            <td>$pagestring </td>
+                        }
+                </tr>
+                </table>
+           </td>
+        </tr>
+        <tr><td>designMode</td><td> $subsession.getDesignMode()</td></tr>
+        <tr><td>Language Code</td><td> $subsession.getCurrentLanguageCode()</td></tr>
+        <tr><td>Properties: </td><td> $subsession.dumpHTML()</td></tr>
+        <tr><td>Fields:</td><td> $subsession.dumpFields()</td></tr>
+        <tr><td>Context:</td><td>
+        ## this should work, but it doesn't since the Template provider doesn't know about dynamide directories
+        ## That should be fixed in the .properties file, but that isn't being read for some reason.
+        ##parse "util/dumpContext.wm"
+        ## instead, this works nicely:
+        $contextDumpHTML
+        </td>
+        </tr>
+        <!--<tr><td>WebMacro Log:</td><td><pre>$subsession.showWebMacroLog()</pre></td></tr>-->
+        </table>
+        #set $pageLocationTable = "<table border='1' bgcolor='white' cellspacing='0' cellpadding='5'><tr><th>Page Locations</th></tr>"
+        #foreach $thepage in $subsession.LoadedPages {
+            #set $pageLocTableRow = "<tr><td>$thepage.getFilename()</td></tr>"
+            #set $pageLocationTable = "$pageLocationTable$pageLocTableRow"
+        }
+        <br/>
+        $pageLocationTable</table>
+
+        <a href="#top">top</a>
+
+    }
+
+]]></htmlsrc>
+</widget>

@@ -1,0 +1,63 @@
+import com.dynamide.*;
+import com.dynamide.util.*;
+import com.dynamide.datatypes.*;
+import com.dynamide.resource.ResourceManager;
+
+if (bsh.args.length == 0){
+    print("\r\n  Usage: bsh publish.bs [-o outputDirectory] <applicationURI> \r\n");
+    System.exit(1);
+}
+
+Opts opts = new Opts(bsh.args);
+String dir = opts.getOption("-o");
+String params = opts.getOption("-p");
+String urls = opts.getOption("-u");
+String report = opts.getOption("-r");
+if (report == null || report.length()==0){
+    report = "./publish-report.html";
+}
+String uri = opts.getRemainingArgAt(0);
+
+String message =
+    "Publishing:"
+    + "\r\n    URI: "+uri
+    + "\r\n    output directory '"+dir+"'";
+if (params!=null && params.length()>0){
+    message = message + "\r\n    with override parameters: "+params;
+}
+if (urls!=null && urls.length()>0){
+    message = message + "\r\n    with override URLs from: "+urls;
+}
+System.out.println(message+"\r\n\r\n");
+
+ResourceManager.createStandalone();
+
+PublishParamsDatatype ppd = null;
+EnumeratedDatatype pud = null;
+
+//Note: you could also run with external property file:
+//   Property p = Property.createFromXML("./publish-sample-properties.xml");
+//   ppd = p.getValue();
+//
+//   pu = Property.createFromXML("./publish-sample-urls-properties.xml");
+
+
+if (params!=null && params.length()>0){
+    p = Property.createFromXML(params);
+    ppd = p.getValue();
+}
+
+if (urls!=null && urls.length()>0){
+    pu = Property.createFromXML(urls);
+    pud = pu.getValue();
+}
+
+System.out.println("uri, ppd, pud, dir"+uri+','+ppd+','+pud+','+dir);
+targetSession = Session.publish(uri, ppd, pud, dir, false);
+targetSession.startSession();
+String status = "<html><body><style>"
+  + ".publishStatus { border: 1; } </style>"
+  + targetSession.getPublishStatus()
+  + "</body></html>";
+FileTools.saveFile("", report, status);
+System.exit(0);

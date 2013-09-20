@@ -1,0 +1,37 @@
+<HTML>
+<HEAD>
+  <TITLE>Test Focus/Activation</TITLE>
+
+    <link rel="stylesheet"  SRC="/com/dynamide/doc/dynamidedoco.css" href="/com/dynamide/doc/dynamidedoco.css"></link>
+
+    <SCRIPT Language="javascript" SRC="/com/dynamide/templates/en/js/scripts.js" >
+        //General Utilty Functions.
+    </SCRIPT>
+
+    <SCRIPT Language="javascript" SRC="/com/dynamide/templates/en/js/windowing.js" >
+        //Window and View functions.
+    </SCRIPT>
+
+
+</HEAD>
+
+<BODY id="page1" name="page1" bgcolor="white" CONTENTEDITABLE="false" onkeydown="changeIt()">
+  <DIV id="pageWrapper" CONTENTEDITABLE="false">
+    <h2>Test Editable</h2>
+    <DIV id="pageWrapper" CONTENTEDITABLE="true">
+    <p> You should be able to edit me
+    </p>
+    </DIV>
+  </DIV>
+
+  <script>
+  function changeIt(){
+      tempSelection = document.selection.createRange();
+      if (tempSelection != null){
+              tempSelection.select();
+      }
+  }
+  </script>
+</BODY>
+
+</HTML>

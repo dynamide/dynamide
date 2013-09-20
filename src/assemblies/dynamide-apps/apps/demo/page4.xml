@@ -1,0 +1,367 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<dynamideForm>
+  <widgets>
+    <widget id="breadcrumbs1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.breadcrumbs</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="button2">
+      <properties>
+        <property name="action">
+          <value>1</value>
+        </property>
+        <property name="caption">
+          <value>Submit Me!</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_container1">
+      <properties>
+        <property name="pageName">
+          <value>container1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.container</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_img_logo">
+      <properties>
+        <property name="height">
+          <value>40</value>
+        </property>
+        <property name="src">
+          <value>resources/images/dynamide-logo.gif</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.img</value>
+        </property>
+        <property name="width">
+          <value>40</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_linkstrip1">
+      <properties>
+        <property name="border">
+          <value>1</value>
+        </property>
+        <property name="enabled">
+          <value>true</value>
+        </property>
+        <property name="fontColor">
+          <value>white</value>
+        </property>
+        <property name="links">
+          <value>
+            <enumeration override="true" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>?SESSIONID=$SESSIONID&amp;page=$pageID&amp;action=com.dynamide.linkstrip&amp;dmLinkstripItem=Home</href>
+                <text>Page 1</text>
+                <key>home</key>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>?SESSIONID=$SESSIONID&amp;page=$pageID&amp;action=com.dynamide.linkstrip&amp;dmLinkstripItem=Support</href>
+                <text>Page 2</text>
+                <key>support</key>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>?SESSIONID=$SESSIONID&amp;page=$pageID&amp;action=com.dynamide.linkstrip&amp;dmLinkstripItem=Contact%20Us</href>
+                <text>Page 3</text>
+                <key>contactus</key>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>?SESSIONID=$SESSIONID&amp;page=$pageID&amp;action=com.dynamide.linkstrip&amp;dmLinkstripItem=Site%20Map</href>
+                <text>Page 4</text>
+                <key>sitemap</key>
+              </item>
+            </enumeration>
+          </value>
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+        </property>
+        <property name="type">
+          <value>com.dynamide.linkstrip</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_linkstrip2">
+      <properties>
+        <property name="border">
+          <value>1</value>
+        </property>
+        <property name="enabled">
+          <value>true</value>
+        </property>
+        <property name="fontColor">
+          <value>#336699</value>
+        </property>
+        <property name="links">
+          <value>
+            <enumeration override="true" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>?SESSIONID=$SESSIONID&amp;page=$pageID&amp;action=com.dynamide.linkstrip&amp;dmLinkstripItem=Home</href>
+                <text>Page 1</text>
+                <key>home</key>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>?SESSIONID=$SESSIONID&amp;page=$pageID&amp;action=com.dynamide.linkstrip&amp;dmLinkstripItem=Support</href>
+                <text>Page 2</text>
+                <key>support</key>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>?SESSIONID=$SESSIONID&amp;page=$pageID&amp;action=com.dynamide.linkstrip&amp;dmLinkstripItem=Contact%20Us</href>
+                <text>Page 3</text>
+                <key>contactus</key>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>?SESSIONID=$SESSIONID&amp;page=$pageID&amp;action=com.dynamide.linkstrip&amp;dmLinkstripItem=Site%20Map</href>
+                <text>Page 4</text>
+                <key>sitemap</key>
+              </item>
+            </enumeration>
+          </value>
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+        </property>
+        <property name="orientation">
+          <value>vertical</value>
+        </property>
+        <property name="showTopBorder">
+          <value>false</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.linkstrip</value>
+        </property>
+        <property name="width">
+          <value>100</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_spacer1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.spacer</value>
+        </property>
+        <property name="width">
+          <value>50</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_spacer2">
+      <properties>
+        <property name="height">
+          <value>30</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.spacer</value>
+        </property>
+        <property name="width">
+          <value>0</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_tree1">
+      <properties>
+        <property name="spacing">
+          <value>25</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.tree</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="designModeIncludes">
+      <properties>
+        <property name="items">
+          <value>
+            <enumeration override="false" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/js/scripts.js</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/js/msdom.js</item>
+            </enumeration>
+          </value>
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+        </property>
+        <property name="name">
+          <value>designModeIncludes</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.includes</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="includes1">
+      <properties>
+        <property name="items">
+          <value>
+            <enumeration override="false" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/css/dynamide.css</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/js/page.js</item>
+            </enumeration>
+          </value>
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+        </property>
+        <property name="name">
+          <value>includes1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.includes</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="widgetstyle1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.widgetstyle</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="session1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.session</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="hiddenPageID">
+      <properties>
+        <property name="field">
+          <value>page</value>
+        </property>
+        <property name="name">
+          <value></value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.hidden</value>
+        </property>
+        <property name="value">
+          <value>page4</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="linkContainer">
+      <properties>
+        <property name="pageName">
+          <value>linkPage</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.container</value>
+        </property>
+      </properties>
+    </widget>
+  </widgets>
+  <htmlsrc browser="*"><![CDATA[
+<HTML>
+  <HEAD>
+    <TITLE/>
+  </HEAD>
+  <BODY id="page4" onclick="widgetClicked(this)" bottomMargin="0" bgColor="#ffffff" leftMargin="0" topMargin="0" rightMargin="0" name="page4">
+    <SPAN class="widget" id="designModeIncludes"/>
+    <SPAN class="widget" id="includes1"/>
+    <SPAN class="widget" id="widgetstyle1"/>
+    <DIV id="pageWrapper">
+      <FORM name="mojoForm" accept-charset="UNKNOWN" action="/dynamide/demo" method="get" encType="application/x-www-form-urlencoded">
+        <TABLE cellSpacing="0" cellPadding="0" width="100%" border="0">
+          <TBODY>
+            <TR>
+              <!-- Top Bar -->
+
+              <TD colSpan="3" rowSpan="1">
+                <TABLE cellSpacing="0" cellPadding="0" border="0">
+                  <TBODY>
+                    <TR>
+                      <TD vAlign="bottom" colSpan="1" rowSpan="1">
+                        <SPAN class="widget" id="com_dynamide_img_logo"/>
+                      </TD>
+                      <TD vAlign="middle" colSpan="1" rowSpan="1">
+                        <SPAN class="big1">Dynamide</SPAN>
+                      </TD>
+                      <TD vAlign="middle" width="100%" colSpan="1" rowSpan="1">
+                        <CENTER>
+                          <SPAN class="big4">Demo Application</SPAN>
+                        </CENTER>
+                      </TD>
+                    </TR>
+                  </TBODY>
+                </TABLE>
+                <SPAN class="widget" id="com_dynamide_linkstrip1"/>
+              </TD>
+            </TR>
+            <TR>
+              <!-- Left Bar -->
+
+              <TD vAlign="top" colSpan="1" rowSpan="1">
+                <SPAN class="widget" id="com_dynamide_spacer2"/>
+                <SPAN class="widget" id="linkContainer"/>
+              </TD>
+              <!-- Spacer -->
+
+              <TD colSpan="1" rowSpan="1">
+                <SPAN class="widget" id="com_dynamide_spacer1"/>
+              </TD>
+              <!-- Middle Body -->
+
+              <TD width="100%" colSpan="1" rowSpan="1">
+                <P align="right">
+                  <SPAN class="widget" id="breadcrumbs1"/>
+                </P>
+                <H2>Page 4</H2>
+                <P>This page tests the com.dynamide.tree component</P>
+                <SPAN class="widget" id="com_dynamide_tree1"/>
+                <BR />
+                <SPAN class="widget" id="com_dynamide_container1"/>
+                <BR />
+                <SPAN class="widget" id="button2"/>
+                <!-- End Middle Body -->
+
+              </TD>
+            </TR>
+          </TBODY>
+        </TABLE>
+        <SPAN class="widget" id="session1"/>
+        <SPAN class="widget" id="hiddenPageID"/>
+      </FORM>
+    </DIV>
+  </BODY>
+</HTML>
+]]></htmlsrc>
+  <properties>
+    <property name="lastSave">
+      <value>1026334931040</value>
+      <readOnly>true</readOnly>
+      <datatype>java.util.Date</datatype>
+    </property>
+    <property name="margin">
+      <value>0</value>
+      <eval>document.body.margin = "$page.margin";</eval>
+    </property>
+    <property name="name">
+      <value>page4</value>
+    </property>
+    <property name="onAction" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+    <property name="onLoad" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+    <property name="onValidate" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+    <property name="title">
+      <value>Page 4</value>
+    </property>
+    <property name="type">
+      <value>pagetypes/com.dynamide.form</value>
+      <readOnly>true</readOnly>
+    </property>
+  </properties>
+</dynamideForm>

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm >
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<application>
+
+<fields href="fielddefs.xml"></fields>
+
+<properties>
+    <property name="poolable">
+      <value>true</value>
+    </property>
+</properties>
+
+  <event language="beanshell" name="application_queryNextPage">
+  <![CDATA[
+         //always show this one:
+         event.nextPageID = "page1";
+  ]]>
+  </event>
+
+  <pages>
+    <page name="page1"></page>
+  </pages>
+
+</application>

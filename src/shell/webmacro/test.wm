@@ -1,0 +1,3 @@
+#set $SESSIONID = "333"
+#set $detailURLTemplate = "<a href='sessionDetailBaseURL&amp;showSessionObjectDetail=1&amp;SUBSESSIONID=\$SESSIONID\&amp;SESSIONID=$SESSIONID\&amp;which='>\$SESSIONID</a>"
+$detailURLTemplate

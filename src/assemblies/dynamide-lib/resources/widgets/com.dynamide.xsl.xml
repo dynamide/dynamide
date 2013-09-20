@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<widget>
+    <componentHelp>
+    <p> Set the xml and xsl properties to files within your assembly's search
+    path, using relative names.  Set the expandResult property to "true" if
+    you need to have the resulting xml expanded in the Dynamide Session context, that
+    is, if you need things like \$SESSION.
+    </p>
+    <p>If you wish to grab any elements from the DOM of the XML file, hook the onParsed
+    event.  This event occurs before rendering, but after the entire XML document has been loaded.
+    After the XML has been rendered using the XSL, both source files are garbage collected.
+    </p>
+    </componentHelp>
+
+    <properties>
+        <property name="border">
+            <defaultValue>0</defaultValue>
+        </property>
+        <property name="enabled">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+        <property name="expandResult">
+            <defaultValue>false</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+        <property name="name"><defaultValue>container</defaultValue></property>
+        <property name="type">
+            <defaultValue>com.dynamide.xsl</defaultValue>
+            <readOnly>true</readOnly>
+        </property>
+        <property name="visible">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+        <property name="width">
+            <defaultValue>100%</defaultValue>
+        </property>
+        <property name="height">
+            <defaultValue>25</defaultValue>
+        </property>
+        <property name="xml">
+            <defaultValue></defaultValue>
+        </property>
+        <property name="xmlPageID">
+            <defaultValue></defaultValue>
+            <helpTip>Set this when you set the xml property to keep a linkstrip in sync, if you point the
+            linkstrip's targetID at this component, for example: linkstrip.targetID == "main.xslDocs.xmlPageID"</helpTip>
+        </property>
+        <property name="xsl">
+            <defaultValue></defaultValue>
+        </property>
+
+    </properties>
+
+  <event language="beanshell" name="com_dynamide_xsl_onImport"><![CDATA[
+       /* import com.caucho.xsl.*;
+        * import com.caucho.util.*;
+        * import com.caucho.vfs.*;
+        * import com.caucho.transform.*;
+        */
+
+        import org.jdom.Element;
+
+        import com.dynamide.util.*;
+        import com.dynamide.xsl.*;
+        import com.dynamide.event.ScriptEvent;
+
+        import com.icl.saxon.*;
+
+  ]]></event>
+
+  <event language="beanshell" name="com_dynamide_xsl_onTransform">
+  <![CDATA[
+        try {
+            //event.session.setStdoutEcho(true);
+            System.out.println("sender: "+event.sender);
+
+            String xml = event.sender.get("xml");
+            String xsl = event.sender.get("xsl");
+            String xmlname = event.session.findAppFilename(xml);
+            String xslname = event.session.findAppFilename(xsl);
+            if ( xmlname == null ) {
+                event.returnSource("xml name was not found: "+xml);
+                event.prettyPrint = false;
+            } else if ( xslname == null ) {
+                event.returnSource("xsl name was not found: "+xsl);
+                event.prettyPrint = false;
+            } else {
+                event.println("xmlname: "+xmlname);
+                event.println("xslname: "+xslname);
+                StringList expansionVariables = new StringList();
+
+
+                //if event source exists:
+                jdf = new com.dynamide.JDOMFile(null, xmlname);
+                Property jdfProperty = new Property(event.sender);
+                jdfProperty.setValue(jdf);
+                event.sender.setProperty("sourceJDOMFile", jdfProperty);
+                //This should fire an event, not a method, pluggable by the app programmer:
+                event.session.fireWidgetMethod(event.sender, "com_dynamide_xsl_onSourceLoaded");
+
+                //Now fire an event, not a method, pluggable by the app programmer, that lets them load variables prior to page expansion:
+                ScriptEvent resultEvent = event.session.fireWidgetMethod(event.sender, "com_dynamide_xsl_onSetVariables");
+                if (resultEvent.resultCode == ScriptEvent.RC_OK){
+                    //event.println("resultEvent: "+resultEvent);
+                    StringList sl2 = (StringList)resultEvent.outputObject;
+                    expansionVariables.add(sl2);
+                }
+
+                st = new com.dynamide.xsl.SaxonJDOMTransform();
+                boolean useJDOM = false;
+                boolean useDynamideSaxonController = true;
+                event.resultSrc = st.transform(xmlname, xslname, event.session, useDynamideSaxonController, useJDOM);
+
+                if (event.sender.getPropertyStringValue("expandResult").equals("true")){
+                    event.resultSrc = event.session.expandTemplate(expansionVariables, event.resultSrc, "com.dynamide.xsl-expanding::"+xmlname+"::"+xslname);
+                }
+            }
+        } catch (Exception e){
+            String msg = StringTools.escape(Tools.errorToString(e, true));
+            event.resultSrc = "ERROR: (See Session Console Log) <pre>"+msg+"</pre>";
+            event.println(msg);
+            event.prettyPrint = false;
+        }
+  ]]>
+  </event>
+
+  <event language="beanshell" name="com_dynamide_xsl_onTransform_OLD">
+  <![CDATA[
+        /*
+        This used to work, before I installed the security manager, which disallows "exec javac"
+        which Resin seems to require for processing xsl.
+
+        StylesheetFactory factory = new Xsl();
+        Stylesheet style = factory.newStylesheet(xslname);
+
+        StreamTransformer transformer = style.newStreamTransformer();
+        CharBuffer cb = new CharBuffer();
+        WriteStream os = Vfs.openWrite(cb);
+        transformer.transform(xmlname, os);
+        os.close();
+        event.resultSrc = cb.toString();
+        */
+  ]]>
+  </event>
+
+
+  <event language="beanshell" name="com_dynamide_xsl_onSourceLoaded">
+  <![CDATA[
+    event.println("in com_dynamide_xsl_onSourceLoaded");
+    jdom = event.sender.getProperty("sourceJDOMFile");
+    event.println("sourceJDOMFile: "+jdom);
+  ]]>
+  </event>
+
+  <event language="beanshell" name="com_dynamide_xsl_onSetVariables">
+  <![CDATA[
+    //Contract: if you find variables you would like to expand in the page, return a StringList of values.
+    jdom = event.sender.getProperty("sourceJDOMFile").getValue();
+    sl = new StringList();
+    // do what ya like...
+    //sl.addObject("title", title);
+    event.setOutputObject(sl);
+    return sl;
+  ]]>
+  </event>
+
+
+    <htmlsrc browser="*"><![CDATA[
+        $session.fireWidgetImports($widget, "com_dynamide_xsl_onImport")
+        #set $event = $session.fireWidgetMethod($widget, "com_dynamide_xsl_onTransform")
+        $event.resultSrc
+    ]]></htmlsrc>
+</widget>

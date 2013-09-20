@@ -1,0 +1,33 @@
+.big1 {font: 28px Arial,Helvetica,sans-serif; }
+.big2 {font: 24px Arial,Helvetica,sans-serif; }
+.big3 {font: 21px Arial,Helvetica,sans-serif; }
+.big4 {font: 18px Arial,Helvetica,sans-serif; }
+.caption       {color:#228822; font-family:Tahoma, Arial, sans-serif; font-size:9pt; font-weight:bold; }
+.dmbutton      {background-color: AFB6D3; darker: 6A76AD; old-color: CCCC99; color: black; font-family:Tahoma, sans-serif; font-size:9pt; font-weight:bold; border-color:white; border-top-width:0pt; border-left-width:0pt; border-bottom-width:2pt; border-right-width:2pt; }
+.dmDisabled    {color:#EEEEEE; font-family:Tahoma, Arial, sans-serif; font-size:9pt; font-weight:normal; }
+.errorCaption  {color: red; font-family:Tahoma, Arial, sans-serif; font-size:9pt; font-weight:bold; font-weight:bolder; font-style:italic;}
+.hr30 {width: 30%; text-align: left;}
+.hrwide {width: 100%;}
+.lispaced {font: 16px Times,Roman,serif; margin-bottom: 20px; margin-right: 50px;}
+.pickbutton    {background-color: AFB6D3; darker: 6A76AD; old-color: CCCC99; color: black; font-family:Tahoma, sans-serif; font-size:9pt; font-weight:bold; border-color:white; border-top-width:0pt; border-left-width:0pt; border-bottom-width:2pt; border-right-width:2pt; }
+.pre-noindent {font: courier 10px;}
+.sechead {margin-left:15px; font: 22px Arial,Helvetica,sans-serif; }
+.spaced {margin-top: 5px;}
+.subhead {font-weight: bold; background-color: #E6DEC4}
+A {color: #31324E; text-decoration: underline; font: 15px}
+A:active {color: green; text-decoration: underline}
+A:hover {color: #FF9933; text-decoration: underline}
+BODY {margin: 0px; border: 0px; padding: 0px; }
+dontdothisBODY {margin-left:3%; margin-right:3%;}
+FORM {margin: 0px; border: 0px; padding: 0px; }
+h1 {font: 28px Arial,Helvetica,sans-serif; }
+h2 {font: 25px Arial,Helvetica,sans-serif; }
+h3 {font: 21px Arial,Helvetica,sans-serif; }
+h4 {font: 18px Arial,Helvetica,sans-serif; }
+li {font: 16px Times,Roman,serif; margin-right: 50px;}
+p {font: 17px Times,Roman,Arial,Helvetica,sans-serif; }
+pre {margin-left:30px; font-size: 0.8em; }
+small {font: 7pt Times,Roman,Arial,Helvetica,sans-serif; }
+td {font: 17px Times,Roman,Arial,Helvetica,sans-serif; }
+td {font: 17px Times,Roman,serif; }
+th {font: 17px Times,Roman,serif; }

@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideDoco>
+<dynamideDoco pageTitle='Security'>
+<!--
+<topic id="security">
+   <indices>
+     <name>security</name>
+   </indices>
+</topic>
+-->
+<!-- or, just allow inline tags, and then scan for them: -->
+
+<indexTarget id="security overview"/>
+<h4>
+The following security features are implemented in Dynamide.
+</h4>
+
+<P>
+The DynamideServlet installs its own SecurityManager.
+This SecurityManager disallows dangerous activity, from the viewpoint of the owner of the application server in which Dynamide runs.
+</P>
+
+<P>
+Specifically, these activities have been disallowed:
+</P>
+
+        <UL>
+            <LI>System Exit</LI>
+            <LI>Exec</LI>
+            <LI>Socket Listen (server sockets)</LI>
+            <LI>File Access  </LI>
+        </UL>
+
+<P>
+All Dynamide applications run within a DynamideWorkerThreadGroup threadgroup.   You are allowed to spin off threads,
+but they will still have DynamideWorkerThreadGroup in their parent chain.  Code in a DynamideWorkerThreadGroup
+does not have the same permissions as the DynamideResourceManager,
+so to access protected resources, you should use the DynamideResourceManager.
+</P>
+
+<hr />
+
+<h2>Security Implementation</h2>
+
+<P>
+There is a master list of permissions:
+<pre>
+file
+    open
+    read
+    write
+process
+    run
+application
+    create_user
+    create_account
+    create_assembly
+Page, Widget, Application
+    read
+    write
+
+
+
+</pre>
+
+(There must be some way to secure each of the actions above.  So create_assembly must
+be blocked by the thing that saves files, and delegated to an object that CAN create assemblies.
+This is because assemblies are just files, but creating them as files allows
+a set of permissions the next time assemblies are re-read.
+
+A process acquires these permissions when run as a user.
+Objects require the permissions.  The ResourceManager checks that the process
+contains required permissions when accessing an object of a given type.
+For example, if Page requires read permission, the process must contain
+page.read permission.
+</P>
+
+
+</dynamideDoco>

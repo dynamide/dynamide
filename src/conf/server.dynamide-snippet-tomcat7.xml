@@ -1,0 +1,13 @@
+<!-- This Host element goes in wherever the Host element is defined 
+     in your $TOMCAT_HOME/conf/server.xml
+-->
+<Host name="localhost"  appBase="webapps"   unpackWARs="true" autoDeploy="true">
+           <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
+                     prefix="localhost_access_log." suffix=".txt"
+                     pattern="%h %l %u %t &quot;%r&quot; %s %b" resolveHosts="false"/>
+           <Context path="/static" appBase=""
+                   docBase="/Users/laramie/src/dynamide/build/ROOT/static"
+                   debug="99" reloadable="true">
+           </Context>
+</Host>
+

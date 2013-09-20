@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<application>
+  <event language="beanshell" name="application_onImport"><![CDATA[
+    import com.dynamide.*;
+    import com.dynamide.event.*;
+    import com.dynamide.util.*;
+    import com.dynamide.datatypes.*;
+  ]]></event>
+  <pages>
+  </pages>
+  <properties>
+    <property name="defaultLanguage">
+      <value>en-us</value>
+    </property>
+    <property name="lastSave">
+      <value>1021613598553</value>
+      <readOnly>true</readOnly>
+      <datatype>java.util.Date</datatype>
+    </property>
+    <property name="title">
+      <value>Demo Application</value>
+    </property>
+    <property name="type">
+      <value>com.dynamide.Session</value>
+      <readOnly>true</readOnly>
+    </property>
+
+    <property name="onAction" isEvent="true">
+      <value>application_onAction</value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+
+    <property name="tclsource">
+      <value><![CDATA[
+      proc onscript {event} {
+        $event setNextPageID "Zanzibar"
+        $event returnSource "<html><body><pre>[$event dumpHTML]</pre></body></html>"
+      }
+      ]]></value>
+    </property>
+
+  </properties>
+
+<!--
+  to run this app, just use /dynamide/testTcl?action=foo
+-->
+
+<event language="beanshell" name="application_onAction">
+  <![CDATA[
+        String res = "";
+        event.println("application in onAction");
+        try {
+            event.currentPageID = "Application";
+
+            ji = new tcl.lang.Interp();
+            ji.eval("package require java");
+            tcl.lang.TclObject tclobj;
+            //this works, by the way: ji.eval("set event [java::new com.dynamide.event.ScriptEvent]");
+            //but the rest of this example uses the event passed in to this beanshell event, since it is properly initialized.
+            String source = event.session.getPropertyStringValue("tclsource");
+            ji.eval(source);
+
+            ji.setVar("scriptEvent",
+                      tcl.lang.ReflectObject.newInstance(ji, event.getClass(), event),
+                      0);
+            ji.eval("onscript $scriptEvent");
+            //tclobj = ji.getResult();
+            //if (tclobj != null) res += "\r\ntcl obj to string:"+tclobj.toString();
+        } catch (Exception tcle){
+            src =  "<html><body>Exception firing Tcl event: <pre>"+Tools.errorToString(tcle, true)+"</pre></body></html>";
+            event.returnSource(src);
+        }
+
+
+  ]]>
+</event>
+
+</application>

@@ -1,0 +1,25 @@
+<BODY>
+<P>Classes for accessing resources from Dynamide.
+All resource requests in Dynamide must go through the Dynamide ResourceManager.
+This class will make calls to the com.dynamide.security.DynamideSecurityManager to
+see if the action is allowed.  Things like socket resources are denied in Hosted Mode.
+Direct file access through the java.io.File constructors is dissallowed.  To read a file
+you must use the Dynamide ResourceManager, and have permissions on the target file.
+</P>
+
+<P>
+Persistent resources can be stored in Assemblies, which can be physically represented
+by zip files or file directories.  Widgets, applications, and pages can all be persisted
+in Assemblies.  The Assemblies are represented by the Assembly class.  Each Assembly
+is an IContext containing IContext nodes for each resource.  Assembly IContexts also
+participate in an IContext tree of Assemblies.
+</P>
+
+<P>
+Stored in the Assemblies are web-apps.xml resources, which describe the applications
+present in an Assembly for deployment.  These are represented by the WebApps class,
+and the WebAppEntry record, and get transformed into an IContext tree of WebApps.
+</P>
+
+
+</BODY>

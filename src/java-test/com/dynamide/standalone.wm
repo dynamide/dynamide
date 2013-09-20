@@ -1,0 +1,10 @@
+<html><head><title>WebMacro "Standalone" example!</title></head>
+
+<body>
+<h1><font color="red">WebMacro "standalone" example!</font></h1>
+Today is $Today
+<p>
+Number is $Number
+
+<p>
+</body></html>

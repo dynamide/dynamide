@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<dynamideForm>
+  <widgets>
+  </widgets>
+  <htmlsrc browser="*"><![CDATA[
+<HTML>
+  <HEAD>
+    <TITLE>$page.title</TITLE>
+  </HEAD>
+  <BODY id="page1" bottomMargin="15" leftMargin="10" topMargin="15" rightMargin="10" name="page1">
+    <P>Login Successful</P>
+  </BODY>
+</HTML>
+]]></htmlsrc>
+  <properties>
+    <property name="lastSave">
+      <datatype>java.util.Date</datatype>
+      <readOnly>true</readOnly>
+      <value>1072971697087</value>
+    </property>
+    <property name="name">
+      <readOnly>true</readOnly>
+      <value>success</value>
+    </property>
+    <property name="title">
+      <value>Login Successful</value>
+    </property>
+    <property name="type">
+      <readOnly>true</readOnly>
+      <value>pagetypes/com.dynamide.page</value>
+    </property>
+  </properties>
+</dynamideForm>

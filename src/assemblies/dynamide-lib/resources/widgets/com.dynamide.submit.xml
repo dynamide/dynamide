@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+    <!-- Warning: I use the "caption" property for the button title to be standard
+      -  in the IDE, but this is not standard HTML.  The "value" property is supposed to be that.
+      -  For now I'm just removing value, so there won't be confusion.
+      -->
+
+<widget>
+    <componentHelp>
+     <p>Submits a form when clicked.  If you want to run some javascript, use com.dynamide.button instead.
+     </p>
+    </componentHelp>
+
+
+
+  <event language="beanshell" name="onAction"><![CDATA[
+    System.out.println("======================== com.dynamide.submit.onAction ====[ "+event.action+"] ====");
+  ]]></event>
+
+    <properties>
+        <property name="accesskey"><defaultValue></defaultValue></property>
+        <property name="action"><defaultValue></defaultValue></property>
+        <property name="caption">
+          <defaultValue>submit</defaultValue>
+          <intl>1</intl>
+        </property>
+        <property name="captionWidth"><defaultValue>0</defaultValue></property>
+        <property name="class"><defaultValue>dmbutton</defaultValue></property>
+        <property name="cellpadding"><defaultValue>0</defaultValue></property>
+        <property name="cellspacing"><defaultValue>0</defaultValue></property>
+        <property name="enabled">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+        <property name="field">
+           <datatype>com.dynamide.datatypes.LiveEnumeratedDatatype</datatype>
+           <defaultValue>
+                <enumeration defaultIndex='0'>
+                    <value></value>  <!-- make sure there is one empty value for autocreated fields -->
+                </enumeration>
+            </defaultValue>
+           <liveEvalString>session.getFieldNames();</liveEvalString>
+        </property>
+        <property name="name"><defaultValue>Submit</defaultValue></property> <!-- Use this as the default, but add a sequence #: button1-->
+            <property name="onClick" isEvent="true"><defaultValue></defaultValue></property>
+        <property name="tabindex"><defaultValue></defaultValue></property>
+        <property name="text"><defaultValue></defaultValue></property>
+        <property name="type"><defaultValue>com.dynamide.submit</defaultValue><readOnly>true</readOnly></property>
+        <property name="visible">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+    </properties>
+
+    <htmlsrc browser="*"><![CDATA[
+
+        #if ($page){
+            #set $topParent = $page.findTopParentPage()
+            #if ($topParent){
+                ##set $uniqueID = "$topParent.ID\_$pageID\_$widget.ID"
+                #set $uniqueID = "$pageID\_$widget.ID"
+                <!--topParent: $topParent <br />-->
+                #set $topPageID = $topParent.getID()
+                ###$topParent.registerAction("$widget.ID\_onClick", $widget, "onClick", "")
+                $session.registerAction("$uniqueID", $page, "$widget.ID\_onClick", "")
+                <!--registeredAction: "$uniqueID\_onClick"-->
+                ###set $baseHref = "?SESSIONID=$SESSIONID&page=$topParent.ID&action=$widget.ID\_onClick"
+                ###<a href="$baseHref&loginAction=login">$widget.ID\_onAction</a>
+            }  #else {
+                #set $uniqueID = "$pageID\_$widget.ID"
+                NO 'topParent'
+            }
+        } #else {
+            #set $uniqueID = "$widget.ID"
+            NO 'page' variable defined.
+        }
+        #set $fieldID = $widget.fieldID
+        ###fieldID: $fieldID
+        ###$session.registerSubmitAction("$fieldID", "$widget.action")
+        $session.registerSubmitAction("$uniqueID", "$widget.action")
+        #set $type = "submit"
+        ## These things make the submit button "live" at design time, which is bad,
+        ## so fake it with a button, which does nothing.
+        #if ($designMode == "true") {
+            #set $type = "button"
+        }
+        <table border="0"  cellpadding="$widget.cellpadding" cellspacing="$widget.cellspacing">
+            <tr>
+                <td width="$widget.captionWidth">
+                    <dm_nbsp/>
+                </td>
+                <td>
+                #set $accesskey = "accesskey='$widget.accesskey'"
+
+                    <input class="$widget.class" type="$type"
+                        #if ($widget.tabindex != "") { tabindex='$widget.tabindex' }
+                        ##name="$fieldID"
+                        name="$uniqueID"
+                        value="$widget.caption" $accesskey />
+                </td>
+            </tr>
+        </table>
+    ]]></htmlsrc>
+</widget>

@@ -1,0 +1,44 @@
+<web-app id='/' app-dir='webapps/dynamide'>
+
+
+
+	<description>
+	Dynamide Webapp for tomcat-6.  For tomcat-7, see the current web.xml file in this directory.
+	</description>
+
+
+
+
+	<display-name>Dynamide Webapp in web.xml</display-name>
+
+	<!--classpath id='WEB-INF/classes' source='WEB-INF/classes' compile='true'/-->
+      <servlet>
+      <servlet-name>DynamideServlet</servlet-name>
+      <servlet-class>com.dynamide.DynamideServlet</servlet-class>
+                <init-param>
+			<param-name>DYNAMIDE_HOME</param-name>
+			<param-value>C:/dynamide</param-value>	
+		</init-param>
+      </servlet>
+ 
+      <servlet-mapping>
+      <servlet-name>DynamideServlet</servlet-name>
+      <url-pattern>/*</url-pattern>
+      </servlet-mapping>
+      
+      
+      <servlet-mapping>
+      <servlet-name>DynamideServlet</servlet-name>
+      <url-pattern>/*/</url-pattern>
+      </servlet-mapping>
+
+      <session-config>
+        <session-max>4096</session-max>
+        <session-timeout>30</session-timeout>
+        <enable-cookies>true</enable-cookies>
+        <enable-url-rewriting>false</enable-url-rewriting>
+      </session-config>
+      
+      
+
+    </web-app>

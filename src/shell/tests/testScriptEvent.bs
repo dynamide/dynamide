@@ -1,0 +1,42 @@
+import com.dynamide.event.*;
+
+source("dynamideShell.bs");
+
+
+
+print("HandlerResult ==> h");
+print("ScriptEvent ==> e");
+print("session ==> s");
+s=newSession("/Dynamide/demo");
+print("page ==> p");
+p=s.getPageByID("page1");
+
+h = new HandlerResult("");
+s.setHandlerResult(h);
+e = new ScriptEvent(s);
+e.setSession(s);
+s.setUSER("testuser");
+
+print("\r\n");
+print("Test of com.dynamide.event.ScriptEvent");
+print("\r\n");
+print("e.sendRedirectToPage(\"page1\")");
+e.sendRedirectToPage("page1");
+print(e.redirectURL);
+print("\r\n");
+print("e.sendRedirectToPage(\"page1\", \"login\")");
+e.sendRedirectToPage("page1", "login");
+print(e.redirectURL);
+
+print("\r\n");
+print("e.sendRedirectToPage(\"page1\", \"login\", \"sender=My+Page\")");
+e.sendRedirectToPage("page1", "login", "sender=My+Page");
+print(e.redirectURL);
+
+print("\r\n");
+print("e.sendRedirectToPage(\"\", \"\", \"sender=My+Page\")");
+e.sendRedirectToPage("", "", "sender=My+Page");
+print(e.redirectURL);
+
+System.exit(0);
+

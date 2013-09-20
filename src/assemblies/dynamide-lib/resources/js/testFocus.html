@@ -1,0 +1,33 @@
+<HTML>
+<HEAD>
+  <TITLE>Test Focus/Activation</TITLE>
+
+    <link rel="stylesheet"  SRC="/com/dynamide/doc/dynamidedoco.css" href="/com/dynamide/doc/dynamidedoco.css"></link>
+
+    <SCRIPT Language="javascript" SRC="/com/dynamide/templates/en/js/scripts.js" >
+        //General Utilty Functions.
+    </SCRIPT>
+
+    <SCRIPT Language="javascript" SRC="/com/dynamide/templates/en/js/windowing.js" >
+        //Window and View functions.
+    </SCRIPT>
+
+    <SCRIPT Language="javascript">
+      function onActivate(){
+        logDebug('in onActivate');
+      }
+      function onFocus(){
+        logDebug('in onFocus');
+      }
+      logDebug('log started');
+
+    </SCRIPT>
+
+</HEAD>
+
+<BODY id="page1" name="page1" bgcolor="white" onactivate='onActivate()' onfocus='onFocus()'>
+  <h2>Test Focus/Activation</h2>
+  <a href='javascript:document.body.setActive()'>activate</a>
+</BODY>
+
+</HTML>

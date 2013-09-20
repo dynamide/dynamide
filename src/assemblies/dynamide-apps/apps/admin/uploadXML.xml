@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm >
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<dynamideForm>
+
+<properties>
+
+    <property name="type">
+      <value>pagetypes/com.dynamide.form</value>
+      <readOnly>true</readOnly>
+    </property>
+
+    <property name="title">
+      <value>Upload Test</value>
+    </property>
+
+    <property name="margin">
+      <value>0</value>
+    </property>
+
+    <property name="bgcolor">
+      <value>white</value>
+    </property>
+
+
+  </properties>
+
+    <event language="beanshell" name="uploadXML_onAction"><![CDATA[
+        System.out.println("====================== uploadXML_onAction 3");
+        String filename = session.getQueryParam("file.filename");
+        String file = session.getQueryParam("file.file");
+        if ( Tools.isBlank(filename) || Tools.isBlank(file) ) {
+            System.out.println("filename '"+filename+"' or file '"+file+"' was blank");
+        } else {
+            filename = filename.replace(' ', '_');
+            filename = filename.replace('\'', '_');
+            filename = filename.replace('\"', '_');
+            if (!FileTools.isWebSafeFileName(filename)){
+                event.returnSource("<html><body>ERROR: invalid filename: "+filename+"</body></html>");
+                return;
+            }
+            String newFilename = filename;
+            int iSlash = filename.lastIndexOf("\\");
+            if ( iSlash>-1 ) {
+                newFilename = newFilename.substring(iSlash+1);
+            }
+            iSlash = filename.lastIndexOf("/");
+            if ( iSlash>-1 ) {
+                newFilename = newFilename.substring(iSlash+1);
+            }
+            rm = com.dynamide.resource.ResourceManager.getRootResourceManager();
+            String dir = FileTools.join(rm.getStaticRoot(), "dynamide/admin/files");
+            FileTools.createDirectory(dir);
+            String fullNewFilename = FileTools.join(dir, newFilename);
+            boolean ok = FileTools.copyFile(file, fullNewFilename);
+            String msg = "copied: "+fullNewFilename + " from "+file+" result: "+ok;
+            session.setFieldValue("uploadStatus", msg);
+
+            session.setFieldValue("transformStatus", "");
+            try {
+                String content = FileTools.readFile(fullNewFilename);
+                com.dynamide.JDOMFile.prettyPrintHTML(content);
+                session.setFieldValue("transformStatus", "UPLOAD OK");
+            } catch( Throwable e ){
+                emsg = com.dynamide.util.Tools.errorToString(e, true);
+                System.out.println(emsg);
+                event.returnSource("<html><body>ERROR: "+emsg+" in: "+fullNewFilename+"</body></html>");
+                return;
+            }
+
+        }
+    ]]>
+    </event>
+
+
+<htmlsrc><![CDATA[
+  <HTML>
+    <HEAD>
+        <TITLE>$session.title - $page.title</TITLE>
+        $session.getInclude("resources/js/page.js")
+        $session.getInclude("resources/css/dynamide.css")
+    </HEAD>
+
+    <BODY id="uploadXML" onclick="widgetClicked(this)" bgcolor="white">
+        <SPAN class="widget" id="widgetstyle1"></SPAN>
+        <center>
+        <table border='0' cellpadding='20' cellspacing='0'>
+          <tr>
+            <td>
+            <h2>Upload and validate an XML file</h2>
+            $session.uploadStatus
+        <form name="Upload" method="POST" action="$session.requestPath" enctype="multipart/form-data">
+
+               <table border='0' cellpadding='0' cellspacing='0'>
+                 <tr>
+                   <td>
+                        appname:
+                   </td>
+                   <td>
+                       <input TYPE="text" NAME="appname"/>
+                   </td>
+                 </tr>
+                 <tr>
+                   <td>
+                        file:
+                   </td>
+                   <td>
+                        <input TYPE="file" NAME="file"/>
+                   </td>
+                 </tr>
+                 <tr>
+                   <td>
+
+                   </td>
+                   <td>
+                      <input TYPE="submit" NAME="Submit" VALUE="Validate File"/>
+                   </td>
+                 </tr>
+               </table>
+              <input type="hidden" name="action" value="Upload"/>
+              <input type="hidden" name="page" value="uploadXML"/>
+              <input type="hidden" name="next" value="uploadXML"/>
+              <input type="hidden" name="SESSIONID" value="$SESSIONID"/>
+          </form>
+
+            </td>
+          </tr>
+        </table>
+        </center>
+
+          <pre>
+          ##$session.getRequest().getParameter("file")
+          ##$session.getRequest().getParameterNames() ##("action")
+          ##$session.dumpRequestInfo()
+          </pre>
+      </BODY>
+    </HTML>
+  ]]></htmlsrc>
+
+  <widgets>
+      <widget id="widgetstyle1">
+      <properties>
+        <property name="name">
+          <value>hidden</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.widgetstyle</value>
+        </property>
+      </properties>
+    </widget>
+  </widgets>
+
+</dynamideForm>

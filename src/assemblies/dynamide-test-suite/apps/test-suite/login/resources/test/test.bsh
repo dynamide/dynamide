@@ -1,0 +1,12 @@
+/*
+ in beanshell
+   bsh C:\dynamide\build\ROOT\homes\dynamide\assemblies\com-dynamide-apps-1\apps\test-suite\login\resources\test\test.bsh
+ in jswat:
+   bsh.Interpreter C:\dynamide\build\ROOT\homes\dynamide\assemblies\com-dynamide-apps-1\apps\test-suite\login\resources\test\test.bsh
+*/
+
+source("C:/dynamide/src/shell/dynamideShell.bs");
+s = Session.createSession("/dynamide/test-suite/login", "/dynamide/test-suite/login?SESSIONID=test-login");
+result = s.handleURL("/dynamide/test-suite/login?next=page1");
+//print(result);
+result = s.handleURL("/dynamide/test-suite/login?page=page1&action=resources/widgets/com.dynamide.login_onAction");

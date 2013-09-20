@@ -1,0 +1,7 @@
+#set $ft = $shell.loadClass("com.dynamide.util.FileTools")
+#set $map = $ft.list("C:/doc.lar/personal/wwwroot/provisionalauthority", 2, 1)
+#foreach  $f in $map {
+  #if ($f){
+        <img src="$f.getCanonicalPath()" />
+  }
+}

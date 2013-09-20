@@ -1,0 +1,24 @@
+package com.dynamide.resource;
+
+import javax.naming.*;
+import javax.naming.spi.*;
+
+import com.dynamide.resource.*;
+
+/**
+ *  see javax.naming.InitialContextFactory
+ */
+public class DynamideInitialContextFactory implements InitialContextFactory
+{
+  public DynamideInitialContextFactory(){
+    super();
+  }
+
+  /**
+   *  Get a context based on <tt>environment<tt>.  However, the environment is ignored.
+   */
+  public Context getInitialContext(java.util.Hashtable environment)
+  throws NamingException {
+    return new DynamideContext();
+  }
+}

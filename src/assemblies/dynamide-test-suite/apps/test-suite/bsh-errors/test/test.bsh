@@ -1,0 +1,4 @@
+source("C:/dynamide/src/shell/dynamideShell.bs");
+s = Session.createSession("/dynamide/test-suite/bsh-errors", "/dynamide/test-suite/bsh-errors?USER=laramie");
+print(s.handleURL("/dynamide/test-suite/bsh-errors?USER=laramie&page=errors&next=errors&action=makeSyntaxError&SESSIONID=test"));
+

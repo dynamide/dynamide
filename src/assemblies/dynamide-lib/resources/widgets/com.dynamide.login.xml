@@ -1,0 +1,899 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<dynamideForm>
+
+    <componentHelp>
+     <p>This component encapsulates a Dynamide login, and is backed by a
+        database schema which can be used from the Dynamide system login
+        each account gets, or can be imported into a namespace in
+        your database instance.</p>
+    </componentHelp>
+
+  <event language="beanshell" name="onImport"><![CDATA[
+    import com.dynamide.security.Login;
+    import com.dynamide.*;
+    import com.dynamide.util.*;
+  ]]></event>
+
+  <event language="beanshell" name="onLoad"><![CDATA[
+    System.out.println("================ login onLoad =============== session "+session);
+    login = new com.dynamide.security.Login(session, "dynamide", "loginObject");
+    session.registerDatasource(login);
+  ]]></event>
+
+
+  <event language="beanshell" name="onAction"><![CDATA[
+    String action = event.getQueryParam("loginAction");
+    System.out.println("======================== com.dynamide.login.onAction ====[ "+action+"] ====");
+    event.prettyPrint = false;
+    Page topPage = event.sender.findTopParentPage();
+    String topPageID = topPage.getID();
+    System.out.println("@@@@@@@@@@@@@ topPage "+topPage+"  topPageID: "+topPageID);
+    Login loginObject = session.getDatasource("loginObject");
+    System.out.println("com.dynamide.login onAction loginObject: "+loginObject);
+    if (action.equals("login")){
+        String USER = event.session.getFieldValue("USER");
+        if (USER == null || USER.trim().length()==0){
+            session.setFieldError("USER", "Required field");
+            System.out.println("ERROR in USER: empty");
+            event.jumpToPage(topPageID);
+            return;
+        } else {
+            rm = session.getResourceManager();
+            int code;
+            if (rm.isUserLocalDeveloper(session.getUSER())){
+                o = rm.find("/conf/localDeveloper/password");
+                if ( o != null ) {
+                    System.out.println("login: "+session.getUSER()+" p: "+o.toString());
+                    code = loginObject.login(session.getUSER(), o.toString());
+                    if ( code != Login.OK ) {
+                        //just try to use the supplied password from the field:
+                        session.logDebug("localDeveloper, but wrong password in context. trying user-supplied password.");
+                        code = loginObject.login();
+                    }
+                } else {
+                    session.logDebug("localDeveloper, but empty password in context");
+                    code = loginObject.login();
+                }
+            } else {
+                code = loginObject.login();
+            }
+            if (code == Login.OK){
+                /**
+                //application_onStart ensures this is there.
+                logins = session.getResourceManager().find("/homes/dynamide/appdata/swarm/logins");
+                if ( logins != null ) {
+                    loginObject.storeInPool(logins);
+                } else {
+                    session.logError("Can't store login in pool because /homes/dynamide/appdata/swarm/logins was not found in ResourceManager");
+                }
+                */
+                //this doesn't work:
+                //url = session.getAppURL(event.sender.getPropertyStringValue("successRedirectURL"));
+                //but this does:
+                url = event.sender.get("successRedirectURL");
+                System.out.println("__________________URL: "+url);
+                event.sendRedirect(url);
+                return;
+                /**
+                if ( ! s.userHasPermission(USER, ...)){
+                    event.returnSource("<html><body>User does not have permission ...</body></html>");
+                    return;
+                }
+
+                requestedPageAfterLogin = session.getFieldStringValue("requestedPageAfterLogin");
+                if ( requestedPageAfterLogin.length()>0){
+                    session.setFieldValue("requestedPageAfterLogin", "");
+                    event.sendRedirect(session.getAppURL("next="+requestedPageAfterLogin));
+                    return;
+                } else {
+                    event.sendRedirect(session.getAppURL("next=page1")); //menu"));
+                    return;
+                }
+                */
+            } else {
+                session.setFieldError("USER", "Login failed: "+Login.errorCodeToString(code));
+                event.jumpToPage(topPageID);
+                return;
+            }
+        }
+    } else if (action.equals("makeProfileChanges")){
+            System.out.println("action changeProfile loginObject: "+loginObject);
+            String USER = session.getFieldValue("USER");
+            int code = loginObject.changeUserProfile();
+            System.out.println("action makeProfileChanges code: "+code);
+            if (code != Login.OK){
+                System.out.println("action changeProfile bad code");
+                session.setFieldError("USER", loginObject.getLastError());
+                event.jumpToPage(topPageID);
+                return;
+            }
+            event.sendRedirect(session.getAppURL("next=page1")); //menu"));
+            return;
+    } else if (action.equals("newPassword")){
+            //Use redirects so that password is not seen in URL.
+            System.out.println("action newPassword");
+            //This bit is funny: if the user is logged in, we should never then allow them to blank it out.
+            String USER = session.getFieldValue("USER");
+            if (USER == null || USER.length()==0){
+                session.setFieldError("USER", "Required field");
+                System.out.println("user empty action changePassword");
+                event.sendRedirect(session.getAppURL("next=login"));
+                return;
+            }
+            int code = loginObject.changePassword();
+            System.out.println("action changePassword code: "+code);
+            if (code != Login.OK){
+                event.sendRedirect(session.getAppURL("next=login"));
+                return;
+            }
+            event.sendRedirect(session.getAppURL("next=page1")); //menu"));
+            return;
+    } else if (action.equals("register")){
+        System.out.println("action register");
+        String USER = session.getFieldValue("USER");
+        if (USER == null || USER.length()==0){
+            session.setFieldError("USER", "Required field");
+            event.sendRedirect(session.getAppURL("next=login"));
+            return;
+        }
+        EMAIL = session.getString("LOGINOBJECT_EMAIL");
+        if (EMAIL == null || EMAIL.length()==0){
+            session.setFieldError("loginObject_EMAIL", "Required field");
+            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@"+session.findField("loginObject_EMAIL").getErrorMessage());
+            //event.jumpToPage("login");
+            event.sendRedirect(session.getAppURL("next="+topPageID+"&loginAction=register"));
+            return;
+        }
+        int code = loginObject.addUser();
+        if ( code != Login.ADDUSER_ERROR && code != Login.ADDUSER_DENIED ) {
+            //I only do this here, and not in the login prefs. User must use schwarm prefs.
+            loginID = loginObject.lookupUserID(USER);
+            getSchwarmanizer().changeUserEmailPrefSwarmUpdates(loginID, session.getFieldValue("wantEmailUpdates"));
+        }
+        if (code == Login.ADDUSER_ALLOWED){
+            event.sendRedirect(session.getAppURL("next=page1"));
+        } else if (code == Login.ADDUSER_PENDING) {
+            inputObject = new HashMap();
+            inputObject.put("subject", "authorize new user: "+USER);
+            inputObject.put("body",
+              "authorize new user: "+USER
+              +"\r\n<br />Familiar Name: "+session.getString("LOGINOBJECT_FAMILIARNAME")
+              +"\r\n<br />Surname: "+session.getString("LOGINOBJECT_SURNAME")
+              +"\r\n<br />Other Name: "+session.getString("LOGINOBJECT_OTHERNAME")
+              +"\r\n<br />EMail: "+session.getString("LOGINOBJECT_EMAIL")
+              +"\r\n<br />Referrer: "+session.getString("loginObject_REFERRER")
+              );
+            rm = ResourceManager.getRootResourceManager();
+            String from = rm.find("/homes/dynamide/appdata/swarm/email/schwarmanizer-from-email");
+            String to = rm.find("/homes/dynamide/appdata/swarm/email/schwarmanizer-admin-email");
+            inputObject.put("to", to);
+            inputObject.put("from", from);
+
+            rm.startJob(session, "application_jobAdminMail", inputObject, false);
+
+            event.sendRedirect("/static/dynamide/schwarmanizer/authorizationPending.html");
+            return;
+        } else {
+            event.sendRedirect(session.getAppURL("next=login&loginAction=register&debug=badADDUSERCode"));
+            return;
+        }
+    } else if (action.equals("resetPasswords")){
+        Enumeration en = loginObject.getUserLogins();
+        String oks = "", bads = "";
+        while (en.hasMoreElements()){
+            String otherUser = (String)en.nextElement();
+            if (otherUser.length()>0){
+               int code = loginObject.resetOtherUserPassword(otherUser, "password");
+               if (code == Login.OK){
+                    oks += otherUser+"<br />\r\n";
+                } else {
+                    bads += otherUser+": "+loginObject.getLastError()+"<br />\r\n";
+                }
+            }
+        }
+        event.returnSource("<html><body>DONE Password Reset. Results:<br/><hr/>OK: <hr/>"+oks+"<hr/>BAD: <hr/>"+bads+"<hr/></body></html>");
+        return;
+    } else if (action.equals("cancel")){
+        event.sendRedirect(session.getAppURL(""));
+        return;
+    } else {
+        event.sendRedirect(session.getAppURL("next="+topPageID+"&loginAction="+action));
+        return;
+    }
+  ]]></event>
+
+  <widgets>
+    <widget id="editUSER">
+      <properties>
+        <property name="caption">
+          <value>*User Login</value>
+        </property>
+        <property name="align">
+          <value>right</value>
+        </property>
+        <property name="captionWidth">
+          <value>200</value>
+        </property>
+        <property name="field">
+           <value>USER</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="readonlyLogin">
+      <properties>
+        <property name="caption">
+          <value>*User Login</value>
+        </property>
+        <property name="align">
+          <value>right</value>
+        </property>
+        <property name="enabled">
+          <value>false</value>
+        </property>
+        <property name="captionWidth">
+          <value>200</value>
+        </property>
+        <property name="field">
+           <value>USER</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="editPassword">
+      <properties>
+        <property name="align">
+          <value>right</value>
+        </property>
+        <property name="caption">
+          <value>*Password</value>
+        </property>
+        <property name="captionWidth">
+          <value>200</value>
+        </property>
+        <property name="datasource">
+          <value>loginObject</value>
+        </property>
+        <property name="field">
+          <value>password</value>
+        </property>
+        <property name="isPassword">
+          <value>true</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="editNewPassword">
+      <properties>
+        <property name="align">
+          <value>right</value>
+        </property>
+        <property name="caption">
+          <value>*New Password</value>
+        </property>
+        <property name="captionWidth">
+          <value>200</value>
+        </property>
+        <property name="datasource">
+          <value>loginObject</value>
+        </property>
+        <property name="field">
+          <value>newPassword</value>
+        </property>
+        <property name="isPassword">
+          <value>true</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="editNewPassword2">
+      <properties>
+        <property name="align">
+          <value>right</value>
+        </property>
+        <property name="caption">
+          <value>*Re-enter New Password</value>
+        </property>
+        <property name="captionWidth">
+          <value>200</value>
+        </property>
+        <property name="datasource">
+          <value>loginObject</value>
+        </property>
+        <property name="field">
+          <value>newPassword2</value>
+        </property>
+        <property name="isPassword">
+          <value>true</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+        </property>
+      </properties>
+    </widget>
+
+
+    <widget id="editEMail">
+      <properties>
+        <property name="align">
+          <value>right</value>
+        </property>
+        <property name="caption">
+          <value>eMail</value>
+        </property>
+        <property name="datasource">
+          <value>loginObject</value>
+        </property>
+        <property name="field">
+          <value>eMail</value>
+        </property>
+
+        <property name="captionWidth">
+          <value>200</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="editFamiliarName">
+      <properties>
+        <property name="align">
+          <value>right</value>
+        </property>
+        <property name="caption">
+          <value>Familiar Name</value>
+        </property>
+        <property name="datasource">
+          <value>loginObject</value>
+        </property>
+        <property name="field">
+          <value>familiarName</value>
+        </property>
+        <property name="captionWidth">
+          <value>200</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="editSurname">
+      <properties>
+        <property name="align">
+          <value>right</value>
+        </property>
+        <property name="caption">
+          <value>Surname</value>
+        </property>
+        <property name="datasource">
+          <value>loginObject</value>
+        </property>
+        <property name="field">
+          <value>surname</value>
+        </property>
+        <property name="captionWidth">
+          <value>200</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="editOthername">
+      <properties>
+        <property name="align">
+          <value>right</value>
+        </property>
+        <property name="caption">
+          <value>Other Name</value>
+        </property>
+        <property name="datasource">
+          <value>loginObject</value>
+        </property>
+        <property name="field">
+          <value>otherName</value>
+        </property>
+        <property name="captionWidth">
+          <value>200</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="editReferrer">
+      <properties>
+        <property name="align">
+          <value>right</value>
+        </property>
+        <property name="caption">
+          <value>Who referred you?</value>
+        </property>
+        <property name="datasource">
+          <value>loginObject</value>
+        </property>
+        <property name="field">
+          <value>referrer</value>
+        </property>
+        <property name="captionWidth">
+          <value>200</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="cbWantEmailUpdates">
+      <properties>
+        <property name="align">
+          <value>right</value>
+        </property>
+        <property name="caption">
+          <value>Schwarmanizer updates in eMail?</value>
+        </property>
+        <property name="captionWidth">
+          <value>200</value>
+        </property>
+        <property name="field">
+          <value>wantEmailUpdates</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.checkbox</value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="selectLogin">
+      <properties>
+        <property name="align">
+          <value>right</value>
+        </property>
+        <property name="border">
+          <value>0</value>
+        </property>
+        <property name="caption">
+          <value>*Login</value>
+        </property>
+        <property name="captionClass">
+          <value>caption</value>
+        </property>
+        <property name="captionWidth">
+          <value>200</value>
+        </property>
+        <property name="field">
+           <value>USER</value>
+        </property>
+        <property name="multiple">
+          <value>false</value>
+        </property>
+        <property name="size">
+          <value>1</value>
+        </property>
+        <property name="tabindex">
+          <value>1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.select</value>
+        </property>
+        <property name="items">
+           <datatype>com.dynamide.datatypes.LiveEnumeratedDatatype</datatype>
+           <value>
+                <enumeration defaultIndex='0'>
+                    <value>my default value</value>  <!-- make sure there is one empty value for autocreated fields -->
+                </enumeration>
+            </value>
+           <liveEvalString>session.getDatasource("loginObject").getUserLogins();</liveEvalString>
+        </property>
+
+
+      </properties>
+    </widget>
+
+
+
+    <widget id="standardIncludes">
+      <properties>
+        <property name="name">
+          <value>standardIncludes</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.stdincludes</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="session1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.session</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="hiddenPageID">
+      <properties>
+        <property name="field">
+          <value>page</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.hidden</value>
+        </property>
+        <property name="value">
+          <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+          <value>$pageID</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="includes1">
+      <properties>
+        <property name="items">
+          <value>
+            <enumeration override="false" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/css/dynamide.css</item>
+            </enumeration>
+          </value>
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+        </property>
+        <property name="name">
+          <value>includes1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.includes</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="widgetstyle1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.widgetstyle</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="submitLogin">
+      <properties>
+        <property name="action">
+          <value>login</value>
+        </property>
+        <property name="caption">
+          <value>Login</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="submitRegister">
+      <properties>
+        <property name="action">
+          <value>register</value>
+        </property>
+        <property name="caption">
+          <value>Register</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="submitChange">
+      <properties>
+        <property name="action">
+          <value>makeProfileChanges</value>
+        </property>
+        <property name="caption">
+          <value>Make Changes</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="submitNewPassword">
+      <properties>
+        <property name="action">
+          <value>newPassword</value>
+        </property>
+        <property name="caption">
+          <value>Change Password</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="submitCancel">
+      <properties>
+        <property name="action">
+          <value>cancel</value>
+        </property>
+        <property name="caption">
+          <value>Cancel</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
+
+  </widgets>
+
+  <htmlsrc browser="*" isWebMacro="true" isXHTML="false"><![CDATA[
+<HTML>
+  <HEAD>
+    <TITLE/>
+  </HEAD>
+  <BODY id="login" bgcolor="white">
+    <SPAN class="widget" id="standardIncludes"/>
+    <SPAN class="widget" id="includes1"/>
+    <SPAN class="widget" id="widgetstyle1"/>
+    <style>
+    h2  {font: 24px Arial,Helvetica,sans-serif; margin: 0;}
+    a {color: green; text-decoration: underline; font: 14px; font-family: Arial, Helvetica; font-weight: bold; }
+    a:active {color: green; text-decoration: underline; font: 14px; font-family: Arial, Helvetica; font-weight: bold; }
+    a:hover {color: \#FF9933; text-decoration: underline; font: 14px; font-family: Arial, Helvetica; font-weight: bold; }
+    p  {font: 14px Arial,Helvetica,sans-serif; margin: 20;}
+    th  {font: 16px Arial,Helvetica,sans-serif; margin: 20; font-weight:  bold;}
+    td  {font: 14px Arial,Helvetica,sans-serif; margin: 20;}
+    h2  {font: 24px Arial,Helvetica,sans-serif; margin: 0;}
+    </style>
+
+    #macro oneRow($cell){
+        <tr><td>$cell</td></tr>
+    }
+
+    #macro oneRowCenter($cell){
+        <tr><td align="center">$cell</td></tr>
+    }
+
+    #macro widgetOneRow($widgetID){
+        <tr><td><SPAN class="widget" id="$widgetID"/></td></tr>
+    }
+
+    #macro widgetOneRowCenter($widgetID){
+        <tr><td align="center">
+        <table border='0' cellpadding='2' cellspacing='0'>
+          <tr>
+            <td>
+                <SPAN class="widget" id="$widgetID"/>
+            </td>
+            <td>
+               <SPAN class="widget" id="submitCancel"/>
+            </td>
+          </tr>
+        </table>
+        </td></tr>
+    }
+
+    #macro widgetOneRowCenterNoCancel($widgetID){
+        <tr><td align="center">
+        <SPAN class="widget" id="$widgetID"/>
+        </td></tr>
+    }
+
+    #macro widget($id){
+        <SPAN class="widget" id="$id" />
+    }
+
+    #macro headerRow($msg){
+
+          <tr>
+            <th bgcolor="lightgrey">
+                <b>$msg</b>
+            </th>
+          </tr>
+    }
+
+    #macro requiredFieldNoteRow(){
+          <tr>
+            <td align="left">
+                <SPAN class="caption">*</SPAN> Indicates required fields
+            </td>
+          </tr>
+    }
+
+ <table border='$page.border' cellpadding='0' cellspacing='0'>
+  <tr>
+  <td>
+<!--
+  ## THIS IS A PAGE AND NOT A WIDGET
+  <pre>
+    page1   a Page, contains a com.dynamide.loginform via the href and id attributes of a widget span.
+    com.dynamide.loginform   this page, which can be a widget, too, and HAS_A com.dynamide.login component
+        com.dynamide.login   widget representation of com.dynamide.security.Login
+            com.dynamide.security.Login   Java side object, it is the widget's getObject()
+
+    span class="widget" may have a nested properties element??? or  a single element with
+       all the properties as string attributes????
+
+    Arg!  pageID needs to refer to the parentPageID always.  and widget should refer to this container? Help!  Figure out the
+    scenarios and rules.
+    THIS IS A JOB FOR com.dynamide.pageid, a widget that figures this out.
+
+    This page now works (2/7/2004 11:57PM) but the problem is that I have to fake out the submit
+    button with the submit link.  Really, submit buttons should allow you to fire serverside events
+    OR the application "action".  The action is bad, because it is a global, really, and should be replaced
+    by the serverside event.  This is required when you have containers and nested pages.
+    ###$session.dumpContext($WEBMACRO_CONTEXT.getContext())
+    #if ($parent){
+       parent: '$parent'
+    }
+    pageID: $pageID <br />
+  </pre>
+-->
+  <center>
+  <FORM name="loginForm" accept-charset="UNKNOWN" action="$session.applicationPath" method="get" encType="application/x-www-form-urlencoded">
+    <h2>Login</h2>
+    #set $topPageID = $pageID
+    ## set a reasonable default:
+    #set $baseHref = "?SESSIONID=$SESSIONID&page=$pageID"
+    #set $topParent = $page.findTopParentPage()
+    #if ($topParent){
+        topParent: $topParent <br />
+        #set $topPageID = $topParent.getID()
+        $topParent.registerAction("$pageID\_onAction", $page, "onAction", "")
+        #set $baseHref = "?SESSIONID=$SESSIONID&page=$topParent.ID&action=$pageID\_onAction"
+        <a href="$baseHref&loginAction=login">$pageID\_onAction</a>
+    }
+    ####set $action = $session.getCurrentAction()
+    #set $action = $session.getQueryParam("loginAction")
+    #if ($action == "changeProfile" || $action == "makeProfileChanges" || $action == "newUser" || $action == "register" ){
+
+        #if ($action == "newUser" || $action == "register" ){
+            <p>Already a current user?  Please <a href="$baseHref&loginAction=existingUser">login</a>.</p>
+        }
+        #if ($action == "changeProfile" || $action == "makeProfileChanges" ){
+           <p>Want to change your password?  <a href="$baseHref&loginAction=changePassword">Click here</a>.</p>
+        }
+        <table border='1' cellpadding='10' cellspacing='0'>
+          #if ($action == "changeProfile" ){
+                #headerRow("Change Your Profile")
+          } #else {
+                #headerRow("New users register here")
+                <tr>
+                  <td width="400">
+                  Please choose a login name and password, fill out all desired fields, and use the Register button.
+                  Please use a short login name, from 3 to 8 characters. (Longer names are supported, however.)
+                  </td>
+                </tr>
+          }
+          <tr>
+            <td width="400">
+                <table border='0' cellpadding='4' cellspacing='0' width="100%">
+                    #if ($action == "changeProfile" ){
+                        #widgetOneRow("readonlyLogin")
+                    } #else {
+                        ## newUser: let them select a user login and choose a new password.
+                        #widgetOneRow("editUSER")
+                        #widgetOneRow("editNewPassword")
+                        #widgetOneRow("editNewPassword2")
+                    }
+                    #widgetOneRow("editFamiliarName")
+                    #widgetOneRow("editOthername")
+                    #widgetOneRow("editSurname")
+                    #widgetOneRow("editEMail")
+                    #widgetOneRow("editReferrer")
+                    #if ($action == "newUser" || $action == "register"){
+                        #widgetOneRow("cbWantEmailUpdates")
+                    }
+                    #if ($action == "changeProfile" ){
+                        #widgetOneRowCenter("submitChange")
+                    } #else {
+                        #widgetOneRowCenter("submitRegister")
+                    }
+                    #requiredFieldNoteRow()
+                </table>
+            </td>
+          </tr>
+        </table>
+    } #elseif ($action == "changePassword" || $action == "newPassword" ){
+        <p>Want to change your profile?  <a href="$baseHref&loginAction=changeProfile">Click here</a>.</p>
+            <table border='1' cellpadding='10' cellspacing='0'>
+          #headerRow("Change Your Password")
+          <tr>
+            <td width="400">
+                <table border='0' cellpadding='4' cellspacing='0' width="100%">
+                    #widgetOneRow("readonlyLogin")
+                    #widgetOneRow("editPassword")
+                    #widgetOneRow("editNewPassword")
+                    #widgetOneRow("editNewPassword2")
+                    #widgetOneRowCenter("submitNewPassword")
+                    #requiredFieldNoteRow()
+                </table>
+            </td>
+          </tr>
+        </table>
+    } #else {
+        ## handle all other actions (dmStart existingUser, and any hacked actions.
+
+        <p><b>New user?</b><dm_nbsp/>  Please <a href="$baseHref&loginAction=newUser">Register</a>.</p>
+        <table border='1' cellpadding='10' cellspacing='0'>
+          #headerRow("Current users log in here")
+          <tr>
+            <td>
+                <table border='0' cellpadding='4' cellspacing='0'>
+                  #widgetOneRow("selectLogin")
+                  #widgetOneRow("editPassword")
+                  #widgetOneRowCenterNoCancel("submitLogin")
+                  #requiredFieldNoteRow()
+                </table>
+            </td>
+          </tr>
+        </table>
+    }
+    ##getErrorMessage ::: $session.findField("loginObject_EMAIL").getErrorMessage()
+
+
+    This works:<a href="javascript:document.forms[0].submit();">submit</a>
+    <SPAN class="widget" id="session1"/>
+
+    <br />
+    <br />
+    <input type="hidden" id="page" name="page" value="$topPageID" />
+    <input type="hidden" id="action" name="action" value="$pageID\_onAction" />
+    <input type="hidden" id="loginAction" name="loginAction" value="login" />
+ </FORM>
+ </center>
+ </td>
+ </tr>
+</table>
+  </BODY>
+</HTML>
+]]></htmlsrc>
+
+
+  <properties>
+    <property name="successRedirectURL">
+      <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+      <value>$session.getAppURL("next=success")</value>
+    </property>
+    <property name="border">
+      <value>1</value>
+    </property>
+    <property name="formAction">
+      <value></value>
+    </property>
+    <property name="formName">
+      <value></value>
+    </property>
+    <property name="lastSave">
+      <value>1050462205141</value>
+      <readOnly>true</readOnly>
+      <datatype>java.util.Date</datatype>
+    </property>
+    <property name="margin">
+      <value>0</value>
+    </property>
+    <property name="name">
+      <value>login</value>
+      <readOnly>true</readOnly>
+    </property>
+    <property name="title">
+      <value>Login</value>
+      <intl>1</intl>
+    </property>
+    <property name="type">
+      <readOnly>true</readOnly>
+      <value>pagetypes/com.dynamide.page</value>
+    </property>
+    <property name="footype">
+        <defaultValue>com.dynamide.login</defaultValue>
+        <readOnly>true</readOnly>
+    </property>
+  </properties>
+</dynamideForm>

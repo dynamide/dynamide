@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Created with Dynamide from DYNAMIDE.COM -->
+<!-- This replaces both com.dynamide.normalpage.xml and page.xml -->
+
+<dynamideForm>
+
+<properties>
+    <property name="margin">
+      <value>0</value>
+      <eval stored='false'><![CDATA[document.body.margin = "$page.margin";document.body.bgcolor='blue';alert('changed');]]></eval>
+    </property>
+
+    <property name="title">
+      <value></value>
+    </property>
+
+    <property name="type">
+      <value>pagetypes/com.dynamide.page</value>
+      <readOnly>true</readOnly>
+    </property>
+
+    <property name="onAction" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+
+    <property name="onLoad" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+
+    <property name="onValidate" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+
+</properties>
+
+<htmlsrc><![CDATA[
+  <html>
+    <HEAD>
+        <title></title>
+    </HEAD>
+    <body  onclick="dmDesign_TableClicked()">
+         <div class="widget" id="widgetstyle1"/>
+         <div class="widget" id="standardIncludes"/>
+         <div class="widget" id="includes1"/>
+        <p> </p>
+    </body>
+  </html>
+]]></htmlsrc>
+
+<widgets>
+    <widget id="widgetstyle1">
+      <properties>
+        <property name="type"><value>com.dynamide.widgetstyle</value></property>
+      </properties>
+    </widget>
+
+    <widget id="standardIncludes">
+      <properties>
+        <property name="name">
+          <value>standardIncludes</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.stdincludes</value>
+        </property>
+      </properties>
+    </widget>
+
+
+    <widget id="includes1">
+      <properties>
+        <property name="items">
+          <value>
+            <enumeration override="false" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/css/dynamide.css</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/js/page.js</item>
+            </enumeration>
+          </value>
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+        </property>
+        <property name="name">
+          <value>includes1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.includes</value>
+        </property>
+      </properties>
+    </widget>
+
+</widgets>
+
+</dynamideForm>

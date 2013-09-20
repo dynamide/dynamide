@@ -1,0 +1,26 @@
+import java.util.*;
+import java.io.*;
+import java.sql.*;
+import org.jdom.*;
+import org.webmacro.datatable.*;
+import com.dynamide.*;
+import com.dynamide.util.*;
+import com.dynamide.datatypes.*;
+import com.dynamide.db.*;
+import com.dynamide.resource.*;
+
+//for mail:
+import java.util.Properties;
+import javax.mail.*;
+import javax.mail.internet.*;
+
+urlPath= "/swarm";
+RESOURCE_ROOT = "C:/dynamide/build/ROOT";
+ResourceManager rootResourceManager = ResourceManager.createStandalone(RESOURCE_ROOT);
+Session session = Session.createSession(urlPath);
+
+inputObject = new HashMap();
+inputObject.put("subject", "This is my Subject");
+inputObject.put("body", "This is my body");
+//rootResourceManager = ResourceManager.getRootResourceManager();
+rootResourceManager.startJob(session, "application_startJobAnnounceMail", inputObject);

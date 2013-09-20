@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideDoco>
+<dynamideDoco>
+  "OHNO_ITS_THE_DANG_PETSTORE_EXAMPLE", then when the user scrolls the datasource to the next pet, the correct image name
+  is selected.
+
+    <example><![CDATA[
+    <htmlsrc browser="*"><![CDATA[
+    #set $w = ""
+    #set $h = ""
+    \#if (\$widget.width != "") { \#set $w = " width=\"\$widget.width\"" }
+    ]]>]]&gt;<![CDATA[</htmlsrc>
+
+    ]]>
+    </example>
+
+
+</dynamideDoco>

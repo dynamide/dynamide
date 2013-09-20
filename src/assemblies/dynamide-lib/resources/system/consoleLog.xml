@@ -1,0 +1,17 @@
+<html>
+<head>
+    <title>Console Log</title>
+    $session.getInclude("resources/css/ide.css")
+</head>
+<body bgcolor='\#A4BFDD'>
+#set $sessionIDTitle = "[<dm_nbsp/><small><b>SESSIONID:</b><dm_nbsp/>$SESSIONID<dm_nbsp/>]<br/>[<dm_nbsp/><dm_nbsp/><b>Path:<dm_nbsp/></b>$session.getURLPath()<dm_nbsp/>]</small>"
+<table border="0" cellpadding="5" cellspacing="0" ><tr><td valign="top">
+    <b>Console Log</b></td><td width="20"><dm_nbsp/></td><td>$sessionIDTitle</td></tr>
+</table>
+<a href='/dynamide?showSessionObjectDetail=$SESSIONID\&SESSIONID=$SESSIONID\&which='>Session Detail</a>
+<hr/>
+<pre>$session.getConsoleLog()</pre>
+<hr/>
+<a href="#top">top</a>
+</body>
+</html>

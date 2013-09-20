@@ -1,0 +1,13 @@
+//test with : bsh tests\test-RDBDatasource.bs -d net_roots_demo -testIterator
+
+source("C:\\dynamide\\src\\shell\\dynamideShell.bs");
+import com.dynamide.*;
+import com.dynamide.util.*;
+import com.dynamide.db.*;
+
+s = Session.createSession("/dynamide/test-suite/dbcontrols");
+s.loadPage("page1");
+ds = s.getDatasource("datasource1");
+ds.insert();
+ds.setFieldValue("LABEL", "Foo");
+ds.post();

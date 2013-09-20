@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Created with Dynamide from DYNAMIDE.COM -->
+<!-- WARNING: THERE IS ANOTHER PAGE, com.dynamide.normalpage.xml, that was supposed to be used,
+     but this one is used now.  %%TODO: figure out which is more correct
+-->
+
+<dynamideForm>
+
+<properties>
+</properties>
+
+<htmlsrc><![CDATA[
+  <html>
+    <HEAD>
+        <title></title>
+         <div class="widget" id="widgetstyle1"/>
+         <div class="widget" id="designModeIncludes"/>
+         <div class="widget" id="includes1"/>
+    </HEAD>
+    <body>
+        <!-- %% todo: change this to have form.action -->
+        <form name="mojoForm" action="/dynamide/demo">
+        <p> </p>
+
+        <div class="widget" id="session1"/>
+        <div class="widget" id="hiddenPageID"/>
+        </form>
+    </body>
+  </html>
+]]></htmlsrc>
+
+<widgets>
+    <widget id="widgetstyle1">
+      <properties>
+        <property name="type"><value>com.dynamide.widgetstyle</value></property>
+      </properties>
+    </widget>
+
+    <widget id="session1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.session</value>
+        </property>
+      </properties>
+    </widget>
+
+   <widget id="hiddenPageID">
+     <properties>
+        <property name="type"><value>com.dynamide.hidden</value></property>
+        <property name="field"><value>page</value></property>
+        <property name="value">
+          <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+          <value>$pageID</value>
+        </property>
+     </properties>
+   </widget>
+
+    <widget id="designModeIncludes">
+      <properties>
+        <property name="items">
+          <value>
+            <enumeration override="false" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/js/scripts.js</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/js/msdom.js</item>
+            </enumeration>
+          </value>
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+        </property>
+        <property name="name">
+          <value>designModeIncludes</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.includes</value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="includes1">
+      <properties>
+        <property name="items">
+          <value>
+            <enumeration override="false" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/css/dynamide.css</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/js/page.js</item>
+            </enumeration>
+          </value>
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+        </property>
+        <property name="name">
+          <value>includes1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.includes</value>
+        </property>
+      </properties>
+    </widget>
+
+</widgets>
+
+</dynamideForm>

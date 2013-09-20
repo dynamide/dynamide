@@ -1,0 +1,35 @@
+package com.dynamide.resource;
+
+import java.util.*;
+
+
+public class ResourceType {
+    public ResourceType(String type){
+        m_type = type;
+        // %% todo: allow initialization of m_permissions.
+    }
+
+    private String m_type = "";
+
+    private Hashtable m_permissions = new Hashtable();
+
+    public Object getPermission(String permissionName){
+        return m_permissions.get(permissionName);
+    }
+
+    public Map getPermissions(){
+        return (Map)m_permissions.clone();
+    }
+
+    public void addPermission(String newPermission)
+    throws SecurityException {
+        m_permissions.put(newPermission, newPermission);
+    }
+
+    public void addPermissions(Map newPermissions)
+    throws SecurityException {
+        throw new SecurityException("ResourceType.addPermissions NOT IMPLEMENTED");
+    }
+
+
+}

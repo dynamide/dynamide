@@ -1,0 +1,424 @@
+<project name="dynamide" default="compile">
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+
+    <target name="help">
+    <echo>
+NOTE: RUNDIR IS THE WWWROOT, NOT ${WWWROOT}/..
+ALSO: the following targets should be understood before using them: push, and install.
+
+USAGE:
+   ant -DRUNDIR=C:/java -DPUSHDIR=C:/temp/mojo push
+         will push all dynamide files from C:/java to C:/temp/mojo.
+         The big thing is that unless you set RUNDIR, pwd must in the sandboxed source code, e.g.
+         pwd = C:/java/com/dynamide/  Where C:/java is the wwwroot where you make development
+         changes.  The default for RUNDIR is ../.., so if you are in com/dynamide/, then
+         this should work:
+
+         ant  -DPUSHDIR=C:/temp/mojo push
+
+         Alternatively, just set RUNDIR and then run from anywhere,
+         although for this to work, you need to ref the build.xml file:
+
+    cd C:/talamazoo/
+
+    ant -buildfile C:/java/com/dynamide/build.xml -DRUNDIR=C:/java -DPUSHDIR=C:/temp/mojo push
+
+    For push, you can define PUSH.OVERWRITE to have push overwrite even files that are
+    newer in the destination.  value is yes or no.  e.g.
+         ant  -DPUSHDIR=C:/temp/mojo  -DPUSH.OVERWRITE=yes  push
+
+   ant -DRUNDIR=C:/temp/mojo install     will operate on the RUNDIR, but use the build.xml
+         from the current dir.
+         Some files are backed up and overwritten, such as:
+            ${RUNDIR}/com/dynamide/dynamide.bat
+                   which is, in this case:     C:/temp/mojo/com/dynamide/dynamide.bat
+            ${RUNDIR}/com/dynamide/vwebserver/webServer.bat
+                   which is, in this case:     C:/temp/mojo/com/dynamidevwebserver/webServer.bat
+         For the full list of files to be backed up, see the backup target.
+     </echo>
+     </target>
+
+
+    <!-- The default RUNDIR.  You should really pass in another RUNDIR -->
+    <property name="RUNDIR" value="."/>
+
+    <property name="outputDir" value="${RUNDIR}/build" />
+    <property name="relative.src.java" value="src/java" />
+    <property name="src.java" value="${RUNDIR}/${relative.src.java}" />
+
+    <property name="PUSH.OVERWRITE" value="no"/>
+
+    <path id="refCLASSPATH">
+        <fileset dir="${RUNDIR}/lib">
+            <include name="*.jar" />
+            <include name="*.zip" />
+        </fileset>
+        <pathelement location="${RUNDIR}" />
+    </path>
+    <property name="propCLASSPATH" refid="refCLASSPATH"/>
+
+    <target name="init">
+
+      <!-- the "war" target has relative paths to the doc and sites that will have to be fixed. -->
+
+      <property name="outputDirClasses" value="${outputDir}/classes" />
+      <mkdir dir="${outputDirClasses}" />
+      <property name="JAVADOCDIR" value="${outputDir}/javadoc"/>
+      <mkdir dir="${JAVADOCDIR}" />
+      <property name="outputDirLib" value="${outputDir}/lib" />
+      <mkdir dir="${outputDirLib}" />
+      <property name="dynamidejar" value="${outputDirLib}/dynamide.jar"/>
+      <property name="dynamidewar" value="${outputDir}/dynamide.war"/>
+      <property environment="myenv"  />
+      <echo>RUNDIR is ${RUNDIR}</echo>
+    </target>
+
+    <target name="checkPUSHDIR" unless="PUSHDIR">
+        <echo>ERROR: PUSHDIR IS UNDEFINED.  Please set it, for example:</echo>
+        <echo>      ant -DPUSHDIR=C:/temp/zanzibar push"</echo>
+        <fail message="ERROR: PUSHDIR IS UNDEFINED."/>
+    </target>
+
+
+    <!-- note: clean cannot depend on init, or it will delete the directories created there. -->
+    <target name="clean">
+      <echo message="cleaning ${src.java}"/>
+      <delete>
+         <fileset dir="${src.java}/com/dynamide" includes="**/*.class" excludes="${RUNDIR}/lib/*.*" />
+      </delete>
+      <echo message="removing ${outputDir}"/>
+      <delete dir="${outputDir}"/>
+    </target>
+
+
+    <target name="compile" depends="init">
+      <echo message="outputDir: ${outputDirClasses}" />
+      <echo></echo>
+      <echo>Compiling using CLASSPATH: ${propCLASSPATH}</echo>
+      <javac
+            debug="on"
+            srcdir="${src.java}"
+            destdir="${outputDirClasses}"
+            classpath="${propCLASSPATH}"
+            includes="com/dynamide/**"
+            excludes="com/dynamide/**.hide,com/dynamide/doc/**"
+      />
+    </target>
+
+
+    <target name="run" depends="init,compile">
+       <!-- This doesn't work nearly as well as doing "ant install" then running the resulting dynamide.bat
+       **  Namely, it won't pass through other command lines.  But it is OK for testing if you can run
+       **  with the current classpath.
+       -->
+       <echo> refCLASSPATH: ${refCLASSPATH}</echo>
+       <echo>Running with args: "${RUNDIR}"</echo>
+       <java classname="com.dynamide.gui.IDE" fork="yes" classpathref="refCLASSPATH">
+            <arg value="$RUNDIR"/>
+        </java>
+    </target>
+
+
+
+    <target name="initFilenames">
+        <!-- This is where the file install.bat comes from. It gets copied elsewhere. -->
+        <property name="install.bat" value="${RUNDIR}/com/dynamide/install.bat"/>
+        <property name="outer.dynamide.bat" value="${RUNDIR}/dynamide.bat"/>
+        <property name="inner.dynamide.bat" value="${RUNDIR}/com/dynamide/dynamide.bat"/>
+        <property name="wwwServer.bat" value="${RUNDIR}/com/dynamide/vwebserver/wwwServer.bat"/>
+        <property name="wwwServer.settings" value="${RUNDIR}/com/dynamide/vwebserver/wwwServer.settings"/>
+        <property name="log.conf" value="${RUNDIR}/com/dynamide/vwebserver/log.conf"/>
+    </target>
+
+    <target name="info" depends="initFilenames">
+        <echo>Install with the file:</echo>
+        <echo>    ${install.bat}</echo>
+        <echo></echo>
+        <echo>Start the Dynamide IDE:</echo>
+        <echo>    ${outer.dynamide.bat}</echo>
+        <echo></echo>
+        <echo>Start the Dynamide webserver:</echo>
+        <echo>    ${wwwServer.bat}</echo>
+        <echo></echo>
+        <echo>Change the Dynamide webserver's settings:</echo>
+        <echo>    ${wwwServer.settings}</echo>
+        <echo></echo>
+        <echo>Change the Dynamide webserver's log setting:</echo>
+        <echo>    ${log.conf}</echo>
+    </target>
+
+
+
+    <target name="backup" depends="initFilenames">
+        <!-- don't need to back up "outer.dynamide.bat" since it uses a relative path and is unchanged locally.-->
+        <ant antfile="build-backupfile.xml">
+            <property name="theFile" value="${inner.dynamide.bat}"/>
+        </ant>
+        <ant antfile="build-backupfile.xml">
+            <property name="theFile" value="${wwwServer.bat}"/>
+        </ant>
+        <ant antfile="build-backupfile.xml">
+            <property name="theFile" value="${wwwServer.settings}"/>
+        </ant>
+        <ant antfile="build-backupfile.xml">
+            <property name="theFile" value="${log.conf}"/>
+        </ant>
+    </target>
+
+    <target name="backupPUSHDIR" if="PUSHDIR.PRESENT">
+       <property name="PUSH.RUNDIR" value="${PUSHDIR}"/>
+       <antcall target="backup">
+           <param name="RUNDIR" value="${PUSH.RUNDIR}"/>
+       </antcall>
+    </target>
+
+    <target name="push" depends="init,checkPUSHDIR">
+       <!-- call backup, then call push.  The trick here is that the backup must
+         == be done on the PUSHDIR, not the RUNDIR. For push, RUNDIR is the developer's
+         == sandbox.
+         == Also, for the properties to be fresh and available for the backup target,
+         == they must not be defined previously.  So we use an antcall, which creates a
+         == child hashtable for the properties, then throws it away on return.
+         == This is how you make an antcall be a function, is to pass in *every* property
+         == that may be needed.  So when we do call pushNoBackup, it is not in our
+         == context, and will have a different hashtable of properties.
+       -->
+
+       <available file="${PUSHDIR}" property="PUSHDIR.PRESENT"/>
+       <antcall target="backupPUSHDIR">
+           <param name="PUSHDIR" value="${PUSHDIR}"/>
+           <param name="RUNDIR" value="${RUNDIR}"/>
+       </antcall>
+
+       <antcall target="pushNoBackup">
+           <param name="RUNDIR" value="${RUNDIR}"/>
+           <param name="PUSH.OVERWRITE" value="${PUSH.OVERWRITE}"/>
+       </antcall>
+    </target>
+
+
+    <target name="pushNoBackup"  if="PUSHDIR" depends="initFilenames" >
+      <echo>Pushing with RUNDIR: ${RUNDIR} and PUSHDIR: ${PUSHDIR}</echo>
+      <echo>Pushing from ${RUNDIR}/com/dynamide  to ${PUSHDIR}/com/dynamide</echo>
+      <echo>If you want another destination, use "ant -DRUNDIR=MyPath push"</echo>
+      <!-- all files, including our ./lib directory, which has required jar files -->
+      <copy overwrite="${PUSH.OVERWRITE}" todir="${PUSHDIR}/" file="${outer.dynamide.bat}" />
+      <copy overwrite="${PUSH.OVERWRITE}" todir="${PUSHDIR}/" file="${install.bat}" />
+      <copy overwrite="${PUSH.OVERWRITE}" todir="${PUSHDIR}/com/dynamide" >
+        <fileset dir="${RUNDIR}/com/dynamide" >
+            <exclude name="**/*.class"/>
+        </fileset>
+      </copy>
+    </target>
+
+
+
+
+    <target name="install" depends="init,initFilenames,backup,compile,javadoc">
+        <!-- Create a bat file to run with the correct classpath and wwwroot, etc.
+        ** NOTE: you must call with the correct -DRUNDIR=mySource and -DPUSHDIR=myDestination,
+        ** where mySource and myDestination are defined correctly.
+        -->
+
+        <echo>Creating dynamide.bat using CLASSPATH: ${propCLASSPATH}</echo>
+        <echo>  </echo>
+        <copy overwrite="yes" file="${inner.dynamide.bat}.template" tofile="${inner.dynamide.bat}"/>
+        <replace file="${inner.dynamide.bat}" token="REP_CLASSPATH" value="${propCLASSPATH}"/>
+        <replace file="${inner.dynamide.bat}" token="REP_RUNDIR" value="${RUNDIR}"/>
+        <echo>Created runable dynamide.bat startup script in "${inner.dynamide.bat}"</echo>
+
+        <copy overwrite="yes"
+              file="${wwwServer.bat}.template"
+              tofile="${wwwServer.bat}"/>
+        <replace file="${wwwServer.bat}" token="REP_CLASSPATH" value="${propCLASSPATH}"/>
+        <replace file="${wwwServer.bat}" token="REP_RUNDIR" value="${RUNDIR}"/>
+        <echo>Created runable wwwServer.bat startup script in "${wwwServer.bat}"</echo>
+
+        <echo>Creating web server settings file wwwServer.settings in </echo>
+        <echo>  ${wwwServer.settings}</echo>
+
+
+        <echo></echo>
+        <echo>log.conf: file="${log.conf}"</echo>
+        <echo>log output goes to ./vwebserver.logfile.txt by default</echo>
+        <echo/>
+
+
+        <copy overwrite="yes"
+              file="${wwwServer.settings}.template"
+              tofile="${wwwServer.settings}"/>
+        <replace file="${wwwServer.settings}" token="REP_RUNDIR" value="${RUNDIR}"/>
+        <echo></echo>
+        <echo></echo>
+        <echo>You should be able to start the webserver with the command</echo>
+        <echo>   ${wwwServer.bat}</echo>
+        <echo>The default is port 82, or change the file:</echo>
+        <echo>   ${wwwServer.settings}</echo>
+        <echo>The Dynamide web server extension is already installed.</echo>
+        <echo>You may wish to edit the file ${RUNDIR}/com/dynamide/vwebserver/log.conf</echo>
+        <echo>    if you want the log to someplace other than the CWD where you start it.</echo>
+        <echo></echo>
+        <echo>The Dynamic Web IDE, Dynamide, runs separately from the web server.</echo>
+        <echo>You should be able to start Dynamide with the command</echo>
+        <echo>   ${inner.dynamide.bat}</echo>
+    </target>
+
+
+
+
+    <target name="javadoc" depends="init">
+        <!--
+            <delete file="${dynamidejar}" />
+            <echo>deleted ${dynamidejar}</echo>
+        -->
+        <mkdir dir="${JAVADOCDIR}"/>
+        <javadoc packagenames="com.dynamide,com.dynamide.gui,com.dynamide.event,com.dynamide.util,com.dynamide.db,com.dynamide.datatypes,com.dynamide.test.samplebeans,com.dynamide.resource,com.dynamide.security,com.dynamide.interpreters"
+                sourcepath="${src.java}"
+                destdir="${JAVADOCDIR}"
+            classpath="${propCLASSPATH}"
+                author="true"
+                verbose="false"
+                version="true"
+                additionalparam="-breakiterator"
+                failonerror='true'
+                use="true"
+                windowtitle="Dynamide API"
+                doctitle="&lt;h2&gt;Dyanamide&lt;/h2&gt;&lt;h3&gt;API Specification&lt;/h3&gt;"
+                bottom="&lt;i&gt;Copyright &#169; 2001, 2002 Laramie Crocker, DYNAMIDE.COM. All Rights Reserved.&lt;i&gt;">
+
+            <!-- this will be supported by ant 1.5:
+            <packageset>
+                <dirset dir="${build.dir}">
+                    <include name="apps/**/classes"/>
+                    <exclude name="apps/**/*Test*"/>
+                </dirset>
+
+            </packageset>
+            -->
+
+            <group title="Core Package" packages="com.dynamide"/>
+            <group title="Core Utility Packages" packages="com.dynamide.*"/>
+            <group title="Test Packages" packages="com.dynamide.test.*"/>
+            <group title="Swing IDE Packages" packages="com.dynamide.gui*"/>
+        </javadoc>
+    </target>
+
+
+    <!-- zip up the sources.  Excludes the com/dynamide/delphi dir.
+         hoses the ./dynamide-sources.zip file, so move it when you are done.
+    -->
+    <target name="zip" depends="init">
+        <delete file="${outputDir}/dynamide-source.zip" />
+        <zip zipfile="${outputDir}/dynamide-source.zip"
+            basedir="${RUNDIR}/"
+            includes="${relative.src.java}/com/dynamide/**/*.*,
+                      Dynamide/**/*.* "
+            excludes="${relative.src.java}/com/dynamide/**/*.class,
+                      com/dynamide/doc/internal/ndas/**/*.*,
+                      com/dynamide/doc/3rd/**/*.*,
+                      com/dynamide/doc/api/**/*.*,
+                      com/dynamide/delphi/**/*.*,
+                      **/*.dfPackage,
+                      **/*.zip,
+                      **/*.jar,
+                      **/*.war,
+                      **/*.exe,
+                      **/*.tag
+                      "
+        />
+    </target>
+
+    <target name="cvs" depends="init">
+        <cvs
+            cvsRoot="/c/temp/cvsroot.lar"
+            command="add conf"
+            noexec="true"
+        />
+    </target>
+
+  <target name="all" depends="clean,init,compile,javadoc,jar,war"/>
+
+  <target name="jar" depends="init,compile">
+    <delete file="${dynamidejar}" />
+    <jar
+         jarfile="${dynamidejar}"
+         basedir="${outputDirClasses}"
+         includes="com/dynamide/**/*.class,com/dynamide/**/*.properties"
+         excludes="com/dynamide/**/*.java,**/*.zip,**/*.exe,**/*.tag,dynamide.jar,**/*.war,com/dynamide/doc/**/*.*,com/dynamide/lib/*.*"
+         />
+  </target>
+
+  <target name="war" depends="jar">
+    <war
+         warfile="${dynamidewar}"
+         webxml="${src.java}/com/dynamide/web.xml"
+         excludes="dynamide.war"
+         >
+         <zipfileset dir="${src.java}/com/dynamide/doc"
+                     prefix="/com/dynamide/doc"
+                     excludes="internal/ndas/*.*" />
+
+
+         <zipfileset dir="${src.java}/com/dynamide/conf"
+                     prefix="/com/dynamide/conf"/>
+         <zipfileset dir="${src.java}/com/dynamide/sites"
+                     prefix="/com/dynamide/sites"/>
+         <!--<zipfileset dir="users"
+                     prefix="/com/dynamide/users"/>
+         -->
+
+        <lib dir="${outputDirLib}" />
+        <lib dir="${RUNDIR}/lib" />
+      </war>
+  </target>
+
+  <!-- ========= Targets that work specifically on my laptop ========== -->
+
+  <target name="warlap" depends="war">
+    <copy overwrite="yes"
+          file="c:/java/com/dynamide/dynamide.war"
+          tofile="c:/bin/_resin/webapps/dynamide.zip"
+          />
+    <unzip
+      src="c:/bin/_resin/webapps/dynamide.zip"
+      dest="c:/bin/_resin/webapps/dynamide"
+    />
+  </target>
+
+  <target name="jarlap" depends="jar">
+    <copy overwrite="yes"
+          file="${dynamidejar}"
+          tofile="c:/bin/_resin/webapps/dynamide/WEB-INF/lib/dynamide.jar"
+          />
+  </target>
+
+  <!--
+  <uptodate property="xslBuild.notRequired" >
+    <srcfiles includes="**/*.xsls"/>
+  </uptodate>
+
+  <target name="xslscript" unless"xslBuild.notRequired">
+      <exec dir='c:/java/com/dynamide'>
+        <arg>$file</arg>
+     </exec>
+  </target>
+  -->
+
+  <target name="xmllap">
+    <copy todir="c:/bin/_resin/webapps/dynamide/com/dynamide" >
+    <fileset dir="c:/java/com/dynamide" >
+      <include name="**/*.conf"/>
+      <include name="**/*.xml"/>
+      <include name="**/*.xsl"/>
+      <include name="**/*.xsls"/>
+      <include name="**/*.css"/>
+      <include name="**/*.js"/>
+      <include name="**/*.wm"/>
+    </fileset>
+  </copy>
+  </target>
+
+
+
+</project>

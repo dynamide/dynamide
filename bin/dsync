@@ -1,0 +1,54 @@
+#!/bin/bash
+
+if [ -z "$1" ]; then
+  export REMOTE=app1
+else
+  export REMOTE=$1
+fi
+echo "dsync to REMOTE: $REMOTE"
+## Specific to transfer between laramiedell and app1
+EXCLUDE_FILE=/c/dynamide/bin/dsync-exclude.txt
+pushd /c
+rootdir=./dynamide
+destdir=laramie@$REMOTE:/home/laramie
+echo rsync-ing from `pwd`/$rootdir to $destdir
+rsync -r -v -z --cvs-exclude --exclude-from=$EXCLUDE_FILE --times -v  --rsh="ssh -l laramie" $rootdir $destdir | grep -v 'is uptodate' | grep -v '^excluding '
+popd
+
+
+echo
+echo
+echo ============================================
+echo DONE.  Now you may execute cvs commit on app1
+
+
+
+#This worked, but is not as fast as the above method.
+#
+#   options='-v -z --cvs-exclude --times'
+#   . $DYNAMIDE_HOME/bin/dsync.env
+#   pushd /c/dynamide
+#
+#   echo
+#   echo ===================================
+#   echo " Using rsync (by timestamp)"
+#   echo "  from: $DYNAMIDE_HOME"
+#   echo "  to:   $destdir"
+#   echo ===================================
+#   echo
+#   popd
+#
+#   rsync -r $options $rootdir $destdir
+#
+#   echo
+#   echo ===================================
+#   echo " Using cvs to commit to:"
+#   echo " $CVSROOT"
+#   echo " with CVS_RSH=ssh"
+#   echo ===================================
+#   echo
+#
+#   pushd /c/temp/dynamide-sandboxes/dynamide
+#   echo "calling cvs commit:"
+#   cvs -t commit -m "Sync"
+#   popd

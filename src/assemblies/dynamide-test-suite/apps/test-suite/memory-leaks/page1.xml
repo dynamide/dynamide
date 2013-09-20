@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm >
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<dynamideForm>
+
+<!--  <event language="beanshell" name="page1_onAction"><![CDATA[
+    event.println("in page1_onAction");
+  ]]></event>
+-->
+
+<properties>
+
+    <property name="type">
+      <value>pagetypes/com.dynamide.form</value>
+      <readOnly>true</readOnly>
+    </property>
+
+    <property name="title">
+      <value>Test Application - Page 1</value>
+    </property>
+
+    <property name="margin">
+      <value>0</value>
+    </property>
+
+    <property name="bgcolor">
+      <value>white</value>
+    </property>
+
+
+  </properties>
+
+<event language="beanshell" name="page1_onAction">
+<![CDATA[
+    content = session.getFieldValue("bigpage");
+
+    event.returnSource(content);
+    
+    /*
+    returning handlerResult 3.52java.lang.Exception
+        at com.dynamide.util.Tools.getStackTrace(Tools.java:768)
+        at com.dynamide.Session.handleAction_inner(Session.java:2093)
+        at com.dynamide.Session.handleAction(Session.java:1819)
+        at com.dynamide.DynamideHandler.handleHttpRequest_Internal(DynamideHandler.java:304)
+        at com.dynamide.DynamideHandler.handleHttpRequest(DynamideHandler.java:149)
+        at com.dynamide.DynamideHandler.run(DynamideHandler.java:111)
+        at java.lang.Thread.run(Thread.java:595)
+        */
+]]>
+</event>
+
+
+<htmlsrc><![CDATA[
+  <HTML>
+    <HEAD>
+        <TITLE>$session.title - $page.title
+        </TITLE>
+        $session.getInclude("resources/js/page.js")
+        $session.getInclude("resources/css/dynamide.css")
+    </HEAD>
+
+    <BODY id="page1" bottomMargin="0" leftMargin="0" topMargin="0" rightMargin="0" bgcolor="white">
+        <SPAN class="widget" id="widgetstyle1" ></SPAN>
+        <FORM name="mojoForm" action="$session.applicationPath" method="get" encType="application/x-www-form-urlencoded">
+           <h2>Test for Memory Leaks</h2>
+                <SPAN class="widget" id="button2"></SPAN>
+                <SPAN class="widget" id="session1" />
+        </FORM>
+      </BODY>
+    </HTML>
+  ]]></htmlsrc>
+
+  <widgets>
+      <widget id="widgetstyle1">
+      <properties>
+        <property name="name">
+          <value>hidden</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.widgetstyle</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="session1">
+      <properties>
+        <property name="name">
+          <value>session1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.session</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="button2">
+      <properties>
+        <property name="action">
+          <value>doSubmitThing</value>
+        </property>
+        <property name="caption">
+          <value>Submit Me!</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
+  </widgets>
+
+</dynamideForm>

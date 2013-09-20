@@ -1,0 +1,594 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<dynamideForm>
+  <event language="beanshell" name="pageDone_onLoad"><![CDATA[
+        event.println("in pageDone_onLoad");
+    ]]></event>
+  <event language="beanshell" name="page2_onAction"><![CDATA[
+        event.println("in pageDone_onAction");
+    ]]></event>
+  <widgets>
+    <widget id="breadcrumbs1">
+      <properties>
+        <property name="field">
+          <value>pageDone_breadcrumbs1</value>
+        </property>
+        <property name="name">
+          <value>breadcrumbs1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.breadcrumbs</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_breadcrumbs1">
+      <properties>
+        <property name="field">
+          <value>pageDone_com_dynamide_breadcrumbs1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.breadcrumbs</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_callout1">
+      <properties>
+        <property name="caption">
+          <intl>1</intl>
+          <value></value>
+        </property>
+        <property name="captionField">
+          <value>TITLE</value>
+        </property>
+        <property name="datasource">
+          <value>com_dynamide_rdbdatasource1</value>
+        </property>
+        <property name="field">
+          <value>TEXT</value>
+        </property>
+        <property name="name">
+          <value>com_dynamide_callout1</value>
+        </property>
+        <property name="type">
+          <readOnly>true</readOnly>
+          <value>com.dynamide.callout</value>
+        </property>
+        <property name="width">
+          <value>80%</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_dbgrid1">
+      <properties>
+        <property name="field">
+          <value>pageDone_com_dynamide_dbgrid1</value>
+        </property>
+        <property name="name">
+          <value>com_dynamide_dbgrid1</value>
+        </property>
+        <property name="type">
+          <readOnly>true</readOnly>
+          <value>com.dynamide.dbgrid</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_dbgrid2">
+      <properties>
+        <property name="field">
+          <value>pageDone_com_dynamide_dbgrid2</value>
+        </property>
+        <property name="name">
+          <value>com_dynamide_dbgrid2</value>
+        </property>
+        <property name="type">
+          <readOnly>true</readOnly>
+          <value>com.dynamide.dbgrid</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_dbgrid3">
+      <properties>
+        <property name="field">
+          <value>pageDone_com_dynamide_dbgrid3</value>
+        </property>
+        <property name="name">
+          <value>com_dynamide_dbgrid3</value>
+        </property>
+        <property name="type">
+          <readOnly>true</readOnly>
+          <value>com.dynamide.dbgrid</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_dbgrid4">
+      <properties>
+        <property name="datasource">
+          <value>com_dynamide_rdbdatasource1</value>
+        </property>
+        <property name="field">
+          <value>pageDone_com_dynamide_dbgrid4</value>
+        </property>
+        <property name="name">
+          <value>com_dynamide_dbgrid4</value>
+        </property>
+        <property name="type">
+          <readOnly>true</readOnly>
+          <value>com.dynamide.dbgrid</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_img_logo">
+      <properties>
+        <property name="field">
+          <value>pageDone_com_dynamide_img_logo</value>
+        </property>
+        <property name="height">
+          <value>40</value>
+        </property>
+        <property name="src">
+          <value>resources/images/dynamide-logo.gif</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.img</value>
+        </property>
+        <property name="width">
+          <value>40</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_linkstrip1">
+      <properties>
+        <property name="border">
+          <value>1</value>
+        </property>
+        <property name="enabled">
+          <value>true</value>
+        </property>
+        <property name="field">
+          <value>pageDone_com_dynamide_linkstrip1</value>
+        </property>
+        <property name="links">
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+          <value>
+            <enumeration override="true" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>?SESSIONID=$SESSIONID&amp;page=$pageID&amp;action=com.dynamide.linkstrip&amp;dmLinkstripItem=Home</href>
+                <text>Page 1</text>
+                <key>home</key>
+                <target></target>
+                <level></level>
+                <class></class>
+                <classCurrent></classCurrent>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>?SESSIONID=$SESSIONID&amp;page=$pageID&amp;action=com.dynamide.linkstrip&amp;dmLinkstripItem=Support</href>
+                <text>Page 2</text>
+                <key>support</key>
+                <target></target>
+                <level></level>
+                <class></class>
+                <classCurrent></classCurrent>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>?SESSIONID=$SESSIONID&amp;page=$pageID&amp;action=com.dynamide.linkstrip&amp;dmLinkstripItem=Contact%20Us</href>
+                <text>Page 3</text>
+                <key>contactus</key>
+                <target></target>
+                <level></level>
+                <class></class>
+                <classCurrent></classCurrent>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>?SESSIONID=$SESSIONID&amp;page=$pageID&amp;action=com.dynamide.linkstrip&amp;dmLinkstripItem=Site%20Map</href>
+                <text>Page 4</text>
+                <key>sitemap</key>
+                <target></target>
+                <level></level>
+                <class></class>
+                <classCurrent></classCurrent>
+              </item>
+            </enumeration>
+          </value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.linkstrip</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_linkstrip2">
+      <properties>
+        <property name="border">
+          <value>1</value>
+        </property>
+        <property name="enabled">
+          <value>true</value>
+        </property>
+        <property name="fontColor">
+          <value>#336699</value>
+        </property>
+        <property name="links">
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+          <value>
+            <enumeration override="true" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>?SESSIONID=$SESSIONID&amp;page=$pageID&amp;action=com.dynamide.linkstrip&amp;dmLinkstripItem=Home</href>
+                <text>Page 1</text>
+                <key>home</key>
+                <target></target>
+                <level></level>
+                <class></class>
+                <classCurrent></classCurrent>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>?SESSIONID=$SESSIONID&amp;page=$pageID&amp;action=com.dynamide.linkstrip&amp;dmLinkstripItem=Support</href>
+                <text>Page 2</text>
+                <key>support</key>
+                <target></target>
+                <level></level>
+                <class></class>
+                <classCurrent></classCurrent>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>?SESSIONID=$SESSIONID&amp;page=$pageID&amp;action=com.dynamide.linkstrip&amp;dmLinkstripItem=Contact%20Us</href>
+                <text>Page 3</text>
+                <key>contactus</key>
+                <target></target>
+                <level></level>
+                <class></class>
+                <classCurrent></classCurrent>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>?SESSIONID=$SESSIONID&amp;page=$pageID&amp;action=com.dynamide.linkstrip&amp;dmLinkstripItem=Site%20Map</href>
+                <text>Page 4</text>
+                <key>sitemap</key>
+                <target></target>
+                <level></level>
+                <class></class>
+                <classCurrent></classCurrent>
+              </item>
+            </enumeration>
+          </value>
+        </property>
+        <property name="orientation">
+          <value>vertical</value>
+        </property>
+        <property name="showTopBorder">
+          <value>false</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.linkstrip</value>
+        </property>
+        <property name="width">
+          <value>100</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_rdbdatabase1">
+      <properties>
+        <property name="dbname">
+          <value>soldierstories</value>
+        </property>
+        <property name="debugSQL">
+          <value>true</value>
+        </property>
+        <property name="field">
+          <value>pageDone_com_dynamide_rdbdatabase1</value>
+        </property>
+        <property name="name">
+          <value>com_dynamide_rdbdatabase1</value>
+        </property>
+        <property name="rdbdatabase">
+          <object>com.dynamide.db.RDBDatabase@10e6c0e</object>
+          <value>[object]</value>
+        </property>
+        <property name="type">
+          <readOnly>true</readOnly>
+          <value>com.dynamide.rdbdatabase</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_rdbdatasource1">
+      <properties>
+        <property name="database">
+          <value>com_dynamide_rdbdatabase1</value>
+        </property>
+        <property name="field">
+          <value>pageDone_com_dynamide_rdbdatasource1</value>
+        </property>
+        <property name="lastCount">
+          <value>5</value>
+        </property>
+        <property name="lastError">
+          <value></value>
+        </property>
+        <property name="name">
+          <value>com_dynamide_rdbdatasource1</value>
+        </property>
+        <property name="open">
+          <value>true</value>
+        </property>
+        <property name="sql">
+          <value>select * from stories</value>
+        </property>
+        <property name="type">
+          <readOnly>true</readOnly>
+          <value>com.dynamide.rdbdatasource</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_rdbnavigator1">
+      <properties>
+        <property name="field">
+          <value>pageDone_com_dynamide_rdbnavigator1</value>
+        </property>
+        <property name="name">
+          <value>com_dynamide_rdbnavigator1</value>
+        </property>
+        <property name="type">
+          <readOnly>true</readOnly>
+          <value>com.dynamide.rdbnavigator</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_rdbnavigator2">
+      <properties>
+        <property name="border">
+          <value>1</value>
+        </property>
+        <property name="datasource">
+          <value>com_dynamide_rdbdatasource1</value>
+        </property>
+        <property name="field">
+          <value>pageDone_com_dynamide_rdbnavigator2</value>
+        </property>
+        <property name="name">
+          <value>com_dynamide_rdbnavigator2</value>
+        </property>
+        <property name="showEditControls">
+          <value>true</value>
+        </property>
+        <property name="type">
+          <readOnly>true</readOnly>
+          <value>com.dynamide.rdbnavigator</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_spacer1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.spacer</value>
+        </property>
+        <property name="width">
+          <value>50</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_spacer2">
+      <properties>
+        <property name="height">
+          <value>30</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.spacer</value>
+        </property>
+        <property name="width">
+          <value>0</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="designModeIncludes">
+      <properties>
+        <property name="items">
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+          <value>
+            <enumeration override="false" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/js/scripts.js</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/js/msdom.js</item>
+            </enumeration>
+          </value>
+        </property>
+        <property name="name">
+          <value>designModeIncludes</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.includes</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="includes1">
+      <properties>
+        <property name="items">
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+          <value>
+            <enumeration override="false" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/css/dynamide.css</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/js/page.js</item>
+            </enumeration>
+          </value>
+        </property>
+        <property name="name">
+          <value>includes1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.includes</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="linkContainer">
+      <properties>
+        <property name="pageName">
+          <value>linkPage</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.container</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="session1">
+      <properties>
+        <property name="field">
+          <value>mojo</value>
+        </property>
+        <property name="name">
+          <value>session1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.session</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="tot1">
+      <properties>
+        <property name="align">
+          <value>right</value>
+        </property>
+        <property name="border">
+          <value>0</value>
+        </property>
+        <property name="captionWidth">
+          <value>100</value>
+        </property>
+        <property name="enabled">
+          <value>false</value>
+        </property>
+        <property name="field">
+          <value>total</value>
+        </property>
+        <property name="name">
+          <value>tot1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="widgetstyle1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.widgetstyle</value>
+        </property>
+      </properties>
+    </widget>
+  </widgets>
+  <htmlsrc browser="*"><![CDATA[
+<HTML>
+  <HEAD>
+    <TITLE/>
+  </HEAD>
+  <BODY id="pageDone" onclick="bodyClicked(this)" bottomMargin="0" bgColor="#ffffff" leftMargin="0" topMargin="0" rightMargin="0" name="pageDone">
+    <SPAN class="widget" id="designModeIncludes"/>
+    <SPAN class="widget" id="includes1"/>
+    <SPAN class="widget" id="widgetstyle1"/>
+    <FORM accept-charset="UNKNOWN" action="/dynamide/demo" method="get" encType="application/x-www-form-urlencoded">
+      <TABLE cellSpacing="0" cellPadding="0" width="100%" border="0">
+        <TBODY>
+          <TR>
+            <!-- Top Bar -->
+
+            <TD colSpan="3" rowSpan="1">
+              <TABLE cellSpacing="0" cellPadding="0" bgColor="#ffffff" border="0">
+                <TBODY>
+                  <TR>
+                    <TD vAlign="bottom" colSpan="1" rowSpan="1">
+                      <SPAN class="widget" id="com_dynamide_img_logo"/>
+                    </TD>
+                    <TD vAlign="middle" colSpan="1" rowSpan="1">
+                      <SPAN class="big1">Dynamide</SPAN>
+                    </TD>
+                    <TD vAlign="middle" width="100%" colSpan="1" rowSpan="1">
+                      <CENTER>
+                        <SPAN class="big4">Demo Application</SPAN>
+                      </CENTER>
+                    </TD>
+                  </TR>
+                </TBODY>
+              </TABLE>
+              <SPAN class="widget" id="com_dynamide_linkstrip1"/>
+            </TD>
+          </TR>
+          <TR>
+            <!-- Left Bar -->
+
+            <TD vAlign="top" colSpan="1" rowSpan="1">
+              <SPAN class="widget" id="com_dynamide_spacer2"/>
+              <SPAN class="widget" id="linkContainer"/>
+            </TD>
+            <!-- Spacer -->
+
+            <TD colSpan="1" rowSpan="1">
+              <SPAN class="widget" id="com_dynamide_spacer1"/>
+            </TD>
+            <!-- Middle Body -->
+
+            <TD align="left" width="100%" colSpan="1" rowSpan="1">
+              <P align="right">
+                <SPAN class="widget" id="breadcrumbs1"/>
+              </P>
+              <H2>You are done!
+                <SPAN class="widget" id="com_dynamide_rdbnavigator2"/>
+                <SPAN class="widget" id="com_dynamide_rdbdatabase1"/>
+                <SPAN class="widget" id="com_dynamide_rdbdatasource1"/>
+                <SPAN class="widget" id="com_dynamide_callout1"/>
+                <SPAN class="widget" id="com_dynamide_dbgrid4"/>
+              </H2>
+              <SPAN class="widget" id="com_dynamide_breadcrumbs1"/>
+              <BR />
+              <BR />Â 
+              <TABLE border="0">
+                <TBODY>
+                  <TR>
+                    <TD colSpan="1" rowSpan="1">
+                      <SPAN class="widget" id="tot1"/>
+                    </TD>
+                  </TR>
+                </TBODY>
+              </TABLE>
+              <SPAN class="widget" id="session1"/>
+              <!-- End Middle Body -->
+
+            </TD>
+          </TR>
+        </TBODY>
+      </TABLE>
+    </FORM>
+  </BODY>
+</HTML>
+]]></htmlsrc>
+  <properties>
+    <property name="bgcolor">
+      <value>white</value>
+    </property>
+    <property name="lastSave">
+      <datatype>java.util.Date</datatype>
+      <readOnly>true</readOnly>
+      <value>1070818253038</value>
+    </property>
+    <property name="margin">
+      <eval>document.body.margin = "$page.margin";</eval>
+      <value>0</value>
+    </property>
+    <property name="name">
+      <readOnly>true</readOnly>
+      <value>pageDone</value>
+    </property>
+    <property name="onAction" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value></value>
+    </property>
+    <property name="onLoad" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value></value>
+    </property>
+    <property name="onValidate" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value></value>
+    </property>
+    <property name="title">
+      <value>Page Done</value>
+    </property>
+    <property name="type">
+      <readOnly>true</readOnly>
+      <value>pagetypes/com.dynamide.form</value>
+    </property>
+  </properties>
+</dynamideForm>

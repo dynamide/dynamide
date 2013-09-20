@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<widget>
+    <componentHelp><p>A direct Webmacro macro.  Can use containing \$page refererence</p>
+    </componentHelp>
+
+    <properties>
+        <property name="basename"><value>macro</value></property>
+        <property name="border">
+            <defaultValue>0</defaultValue>
+        </property>
+        <property name="cellpadding"><defaultValue>0</defaultValue></property>
+        <property name="cellspacing"><defaultValue>0</defaultValue></property>
+        <property name="datasource">
+            <datatype>com.dynamide.datatypes.IDatasourceDatatype</datatype>
+            <defaultValue></defaultValue>
+        </property>
+        <property name="field">
+           <datatype>com.dynamide.datatypes.LiveEnumeratedDatatype</datatype>
+           <defaultValue>
+                <enumeration defaultIndex='0'>
+                    <value></value>  <!-- make sure there is one empty value for autocreated fields -->
+                </enumeration>
+            </defaultValue>
+           <liveEvalString>session.getFieldNames();</liveEvalString>
+        </property>
+        <property name="name"><defaultValue>macro</defaultValue></property>
+        <property name="source">
+            <datatype>com.dynamide.datatypes.StringDatatype</datatype>
+            <defaultValue></defaultValue>
+        </property>
+        <property name="type">
+            <defaultValue>com.dynamide.webmacro</defaultValue>
+            <readOnly>true</readOnly>
+        </property>
+        <property name="visible">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+    </properties>
+
+    <htmlsrc browser="*"><![CDATA[
+        #if ($page != null){
+            $page.expandTemplate($widget.source)
+        }
+    ]]></htmlsrc>
+</widget>

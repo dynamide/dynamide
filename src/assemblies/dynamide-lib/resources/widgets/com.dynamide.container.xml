@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<widget>
+    <componentHelp>
+    </componentHelp>
+
+    <properties>
+        <property name="basename">
+            <defaultValue>container</defaultValue>
+            <hidden>true</hidden>
+        </property>
+        <property name="border">
+            <defaultValue>0</defaultValue>
+        </property>
+        <property name="enabled">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+        <property name="inheritContext">
+            <defaultValue>true</defaultValue>
+        </property>
+        <property name="name"><defaultValue>container</defaultValue></property>
+        <property name="pageName"><defaultValue></defaultValue></property>
+        <property name="type">
+            <defaultValue>com.dynamide.container</defaultValue>
+            <readOnly>true</readOnly>
+        </property>
+        <property name="visible">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+        <property name="width">
+            <defaultValue>100</defaultValue>
+        </property>
+        <property name="height">
+            <defaultValue>25</defaultValue>
+        </property>
+
+    </properties>
+
+    <htmlsrc browser="*"><![CDATA[
+      <table border='$widget.border' cellpadding='0' cellspacing='0' width='$widget.width' height='$widget.height'>
+        <tr>
+          <td>
+            #if ($widget.pageName != ""){
+                $session.expandContainer($widget.pageName, $widget.pageName, $WEBMACRO_CONTEXT.getContext(), $page)
+                ## or use #include as template $session.getContainerSource...
+                ##maybe could reference $outer here.
+            }
+          </td>
+        </tr>
+      </table>
+    ]]></htmlsrc>
+</widget>

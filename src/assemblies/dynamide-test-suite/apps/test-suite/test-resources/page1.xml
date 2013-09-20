@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm >
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<dynamideForm>
+
+  <event language="beanshell" name="page1_onAction"><![CDATA[
+  ]]></event>
+
+<properties>
+    <property name="type">
+      <value>pagetypes/com.dynamide.form</value>
+      <readOnly>true</readOnly>
+    </property>
+    <property name="title">
+      <value>Test Application: Look for resources</value>
+    </property>
+    <property name="margin">
+      <value>0</value>
+    </property>
+    <property name="bgcolor">
+      <value>white</value>
+    </property>
+  </properties>
+
+
+  <htmlsrc browser="*"><![CDATA[
+  <html>
+    <body>
+      TEST.
+    </body>
+  </html>
+  ]]></htmlsrc>
+
+  <widgets>
+  </widgets>
+
+</dynamideForm>

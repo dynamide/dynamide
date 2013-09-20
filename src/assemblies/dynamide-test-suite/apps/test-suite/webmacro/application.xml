@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm >
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<application>
+
+  <fields href="fielddefs.xml"></fields>
+
+  <event language="beanshell" name="application_queryNextPage">
+  <![CDATA[
+         //always show this one until more pages are added:
+         event.nextPageID = "page1";
+  ]]>
+  </event>
+
+  <pages>
+    <page name="page1"></page>
+  </pages>
+
+</application>

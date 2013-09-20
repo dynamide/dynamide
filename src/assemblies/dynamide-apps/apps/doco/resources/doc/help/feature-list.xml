@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideDoco>
+<dynamideDoco pageTitle='Feature List'>
+
+<PRE>
+All pages are dynamically generated
+Pages can pull in other pages
+Sessions remember user state
+Sessions have Fields, which carry across Pages
+Fields can be wired to any kind of datasource
+There is a Widget for automatically processing XSLT
+All Widgets are data-aware
+There are Widgets for many kinds of input
+  Extended HTML controls
+    Edit, Textarea, Select, Checkbox, Button, Submit, Checkbox
+  Compound Controls
+    Chooser, DataGrid, Breadcrumbs, Callout, Tree, TabbedNotebook
+You can create your own custom Widgets
+You can create Application-specific Widgets in WYSIWYG mode
+Dynamide automatically handles page flow, and lets you manipulate page flow in various ways
+There is a full event model for hooking into precisely the event you wish to capture,
+  rather than having to create a Web Application framework for each new application.
+Development, Deployment, and Versioning are managed with developer and staging sandboxes
+
+  Dynamide has sandboxes and per-Application search paths
+  so that the correct overrides are picked up in development, Q/A and production.  Multiple developers
+  can work on the same Dynamide host with different user sandboxes and share or segregate code as desired.
+
+
+
+
+
+
+
+
+
+
+</PRE>
+
+</dynamideDoco>

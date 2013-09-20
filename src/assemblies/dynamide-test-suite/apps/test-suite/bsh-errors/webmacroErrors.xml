@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm >
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<dynamideForm>
+
+<properties>
+    <property name="type">
+      <value>pagetypes/com.dynamide.page</value>
+      <readOnly>true</readOnly>
+    </property>
+
+    <property name="title">
+      <value>Webmacro Errors - Errors</value>
+    </property>
+
+    <property name="margin">
+      <value>0</value>
+    </property>
+
+    <property name="bgcolor">
+      <value>white</value>
+    </property>
+
+  </properties>
+
+<htmlsrc><![CDATA[
+  <HTML>
+    <HEAD>
+        <TITLE>$session.title - $page.title
+        </TITLE>
+        $session.getInclude("resources/css/ide.css")
+    </HEAD>
+
+    <BODY id="page1" bgcolor="white">
+           <h2>$page.title</h2>
+           $session.link("page=webmacroErrors&next=webmacroError1", "Make Syntax Exception")
+           <br />
+           $session.link("next=bshErrors", "Beanshell Errors")
+      </BODY>
+    </HTML>
+  ]]></htmlsrc>
+
+  <widgets>
+  </widgets>
+
+</dynamideForm>

@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<widget>
+    <componentHelp>
+     <p>An image control.  Allows you to pick image files from the server, and
+     allows dynamic selection of the image on the client or the server.</p>
+    </componentHelp>
+
+    <properties>
+        <property name="basename">
+            <defaultValue>img</defaultValue>
+            <hidden>true</hidden>
+        </property>
+        <property name="border"><defaultValue>0</defaultValue></property>
+        <property name="caption">
+          <defaultValue></defaultValue>
+          <intl>1</intl>
+        </property>
+        <property name="captionNOBR">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+        <property name="datasource">
+            <datatype>com.dynamide.datatypes.IDatasourceDatatype</datatype>
+            <defaultValue></defaultValue>
+        </property>
+        <property name="enabled">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+        <property name="field"><defaultValue></defaultValue></property>
+        <property name="height"><defaultValue></defaultValue></property>
+        <property name="name"><defaultValue>img1</defaultValue></property>
+        <property name="src"><defaultValue></defaultValue></property>
+        <property name="tabindex"><defaultValue></defaultValue></property>
+        <property name="type"><defaultValue>com.dynamide.img</defaultValue><readOnly>true</readOnly></property>
+        <property name="visible">
+            <defaultValue>true</defaultValue>
+            <datatype>boolean</datatype>
+        </property>
+        <property name="width"><defaultValue></defaultValue></property>
+        <property name="wrapNoSpaceIE">
+            <datatype>boolean</datatype>
+            <defaultValue>false</defaultValue>
+            <helpTip>This is a special property that deals with an IE bug.  If you put an img, into a
+              table, the cell has extra space below the image.  In cases where you aren't putting this component
+              in a table cell, you can leave this property false.
+            </helpTip>
+        </property>
+    </properties>
+
+    <htmlsrc browser="*"><![CDATA[
+    #set $w = ""
+    #set $h = ""
+    #if ($widget.width != "") { #set $w = " width=\"$widget.width\"" }
+    #if ($widget.height != "") { #set $h = " height=\"$widget.height\"" }
+    #set $ti = ""
+    #if ($widget.tabindex != "") { #set $ti = "tabindex='$widget.tabindex'" }
+
+    #set $imgSrc = ""
+    #if ($widget.value != ""){
+            #set $imgSrc = $session.getInclude("$widget.value")
+    } #else {
+        #if ($widget.src != ""){
+            #set $imgSrc = $session.getInclude("$widget.src")
+        }
+    }
+    #if ($widget.wrapNoSpaceIE == "true"){
+        <style>
+        .nospace \{margin:0; padding:0; border:0; \}
+        </style>
+        <pre class='nospace'><table
+               border='0' cellpadding='0' cellspacing='0'><tr><td><img
+               src="$imgSrc" border="$widget.border" $w $h
+               $ti /></td></tr></table></pre>
+    } #else {
+        <img src="$imgSrc" border="$widget.border" $w $h  $ti/>
+    }
+]]></htmlsrc>
+</widget>

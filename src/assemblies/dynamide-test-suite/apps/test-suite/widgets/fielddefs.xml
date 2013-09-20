@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+
+<fields>
+   <field name="qty">
+       <property name="value"><value>3000</value></property>
+   </field>
+   <field name="page1Description">
+       <property name="value">
+          <value>This Application shows the features of Dynamide.  On this page you can see several types
+                    of components (called Widgets in Dynamide), including one that is a view of a table in a MySQL database.</value>
+          <intl>1</intl>
+       </property>
+   </field>
+</fields>

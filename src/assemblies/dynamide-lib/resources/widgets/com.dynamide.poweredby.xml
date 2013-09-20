@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<!DOCTYPE widget>
+<!--  DOCTYPE widget SYSTEM "widget.dtd"-->
+<!-- Copyright (c) 2001, 2002, 2003, 2004 DYNAMIDE.COM -->
+
+<widget>
+<componentHelp>
+</componentHelp>
+
+<properties>
+    <property name="type">
+        <defaultValue>com.dynamide.poweredby</defaultValue>
+        <readOnly>true</readOnly>
+    </property>
+    <property name="align">
+        <defaultValue>right</defaultValue>
+    </property>
+    <property name="band">
+        <defaultValue>true</defaultValue>
+    </property>
+    <property name="width">
+        <defaultValue>800</defaultValue>
+    </property>
+</properties>
+
+<htmlsrc browser="*"><![CDATA[
+<style>
+<!--
+.poweredby {
+      font-family: Verdana, Geneva, Arial,Helvetica,sans-serif;
+      font-size: 0.7em;          color: \#336699;
+      text-decoration: none;
+}
+.poweredby:hover {color: \#FF9933 ;  text-decoration: underline;}
+.poweredby:active {color: green; }
+-->
+</style>
+    #if ("$widget.band" == "true"){
+    <table width="$widget.width" border='0' cellpadding='0' cellspacing='0'>
+      <tr>
+        <td width="100%" align="$widget.align">
+    }
+        <table border='0' cellpadding='1' cellspacing='0' bgcolor="orange">
+          <tr>
+            <td>
+            <table border='0' cellpadding='3' cellspacing='0' bgcolor="\#B8E28">
+               <tr>
+                <td>
+                    <center>
+                    <a class="poweredby" target="_top" href="https://secure.dynamide.com/dynamide/doco"><i>Powered by</i></a>
+                    <br /><a class="poweredby" target="_top" href="https://secure.dynamide.com/dynamide/doco"><b>DYNAMIDE</b></a>
+                    </center>
+                </td>
+              </tr>
+            </table>
+            </td>
+          </tr>
+        </table>
+
+
+    #if ("$widget.band" == "true"){
+        </td>
+        <td>##&nbsp;&nbsp;&nbsp;
+        </td>
+      </tr>
+    </table>
+    }
+]]></htmlsrc>
+</widget>

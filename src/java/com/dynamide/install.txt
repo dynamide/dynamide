@@ -1,0 +1,6 @@
+@echo YOU MUST MODIFY THIS FILE, THEN RUN IT
+rem set RUNDIR to the base of your installation.  All files go under that directory.
+rem Change the value C:\temp\rundir on the next line to
+rem your desired location, then uncomment the next line:
+
+rem ant -DRUNDIR=C:\temp\rundir install

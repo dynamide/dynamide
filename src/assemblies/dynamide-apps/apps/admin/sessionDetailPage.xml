@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Created with Dynamide from DYNAMIDE.COM -->
+<dynamideForm>
+
+
+<properties>
+    <property name="consoleLogBaseURL">
+      <defaultValue></defaultValue>
+      <value></value>
+    </property>
+    <property name="sessionDetailBaseURL">
+      <defaultValue></defaultValue>
+      <value></value>
+    </property>
+    <property name="type">
+      <value>pagetypes/com.dynamide.page</value>
+      <readOnly>true</readOnly>
+    </property>
+</properties>
+
+
+<htmlsrc><![CDATA[
+<HTML>
+<HEAD>
+    <TITLE>$page.title</TITLE>
+    $session.getInclude("resources/js/page.js")
+    $session.getInclude("resources/css/ide.css")
+    $session.getInclude("resources/css/admin.css")
+    $session.getInclude("resources/css/handlerprocs.css")
+</HEAD>
+<BODY  bgcolor='#A4BFDD' id="sessionDetailPage" onclick="widgetClicked(this)">
+    <SPAN class="widget" id="widgetstyle1"></SPAN>
+    <FORM name="mojoForm" action="/dynamide/admin" method="get" encType="application/x-www-form-urlencoded">
+
+        <SPAN class="widget" id="subsessiondetail1" ></SPAN>
+
+
+        <SPAN class="widget" id="session1" ></SPAN>
+        <SPAN class="widget" id="hiddenPageID" ></SPAN>
+    </FORM>
+</BODY>
+</HTML>
+]]></htmlsrc>
+
+<event language="beanshell" name="sessionDetailPage_onLoad">
+<![CDATA[
+        event.println("\r\n\r\n<hr/>in sessionDetailPage_onLoad");
+]]>
+</event>
+
+<event language="beanshell" name="sessionDetailPage_beforeOutput">
+<![CDATA[
+        event.session.fireApplicationEvent("application_setBaseURLs");
+
+        //Set the SUBSESSIONID for the widget:
+        String ssid = event.getQueryParam("SUBSESSIONID");
+        Widget w = event.currentPage.get("subsessiondetail1");
+        w.setProperty("SUBSESSIONID", ssid);
+
+        String sessionDetailBaseURL = event.session.getFieldValue("sessionDetailBaseURL");
+        w.setProperty("sessionDetailBaseURL", sessionDetailBaseURL);
+
+        String consoleLogBaseURL = event.session.getFieldValue("consoleLogBaseURL");
+        w.setProperty("consoleLogBaseURL", consoleLogBaseURL);
+]]>
+</event>
+
+<widgets>
+    <widget id="session1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.session</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="hiddenPageID">
+      <properties>
+        <property name="field">
+          <defaultValue>
+            <enumeration override="false" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.StringDatatype"></item>
+            </enumeration>
+          </defaultValue>
+          <datatype>com.dynamide.datatypes.LiveEnumeratedDatatype</datatype>
+          <liveEvalString>session.getFieldNames();</liveEvalString>
+          <value>page</value>
+        </property>
+        <property name="name">
+          <defaultValue>hidden</defaultValue>
+        </property>
+        <property name="type">
+          <defaultValue>com.dynamide.hidden</defaultValue>
+          <readOnly>true</readOnly>
+          <value>com.dynamide.hidden</value>
+        </property>
+        <property name="value">
+          <defaultValue></defaultValue>
+          <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+          <value>$pageID</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="widgetstyle1">
+      <properties>
+        <property name="name">
+          <defaultValue>widgetstyle</defaultValue>
+        </property>
+        <property name="type">
+          <defaultValue>com.dynamide.widgetstyle</defaultValue>
+          <readOnly>true</readOnly>
+          <value>com.dynamide.widgetstyle</value>
+        </property>
+        <property name="visible">
+          <defaultValue>true</defaultValue>
+          <datatype>boolean</datatype>
+        </property>
+      </properties>
+    </widget>
+    <widget id="subsessiondetail1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.subsessiondetail</value>
+        </property>
+        <property name="SUBSESSIONID">
+          <value></value>
+        </property>
+      </properties>
+    </widget>
+  </widgets>
+</dynamideForm>

@@ -1,0 +1,333 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<dynamideForm>
+  <htmlsrc><![CDATA[
+<HTML>
+<HEAD>
+  <TITLE></TITLE>
+  <SPAN class="widget" id="includes1"/>
+</HEAD>
+<BODY id="adminLogin" onclick="widgetClicked(this)" bottomMargin="0" bgColor="#ffffff" leftMargin="0" topMargin="0" rightMargin="0">
+<SPAN class="widget" id="widgetstyle1" onresizestart="javascript:event.cancelBubble=true;return false;" onclick="widgetClicked(this)"></SPAN>
+
+<FORM action="/dynamide/admin" method="get" encType="application/x-www-form-urlencoded">
+          <TABLE cellSpacing="0" cellPadding="" border="0">
+            <TBODY>
+              <TR>
+                <TD colSpan="3">
+                        <TABLE cellSpacing="0" cellPadding="0" bgColor="#ffffff" border="0">
+                            <TBODY>
+                            <TR>
+                                <TD valign="bottom">
+                                <SPAN class="widget" id="com_dynamide_img_logo" onresizestart="javascript:event.cancelBubble=true;return false;" onclick="widgetClicked(this)"></SPAN>
+                                </TD>
+                                <TD valign="middle">
+                                <SPAN class="big1">Dynamide</SPAN>
+                                </TD>
+                                    <TD valign="middle" width="100%">
+                                <CENTER>
+                                    <SPAN class="big4">Dynamide Administration</SPAN>
+                                </CENTER>
+                                </TD>
+                            </TR>
+                            </TBODY>
+                        </TABLE>
+                    <SPAN class="widget" id="com_dynamide_linkstrip1" onresizestart="javascript:event.cancelBubble=true;return false;" onclick="widgetClicked(this)"></SPAN>
+                </TD>
+              </TR>
+              <TR>
+                <TD>
+                    <SPAN class="widget" id="com_dynamide_spacer1" onresizestart="javascript:event.cancelBubble=true;return false;" onclick="widgetClicked(this)"></SPAN>
+                </TD>
+                <TD colspan='2' align="left" width="100%">
+                    <table border='0' cellpadding='0' cellspacing='6'>
+                    <tr>
+                        <td align="center">
+                            <br/><H3>Log in with administrator rights to an application</H3>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                           <SPAN class="widget" id="editApplicationPath" onresizestart="javascript:event.cancelBubble=true;return false;" onclick="widgetClicked(this)"></SPAN>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <SPAN class="widget" id="userName" onresizestart="javascript:event.cancelBubble=true;return false;" onclick="widgetClicked(this)"></SPAN>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <SPAN class="widget" id="editPassword" onresizestart="javascript:event.cancelBubble=true;return false;" onclick="widgetClicked(this)"></SPAN>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                           <SPAN class="widget" id="submit1" />
+                        </td>
+                    </tr>
+                    </table>
+                </TD>
+              </TR>
+            </TBODY>
+          </TABLE>
+        <SPAN class="widget" id="session1" onresizestart="javascript:event.cancelBubble=true;return false;" onclick="widgetClicked(this)"></SPAN>
+
+        </FORM>
+
+      </BODY>
+    </HTML>
+  ]]></htmlsrc>
+  <event language="beanshell" name="adminLogin_onLoad"><![CDATA[
+        event.println("\r\n\r\n<hr/>in adminLogin_onLoad");
+]]></event>
+  <event language="beanshell" name="adminLogin_onAction"><![CDATA[
+        event.println("\r\n\r\n<hr/>in adminLogin_onAction");
+        Widget editUserName = event.session.find("adminLogin.userName");
+        if (editUserName != null){
+            value =  editUserName.get("value");
+            password =  session.get("adminLogin_editPassword");
+            print("adminLogin considering "+value);
+            if (value.equals("admin") && password.equals("cooper")){
+                event.session.logHandlerProc("DEBUG", "adminLogin approved user "+value);
+                session.setUSER(value);
+                event.session.logHandlerProc("DEBUG", "set field value in session, USER == "+value);
+                editUserName.setErrorMessage(null);
+                event.sendRedirectToPage("sessionsPage");
+                return;
+            } else {
+                editUserName.setErrorMessage("User '"+value+"' is not authorized to use admin application");
+                event.session.logHandlerProc("DEBUG", "error: wrong user");
+            }
+        } else {
+            event.session.logHandlerProc("DEBUG", "error: no widget");
+        }
+]]></event>
+  <widgets>
+    <widget id="includes1">
+      <properties>
+        <property name="items">
+          <value>
+            <enumeration override="false" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/css/dynamide.css</item>
+              <item datatype="com.dynamide.datatypes.StringDatatype">resources/js/page.js</item>
+            </enumeration>
+          </value>
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+        </property>
+        <property name="name">
+          <value>includes1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.includes</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="editApplicationPath">
+      <properties>
+        <property name="caption">
+          <value>Application URI</value>
+          <intl>1</intl>
+        </property>
+        <property name="captionWidth">
+          <value>250</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+          <readOnly>true</readOnly>
+        </property>
+      </properties>
+    </widget>
+    <widget id="editPassword">
+      <properties>
+        <property name="caption">
+          <value>Password</value>
+          <intl>1</intl>
+        </property>
+        <property name="captionClass">
+          <value>caption</value>
+        </property>
+        <property name="captionWidth">
+          <value>250</value>
+        </property>
+        <property name="isPassword">
+          <value>true</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+          <readOnly>true</readOnly>
+        </property>
+        <property name="visible">
+          <value>true</value>
+          <datatype>boolean</datatype>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_img_logo">
+      <properties>
+        <property name="height">
+          <value>40</value>
+        </property>
+        <property name="src">
+          <value>resources/images/dynamide-logo.gif</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.img</value>
+          <readOnly>true</readOnly>
+        </property>
+        <property name="width">
+          <value>40</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_linkstrip1">
+      <properties>
+        <property name="border">
+          <value>1</value>
+        </property>
+        <property name="enabled">
+          <value>true</value>
+          <datatype>boolean</datatype>
+        </property>
+        <property name="links">
+          <value>
+            <enumeration override="true" defaultIndex="0">
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>${SESSIONARG}&amp;${PAGEARG}&amp;action=com.dynamide.linkstrip&amp;dmLinkstripItem=Home</href>
+                <text>Home</text>
+                <key>home</key>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>${SESSIONARG}&amp;${PAGEARG}&amp;action=com.dynamide.linkstrip&amp;dmLinkstripItem=Support</href>
+                <text>Support</text>
+                <key>support</key>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>${SESSIONARG}&amp;${PAGEARG}&amp;action=com.dynamide.linkstrip&amp;dmLinkstripItem=Contact%20Us</href>
+                <text>Contact Us</text>
+                <key>contactus</key>
+              </item>
+              <item datatype="com.dynamide.datatypes.Link">
+                <href>${SESSIONARG}&amp;${PAGEARG}&amp;action=com.dynamide.linkstrip&amp;dmLinkstripItem=Site%20Map</href>
+                <text>Site Map</text>
+                <key>sitemap</key>
+              </item>
+            </enumeration>
+          </value>
+          <datatype>com.dynamide.datatypes.Enumeration</datatype>
+        </property>
+        <property name="type">
+          <value>com.dynamide.linkstrip</value>
+          <readOnly>true</readOnly>
+        </property>
+      </properties>
+    </widget>
+    <widget id="com_dynamide_spacer1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.spacer</value>
+          <readOnly>true</readOnly>
+        </property>
+      </properties>
+    </widget>
+    <widget id="session1">
+      <properties>
+        <property name="field">
+          <value>mojo</value>
+        </property>
+        <property name="name">
+          <value>session1</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.session</value>
+          <readOnly>true</readOnly>
+        </property>
+      </properties>
+    </widget>
+    <widget id="userName">
+      <properties>
+        <property name="caption">
+          <value>User Name</value>
+          <intl>1</intl>
+        </property>
+        <property name="captionWidth">
+          <value>250</value>
+        </property>
+        <property name="field">
+          <value>USER</value>
+        </property>
+        <property name="name">
+          <value>userName</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+          <readOnly>true</readOnly>
+        </property>
+        <property name="visible">
+          <value>true</value>
+          <datatype>boolean</datatype>
+        </property>
+      </properties>
+    </widget>
+    <widget id="widgetstyle1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.widgetstyle</value>
+          <readOnly>true</readOnly>
+        </property>
+      </properties>
+    </widget>
+    <widget id="submit1">
+      <properties>
+        <property name="action">
+          <value>login</value>
+        </property>
+        <property name="caption">
+          <value>Login</value>
+        </property>
+        <property name="captionWidth">
+          <value>250</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
+  </widgets>
+  <properties>
+    <property name="bgcolor">
+      <value>white</value>
+    </property>
+    <property name="lastSave">
+      <value>1022263965846</value>
+      <readOnly>true</readOnly>
+      <datatype>java.util.Date</datatype>
+    </property>
+    <property name="margin">
+      <value>0</value>
+      <eval>document.body.margin = "$page.margin";</eval>
+    </property>
+    <property name="name">
+      <value>adminLogin</value>
+    </property>
+    <property name="onAction" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+    <property name="onLoad" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+    <property name="onValidate" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+    <property name="title">
+      <value>Admin Login</value>
+    </property>
+    <property name="type">
+      <value>pagetypes/com.dynamide.form</value>
+      <readOnly>true</readOnly>
+    </property>
+  </properties>
+</dynamideForm>

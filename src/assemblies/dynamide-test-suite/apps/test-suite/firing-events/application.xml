@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm >
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<application>
+
+  <fields href="fielddefs.xml"></fields>
+
+<properties>
+    <property name='imports'>
+            <datatype>com.dynamide.datatypes.Enumeration</datatype>
+            <value>
+                <enumeration defaultIndex='0'>
+                    <item datatype="com.dynamide.datatypes.Version">
+                        <basename>com-dynamide-lib</basename>
+                        <interface>1</interface>
+                        <build>59+</build>
+                    </item>
+                    <item datatype="com.dynamide.datatypes.Version">
+                        <basename>com-foobar-lib</basename>
+                        <interface>2</interface>
+                        <build>8+</build>
+                    </item>
+                    <item datatype="com.dynamide.datatypes.Version">
+                        <basename>com-acme-apps</basename>
+                        <interface>1</interface>
+                        <build>9+</build>
+                    </item>
+                </enumeration>
+            </value>
+            <helpTip>Imports defined for this Application</helpTip>
+        </property>
+  </properties>
+
+  <event language="beanshell" name="application_onImport">
+  <![CDATA[
+        import java.util.*;
+        import java.io.*;
+        import com.dynamide.*;
+        import com.dynamide.util.*;
+        import com.dynamide.datatypes.*;
+        import org.jdom.*;
+  ]]></event>
+
+  <event language="beanshell" name="application_onStart">
+  <![CDATA[
+        System.out.println("\r\n\r\n\r\n=================== Starting /dynamide/test-suite/firing-events Session: "+event.session.getSessionID()+" ==============");
+        event.println("fired: "+event.session.fireApplicationEvent("application_onAction"));
+        event.println("fired2: "+event.session.fireApplicationEvent("application_onAction", "mojo"));
+        theLog = com.dynamide.util.Log.getInstance();
+        if (theLog != null && theLog.getConfigFile().length() == 0){
+            String logconf = event.session.findResourceFilename("log.conf");
+            System.out.println("real path to log.conf: "+logconf);
+            com.dynamide.util.Log.configure(com.dynamide.util.Tools.fixFilename(logconf));
+        }
+  ]]>
+  </event>
+
+  <event language="beanshell" name="application_queryNextPage">
+  <![CDATA[
+
+         if (event.currentPageID.equals("page1")){
+            event.nextPageID = "folder1/folder2/page2";
+         } else {
+            //always show this one until more pages are added:
+            event.nextPageID = "page1";
+         }
+  ]]>
+  </event>
+
+  <event language="beanshell" name="application_onAction">
+  <![CDATA[
+    event.println("in application_onAction");
+    //event.jumpToPage("folder1/folder2/page2");
+  ]]>
+  </event>
+
+  <pages>
+    <page name="page1"></page>
+    <page name="folder1/folder2/page2"></page>
+  </pages>
+
+</application>

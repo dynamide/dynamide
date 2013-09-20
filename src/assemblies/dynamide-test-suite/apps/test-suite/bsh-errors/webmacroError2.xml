@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm >
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<dynamideForm>
+
+<properties>
+    <property name="type">
+      <value>pagetypes/com.dynamide.page</value>
+      <readOnly>true</readOnly>
+    </property>
+    <property name="title">
+      <value>Webmacro Errors - Errors</value>
+    </property>
+  </properties>
+
+<htmlsrc><![CDATA[
+  <HTML>
+  $session.StringTools.fill("<", 10)
+  <<<
+    <BODY id="webmacroError2" bgcolor="white">
+     ### #mojo  ## This is illegal.
+    </BODY>
+ </HTML>
+  ]]></htmlsrc>
+
+  <widgets>
+  </widgets>
+
+</dynamideForm>

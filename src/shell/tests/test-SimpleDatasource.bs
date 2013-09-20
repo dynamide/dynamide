@@ -1,0 +1,50 @@
+//call with:
+// call C:\dynamide\bin\setDynamideLocal.bat
+// cd   C:\dynamide\src\shell\tests
+// call bsh test-SimpleDatasource.bs
+
+
+source("../dynamideShell.bs");
+import com.dynamide.*;
+import com.dynamide.util.*;
+import com.dynamide.db.*;
+
+//s = Session.createSession("/dynamide/doco");
+//sd = new SimpleDatasource(s, s);
+sd = new SimpleDatasource(null, null);
+print("dump current row, before adding any data: "+sd.dumpRow(sd.getCurrentRow()));
+sd.addColumn("F0","");
+sd.addColumn("F1","");
+sd.addRow();
+sd.setFieldValue("F0", "r0,0");
+sd.setFieldValue("F1", "r0,1");
+
+print("dump current row, after adding one row: "+sd.dumpRow(sd.getCurrentRow()));
+
+sd.addRow();
+sd.setFieldValue("F0", "r1,0");
+sd.setFieldValue("F1", "r1,1");
+
+print("=========== dumpRow, after adding two rows total ==============");
+i=sd.iterator();
+while ( i.hasNext() ) {
+    r=i.next();
+    print(sd.dumpRow(r));
+}
+
+
+print("=========== table dump ==============");
+print(sd.dump());
+print("=========== table dump, after re-setting a field value ==============");
+sd.setFieldValue("F0", "new value", "0");
+print("getField by index: "+sd.getField("F0", "0"));
+print(sd.dump());
+print("===============================");
+
+sd.seekBegin();
+print("get: "+sd.get("F0"));
+sd.go(1);
+print("get: "+sd.get("F0"));
+
+print("done");
+sd;

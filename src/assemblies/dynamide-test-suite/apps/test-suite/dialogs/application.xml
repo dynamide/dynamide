@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<application>
+  <fields href="fielddefs.xml"></fields>
+  <pages>
+  </pages>
+
+  <event language="beanshell" name="application_onAction"><![CDATA[
+    event.println("application_onAction");
+
+    p = session.findOrCreateDialog("myImgviewAction", "resources/dialogs/com.dynamide.imgview");
+    p.setProperty("align", "center");
+    p.setProperty("imageAlign", "center");
+    p.setProperty("imageSrc", "resources/images/save-file.gif");
+    p.setProperty("title", "The Big Image Dialog");
+    p.setProperty("caption", "<br/><h2>The Big Image Dialog</h2>");
+    p.setProperty("href", "/dynamide/demo");
+    p.setProperty("hrefCaption", "/dynamide/demo app");
+    p.setProperty("hrefTarget", "demoapp");
+    p.setProperty("footer", "<br/><hr/>This application excercise the com.dynamide.imgview dialog, which simply shows an image in a web page."
+                           +"<br/>You can create it with just a single call to Session.findOrCreateDialogURL(...).  You can use imageSrc relative to the project or the library."
+                           +"<h4>Dialog Properties</h4>"+p.dumpHTML());
+    event.jumpToPage("myImgviewAction");
+    return;
+  ]]></event>
+  <properties>
+    <property name="onAction" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+    <property name="title">
+      <value>Test Dialogs</value>
+    </property>
+    <property name="type">
+      <value>com.dynamide.Session</value>
+      <readOnly>true</readOnly>
+    </property>
+  </properties>
+</application>

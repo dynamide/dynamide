@@ -1,0 +1,93 @@
+
+import java.io.*;
+import java.util.Date;
+import java.util.Properties;
+import javax.mail.*;
+import javax.mail.internet.*;
+import javax.activation.*;
+
+public class Mailer
+{
+    public static void main(String[] args)
+    {
+        String from, to, subject, body, attach, server;
+
+        /* Getting SMTP server from argument */
+        if (args.length > 0)
+            server = args[0];
+        else {
+            System.err.println("Warning: "
+                               + "No server specified. Will try localhost.\n");
+            server = "none";
+        }
+        /* Get details from user input */
+        System.out.print("Mail From: ");
+        from = getInput();
+        System.out.print("Mail To: ");
+        to = getInput();
+        System.out.print("Subject: ");
+        subject = getInput();
+        System.out.print("Attachment (leave blank for none): ");
+        attach = getInput();
+        System.out.println("Enter message body, ending with a \".\" on a line "
+                           + "by itself.");
+        body = getBody();
+
+        /* Now to construct and send the message */
+        Properties mailProp = System.getProperties();
+        if (! server.equals("none"))
+            mailProp.put("mail.smtp.host", server);
+        Session mailSession = Session.getDefaultInstance(mailProp, null);
+        try {
+            MimeMessage mailMessage = new MimeMessage(mailSession);
+            mailMessage.setFrom(new InternetAddress(from));
+            mailMessage.setRecipients(Message.RecipientType.TO,
+                                      InternetAddress.parse(to, false));
+            mailMessage.setSubject(subject);
+            MimeBodyPart mimeBody = new MimeBodyPart();
+            mimeBody.setText(body);
+            Multipart multipart = new MimeMultipart();
+            multipart.addBodyPart(mimeBody);
+            if (! attach.equals("")) {
+                MimeBodyPart mimeAttach = new MimeBodyPart();
+                FileDataSource fds = new FileDataSource(attach);
+                mimeAttach.setDataHandler(new DataHandler(fds));
+                mimeAttach.setFileName(fds.getName());
+                multipart.addBodyPart(mimeAttach);
+            }
+            mailMessage.setContent(multipart);
+            mailMessage.setSentDate(new Date());
+            Transport.send(mailMessage);
+            System.out.println("One mail sent successfully.....");
+        } catch (MessagingException mailEx) {
+            System.err.println("Error :\n");
+            mailEx.printStackTrace();
+            System.err.println("\n\nCouldn't send mail...");
+        }
+    }
+
+    public static String getInput()
+    {
+        InputStreamReader reader = new InputStreamReader(System.in);
+        BufferedReader input = new BufferedReader(reader);
+        String inputString = null;
+        try {
+            inputString = input.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error : " + e.toString());
+        }
+        return inputString;
+    }
+
+    public static String getBody()
+    {
+        String bodyString = "", line;
+        line = getInput();
+        while ( ! line.equals(".")) {
+            bodyString = bodyString.concat(line+"\n");
+            line = getInput();
+        }
+        return bodyString;
+    }
+}

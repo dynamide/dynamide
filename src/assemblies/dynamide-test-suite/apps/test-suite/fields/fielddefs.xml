@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+
+<fields>
+   <field name="ZIPCODE">
+       <property name="value"><value>94709</value></property>
+   </field>
+</fields>

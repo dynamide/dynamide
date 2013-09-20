@@ -1,0 +1,7 @@
+cls
+
+set CLASSPATH=REP_CLASSPATH
+
+set RUNDIR=REP_RUNDIR
+
+java -classpath %CLASSPATH% com.dynamide.gui.IDE %RUNDIR% %RUNDIR%\Dynamide\demo\application.xml %RUNDIR%\Dynamide\demo\page1verysimple.xml

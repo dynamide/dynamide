@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+
+<project name="XDoclet Documentation" default="todo">
+    <property name="foodir" value="../.."/>
+    <property name="xdoclet.lib.dir" value="c:/bin/xdoclet/lib"/>
+    <property name="dynamide.lib.dir" value="../../lib"/>
+    <property name="dynamide.src.dir" value="../../src/java"/>
+    <property name="dynamide.output.dir" value="../../build"/>
+
+    <property name="docs.todo.dir" value="${foodir}/build/xdoclet/todo"/>
+    <property name="docs.bug.dir" value="${foodir}/build/xdoclet/bugs"/>
+    <property name="docs.keymethods.dir" value="${foodir}/build/xdoclet/keymethods"/>
+
+    <property name="buildDirClasses" value="./build/classes"/>
+
+    <!-- =================================================================== -->
+    <!-- Define classpath                                                    -->
+    <!-- =================================================================== -->
+    <path id="doc.class.path">
+        <fileset dir="${xdoclet.lib.dir}">
+            <include name="**/*.jar" />
+        </fileset>
+        <pathelement location="${buildDirClasses}" />
+        <fileset dir="${dynamide.lib.dir}">
+            <include name="*.jar"/>
+        </fileset>
+        <pathelement location="${ant.home}/lib/ant.jar"/>
+    </path>
+
+    <!-- =================================================================== -->
+    <!-- Generate todo-list from source (@todo tags)                         -->
+    <!-- =================================================================== -->
+
+
+    <!-- warning: null pointer exception in xdoclet if you don't clean todo output dir first....
+    -->
+
+    <target name="todo">
+        <echo>foodir: ${foodir}</echo>
+
+        <delete dir="${docs.todo.dir}" />
+        <mkdir dir="${docs.todo.dir}" />
+        <taskdef name="todo"
+                 classname="xdoclet.modules.doc.DocumentDocletTask"
+                 classpathref="doc.class.path"
+        />
+
+        <todo destdir="${docs.todo.dir}" >
+            <fileset dir="${foodir}/src/java">
+                <include name="**/*.java" />
+            </fileset>
+
+            <info/>
+        </todo>
+    </target>
+
+    <!-- =================================================================== -->
+    <!-- Generate todo-list from source (@bug tags)                         -->
+    <!-- =================================================================== -->
+
+    <target name="bugs">
+        <delete dir="${docs.bug.dir}" />
+        <mkdir dir="${docs.bug.dir}" />
+        <taskdef name="bug"
+                 classname="xdoclet.modules.doc.DocumentDocletTask"
+                 classpathref="doc.class.path"
+        />
+
+        <bug destdir="${docs.bug.dir}" >
+            <fileset dir="${foodir}/src/java">
+                <include name="**/*.java" />
+            </fileset>
+
+            <info tag="bug"/>
+        </bug>
+    </target>
+
+    <!-- =================================================================== -->
+    <!-- Generate todo-list from source (@keymethod tags)                         -->
+    <!-- =================================================================== -->
+
+    <target name="keymethods">
+        <delete dir="${docs.keymethods.dir}" />
+        <mkdir dir="${docs.keymethods.dir}" />
+        <taskdef name="keymethods"
+                 classname="xdoclet.modules.doc.DocumentDocletTask"
+                 classpathref="doc.class.path"
+        />
+
+        <keymethods destdir="${docs.keymethods.dir}" >
+            <fileset dir="${foodir}/src/java">
+                <include name="**/*.java" />
+            </fileset>
+
+            <info tag="dynamide.keymethod"/>
+        </keymethods>
+    </target>
+
+</project>

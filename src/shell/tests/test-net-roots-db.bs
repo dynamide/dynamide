@@ -1,0 +1,40 @@
+import java.sql.*;
+import org.webmacro.datatable.*;
+import com.dynamide.db.*;
+import com.dynamide.util.*;
+import com.dynamide.event.ScriptEvent;
+
+
+import com.dynamide.*;
+import com.dynamide.resource.*;
+import com.dynamide.util.*;
+
+show();
+
+ResourceManager rm = ResourceManager.createStandalone();
+Session session = Session.createSession("/swarm");
+
+ResourceManager rm = ResourceManager.getRootResourceManager();
+RDBDatabase db = rm.openDatabase("net_roots_demo");
+
+try {
+    String sql = "select * from view_swarm_actions_wdetail;";
+    tt = db.readTableTree(sql, "id", "parent_id", true);
+
+    print(tt.dump());
+
+    if (false){
+            //this is pretty much the same as dump():
+            print("=== getPreorderIterator ===");
+            it = tt.getPreorderIterator();
+            while ( it.hasNext() ) {
+                print("\r\n===> "+it.next());
+            }
+    }
+
+    print("composite 2 :: "+tt.findComposite("2"));
+
+} finally {
+    db.close();
+    System.exit(0);
+}

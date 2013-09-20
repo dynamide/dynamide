@@ -1,0 +1,117 @@
+<HTML>
+
+  <BODY bgcolor="white">
+    <style>
+    .open {cursor: hand; color: red; display:''}
+    .closed {cursor: hand; color: blue; display:none}
+    </style>
+    <script language="JavaScript1.2">
+    <!--
+    var ns6=document.getElementById&&!document.all?1:0
+
+    //These are just to force a preload.  They aren't used by ref. And they don't affect the image swapping.
+    img1src = new Image();
+    img1src.src = "/com/dynamide/images/plus.jpg";
+    img2src = new Image();
+    img2src.src = "/com/dynamide/images/minus.jpg";
+
+    function expandit2(plusID, objID){
+      curobj = document.getElementById(objID);
+      if (curobj.className == "closed"){
+        curobj.className = "open"
+        showplus(plusID, "0");
+      } else {
+        curobj.className = "closed"
+        showplus(plusID, "1");
+      }
+    }
+    function showplus(plusname, p){
+      theImg=document.getElementById(plusname);
+      if (p=="1") {
+          theImg.setAttribute("src","/com/dynamide/images/plus.jpg");
+      } else {
+          theImg.setAttribute("src","/com/dynamide/images/minus.jpg");
+      }
+      var scr = "replus('"+plusname+"');"
+      setTimeout(scr, 1);
+    }
+
+    function replus(plusname){
+      theImg=document.getElementById(plusname);
+      theImg.setAttribute("src",theImg.getAttribute("src"));
+    }
+
+    function nada(){}
+    //-->
+    </script>
+
+    <table border='1' cellpadding='3' cellspacing='0'>
+      <tr>
+        <td>
+            <span onclick="expandit2('img9','sp119')" id='a19' class="open">
+              <a href="javascript:nada()">
+                <img id="img9" border='0' class="open" src="/com/dynamide/images/minus.jpg"></img>
+                Header TOP
+              </a>
+            </span>
+        </td>
+      </tr>
+      <tr>
+        <td>
+            <span onclick="expandit2('img9','sp119')" id='sp119' class="open">
+                <table border='1' cellpadding='3' cellspacing='0'>
+                  <tr>
+                    <td width="20">&nbsp;
+                    </td>
+                    <td><img id="img10" border='0' class="open" src="/com/dynamide/images/LEAF.jpg"></img>
+                    </td>
+                    <td>
+                        hi
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                        <span id='sp120' class="open">
+                        <table border='1' cellpadding='3' cellspacing='0'>
+                          <tr>
+                            <td width="20">&nbsp;
+                            </td>
+                            <td><img id="img14" border='0' class="open" src="/com/dynamide/images/LEAF.jpg"></img>
+                            </td>
+                            <td>
+                              hi
+                            </td>
+                          </tr>
+                        </table>
+                        </span>
+                    </td>
+                  </tr>
+                </table>
+            </span>
+        </td>
+      </tr>
+    </table>
+
+
+
+    <script language="JavaScript" type="text/javascript">
+    function swapImage(){
+    theImg=document.getElementById("test2img");
+    theImg.setAttribute("src","/com/dynamide/images/plus.jpg");
+    }
+    function restoreImage(){
+    theImg=document.getElementById("img9");
+    theImg.setAttribute("src","/com/dynamide/images/minus.jpg");
+    }
+    </script>
+
+
+
+</body>
+
+
+
+  </BODY>
+
+
+</HTML>
