@@ -2,4 +2,6 @@
 
 . $DYNAMIDE_HOME/bin/setjavaClasspathDynamide.sh
 
-java -DDYNAMIDE_HOME=$DYNAMIDE_HOME com.dynamide.Session $*
+echo CLASSPATH: $CLASSPATH
+echo 
+java -cp "$CLASSPATH" -DDYNAMIDE_HOME=$DYNAMIDE_HOME com.dynamide.Session $*

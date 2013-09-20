@@ -20,8 +20,10 @@ else
   fi
 fi
 
-##export CLASSPATH=`$perl $DYNAMIDE_HOME/bin/setjavaClasspathDynamide.pl`
-export CLASSPATH='build/lib/dynamide.jar:lib/*'
+
+## lib/* only works for java 6
+export CLASSPATH="${DYNAMIDE_HOME}/build/defaultWebapp/ROOT/WEB-INF/lib/"; CLASSPATH+='*'
+echo === $CLASSPATH ===
 
 if [ "$1" = "-outputclasspath" ]; then
   echo $CLASSPATH
