@@ -1,40 +1,15 @@
 <component name="libraryTable">
   <library name="lib">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../apache-tomcat-7.0.23/webapps/dynamide/WEB-INF/lib/bsh-2.0b4.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../apache-tomcat-7.0.23/webapps/dynamide/WEB-INF/lib/activation.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../apache-tomcat-7.0.23/webapps/dynamide/WEB-INF/lib/commons-io-2.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../apache-tomcat-7.0.23/webapps/dynamide/WEB-INF/lib/commons-fileupload-1.2.2.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../apache-tomcat-7.0.23/webapps/dynamide/WEB-INF/lib/httpunit.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../apache-tomcat-7.0.23/webapps/dynamide/WEB-INF/lib/jacl.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../apache-tomcat-7.0.23/webapps/dynamide/WEB-INF/lib/jakarta-oro-2.0.7.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../apache-tomcat-7.0.23/webapps/dynamide/WEB-INF/lib/jaxen-full.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../apache-tomcat-7.0.23/webapps/dynamide/WEB-INF/lib/concurrent.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../apache-tomcat-7.0.23/webapps/dynamide/WEB-INF/lib/datatable.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../apache-tomcat-7.0.23/webapps/dynamide/WEB-INF/lib/dom4j-full.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../apache-tomcat-7.0.23/webapps/dynamide/WEB-INF/lib/mail.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../apache-tomcat-7.0.23/webapps/dynamide/WEB-INF/lib/mysql-connector-java-5.1.6.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../apache-tomcat-7.0.23/webapps/dynamide/WEB-INF/lib/naming-common.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../apache-tomcat-7.0.23/webapps/dynamide/WEB-INF/lib/nekohtml.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../apache-tomcat-7.0.23/webapps/dynamide/WEB-INF/lib/jdbcpool-0.99.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../apache-tomcat-7.0.23/webapps/dynamide/WEB-INF/lib/jdom.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../apache-tomcat-7.0.23/webapps/dynamide/WEB-INF/lib/junit.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../apache-tomcat-7.0.23/webapps/dynamide/WEB-INF/lib/log4j.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../apache-tomcat-7.0.23/webapps/dynamide/WEB-INF/lib/xml-apis.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../apache-tomcat-7.0.23/webapps/dynamide/WEB-INF/lib/xmlParserAPIs.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../apache-tomcat-7.0.23/webapps/dynamide/WEB-INF/lib/pg73jdbc3.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../apache-tomcat-7.0.23/webapps/dynamide/WEB-INF/lib/printf.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../apache-tomcat-7.0.23/webapps/dynamide/WEB-INF/lib/saxon-jdom.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../apache-tomcat-7.0.23/webapps/dynamide/WEB-INF/lib/saxon.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../apache-tomcat-7.0.23/webapps/dynamide/WEB-INF/lib/skaringa-r1p7.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../apache-tomcat-7.0.23/webapps/dynamide/WEB-INF/lib/tcljava.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../apache-tomcat-7.0.23/webapps/dynamide/WEB-INF/lib/webmacro.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../apache-tomcat-7.0.23/webapps/dynamide/WEB-INF/lib/xercesImpl.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/jsdk-24.jar!/" />
+      <root url="file://$PROJECT_DIR$/lib" />
+      <root url="file://$PROJECT_DIR$/lib" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="file://$PROJECT_DIR$/src/java" />
+      <root url="file://$PROJECT_DIR$/lib" />
+      <root url="file://$PROJECT_DIR$/lib" />
     </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/lib" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib" recursive="false" type="SOURCES" />
   </library>
 </component>

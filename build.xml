@@ -36,27 +36,25 @@
     <property name="installedProps"  value="${myenv.DYNAMIDE_HOME}/dynamide.local.properties"/>
 
     <!-- These property files include definitions such as:
-        ANT_HOME=/usr/local/apache-ant-1.5.3-1
         DYNAMIDE_LOGS=/export/logs/dynamide
-        JAVA_HOME=/usr/java/j2sdk1.4.1_03
-        PERL=/usr/bin/perl
-        RESIN_HOME=/usr/local/resin-2.1.9
-        RESIN_PORT=7080
         DYNAMIDE_RESIN_CONF=${RESIN_HOME}/conf/resin.dynamide.conf
-        DYNAMIDE_RESOURCE_ROOT=${DYNAMIDE_HOME}/build/ROOT
+        DYNAMIDE_RESOURCE_ROOT=${DYNAMIDE_HOME}/build/DYNAMIDE_RESOURCE_ROOT
         DYNAMIDE_STATIC_ROOT=${DYNAMIDE_RESOURCE_ROOT}/static
+        DYNAMIDE_BUILD=${DYNAMIDE_HOME}/build
     -->
 
   <!-- =================================================================== -->
   <!--            Targets                                                  -->
   <!-- =================================================================== -->
-<target name="check-props">
+<target name="check-props" depends="init-properties">
     <echo>
-    myenv ${myenv}
-    DYNAMIDE_HOME ${DYNAMIDE_HOME}
-    installedProps ${installedProps}
-    myenv.DYNAMIDE_HOME ${myenv.DYNAMIDE_HOME}
-    myenv.FOO ${myenv.FOO}
+    installedProps: ${installedProps}
+    myenv.DYNAMIDE_HOME: ${myenv.DYNAMIDE_HOME}
+    DYNAMIDE_HOME: ${DYNAMIDE_HOME}
+    DYNAMIDE_BUILD: ${DYNAMIDE_BUILD}
+    DYNAMIDE_RESOURCE_ROOT: ${DYNAMIDE_RESOURCE_ROOT}
+    DYNAMIDE_STATIC_ROOT: ${DYNAMIDE_STATIC_ROOT}
+    DYNAMIDE_CONTEXT_CONF: ${DYNAMIDE_CONTEXT_CONF}
     </echo>
 </target>
 
@@ -85,10 +83,8 @@
 
 
     <target name="init-properties" depends="unix-filenames,dos-filenames">
-        <echo>Using dynamide.local.properties from DYNAMIDE_HOME: ${installedProps} </echo>
         <property file="${installedProps}" />
-        <echo>DYNAMIDE_RESOURCE_ROOT: ${DYNAMIDE_RESOURCE_ROOT} </echo>
-        <property name="buildDir" value="${DYNAMIDE_HOME}/build" />
+        <property name="buildDir" value="${DYNAMIDE_BUILD}" />
         <property name="dynamide.lib" value="${DYNAMIDE_HOME}/lib" />
 
         <!-- turn this "on" for debug symbols (line numbers in bytecode), or "off". -->
@@ -121,21 +117,20 @@
            </fileset>
         </path>
         <property name="propCLASSPATH" refid="refCLASSPATH"/>
-        <echo>installedProps: ${installedProps}</echo>
     </target>
 
-    <target name="write-properties" depends="init-properties">
+    <target name="write-properties" depends="check-props">
         <echo>echoproperties to: ${DYNAMIDE_HOME}/dynamide.generated.properties</echo>
         <echoproperties destfile="${DYNAMIDE_HOME}/dynamide.generated.properties"/>
     </target>
 
-    <target name="init" depends="init-properties">
+    <target name="init" depends="check-props">
       <mkdir dir="${DYNAMIDE_RESOURCE_ROOT}" />
       <mkdir dir="${DYNAMIDE_RESOURCE_ROOT}/assemblies" />
-      <mkdir dir="${DYNAMIDE_RESOURCE_ROOT}/classes" />
       <mkdir dir="${buildDirClasses}" />
       <mkdir dir="${JAVADOCDIR}" />
       <mkdir dir="${buildDirLib}" />
+      <mkdir dir="${DYNAMIDE_STATIC_ROOT}" />
       <echo>user.home is ${user.home}</echo>
       <echo>JAVA_HOME is ${myenv.JAVA_HOME}</echo>
       <echo>DYNAMIDE_HOME is ${DYNAMIDE_HOME}</echo>
@@ -149,7 +144,7 @@
 
     <!-- note: clean cannot depend on init, or it will delete the directories created there. -->
 
-    <target name="clean" depends="init-properties">
+    <target name="clean" depends="check-props">
       <echo message="cleaning ${src.java}"/>
       <delete>
          <fileset dir="${src.java}/com/dynamide" includes="**/*.class" excludes="${DYNAMIDE_HOME}/lib/*.*" />
@@ -159,18 +154,32 @@
       <delete>
          <fileset dir="${buildDir}/classes" includes="**/*.class" excludes="${DYNAMIDE_HOME}/lib/*.*" />
       </delete>
-
-      <echo message="cleaning ${DYNAMIDE_RESOURCE_ROOT}/classes"/>
-      <delete>
-         <fileset dir="${DYNAMIDE_RESOURCE_ROOT}/classes" includes="**/*.class" excludes="${DYNAMIDE_HOME}/lib/*.*" />
-      </delete>
     </target>
 
     <target name="classpath" depends="init">
       <echo>CLASSPATH: ${propCLASSPATH}</echo>
     </target>
+    
+    <target name="lib" depends="check-props">
+        <copy todir="${buildDirLib}">
+            <fileset dir="${dynamide.lib}" includes="**"/>  
+         </copy>
+         
+    </target>
+    
+    <target name="ROOT" depends="compile,jar">
+        <property name="ROOT.dir" value="${buildDir}/tomcat/webapps/ROOT" />
+        <property name="ROOT.libdir" value="${buildDir}/tomcat/webapps/ROOT/WEB-INF/lib" />
+        <mkdir dir="${ROOT.dir}" />
+        <copy todir="${ROOT.libdir}">
+            <fileset dir="${dynamide.lib}" includes="**"/>  
+         </copy>
+         <copy verbose="yes" overwrite="yes" file="${dynamidejar}" todir="${ROOT.libdir}"/>
+         <copy verbose="yes" overwrite="no" file="${src}/conf/webapps/ROOT/WEB-INF/web.xml" todir="${ROOT.dir}/WEB-INF"/>
+    </target>
 
-    <target name="compile" depends="init">
+
+    <target name="compile" depends="init,lib">
       <echo message="buildDir: ${buildDirClasses}" />
       <echo></echo>
       <copy overwrite="yes"
@@ -341,7 +350,7 @@
                 includes="${dynamidejar},
                           **/*.*
                           "
-                 excludes="build/classes/**/*.class,
+                 excludes="${buildDirClasses}/**/*.class,
                           doc/internal/**/*.*,
                           doc/3rd/**/*.*,
                           build/doxygen/**/*.*,
@@ -427,9 +436,10 @@
         />
     </target>
 
-  <target name="jar" depends="init,compile">
+  <target name="jar" depends="init,compile,lib">
     <delete file="${dynamidejar}" />
       <echo>basedir:${buildDirClasses} </echo>
+      <echo>dynamidejar:${dynamidejar} </echo>
     <jar
          jarfile="${dynamidejar}"
          basedir="${buildDirClasses}"

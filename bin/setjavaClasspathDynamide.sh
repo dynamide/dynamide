@@ -2,6 +2,7 @@
 #Example -- you can run this to get the classpath:
 #
 #    /bin/sh  bin/setjavaClasspathDynamide.sh -outputclasspath
+echo HOME:  $DYNAMIDE_HOME
 
 if [ -z "$DYNAMIDE_HOME" ] ; then
   echo ERROR: DYNAMIDE_HOME not set
@@ -22,7 +23,7 @@ fi
 
 
 ## lib/* only works for java 6
-export CLASSPATH="${DYNAMIDE_HOME}/build/defaultWebapp/ROOT/WEB-INF/lib/"; CLASSPATH+='*'
+export CLASSPATH="/Users/laramie/dynamide/build/tomcat/webapps/ROOT/WEB-INF/lib/"; CLASSPATH+='*'
 echo === $CLASSPATH ===
 
 if [ "$1" = "-outputclasspath" ]; then

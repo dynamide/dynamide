@@ -169,7 +169,7 @@ public final class ResourceManager extends Pool {
      *  NOTE: once you do this, you must explicitly call System.exit(code) when you are done,
      *  because the ResourceManager singleton hangs around in memory.
      *
-     *  @param resourceRoot would be something like: "C:/dynamide/build/ROOT"
+     *  @param resourceRoot would be something like: "C:/dynamide/build/DYNAMIDE_RESOUCE_ROOT"
      *  @dynamide.factorymethod
      */
     public static ResourceManager createStandalone(String resourceRoot, String logConfFilename)
@@ -322,6 +322,22 @@ public final class ResourceManager extends Pool {
         Properties props = readPropertiesFromHome(home);
         return (String)props.get("DYNAMIDE_RESOURCE_ROOT");
     }
+    
+     public static String getStaticRootFromHome()
+    throws Exception {
+        String home = getDynamideHomeFromEnv();
+        return getStaticRootFromHome(home);
+    }
+    
+    public static String getStaticRootFromHome(String home)
+    throws Exception {
+        Properties props = readPropertiesFromHome(home);
+        String ret = (String)props.get("DYNAMIDE_STATIC_ROOT");
+        ret = StringTools.searchAndReplaceAll(ret, "${DYNAMIDE_BUILD}", (String)props.get("DYNAMIDE_BUILD"));
+        ret = StringTools.searchAndReplaceAll(ret, "${DYNAMIDE_HOME}", (String)props.get("DYNAMIDE_HOME"));
+        ret = StringTools.searchAndReplaceAll(ret, "${DYNAMIDE_RESOURCE_ROOT}", (String)props.get("DYNAMIDE_RESOURCE_ROOT"));    //2013-09-21 this is messy: todo: centralize all ant-style substitutions in pulling in dynamide.local.properties.
+        return ret;
+    }
 
     public static String getDynamideContextConf()
     throws Exception {
@@ -344,17 +360,21 @@ public final class ResourceManager extends Pool {
             System.out.println("       java -D"+Constants.DYNAMIDE_HOME_ENV+"=/usr/local/dynamide <main-class>\r\n\r\n");
             Log.error(ResourceManager.class, errmsg);
             throw new DynamideException(errmsg);
-            //return "./build/ROOT";
         }
         Properties props = FileTools.loadPropertiesFromFile(Tools.fixFilename(home), "dynamide.local.properties");
         if (props == null){
             String errmsg = "readPropertiesFromHome(\""+home+"\") failed. Error: couldn't find file dynamide.local.properties in directory: '"+home+"'";
             Log.error(ResourceManager.class, errmsg);
             throw new DynamideException(errmsg);
-            //return "./build/ROOT";
         }
+
+        String DYNAMIDE_BUILD = props.getProperty("DYNAMIDE_BUILD");
         String root = props.getProperty("DYNAMIDE_RESOURCE_ROOT");
+
+        root = StringTools.searchAndReplaceAll(root, "${DYNAMIDE_BUILD}", DYNAMIDE_BUILD);
+
         root = StringTools.searchAndReplaceAll(root, "${DYNAMIDE_HOME}", home);
+
         try {
             File f = new File(root);
             if (f!=null && f.exists()){
@@ -395,7 +415,7 @@ public final class ResourceManager extends Pool {
     throws Exception {
         //todo: %% may want to pick this up from dynamide.local.properties::DYNAMIDE_STATIC_ROOT instead.
         if (m_staticRoot.length()==0){
-            m_staticRoot = FileTools.join(getResourceRootFromHome(), getStaticPrefix());
+            m_staticRoot = getStaticRootFromHome();
         }
         return m_staticRoot;
     }
@@ -1024,7 +1044,7 @@ public final class ResourceManager extends Pool {
                             
                             
     //TODO: %%%%% when some of these params are empty, you will get a null pointer exeption.
-    //  This is true, for example, when you have HOME and ASSEMBLY missing from WebAppEntry, when you put / pointing to doco in file:///C:/dynamide/build/ROOT/homes/web-apps.xml
+    //  This is true, for example, when you have HOME and ASSEMBLY missing from WebAppEntry, when you put / pointing to doco in file:///C:/dynamide/build/DYNAMIDE_RESOURCE_ROOT/homes/web-apps.xml
         return Assembly.findAssembly(findAssembliesInAccount(account), basename, interfaceNumber, build);
     }
 
