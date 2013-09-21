@@ -1,0 +1,145 @@
+<project name="dynamide.experimental" default="info">
+
+<target name="info">
+    <echo>In experimental build. DYNAMIDE_RESOURCE_ROOT = ${DYNAMIDE_RESOURCE_ROOT} </echo>
+
+</target>
+
+
+<!-- Copyright (c) 2001, 2002, 2003 DYNAMIDE.COM -->
+
+<!-- =================================================================== -->
+  <!--     Experimental                                                    -->
+  <!-- =================================================================== -->
+
+  <!--
+  <uptodate property="xslBuild.notRequired" >
+    <srcfiles includes="**/*.xsls"/>
+  </uptodate>
+
+  <target name="xslscript" unless"xslBuild.notRequired">
+      <exec dir='c:/java/com/dynamide'>
+        <arg>$file</arg>
+     </exec>
+  </target>
+  -->
+
+  <target name="push-homes-desu-ka" >
+    <echo>Setting up the homes directory</echo>
+    <cvs
+        cvsRoot="${myenv.CVSROOT}"
+        command="co -d homes dynamide/src/homes-src"
+        dest="${DYNAMIDE_RESOURCE_ROOT}"
+    />
+    <echo>Checking out a CVS HEAD revision of desu-ka-apps</echo>
+    <cvs
+        cvsRoot="${myenv.CVSROOT}"
+        command="co -d homes/desu-ka/assemblies/com-desu-ka-apps-1   dynamide/src/assemblies/com-desu-ka-apps"
+        dest="${DYNAMIDE_RESOURCE_ROOT}"
+    />
+  </target>
+  
+  <target name="push-resin" >
+      <echo>pushing to ${RESIN_HOME}</echo>
+      <copy toDir="${RESIN_HOME}/webapps/dynamide/WEB-INF/lib">
+          <fileset dir="${dynamide.lib}" />
+      </copy>
+      <copy file="${dynamidejar}" todir="${RESIN_HOME}/webapps/dynamide/WEB-INF/lib" />
+  </target>
+  
+  <!-- I run this command from cygwin bash, since it knows where "cvs" is, and the pathnames are set for that. -->
+  <target name="push-homes" >
+    <echo>Using CVSROOT from environment: ${myenv.CVSROOT}</echo>
+    <echo>Using DYNAMIDE_RESOURCE_ROOT: ${DYNAMIDE_RESOURCE_ROOT}</echo>
+
+    <echo>Setting up the conf directory</echo>
+    <cvs
+        cvsRoot="${myenv.CVSROOT}"
+        command="co -d conf dynamide/src/conf"
+        dest="${DYNAMIDE_RESOURCE_ROOT}"
+    />
+
+    <echo>Setting up the homes directory</echo>
+    <cvs
+        cvsRoot="${myenv.CVSROOT}"
+        command="co -d homes dynamide/src/homes-src"
+        dest="${DYNAMIDE_RESOURCE_ROOT}"
+    />
+
+    <echo>Checking out a CVS HEAD revision of desu-ka-apps</echo>
+    <cvs
+        cvsRoot="${myenv.CVSROOT}"
+        command="co -d homes/desu-ka/assemblies/com-desu-ka-apps-1   dynamide/src/assemblies/com-desu-ka-apps"
+        dest="${DYNAMIDE_RESOURCE_ROOT}"
+    />
+
+    <echo>Checking out a CVS HEAD revision of dynamide-apps</echo>
+    <cvs
+        cvsRoot="${myenv.CVSROOT}"
+        command="co -d homes/dynamide/assemblies/com-dynamide-apps-1   dynamide/src/assemblies/dynamide-apps"
+        dest="${DYNAMIDE_RESOURCE_ROOT}"
+    />
+
+    <!--
+            <echo>Now pushing dynamide apps with build-70</echo>
+            <cvs
+                cvsRoot="${myenv.CVSROOT}"
+                command="export  -r build-70 -d homes/dynamide/assemblies/com-dynamide-apps-70   dynamide/src/assemblies/dynamide-apps"
+                dest="${DYNAMIDE_RESOURCE_ROOT}"
+            />
+    -->
+
+    <echo>Checking out a CVS HEAD revision or dynamide-lib</echo>
+    <cvs
+        cvsRoot="${myenv.CVSROOT}"
+        command="co -d assemblies/com-dynamide-lib-1   dynamide/src/assemblies/dynamide-lib"
+        dest="${DYNAMIDE_RESOURCE_ROOT}"
+    />
+    <!--
+        This is how you would use CVS to get multiple versions of Assemblies.
+        <echo>Now pushing dynamide-lib with build-70</echo>
+        <cvs
+            cvsRoot="${myenv.CVSROOT}"
+            command="export  -r build-70 -d assemblies/com-dynamide-lib-70   dynamide/src/assemblies/dynamide-lib"
+            dest="${DYNAMIDE_RESOURCE_ROOT}"
+        />
+    -->
+  </target>
+
+
+  <target name="xdoclet">
+    <!-- antfile is relative to dir -->
+    <ant antfile="build-xdoclet.xml"
+         dir="./src/xdoclet"
+         target="all"/>
+  </target>
+
+  <target name="key">
+    <!-- antfile is relative to dir -->
+    <ant antfile="build-xdoclet.xml"
+         dir="./src/xdoclet"
+         target="key"/>
+  </target>
+
+  <target name="bugs">
+    <!-- antfile is relative to dir -->
+    <ant antfile="build-todo.xml"
+         dir="./src/xdoclet"
+         target="bugs"/>
+  </target>
+
+  <target name="keymethods">
+    <!-- antfile is relative to dir -->
+    <ant antfile="build-todo.xml"
+         dir="./src/xdoclet"
+         target="keymethods"/>
+  </target>
+
+  <target name="todo">
+    <!-- antfile is relative to dir -->
+    <ant antfile="build-todo.xml"
+         dir="./src/xdoclet"
+         target="todo"/>
+  </target>
+  
+  </project>

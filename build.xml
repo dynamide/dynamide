@@ -1,22 +1,14 @@
-<project name="dynamide" default="compile">
-<!-- Copyright (c) 2001, 2002, 2003 DYNAMIDE.COM -->
+<project name="dynamide" default="all">
+<!-- Copyright (c) 2001 - 2013 DYNAMIDE.COM -->
 
-   <!-- To see targets in this file, use "ant -projecthelp" -->
-
-  <!-- =================================================================== -->
-  <!--   DO NOT CHANGE THIS FILE
+  <!-- =================================================================== 
+   DO NOT CHANGE THIS FILE
          You can change dynamide.local.properties instead.
          You can also override values on the Ant command line with "ant -D..."
          These -D parameters win over environment variables.
-   -->
-  <!-- =================================================================== -->
-
-    <!-- as of 6/14/2003 12:49PM, this file has been trimmed down,
-         and all deprecated tasks removed.
-         See ${DYNAMIDE_HOME}/experimental/build.deprecated.xml
-         if you have the full developer source.
-    -->
-
+         
+         To see targets in this file, use "ant -projecthelp" 
+        =================================================================== -->
 
     <!-- pull in the User's environment -->
     <property environment="myenv"  />
@@ -27,11 +19,7 @@
       **  or, from your env in Unix:    ant -DDYNAMIDE_HOME=$DYNAMIDE_HOME clean compile
     -->
     <property name="DYNAMIDE_HOME" value="${myenv.DYNAMIDE_HOME}"/>
-
-    <!--    
-    * <property name="homeprops" value="${user.home}/dynamide.local.properties"/>
-    -->
-
+    
     <property name="propsTemplate"   value="${myenv.DYNAMIDE_HOME}/bin/dynamide.local.properties.template"/>
     <property name="installedProps"  value="${myenv.DYNAMIDE_HOME}/dynamide.local.properties"/>
 
@@ -46,17 +34,21 @@
   <!-- =================================================================== -->
   <!--            Targets                                                  -->
   <!-- =================================================================== -->
-<target name="check-props" depends="init-properties">
-    <echo>
-    installedProps: ${installedProps}
-    myenv.DYNAMIDE_HOME: ${myenv.DYNAMIDE_HOME}
-    DYNAMIDE_HOME: ${DYNAMIDE_HOME}
-    DYNAMIDE_BUILD: ${DYNAMIDE_BUILD}
-    DYNAMIDE_RESOURCE_ROOT: ${DYNAMIDE_RESOURCE_ROOT}
-    DYNAMIDE_STATIC_ROOT: ${DYNAMIDE_STATIC_ROOT}
-    DYNAMIDE_CONTEXT_CONF: ${DYNAMIDE_CONTEXT_CONF}
-    </echo>
-</target>
+
+    <target name="all" depends="init,setup,jar,javadoc,static,ROOT,homes">
+    </target>
+    
+    <target name="check-props" depends="init-properties">
+        <echo>
+        installedProps: ${installedProps}
+        myenv.DYNAMIDE_HOME: ${myenv.DYNAMIDE_HOME}
+        DYNAMIDE_HOME: ${DYNAMIDE_HOME}
+        DYNAMIDE_BUILD: ${DYNAMIDE_BUILD}
+        DYNAMIDE_RESOURCE_ROOT: ${DYNAMIDE_RESOURCE_ROOT}
+        DYNAMIDE_STATIC_ROOT: ${DYNAMIDE_STATIC_ROOT}
+        DYNAMIDE_CONTEXT_CONF: ${DYNAMIDE_CONTEXT_CONF}
+        </echo>
+    </target>
 
     <target name="check-os">
         <condition property="osIsDos">
@@ -142,18 +134,14 @@
     <target name="setup"  depends="init,homes,static-apps">         
     </target>
 
-    <!-- note: clean cannot depend on init, or it will delete the directories created there. -->
-
     <target name="clean" depends="check-props">
       <echo message="cleaning ${src.java}"/>
       <delete>
          <fileset dir="${src.java}/com/dynamide" includes="**/*.class" excludes="${DYNAMIDE_HOME}/lib/*.*" />
       </delete>
-
       <echo message="cleaning ${buildDir}/classes"/>
-      <delete>
-         <fileset dir="${buildDir}/classes" includes="**/*.class" excludes="${DYNAMIDE_HOME}/lib/*.*" />
-      </delete>
+      <delete dir="${buildDir}/classes" />
+      <mkdir dir="${buildDir}/classes" />
     </target>
 
     <target name="classpath" depends="init">
@@ -200,10 +188,6 @@
           tofile="${DYNAMIDE_RESOURCE_ROOT}/conf/context.xml  "
           />
 
-      <!-- target=1.1 is for the jvm you wish to target
-         javac ...
-            target="1.1"
-      -->
       <javac
             debug="${debug.symbols}"
             srcdir="${src.java}"
@@ -229,7 +213,6 @@
       />
     </target>
 
-
     <target name="javadoc" depends="javadoc-copy">
     </target>
 
@@ -242,10 +225,6 @@
     </target>
 
     <target name="javadoc-run" depends="init">
-        <!--
-            <delete file="${dynamidejar}" />
-            <echo>deleted ${dynamidejar}</echo>
-        -->
         <mkdir dir="${JAVADOCDIR}"/>
         <javadoc packagenames="com.dynamide,com.dynamide.datatypes,com.dynamide.db,com.dynamide.event,com.dynamide.gui,com.dynamide.interpreters,com.dynamide.resource,com.dynamide.security,com.dynamide.test.samplebeans,com.dynamide.util,com.dynamide.xsl"
                 sourcepath="${src.java}"
@@ -280,7 +259,6 @@
             <tag name="dynamide.keymethod" scope="all" description="&lt;font color='red'/>Key Method:&lt;/font>" />
             <tag name="bug" scope="all" description="Bug:" />
             <tag name="todo" scope="all" description="To do:" />
-
         </javadoc>
     </target>
 
@@ -304,8 +282,6 @@
 
     <target name="static" depends="static-apps,javadoc">
     </target>
-
-
 
     <!-- zip up all the sources, for distribution.
          hoses the dynamide-source-${dynamide.version}.zip file, but preserves previous versions.
@@ -371,18 +347,7 @@
                           />
         </zip>
         <delete file="${dynamide.lib}/dynamide.jar"/>
-
         <echo>Zipfile: ${zipfile}</echo>
-
-        <!-- 
-        <copy todir="${DYNAMIDE_STATIC_ROOT}/dynamide/build">
-            <fileset dir="${DYNAMIDE_HOME}/build">
-                <include name="*.zip"/>
-                <include name="builds.html"/>
-            </fileset>
-        </copy>
-        <echo>Files copied from ${DYNAMIDE_HOME}/build to ${DYNAMIDE_STATIC_ROOT}/dynamide/build</echo>
-        -->
     </target>
 
     <target name="install-dist" if="DYNAMIDE_DIST_BASE" depends="init,dist">
@@ -593,147 +558,10 @@
     <echo>See ${buildDir}/test-results/html</echo>
   </target>
 
-
-
-  <!-- =================================================================== -->
-  <!--     all    - does NOT run "clean"                                                          -->
-  <!-- =================================================================== -->
-
-  <target name="all" depends="init,setup,jar,javadoc,static"/>
-
-  <!-- =================================================================== -->
-  <!--     Experimental                                                    -->
-  <!-- =================================================================== -->
-
-  <!--
-  <uptodate property="xslBuild.notRequired" >
-    <srcfiles includes="**/*.xsls"/>
-  </uptodate>
-
-  <target name="xslscript" unless"xslBuild.notRequired">
-      <exec dir='c:/java/com/dynamide'>
-        <arg>$file</arg>
-     </exec>
-  </target>
-  -->
-
-  <target name="push-homes-desu-ka" depends="init">
-    <echo>Setting up the homes directory</echo>
-    <cvs
-        cvsRoot="${myenv.CVSROOT}"
-        command="co -d homes dynamide/src/homes-src"
-        dest="${DYNAMIDE_RESOURCE_ROOT}"
-    />
-    <echo>Checking out a CVS HEAD revision of desu-ka-apps</echo>
-    <cvs
-        cvsRoot="${myenv.CVSROOT}"
-        command="co -d homes/desu-ka/assemblies/com-desu-ka-apps-1   dynamide/src/assemblies/com-desu-ka-apps"
-        dest="${DYNAMIDE_RESOURCE_ROOT}"
-    />
-  </target>
-  
-  <target name="push-resin" depends="init,jar">
-      <echo>pushing to ${RESIN_HOME}</echo>
-      <copy toDir="${RESIN_HOME}/webapps/dynamide/WEB-INF/lib">
-          <fileset dir="${dynamide.lib}" />
-      </copy>
-      <copy file="${dynamidejar}" todir="${RESIN_HOME}/webapps/dynamide/WEB-INF/lib" />
-  </target>
-  <!-- I run this command from cygwin bash, since it knows where "cvs" is, and the pathnames are set for that. -->
-  <target name="push-homes" depends="init">
-    <echo>Using CVSROOT from environment: ${myenv.CVSROOT}</echo>
-    <echo>Using DYNAMIDE_RESOURCE_ROOT: ${DYNAMIDE_RESOURCE_ROOT}</echo>
-
-    <echo>Setting up the conf directory</echo>
-    <cvs
-        cvsRoot="${myenv.CVSROOT}"
-        command="co -d conf dynamide/src/conf"
-        dest="${DYNAMIDE_RESOURCE_ROOT}"
-    />
-
-    <echo>Setting up the homes directory</echo>
-    <cvs
-        cvsRoot="${myenv.CVSROOT}"
-        command="co -d homes dynamide/src/homes-src"
-        dest="${DYNAMIDE_RESOURCE_ROOT}"
-    />
-
-    <echo>Checking out a CVS HEAD revision of desu-ka-apps</echo>
-    <cvs
-        cvsRoot="${myenv.CVSROOT}"
-        command="co -d homes/desu-ka/assemblies/com-desu-ka-apps-1   dynamide/src/assemblies/com-desu-ka-apps"
-        dest="${DYNAMIDE_RESOURCE_ROOT}"
-    />
-
-    <echo>Checking out a CVS HEAD revision of dynamide-apps</echo>
-    <cvs
-        cvsRoot="${myenv.CVSROOT}"
-        command="co -d homes/dynamide/assemblies/com-dynamide-apps-1   dynamide/src/assemblies/dynamide-apps"
-        dest="${DYNAMIDE_RESOURCE_ROOT}"
-    />
-
-    <!--
-            <echo>Now pushing dynamide apps with build-70</echo>
-            <cvs
-                cvsRoot="${myenv.CVSROOT}"
-                command="export  -r build-70 -d homes/dynamide/assemblies/com-dynamide-apps-70   dynamide/src/assemblies/dynamide-apps"
-                dest="${DYNAMIDE_RESOURCE_ROOT}"
-            />
-    -->
-
-    <echo>Checking out a CVS HEAD revision or dynamide-lib</echo>
-    <cvs
-        cvsRoot="${myenv.CVSROOT}"
-        command="co -d assemblies/com-dynamide-lib-1   dynamide/src/assemblies/dynamide-lib"
-        dest="${DYNAMIDE_RESOURCE_ROOT}"
-    />
-    <!--
-        This is how you would use CVS to get multiple versions of Assemblies.
-        <echo>Now pushing dynamide-lib with build-70</echo>
-        <cvs
-            cvsRoot="${myenv.CVSROOT}"
-            command="export  -r build-70 -d assemblies/com-dynamide-lib-70   dynamide/src/assemblies/dynamide-lib"
-            dest="${DYNAMIDE_RESOURCE_ROOT}"
-        />
-    -->
-  </target>
-
-
-  <target name="xdoclet">
-    <!-- antfile is relative to dir -->
-    <ant antfile="build-xdoclet.xml"
-         dir="./src/xdoclet"
-         target="all"/>
-  </target>
-
-  <target name="key">
-    <!-- antfile is relative to dir -->
-    <ant antfile="build-xdoclet.xml"
-         dir="./src/xdoclet"
-         target="key"/>
-  </target>
-
-  <target name="bugs">
-    <!-- antfile is relative to dir -->
-    <ant antfile="build-todo.xml"
-         dir="./src/xdoclet"
-         target="bugs"/>
-  </target>
-
-  <target name="keymethods">
-    <!-- antfile is relative to dir -->
-    <ant antfile="build-todo.xml"
-         dir="./src/xdoclet"
-         target="keymethods"/>
-  </target>
-
-  <target name="todo">
-    <!-- antfile is relative to dir -->
-    <ant antfile="build-todo.xml"
-         dir="./src/xdoclet"
-         target="todo"/>
-  </target>
-
-
+  <target name="experimental" depends="check-props">
+      <ant antfile="${DYNAMIDE_HOME}/build-experimental.xml"
+             dir="${DYNAMIDE_HOME}"
+             target="info" />
+   </target>
 
 </project>
