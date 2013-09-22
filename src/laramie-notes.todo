@@ -1,4 +1,0 @@
-to test the refresh headers:
-   curl -D ./headers.txt http://www.progressivepunch.org/index.jsp
-jsp test
-  http://u1036.c03.escapebox.net/voterpunch/test.jsp
