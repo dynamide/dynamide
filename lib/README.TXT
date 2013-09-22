@@ -185,11 +185,12 @@ pg73jdbc3.jar
         xmlrpc-client-3.1.3.jar
         xmlrpc-common-3.1.3.jar
 
-2103-02-12
+2013-02-12
     https://github.com/nebhale/JsonPath
     jsonpath-1.0.0.BUILD-SNAPSHOT.jar
 
-Added these files as suggested by rhino-mongodg:
+2013-09-18
+   Added these files as suggested by rhino-mongodg:
     json-rhino.jar
     rhino-driver-mongodb-rhino-2.0.5.jar
     js.jar
