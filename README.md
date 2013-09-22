@@ -1,7 +1,11 @@
 dynamide
 ========
 
-Full source for dynamide
+Full source for dynamide.  Do a git clone, then cd into "dynamide".  
+From there do:
+   export DYNAMIDE_HOME=`pwd`
+   ant
+
 
 Please follow the installation instructions in ./INSTALLING 
 
