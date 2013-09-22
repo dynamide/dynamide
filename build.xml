@@ -480,8 +480,8 @@
               file="${DYNAMIDE_HOME}/bin/.webmacroshell.basescript"
               tofile="${user.home}/.webmacroshell.basescript" />
 
-        <echoproperties destfile="${DYNAMIDE_HOME}/bin/dynamide.generated.properties"/>
-        <echo>wrote ${DYNAMIDE_HOME}/bin/dynamide.generated.properties</echo>
+        <echoproperties destfile="${buildDir}/dynamide.generated.properties"/>
+        <echo>wrote ${buildDir}/dynamide.generated.properties</echo>
   </target>
 
 
