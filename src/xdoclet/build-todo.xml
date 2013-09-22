@@ -2,7 +2,7 @@
 
 <project name="XDoclet Documentation" default="todo">
     <property name="foodir" value="../.."/>
-    <property name="xdoclet.lib.dir" value="c:/bin/xdoclet/lib"/>
+    <property name="xdoclet.lib.dir" value="../../lib"/>
     <property name="dynamide.lib.dir" value="../../lib"/>
     <property name="dynamide.src.dir" value="../../src/java"/>
     <property name="dynamide.output.dir" value="../../build"/>
@@ -41,7 +41,7 @@
         <delete dir="${docs.todo.dir}" />
         <mkdir dir="${docs.todo.dir}" />
         <taskdef name="todo"
-                 classname="xdoclet.modules.doc.DocumentDocletTask"
+                 classname="xdoclet.web.WebDocletTask"
                  classpathref="doc.class.path"
         />
 

@@ -9,17 +9,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="0c1499fd-3521-40fb-bf86-987566ff0f7c" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/conf/webapps/ROOT/WEB-INF/web.xml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/lib2.xml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/lib.xml" afterPath="$PROJECT_DIR$/.idea/libraries/lib.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/.dynamide.local.sh" afterPath="$PROJECT_DIR$/bin/.dynamide.local.sh" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.xml" afterPath="$PROJECT_DIR$/build.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/dynamide.local.properties.template" afterPath="$PROJECT_DIR$/bin/dynamide.local.properties.template" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dynamide.local.properties" afterPath="$PROJECT_DIR$/dynamide.local.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Dynamide.iml" afterPath="$PROJECT_DIR$/src/Dynamide.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/com/dynamide/resource/ResourceManager.java" afterPath="$PROJECT_DIR$/src/java/com/dynamide/resource/ResourceManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/xdoclet/build-todo.xml" afterPath="$PROJECT_DIR$/src/xdoclet/build-todo.xml" />
     </list>
     <ignored path="dynamide.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -127,10 +120,24 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="ResourceManager.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="ResourceManager.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/resource/ResourceManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="338" column="19" selection-start="13972" selection-end="13972" vertical-scroll-proportion="0.55131006">
+            <state line="303" column="26" selection-start="12318" selection-end="12318" vertical-scroll-proportion="-11.384615">
+              <folding>
+                <element signature="docComment;class#ResourceManager#0" expanded="true" />
+                <element signature="docComment;method#createStandalone#2;class#ResourceManager#0" expanded="true" />
+                <element signature="docComment;method#getResourceRootFromHome#0;class#ResourceManager#0" expanded="true" />
+                <element signature="docComment;method#readPropertiesFromHome#0;class#ResourceManager#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DynamideServlet.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/DynamideServlet.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="118" column="30" selection-start="4662" selection-end="4662" vertical-scroll-proportion="-0.7910112">
               <folding />
             </state>
           </provider>
@@ -162,6 +169,7 @@
         <option value="$PROJECT_DIR$/src/java/com/dynamide/util/FileTools.java" />
         <option value="$PROJECT_DIR$/../code/java/com/soniczen/tapes/Ingest.java" />
         <option value="$PROJECT_DIR$/src/java/com/dynamide/resource/ResourceManager.java" />
+        <option value="$PROJECT_DIR$/src/java/com/dynamide/DynamideServlet.java" />
       </list>
     </option>
   </component>
@@ -657,11 +665,6 @@
         <state line="45" column="28" selection-start="1686" selection-end="1686" vertical-scroll-proportion="-0.7352941" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/DynamideServlet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="208" column="0" selection-start="9082" selection-end="9082" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/HandlerResult.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="3" column="13" selection-start="37" selection-end="37" vertical-scroll-proportion="0.06203474" />
@@ -773,7 +776,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/resource/ResourceManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="338" column="19" selection-start="13972" selection-end="13972" vertical-scroll-proportion="0.55131006">
+        <state line="303" column="26" selection-start="12318" selection-end="12318" vertical-scroll-proportion="-11.384615">
+          <folding>
+            <element signature="docComment;class#ResourceManager#0" expanded="true" />
+            <element signature="docComment;method#createStandalone#2;class#ResourceManager#0" expanded="true" />
+            <element signature="docComment;method#getResourceRootFromHome#0;class#ResourceManager#0" expanded="true" />
+            <element signature="docComment;method#readPropertiesFromHome#0;class#ResourceManager#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/DynamideServlet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="118" column="30" selection-start="4662" selection-end="4662" vertical-scroll-proportion="-0.7910112">
           <folding />
         </state>
       </provider>
