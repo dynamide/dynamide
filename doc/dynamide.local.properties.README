@@ -1,3 +1,6 @@
+#There is an updated version of this file in 
+#  ${DYNAMIDE_HOME}/dynamide.local.properties
+#
 #  This is the only file you need to modify to build Dynamide.
 #  This file should be copied from
 #    ${DYNAMIDE_HOME}/bin/dynamide.local.properties.template
