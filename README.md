@@ -8,4 +8,4 @@ Please follow the installation instructions in ./INSTALLING
 Once installed, you can either build the documentation locally, or view it on the Dynamide server.
 
 You can contact us at:
-   support@dynamide.com
+   Visit us on the web at <a href="http://dynamide.com">http://dynamide.com</a>
