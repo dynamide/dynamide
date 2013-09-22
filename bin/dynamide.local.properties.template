@@ -3,8 +3,13 @@
 #  For help on this file, see ${DYNAMIDE_HOME}/bin/dynamide.local.properties.README
 
 DYNAMIDE_LOGS=/Users/laramie/tmp/dynamide-logs
-DYNAMIDE_BUILD=/Users/laramie/dyn2/build
-DYNAMIDE_RESOURCE_ROOT=/Users/laramie/dyn2/build/DYNAMIDE_RESOURCE_ROOT
-DYNAMIDE_CONTEXT_CONF=/Users/laramie/dyn2/build/DYNAMIDE_RESOURCE_ROOT/conf/context.xml
-DYNAMIDE_STATIC_ROOT=/Users/laramie/dyn2/build/DYNAMIDE_RESOURCE_ROOT/static
+
+DYNAMIDE_BUILD=${DYNAMIDE_HOME}/build
+
+DYNAMIDE_RESOURCE_ROOT=${DYNAMIDE_BUILD}/DYNAMIDE_RESOURCE_ROOT
+
+DYNAMIDE_CONTEXT_CONF=${DYNAMIDE_RESOURCE_ROOT}/conf/context.xml
+
+DYNAMIDE_STATIC_ROOT=${DYNAMIDE_RESOURCE_ROOT}/static
+
 fileversion=20130921

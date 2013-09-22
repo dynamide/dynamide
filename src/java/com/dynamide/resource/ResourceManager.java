@@ -34,6 +34,8 @@ import com.dynamide.util.Tools;
 import com.dynamide.util.XDB;
 import com.dynamide.widgetbeans.TreeBean;
 
+import javax.servlet.ServletException;
+
 //jdbcpool:
 
 
@@ -108,21 +110,42 @@ public final class ResourceManager extends Pool {
     /**
       *  @dynamide.factorymethod
       */
-    public static ResourceManager installSingletonRootResourceManager(String RESOURCE_ROOT) throws Exception {
-        return installSingletonRootResourceManager(RESOURCE_ROOT, "");
+    public static ResourceManager installSingletonRootResourceManager(String RESOURCE_ROOT,
+                                                                                                          String DYNAMIDE_CONTEXT_CONF,
+                                                                                                          String DYNAMIDE_STATIC_ROOT)
+                                                                                                         throws Exception {
+        return installSingletonRootResourceManager(RESOURCE_ROOT,DYNAMIDE_CONTEXT_CONF, DYNAMIDE_STATIC_ROOT, Constants.LOGCONF_DYNAMIDE);
+    }
+
+    private static void requireValidRESOURCE_ROOT(String resource_root) throws ServletException {
+              if (StringTools.isEmpty(resource_root)) {
+                String msg = "DYNAMIDE_RESOURCE_ROOT was not specified." ;
+                System.err.println(msg);
+                throw new ServletException(msg);
+            }
+         if ( ! FileTools.directoryExists(resource_root)) {
+                String msg = "DYNAMIDE_RESOURCE_ROOT directory specified does not exist ==>"+resource_root+"<==" ;
+                System.err.println(msg);
+                throw new ServletException(msg);
+            }
     }
 
     /**
       *  @dynamide.factorymethod
       */
-    public static ResourceManager installSingletonRootResourceManager(String RESOURCE_ROOT, String logConfFilename)
+    public static synchronized ResourceManager installSingletonRootResourceManager(String RESOURCE_ROOT,
+                                                                                                                              String DYNAMIDE_CONTEXT_CONF,
+                                                                                                                              String DYNAMIDE_STATIC_ROOT,
+                                                                                                                              String logConfFilename)
     throws Exception {
         if ( _singleton == null ) {
+            requireValidRESOURCE_ROOT(RESOURCE_ROOT);
+
             configureLog(RESOURCE_ROOT, logConfFilename);
 
             //_singleton = createResourceManager(null);
             _singleton = new ResourceManager(null);
-            _singleton.initAsRootContext(RESOURCE_ROOT);
+            _singleton.initAsRootContext(RESOURCE_ROOT, DYNAMIDE_CONTEXT_CONF, DYNAMIDE_STATIC_ROOT);
 
             //this code can throw a org.webmacro.InitException
             org.webmacro.WM webmacro = new org.webmacro.WM("com/dynamide/conf/WebMacroDynamide.properties"); //%% todo -- figure out how to move to RESOURCE_ROOT/conf
@@ -154,7 +177,12 @@ public final class ResourceManager extends Pool {
      */
     public static ResourceManager createStandalone()
     throws Exception {
-        return createStandalone(getResourceRootFromEnv(), "");
+        String home = getDynamideHomeFromEnv();
+        Properties props = readPropertiesFromHome(home);
+        return createStandalone( (String)props.get("DYNAMIDE_RESOURCE_ROOT"),
+                                    (String)props.get("DYNAMIDE_CONTEXT_CONF"),
+                                    (String)props.get("DYNAMIDE_STATIC_ROOT"),
+                                    Constants.LOGCONF_DYNAMIDE_JUNIT);
     }
 
     /**
@@ -162,7 +190,10 @@ public final class ResourceManager extends Pool {
       */
     public static ResourceManager createStandalone(String resourceRoot)
     throws Exception {
-        return createStandalone(resourceRoot, "");
+        return createStandalone(resourceRoot,
+                                            resourceRoot+Constants.CONF_CONTEXT_REL,
+                                            resourceRoot+Constants.STATIC_DIR_REL,
+                                            Constants.LOGCONF_DYNAMIDE);
     }
 
     /** Use this when you wish to simply run from the command line, and not in a web framework.
@@ -172,10 +203,10 @@ public final class ResourceManager extends Pool {
      *  @param resourceRoot would be something like: "C:/dynamide/build/DYNAMIDE_RESOUCE_ROOT"
      *  @dynamide.factorymethod
      */
-    public static ResourceManager createStandalone(String resourceRoot, String logConfFilename)
+    public static ResourceManager createStandalone(String resourceRoot, String contextFilename, String staticRoot, String logConfFilename)
     throws Exception {
         com.dynamide.security.DynamideSecurityManager.checkSecurityManagerInit();
-        ResourceManager rm = installSingletonRootResourceManager(resourceRoot, logConfFilename);
+        ResourceManager rm = installSingletonRootResourceManager(resourceRoot, contextFilename, staticRoot, logConfFilename);
         return rm;
     }
 
@@ -184,7 +215,12 @@ public final class ResourceManager extends Pool {
      */
     public static void  createStandaloneForTest()
     throws Exception {
-        createStandalone(getResourceRootFromEnv(), Constants.LOGCONF_DYNAMIDE_JUNIT);
+        String home = getDynamideHomeFromEnv();
+        Properties props = readPropertiesFromHome(home);
+        createStandalone( (String)props.get(Constants.DYNAMIDE_RESOURCE_ROOT),
+                                   (String)props.get(Constants.DYNAMIDE_CONTEXT_CONF),
+                                   (String)props.get(Constants.DYNAMIDE_STATIC_ROOT),
+                                   Constants.LOGCONF_DYNAMIDE_JUNIT);
     }
 
     /** @return null if not initialized by a call to installSingletonRootResourceManage()
@@ -206,9 +242,14 @@ public final class ResourceManager extends Pool {
         if ( DynamideSecurityManager.isCurrentThreadWorker() ) {
             throw new SecurityException("Forbidden [9]");
         }
+        System.out.println("configureLog(\""+RESOURCE_ROOT+"\", \""+logConfFilename+"\") called");
         String logconf;
         if (logConfFilename.length()>0){
-            logconf = Tools.fixFilename(RESOURCE_ROOT+'/'+logConfFilename);
+             if (RESOURCE_ROOT == null || RESOURCE_ROOT.length() ==  0){
+                logconf = Tools.fixFilename(getResourceRootFromEnv()+'/'+logConfFilename);
+             } else {
+                logconf = Tools.fixFilename(RESOURCE_ROOT+'/'+logConfFilename);
+             }
         } else {
             if (RESOURCE_ROOT == null || RESOURCE_ROOT.length() ==  0){
                 logconf = Tools.fixFilename(getResourceRootFromEnv()+'/'+Constants.LOGCONF_DYNAMIDE);
@@ -322,34 +363,63 @@ public final class ResourceManager extends Pool {
         Properties props = readPropertiesFromHome(home);
         return (String)props.get("DYNAMIDE_RESOURCE_ROOT");
     }
-    
+
      public static String getStaticRootFromHome()
     throws Exception {
         String home = getDynamideHomeFromEnv();
         return getStaticRootFromHome(home);
     }
-    
+
     public static String getStaticRootFromHome(String home)
     throws Exception {
         Properties props = readPropertiesFromHome(home);
-        String ret = (String)props.get("DYNAMIDE_STATIC_ROOT");
-        ret = StringTools.searchAndReplaceAll(ret, "${DYNAMIDE_BUILD}", (String)props.get("DYNAMIDE_BUILD"));
-        ret = StringTools.searchAndReplaceAll(ret, "${DYNAMIDE_HOME}", (String)props.get("DYNAMIDE_HOME"));
-        ret = StringTools.searchAndReplaceAll(ret, "${DYNAMIDE_RESOURCE_ROOT}", (String)props.get("DYNAMIDE_RESOURCE_ROOT"));    //2013-09-21 this is messy: todo: centralize all ant-style substitutions in pulling in dynamide.local.properties.
-        return ret;
+        return expandVariablesFromLocalProperties(home, props, "DYNAMIDE_STATIC_ROOT");
     }
 
-    public static String getDynamideContextConf()
+    private String m_dynamideContextConf = "";
+
+    public void setDynamideContextConf(String m_dynamideContextConf) {
+        this.m_dynamideContextConf = m_dynamideContextConf;
+    }
+
+    public String getDynamideContextConf()
     throws Exception {
+        if (StringTools.notEmpty(m_dynamideContextConf)){
+            return m_dynamideContextConf;
+        }
         String home = getDynamideHomeFromEnv();
         Properties props = readPropertiesFromHome(home);
         return (String)props.get("DYNAMIDE_CONTEXT_CONF");
     }
 
-    /** Expands macros:
-     *  DYNAMIDE_RESOURCE_ROOT can reference DYNAMIDE_HOME
-     *  DYNAMIDE_CONTEXT_CONF can reference DYNAMIDE_HOME and DYNAMIDE_RESOURCE_ROOT
-     */
+    /** <pre>==================================================
+    * NOTE: this case is illegal :
+    *   ${DYNAMIDE_RESOURCE_ROOT}/foobar/${DYNAMIDE_HOME}/foo         !! ILLEGAL !!
+    *
+    * These can nest DYNAMIDE_HOME > DYNAMIDE_BUILD > DYNAMIDE_RESOURCE_ROOT
+    *  but they can't be in the same definition.
+    * One of the levels has a rooted directory.
+    * EXAMPLES:
+    *  DYNAMIDE_BUILD
+    *        ${DYNAMIDE_HOME}/build
+    *        /usr/local/dynamide/build
+    *
+    * DYNAMIDE_RESOURCE_ROOT
+    *       ${DYNAMIDE_HOME}/build/dynamide_resource_root
+    *       ${DYNAMIDE_BUILD}/dynamide_resource_root
+    *       /usr/local/dynamide/build/dynamide_resource_root
+    *
+    * DYNAMIDE_CONTEXT_CONF
+    *      ${DYNAMIDE_HOME}/build/dynamide_resource_root/context.xml
+    *      ${DYNAMIDE_BUILD}/dynamide_resource_root/context.xml
+    *      ${DYNAMIDE_RESOURCE_ROOT}t/context.xml
+    *      /usr/local/dynamide/build/dynamide_resource_root /context.xml
+    * ==================================================
+    * Expands macros:
+    *  DYNAMIDE_BUILD can reference DYNAMIDE_HOME
+    *  DYNAMIDE_RESOURCE_ROOT can reference DYNAMIDE_HOME and DYNAMIDE_BUILD
+    *  DYNAMIDE_CONTEXT_CONF   can reference DYNAMIDE_HOME and DYNAMIDE_BUILD and DYNAMIDE_RESOURCE_ROOT
+   </pre>*/
     public static Properties readPropertiesFromHome(String home)
     throws Exception {
         if (home == null || home.length()==0){
@@ -359,28 +429,30 @@ public final class ResourceManager extends Pool {
             System.out.println("    or: ");
             System.out.println("       java -D"+Constants.DYNAMIDE_HOME_ENV+"=/usr/local/dynamide <main-class>\r\n\r\n");
             Log.error(ResourceManager.class, errmsg);
-            throw new DynamideException(errmsg);
+            DynamideException de = new DynamideException(errmsg);
+            System.out.println("       "+Tools.errorToString(de,  true, true));
+            throw de;
         }
-        Properties props = FileTools.loadPropertiesFromFile(Tools.fixFilename(home), "dynamide.local.properties");
+        Properties props = FileTools.loadPropertiesFromFile(Tools.fixFilename(home), Constants.DYNAMIDE_LOCAL_PROPERTIES_FILENAME);
         if (props == null){
             String errmsg = "readPropertiesFromHome(\""+home+"\") failed. Error: couldn't find file dynamide.local.properties in directory: '"+home+"'";
             Log.error(ResourceManager.class, errmsg);
             throw new DynamideException(errmsg);
         }
 
-        String DYNAMIDE_BUILD = props.getProperty("DYNAMIDE_BUILD");
-        String root = props.getProperty("DYNAMIDE_RESOURCE_ROOT");
+        String dynamide_build = props.getProperty("DYNAMIDE_BUILD");
+        dynamide_build = StringTools.searchAndReplaceAll(dynamide_build, "${DYNAMIDE_HOME}", home);
+        props.put("DYNAMIDE_BUILD", dynamide_build);
 
-        root = StringTools.searchAndReplaceAll(root, "${DYNAMIDE_BUILD}", DYNAMIDE_BUILD);
-
-        root = StringTools.searchAndReplaceAll(root, "${DYNAMIDE_HOME}", home);
-
+        String dynamide_resource_root = props.getProperty("DYNAMIDE_RESOURCE_ROOT");
+        dynamide_resource_root = StringTools.searchAndReplaceAll(dynamide_resource_root, "${DYNAMIDE_BUILD}", dynamide_build);
+        dynamide_resource_root = StringTools.searchAndReplaceAll(dynamide_resource_root, "${DYNAMIDE_HOME}", home);
         try {
-            File f = new File(root);
+            File f = new File(dynamide_resource_root);
             if (f!=null && f.exists()){
-                root = f.getCanonicalPath();
+                dynamide_resource_root = f.getCanonicalPath();
             }
-            props.put("DYNAMIDE_RESOURCE_ROOT",  root);
+            props.put("DYNAMIDE_RESOURCE_ROOT",  dynamide_resource_root);
             //may or may not be correct...but it's what they specified.
         } catch (Exception e){
             String errmsg = "getResourceRootFromHome(\""+home+"\") failed.";
@@ -388,15 +460,29 @@ public final class ResourceManager extends Pool {
             throw new Exception(errmsg, e);
         }
 
-        String DYNAMIDE_CONTEXT_CONF = props.getProperty("DYNAMIDE_CONTEXT_CONF");
-        if ( DYNAMIDE_CONTEXT_CONF == null || DYNAMIDE_CONTEXT_CONF.length()==0 ) {
-            DYNAMIDE_CONTEXT_CONF = FileTools.join(root, "/conf/context.xml");
+        String dynamide_context_conf = props.getProperty("DYNAMIDE_CONTEXT_CONF");
+        if ( dynamide_context_conf == null || dynamide_context_conf.length()==0 ) {
+            dynamide_context_conf = FileTools.join(dynamide_resource_root, "/conf/context.xml");
         } else {
-            DYNAMIDE_CONTEXT_CONF = StringTools.searchAndReplaceAll(DYNAMIDE_CONTEXT_CONF, "${DYNAMIDE_HOME}", home);
-            DYNAMIDE_CONTEXT_CONF = StringTools.searchAndReplaceAll(DYNAMIDE_CONTEXT_CONF, "${DYNAMIDE_RESOURCE_ROOT}", root);
+            dynamide_context_conf = StringTools.searchAndReplaceAll(dynamide_context_conf, "${DYNAMIDE_HOME}", home);
+            dynamide_context_conf = StringTools.searchAndReplaceAll(dynamide_context_conf, "${DYNAMIDE_BUILD}", dynamide_build);
+            dynamide_context_conf = StringTools.searchAndReplaceAll(dynamide_context_conf, "${DYNAMIDE_RESOURCE_ROOT}", dynamide_resource_root);
         }
-        props.put("DYNAMIDE_CONTEXT_CONF", DYNAMIDE_CONTEXT_CONF);
+        props.put("DYNAMIDE_CONTEXT_CONF", dynamide_context_conf);
         return props;
+    }
+
+
+     private static String expandVariablesFromLocalProperties(String dynamide_home, Properties props, String propname){
+        String property = props.getProperty(propname);
+        String dynamide_build = props.getProperty(propname);
+        String dynamide_resource_root = props.getProperty("DYNAMIDE_RESOURCE_ROOT");
+        String dynamide_context_conf = props.getProperty("DYNAMIDE_CONTEXT_CONF");
+         property = StringTools.searchAndReplaceAll(property, "${DYNAMIDE_CONTEXT_CONF}", dynamide_context_conf);
+         property = StringTools.searchAndReplaceAll(property, "${DYNAMIDE_RESOURCE_ROOT}", dynamide_resource_root);
+         property = StringTools.searchAndReplaceAll(property, "${DYNAMIDE_BUILD}", dynamide_build);
+         property = StringTools.searchAndReplaceAll(property, "${DYNAMIDE_HOME}", dynamide_home);
+        return property;
     }
 
     public static String getResourceRoot()
@@ -411,9 +497,12 @@ public final class ResourceManager extends Pool {
 
     private String m_staticRoot = "";
 
+    public void setStaticRoot(String staticRoot){
+        m_staticRoot = staticRoot;
+    }
+
     public String getStaticRoot()
     throws Exception {
-        //todo: %% may want to pick this up from dynamide.local.properties::DYNAMIDE_STATIC_ROOT instead.
         if (m_staticRoot.length()==0){
             m_staticRoot = getStaticRootFromHome();
         }
@@ -421,10 +510,8 @@ public final class ResourceManager extends Pool {
     }
 
     public static String getStaticPrefix(){
-        return "/static";
+        return Constants.STATIC_PREFIX;
     }
-
-
 
     public Object getResource(String name)
     throws SecurityException {
@@ -922,12 +1009,14 @@ public final class ResourceManager extends Pool {
         }
     }
 
-    private void initAsRootContext(String RESOURCE_ROOT)
+    private void initAsRootContext(String RESOURCE_ROOT, String DYNAMIDE_CONTEXT_CONF, String DYNAMIDE_STATIC_ROOT)
     throws Exception {
         if ( DynamideSecurityManager.isCurrentThreadWorker() ) {
             throw new SecurityException("Forbidden [6]");
         }
         super.setKey(ROOT_KEY);
+        setDynamideContextConf(DYNAMIDE_CONTEXT_CONF);
+        setStaticRoot(DYNAMIDE_STATIC_ROOT);
         LOG_CACHING = ( Log.getInstance().isEnabledFor(Constants.LOG_CACHING_CATEGORY, org.apache.log4j.Priority.DEBUG) );
 
         RESOURCE_ROOT = Tools.fixFilename(RESOURCE_ROOT);

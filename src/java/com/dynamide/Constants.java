@@ -11,12 +11,23 @@ public class Constants {
     private Constants(){
     }
     public static final String DYNAMIDE_HOME_ENV  = "DYNAMIDE_HOME";
-    public static final String DYNAMIDE_HOME_CONF = "DYNAMIDE_HOME";
+    public static final String DYNAMIDE_LOCAL_PROPERTIES_FILENAME = "dynamide.local.properties";
+
+    //These are all keys in properties files:
+    public static final String DYNAMIDE_HOME = "DYNAMIDE_HOME";
+    public static final String DYNAMIDE_BUILD = "DYNAMIDE_BUILD";
+    public static final String DYNAMIDE_RESOURCE_ROOT = "DYNAMIDE_RESOURCE_ROOT";
+    public static final String DYNAMIDE_STATIC_ROOT = "DYNAMIDE_STATIC_ROOT";
+    public static final String DYNAMIDE_CONTEXT_CONF = "DYNAMIDE_CONTEXT_CONF";
+
     public static final String SESSIONID = "SESSIONID";
     public static final String SESSION_PREFIX = "DM_";
     public static final String CONF_PREFIX = "conf.";
     public static final String LOGCONF_DYNAMIDE = "conf/log.conf";
     public static final String LOGCONF_DYNAMIDE_JUNIT = "conf/log-junit.conf";
+    public static final String CONF_CONTEXT_REL = "/conf/context.xml";
+    public static final String STATIC_DIR_REL = "/static";
+    public static final String STATIC_PREFIX = "/static";
     public static final String DEFAULT_WEBAPPS = "/com/dynamide/conf/web-apps.xml";
     /** Expires header for static files, in milliseconds. */
     public static final int    DEFAULT_EXPIRES = 5*60*1000; //5 minutes for production, crank down to n*seconds for development.

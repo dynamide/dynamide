@@ -78,7 +78,7 @@ public class DynamideServlet extends HttpServlet {
 
                 System.out.println("INIT_STATE var: " + context.getAttribute(DynamideServlet_INIT_STATE));
                 System.out.println(dumpServletInfo(context));
-                context.setAttribute(DynamideServlet_INIT_STATE, STATE_PENDING);
+               // context.setAttribute(DynamideServlet_INIT_STATE, STATE_PENDING);
                 System.out.println(dumpServletInfo(context));
                 System.out.println("INIT_STATE var: " + context.getAttribute(DynamideServlet_INIT_STATE));
                 System.out.println("CONTEXTP var: " + context.getInitParameter("CONTEXTP"));
@@ -117,8 +117,7 @@ public class DynamideServlet extends HttpServlet {
     }
 
     private synchronized void checkInit() throws ServletException {
-        if (DEBUG_SERVLET)
-            System.out.println("==== checkInit. " + "\r\nclassloader: " + this.getClass().getClassLoader() + "\r\nsystemclassloader: " + ClassLoader.getSystemClassLoader());
+        if (DEBUG_SERVLET) System.out.println("==== checkInit. " + "\r\nclassloader: " + this.getClass().getClassLoader() + "\r\nsystemclassloader: " + ClassLoader.getSystemClassLoader());
         // IMPORTANT: keep this in sync with com.dynamide.Main.init(),
         // which does the equivalent things for command-line apps.
         ServletContext context = getServletContext();
@@ -149,19 +148,30 @@ public class DynamideServlet extends HttpServlet {
 
         ResourceManager rootResourceManager = (ResourceManager) context.getAttribute("DynamideRootResourceManager");
         if (rootResourceManager == null) {
-            String DYNAMIDE_HOME = getInitParameter(Constants.DYNAMIDE_HOME_CONF);
-            if (DEBUG_SERVLET) System.out.println("a @@@@@@@@@@@@@@@@@@@@@@@@ init param: DYNAMIDE_HOME: " + DYNAMIDE_HOME);
-            if (DYNAMIDE_HOME.indexOf("$") > -1) {
-                String msg = "ERROR. ${DYNAMIDE_HOME} no longer supported from servlet in init param: DYNAMIDE_HOME: " + DYNAMIDE_HOME;
+            String DYNAMIDE_HOME = getInitParameter(Constants.DYNAMIDE_HOME);
+            String DYNAMIDE_RESOURCE_ROOT = getInitParameter(Constants.DYNAMIDE_RESOURCE_ROOT);
+            String DYNAMIDE_STATIC_ROOT = getInitParameter(Constants.DYNAMIDE_STATIC_ROOT);
+            String DYNAMIDE_CONTEXT_CONF = getInitParameter(Constants.DYNAMIDE_CONTEXT_CONF);
+
+
+            if (DEBUG_SERVLET) {
+                System.out.println("a @@@@@@@ init param: DYNAMIDE_HOME: " + DYNAMIDE_HOME);
+                System.out.println("a @@@@@@@ init param: DYNAMIDE_RESOURCE_ROOT: " + DYNAMIDE_RESOURCE_ROOT);
+                System.out.println("a @@@@@@@ init param: DYNAMIDE_STATIC_ROOT: " + DYNAMIDE_STATIC_ROOT);
+                System.out.println("a @@@@@@@ init param: v: DYNAMIDE_CONTEXT_CONF" + DYNAMIDE_CONTEXT_CONF);
+            }
+            if (DYNAMIDE_HOME != null && DYNAMIDE_HOME.indexOf("$") > -1) {
+                String msg = "ERROR. Expansion of the character '$' is not supported from servlet in init param: DYNAMIDE_HOME: " + DYNAMIDE_HOME;
                 System.out.println(msg);
                 throw new ServletException(msg);
             }
             try {
-                System.setProperty("DYNAMIDE_HOME", DYNAMIDE_HOME);
-                String RESOURCE_ROOT = ResourceManager.getResourceRootFromHome(DYNAMIDE_HOME);
-                Log.info(DynamideServlet.class, "DYNAMIDE_RESOURCE_ROOT [1]: " + RESOURCE_ROOT);
-                rootResourceManager = ResourceManager.installSingletonRootResourceManager(RESOURCE_ROOT);
+                Log.info(DynamideServlet.class, "DYNAMIDE_RESOURCE_ROOT [1]: " + DYNAMIDE_RESOURCE_ROOT);
+                rootResourceManager = ResourceManager.installSingletonRootResourceManager(DYNAMIDE_RESOURCE_ROOT, DYNAMIDE_CONTEXT_CONF, DYNAMIDE_STATIC_ROOT);
+                rootResourceManager.setStaticRoot(DYNAMIDE_STATIC_ROOT);
+                rootResourceManager.setDynamideContextConf(DYNAMIDE_CONTEXT_CONF);
                 rootResourceManager.startLoadOnStartupApps();
+
                 //log is now initialized with correct format string.
                 context.setAttribute("DynamideRootResourceManager", rootResourceManager);
 
@@ -567,12 +577,14 @@ public class DynamideServlet extends HttpServlet {
         return result;
     }
 
+    /*
     public static void main(String args[]) throws Exception {
         String RESOURCE_ROOT = "C:/dynamide/build/ROOT";
-        com.dynamide.resource.ResourceManager.installSingletonRootResourceManager(RESOURCE_ROOT);
+        com.dynamide.resource.ResourceManager.installSingletonRootResourceManager(RESOURCE_ROOT, DYNAMIDE_CONTEXT_CONF);
 
         DynamideServlet s = new DynamideServlet();
         s.doBeanshellTestStandalone();  //this throws an exception from bsh 2.04b1 because classloader  loads classes separately. Though, it works when run as a servlet in tomcat!  arg?!?!?!?
     }
+     */
 
 }

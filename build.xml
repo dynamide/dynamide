@@ -3,7 +3,7 @@
 
   <!-- =================================================================== 
    DO NOT CHANGE THIS FILE
-         You can change dynamide.local.properties instead.
+         You can change $DYNAMIDE_HOME/dynamide.local.properties instead.
          You can also override values on the Ant command line with "ant -D..."
          These -D parameters win over environment variables.
          
@@ -35,21 +35,9 @@
   <!--            Targets                                                  -->
   <!-- =================================================================== -->
 
-    <target name="all" depends="init,setup,jar,javadoc,static,ROOT,homes">
+    <target name="all" depends="init,setup,jar,javadoc,static,ROOT,homes,write-properties">
     </target>
     
-    <target name="check-props" depends="init-properties">
-        <echo>
-        installedProps: ${installedProps}
-        myenv.DYNAMIDE_HOME: ${myenv.DYNAMIDE_HOME}
-        DYNAMIDE_HOME: ${DYNAMIDE_HOME}
-        DYNAMIDE_BUILD: ${DYNAMIDE_BUILD}
-        DYNAMIDE_RESOURCE_ROOT: ${DYNAMIDE_RESOURCE_ROOT}
-        DYNAMIDE_STATIC_ROOT: ${DYNAMIDE_STATIC_ROOT}
-        DYNAMIDE_CONTEXT_CONF: ${DYNAMIDE_CONTEXT_CONF}
-        </echo>
-    </target>
-
     <target name="check-os">
         <condition property="osIsDos">
           <or>
@@ -73,19 +61,23 @@
         <echo>Unix</echo>
     </target>
 
-
     <target name="init-properties" depends="unix-filenames,dos-filenames">
         <property file="${installedProps}" />
-        <property name="buildDir" value="${DYNAMIDE_BUILD}" />
-        <property name="dynamide.lib" value="${DYNAMIDE_HOME}/lib" />
-
+        
         <!-- turn this "on" for debug symbols (line numbers in bytecode), or "off". -->
         <property name="debug.symbols" value="on" />
+        
+        <echo>debug.symbols ${debug.symbols}</echo>
 
-        <!-- pick up the build version string, dynamide.version, from the file also named dynamide.version -->
-        <property file="${DYNAMIDE_HOME}/dynamide.version" />
-
+        <property name="dynamide.lib" value="${DYNAMIDE_HOME}/lib" />
+        
+        <property name="buildDir" value="${DYNAMIDE_BUILD}" />
         <property name="buildDirClasses" value="${buildDir}/classes" />
+        <property name="buildDirLib" value="${buildDir}/lib" />
+        <property name="dynamide.generated.properties.filename" value="${buildDir}/dynamide.generated.properties" />
+        
+        <property file="${DYNAMIDE_HOME}/dynamide.version" />
+        
         <property name="relative.src.java" value="src/java" />
         <property name="relative.src.java-test" value="src/java-test" />
         <property name="src" value="${DYNAMIDE_HOME}/src" />
@@ -96,7 +88,7 @@
         <property name="src.homes" value="${DYNAMIDE_HOME}/src/homes-src" />
         <property name="JAVADOCDIR" value="${buildDir}/javadoc"/>
         <property name="JAVADOCDIR_STATIC" value="${DYNAMIDE_STATIC_ROOT}/dynamide/javadoc"/>
-        <property name="buildDirLib" value="${buildDir}/lib" />
+        
         <property name="dynamidejar" value="${buildDirLib}/dynamide.jar"/>
         <property name="dynamidewar" value="${buildDir}/dynamide.war"/>
         <property name="PUSH.OVERWRITE" value="no"/>
@@ -111,9 +103,21 @@
         <property name="propCLASSPATH" refid="refCLASSPATH"/>
     </target>
 
+    <target name="check-props" depends="init-properties">
+        <echo>
+        installedProps: ${installedProps}
+        myenv.DYNAMIDE_HOME: ${myenv.DYNAMIDE_HOME}
+        DYNAMIDE_HOME: ${DYNAMIDE_HOME}
+        DYNAMIDE_BUILD: ${DYNAMIDE_BUILD}
+        DYNAMIDE_RESOURCE_ROOT: ${DYNAMIDE_RESOURCE_ROOT}
+        DYNAMIDE_STATIC_ROOT: ${DYNAMIDE_STATIC_ROOT}
+        DYNAMIDE_CONTEXT_CONF: ${DYNAMIDE_CONTEXT_CONF}
+        </echo>
+    </target>
+
     <target name="write-properties" depends="check-props">
-        <echo>echoproperties to: ${DYNAMIDE_HOME}/dynamide.generated.properties</echo>
-        <echoproperties destfile="${DYNAMIDE_HOME}/dynamide.generated.properties"/>
+        <echo>echoproperties to: ${dynamide.generated.properties.filename}</echo>
+        <echoproperties destfile="${dynamide.generated.properties.filename}"/>
     </target>
 
     <target name="init" depends="check-props">
@@ -125,21 +129,19 @@
       <mkdir dir="${DYNAMIDE_STATIC_ROOT}" />
       <echo>user.home is ${user.home}</echo>
       <echo>JAVA_HOME is ${myenv.JAVA_HOME}</echo>
-      <echo>DYNAMIDE_HOME is ${DYNAMIDE_HOME}</echo>
+      <echo>DYNAMIDE_HOME  is ${DYNAMIDE_HOME}</echo>
+      <echo>DYNAMIDE_BUILD  is ${buildDir}</echo>
       <echo>DYNAMIDE_RESOURCE_ROOT: ${DYNAMIDE_RESOURCE_ROOT}</echo>
       <echo>dynamide.version: ${dynamide.version}</echo>
-      <echo>see all properties: ${DYNAMIDE_HOME}/bin/dynamide.generated.properties</echo>
+      <echo>see all properties ("depends on write-properties" or "install-bin" tasks): ${dynamide.generated.properties.filename}</echo>
     </target>
 
     <target name="setup"  depends="init,homes,static-apps">         
     </target>
 
     <target name="clean" depends="check-props">
-      <echo message="cleaning ${src.java}"/>
-      <delete>
-         <fileset dir="${src.java}/com/dynamide" includes="**/*.class" excludes="${DYNAMIDE_HOME}/lib/*.*" />
-      </delete>
       <echo message="cleaning ${buildDir}/classes"/>
+      <delete file="${dynamide.generated.properties.filename}" />
       <delete dir="${buildDir}/classes" />
       <mkdir dir="${buildDir}/classes" />
     </target>
@@ -185,7 +187,7 @@
           />
       <copy overwrite="yes"
           file="${src}/conf/context.xml"
-          tofile="${DYNAMIDE_RESOURCE_ROOT}/conf/context.xml  "
+          tofile="${DYNAMIDE_RESOURCE_ROOT}/conf/context.xml"
           />
 
       <javac
@@ -263,7 +265,8 @@
     </target>
 
     <target name="static-apps" depends="init">
-        <echo>DYNAMIDE_STATIC_ROOT:  ${DYNAMIDE_STATIC_ROOT} DYNAMIDE_HOME: ${DYNAMIDE_HOME}</echo>
+        <echo>DYNAMIDE_STATIC_ROOT:  ${DYNAMIDE_STATIC_ROOT}</echo> 
+        <echo>DYNAMIDE_HOME: ${DYNAMIDE_HOME}</echo>
 
         <copy todir="${DYNAMIDE_STATIC_ROOT}/dynamide/doco">
             <fileset dir="${DYNAMIDE_BUILD_APPS}/doco/resources/images"/>
@@ -393,14 +396,6 @@
         <echo>Zipfile: ${zipfile}</echo>
     </target>
 
-    <target name="cvs" depends="init">
-        <cvs
-            cvsRoot="${myenv.CVSROOT}"
-            command="add conf"
-            noexec="true"
-        />
-    </target>
-
   <target name="jar" depends="init,compile,lib">
     <delete file="${dynamidejar}" />
       <echo>basedir:${buildDirClasses} </echo>
@@ -454,7 +449,7 @@
         </condition>
   </target>
 
-  <target name="install-bin" depends="write-dynamide-local-properties,init">
+  <target name="install-bin" depends="write-dynamide-local-properties,init,ROOT">
         <echo>install-bin sees JAVA_HOME: ${myenv.JAVA_HOME}</echo>
         <property name="dynamidelocalsh" value="${DYNAMIDE_HOME}/bin/${dynamide.local.script}"/>
         <copy overwrite="yes"
@@ -480,8 +475,32 @@
               file="${DYNAMIDE_HOME}/bin/.webmacroshell.basescript"
               tofile="${user.home}/.webmacroshell.basescript" />
 
-        <echoproperties destfile="${buildDir}/dynamide.generated.properties"/>
-        <echo>wrote ${buildDir}/dynamide.generated.properties</echo>
+        <echoproperties destfile="${dynamide.generated.properties.filename}"/>
+        <echo>wrote ${dynamide.generated.properties.filename}</echo>
+
+        <property name="web.xml.filename" value="${DYNAMIDE_BUILD}/tomcat/webapps/ROOT/WEB-INF/web.xml" />
+
+       <replace file="${web.xml.filename}"  value="${DYNAMIDE_BUILD}">
+                 <replacetoken expandProperties="false"><![CDATA[${DYNAMIDE_BUILD}]]></replacetoken>
+        </replace>
+
+       <replace file="${web.xml.filename}"  value="${DYNAMIDE_STATIC_ROOT}">
+                 <replacetoken expandProperties="false"><![CDATA[${DYNAMIDE_STATIC_ROOT}]]></replacetoken>
+        </replace>
+
+       <replace file="${web.xml.filename}"  value="${DYNAMIDE_RESOURCE_ROOT}">
+                 <replacetoken expandProperties="false"><![CDATA[${DYNAMIDE_RESOURCE_ROOT}]]></replacetoken>
+        </replace>
+
+        <replace file="${web.xml.filename}"  value="${DYNAMIDE_CONTEXT_CONF}">
+                 <replacetoken expandProperties="false"><![CDATA[${DYNAMIDE_CONTEXT_CONF}]]></replacetoken>
+         </replace>
+
+        <echo>After</echo>
+        <concat>
+            <fileset dir="${DYNAMIDE_BUILD}/tomcat/webapps/ROOT/WEB-INF" includes="web.xml"/>
+         </concat>
+
   </target>
 
 

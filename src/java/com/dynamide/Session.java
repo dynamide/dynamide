@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -5936,9 +5937,25 @@ System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
 
     //================ main ===================================
 
+    private static void usage(String[]args){
+            StringBuffer sb = new StringBuffer();
+            for (String s : Arrays.asList(args)){
+                sb.append(s);
+                sb.append(" ");
+            }
+            System.out.println("\r\nYou passed in: java ... com.dynamide.Session "+ sb.toString());
+            System.out.println("\r\nUsage: java $JAVA_OPTS com.dynamide.Session <DYNAMIDE_RESOURCE_ROOT> <urlPath> [-webmacroTest]");
+            System.out.println("   for example: java com.dynamide.Session C:\\dynamide_resource_root /dynamide/demo ");
+            System.out.println("   or for example: java com.dynamide.Session /usr/local/dynamide/build/dynamide_resource_root  /dynamide/demo ");
+    }
+
     public static void main(String [] args) {
 
         try{
+            if (args.length < 2){
+                usage(args);
+                System.exit(1);
+            }
             String RESOURCE_ROOT = args[0];
             String urlPath = args[1];
 
@@ -5956,8 +5973,7 @@ System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
             }
 
         } catch (Exception e){
-            System.out.println("\r\nUsage: Session <RESOURCE_ROOT> <urlPath> [-webmacroTest]");
-            System.out.println("   for example: Session /dynamide/demo C:\\RESOURCE_ROOT");
+            usage(args);
             System.out.println("\r\nException:");
             e.printStackTrace();
         }

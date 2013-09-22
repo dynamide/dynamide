@@ -26,7 +26,7 @@ public class TestServlet extends HttpServlet {
         try {
             System.out.println("\r\n***** TestServlet init() *****\r\n");
             ServletContext context = getServletContext();
-            String DYNAMIDE_HOME =  getInitParameter(Constants.DYNAMIDE_HOME_CONF);
+            String DYNAMIDE_HOME =  getInitParameter(Constants.DYNAMIDE_HOME);
             System.out.println("a @@@@@@@@@@@@@@@@@@@@@@@@ init param: DYNAMIDE_HOME: "+DYNAMIDE_HOME);
         } catch (Throwable t){
                 System.err.println("ERROR: "+t);

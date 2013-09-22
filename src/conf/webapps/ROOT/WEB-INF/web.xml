@@ -14,9 +14,17 @@
     <servlet>
       <servlet-name>DynamideServlet</servlet-name>
       <servlet-class>com.dynamide.DynamideServlet</servlet-class>
+       <init-param>
+            <param-name>DYNAMIDE_RESOURCE_ROOT</param-name>
+            <param-value>${DYNAMIDE_RESOURCE_ROOT}</param-value>
+      </init-param>
       <init-param>
-            <param-name>DYNAMIDE_HOME</param-name>
-            <param-value>/Users/laramie/dynamideco/dynamide</param-value>
+            <param-name>DYNAMIDE_STATIC_ROOT</param-name>
+            <param-value>${DYNAMIDE_STATIC_ROOT}</param-value>
+      </init-param>
+      <init-param>
+            <param-name>DYNAMIDE_CONTEXT_CONF</param-name>
+            <param-value>${DYNAMIDE_CONTEXT_CONF}</param-value>
       </init-param>
     </servlet>
 
