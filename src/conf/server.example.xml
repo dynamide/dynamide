@@ -1,0 +1,18 @@
+      <Host name="applocal"  appBase="webapps" unpackWARs="false" autoDeploy="false">
+                  <!-- With this scenario, we override any apps that may be in webapps by installing
+                         1) a default Context (with path "" ), and 
+                         2) a Context for /static
+                       The default Context hijacks all of Tomcat's webapp urls and handles them.
+                       No other files in ${CATALINA_BASE}/webapps/ will be available.
+                 -->
+            
+                 <Context path="" docBase="${DYNAMIDE_BUILD}/tomcat/webapps/ROOT"/>
+                 
+                 <Context path="/static" docBase="${DYNAMIDE_STATIC_ROOT}"  />
+                 
+                 <Valve className="org.apache.catalina.valves.AccessLogValve" 
+                       directory="logs"
+                       prefix="dynamide_access_log." suffix=".txt"
+                       pattern="%h %l %u %t &quot;%r&quot; %s %b" />
+      </Host>
+
