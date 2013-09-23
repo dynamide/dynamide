@@ -492,13 +492,14 @@
         </antcall>
         <echo>Wrote web.xml file: ${buildDirTomcat}/webapps/ROOT/WEB-INF/web.xml</echo>
 
-        <property name="server.xml.filename" value="${buildDirTomcat}/conf/tomcat/template.server.xml" />
+        <property name="server.xml.src.filename" value="${src}/conf/tomcat/template.server.xml" />
+        <property name="server.xml.dest.filename" value="${buildDirTomcat}/conf/tomcat/server.xml" />
         <antcall target="replaceMacrosInConfFile">
-             <param name="replaceMacrosInConfFile.src" value="${src}/conf/server.example.xml"/>
-             <param name="replaceMacrosInConfFile.dest" value="server.xml.filename"/>
+             <param name="replaceMacrosInConfFile.src" value="${server.xml.src.filename}"/>
+             <param name="replaceMacrosInConfFile.dest" value="${server.xml.dest.filename}"/>
         </antcall>
-        <echo>Your tomcat server.example.xml has a Host element that can be inserted into TOMCAT/conf/server.xml </echo>
-        <echo>Filename: ${server.xml.filename}</echo>
+        <echo>Your tomcat server.xml has a Host element that can be inserted into TOMCAT/conf/server.xml </echo>
+        <echo>Filename: ${server.xml.dest.filename}</echo>
 
        <antcall target="replaceMacrosInConfFile">
              <param name="replaceMacrosInConfFile.src" value="${src}/conf/tomcat/template.context.ROOT.xml"/>
