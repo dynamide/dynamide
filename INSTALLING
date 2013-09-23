@@ -1,49 +1,30 @@
 Steps to installing dynamide as a developer.
 ====================================
 
-dynamide needs an admin-facing installation script and instructions.
-This file is NOT that file.
-This file tells you how to install from source and get a build working.
-After that, you would follow INSTALLING-tomcat.txt except that that file is just notes right now.
-
-Here's how you get a source distribution, customize the properties file, and then do a build.
-
 Prerequisites:
-  Java
-  Ant
-  svn
-
-Developer Installation Instructions
-====================================
-In these instructions, I have a src directory where I keep all my projects 
-under my home dir.  You can have it elsewhere.  The directory you check out 
-is called dynamide by default.  So just change /Users/laramie/src to whatever you want.
-The rest of the instructions should be generic.
-====================================
-
-cd /Users/laramie/src
-
-svn co https://dynamie.svn.sourceforge.net/svnroot/dynamide dynamide
-
-export DYNAMIDE_HOME=/Users/laramie/src/dynamide
-
-cd ${DYNAMIDE_HOME}
-
-cp ${DYNAMIDE_HOME}/bin/dynamide.local.properties.template ${DYNAMIDE_HOME}/dynamide.local.properties
-
-## In this next file, you want to change some variables.  
-## Read the notes there.
-## Specifically, you need to change these two lines for your system and uncomment them:
-## DYNAMIDE_LOGS=/Users/laramie/tmp/dynamide-logs
-## JAVA_HOME=/Library/Java/Home
-
-vi ${DYNAMIDE_HOME}/dynamide.local.properties
-
-ant compile javadoc dist zip install-bin homes
+  - Java
+  - Ant
+  - Tomcat, installed in ${CATALINA_HOME} and config files in ${CATALINA_BASE}
+        - Make sure Tomcat has at least run once, and that you can get to it. 
+          Just running Tomcat sets up some directories under  ${CATALINA_HOME} 
+          If you haven't done this yet, run and stop Tomcat now:
+               ${CATALINA_HOME}/bin/startup.sh
+               ${CATALINA_HOME}/bin/shutdown.sh
+  
+Installation:          
+    cd ~
+    git clone https://github.com/dynamide/dynamide.git
+    cd dynamide
+    ant 
+    ant install-bin
+    cp ./build/tomcat/conf/Catalina/localhost/* ${CATALINA_BASE}/conf/Catalina/localhost/
 
 
-## From here, you would pull down tomcat and follow the instructions 
-## in ./INSTALLING-tomcat.xml
+To run command-line utilities, export this environment variable:
+    export DYNAMIDE_HOME=`pwd`
+
+If you want to change the output directories, or fiddle with your tomcat setup, look at this file:
+    vi ${DYNAMIDE_HOME}/dynamide.local.properties
 
 ##############################################
 #### WARNING.
