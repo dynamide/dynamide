@@ -492,7 +492,7 @@
         </antcall>
         <echo>Wrote web.xml file: ${buildDirTomcat}/webapps/ROOT/WEB-INF/web.xml</echo>
 
-        <property name="server.xml.filename" value="${buildDirTomcat}/conf/server.example.xml" />
+        <property name="server.xml.filename" value="${buildDirTomcat}/conf/tomcat/template.server.xml" />
         <antcall target="replaceMacrosInConfFile">
              <param name="replaceMacrosInConfFile.src" value="${src}/conf/server.example.xml"/>
              <param name="replaceMacrosInConfFile.dest" value="server.xml.filename"/>
@@ -501,19 +501,23 @@
         <echo>Filename: ${server.xml.filename}</echo>
 
        <antcall target="replaceMacrosInConfFile">
-             <param name="replaceMacrosInConfFile.src" value="${src}/conf/template.context.ROOT.xml"/>
+             <param name="replaceMacrosInConfFile.src" value="${src}/conf/tomcat/template.context.ROOT.xml"/>
              <param name="replaceMacrosInConfFile.dest" value="${buildDirTomcat}/conf/Catalina/localhost/ROOT.xml"/>
         </antcall>
         <echo>If you don't use the server.xml file:  ${server.xml.filename}, </echo>
         <echo>   you can install the above ROOT.xml file into TOMCAT_HOME/conf/Catalina/localhost </echo>
-        <echo>   For example:</echo>
-        <echo>      cp ~/src/dynamide/build/tomcat/conf/Catalina/localhost/* /Users/finbar/apache-tomcat-7.0.42/conf/Catalina/localhost/</echo>
+        <echo>   For example, to copy body dynamide context files:</echo>
+        <echo>      cp ${buildDirTomcat}/conf/Catalina/localhost/* /Users/finbar/apache-tomcat-7.0.42/conf/Catalina/localhost/</echo>
 
       <antcall target="replaceMacrosInConfFile">
-             <param name="replaceMacrosInConfFile.src" value="${src}/conf/template.context.static.xml"/>
+             <param name="replaceMacrosInConfFile.src" value="${src}/conf/tomcat/template.context.static.xml"/>
              <param name="replaceMacrosInConfFile.dest" value="${buildDirTomcat}/conf/Catalina/localhost/static.xml"/>
         </antcall>
         <echo>You can install the above static.xml file into TOMCAT_HOME/conf/Catalina/localhost</echo>
+         <echo>If you don't use the server.xml file:  ${server.xml.filename}, </echo>
+        <echo>   you can install the above static.xml file into TOMCAT_HOME/conf/Catalina/localhost </echo>
+        <echo>   For example, to copy body dynamide context files:</echo>
+        <echo>      cp ${buildDirTomcat}/conf/Catalina/localhost/* /Users/finbar/apache-tomcat-7.0.42/conf/Catalina/localhost/</echo>
 
   </target>
 
