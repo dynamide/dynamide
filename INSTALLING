@@ -18,10 +18,15 @@ Installation:
     ant 
     ant install-bin
     cp ./build/tomcat/conf/Catalina/localhost/* ${CATALINA_BASE}/conf/Catalina/localhost/
-
-
-To run command-line utilities, export this environment variable:
-    export DYNAMIDE_HOME=`pwd`
+    
+Start Tomcat:
+    ${CATALINA_HOME}/bin/startup.sh
+    
+Browse to: 
+        http://localhost:8080/dynamide/doco
+    
+To run command-line utilities, export this environment variable to where you put dynamide:
+    export DYNAMIDE_HOME=/home/laramie/dynamide
 
 If you want to change the output directories, or fiddle with your tomcat setup, look at this file:
     vi ${DYNAMIDE_HOME}/dynamide.local.properties
