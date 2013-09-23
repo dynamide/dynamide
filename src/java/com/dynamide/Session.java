@@ -2899,6 +2899,25 @@ System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
     }
 
     /** Returns specially named values (such as SESSIONID), named pages, Properties, then registered Field objects.
+     * These are the special names, in order:
+"SESSIONID",
+"session",
+"application",
+"page",
+"next",
+"nextPageID",
+"USER",
+"requestPath",
+"applicationPath",
+"pathInfo",
+"account",
+"RESOURCE_ROOT",
+"lastAccessTime",
+"startTime",
+"currentPageID",
+"hits",
+"modeStringShort",
+"pooled".
      */
     public Object get(String what)
     throws Exception {
