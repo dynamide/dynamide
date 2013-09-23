@@ -493,18 +493,20 @@
         </antcall>
         <echo>Wrote web.xml file: ${buildDirTomcat}/webapps/ROOT/WEB-INF/web.xml</echo>
 
+        <property name="server.xml.filename" value="${buildDirTomcat}/conf/server.example.xml" />
         <antcall target="replaceMacrosInConfFile">
              <param name="replaceMacrosInConfFile.src" value="${src}/conf/server.example.xml"/>
-             <param name="replaceMacrosInConfFile.dest" value="${buildDirTomcat}/server.example.xml"/>
+             <param name="replaceMacrosInConfFile.dest" value="server.xml.filename"/>
         </antcall>
         <echo>Your tomcat server.example.xml has a Host element that can be inserted into TOMCAT/conf/server.xml </echo>
-        <echo>Filename: ${buildDirTomcat}/server.example.xml</echo>
+        <echo>Filename: ${server.xml.filename}</echo>
 
        <antcall target="replaceMacrosInConfFile">
              <param name="replaceMacrosInConfFile.src" value="${src}/conf/template.context.default.xml"/>
              <param name="replaceMacrosInConfFile.dest" value="${buildDirTomcat}/conf/Catalina/localhost/default.xml"/>
         </antcall>
-        <echo>You can install the above default.xml file into TOMCAT_HOME/conf/Catalina/localhost: </echo>
+        <echo>If you don't use the server.xml file:  ${server.xml.filename}, </echo>
+        <echo>   you can install the above default.xml file into TOMCAT_HOME/conf/Catalina/localhost: </echo>
 
            <antcall target="replaceMacrosInConfFile">
              <param name="replaceMacrosInConfFile.src" value="${src}/conf/template.context.static.xml"/>
