@@ -25,7 +25,6 @@
         </not>
     </condition>
     <property name="DYNAMIDE_HOME" value="${myenv.DYNAMIDE_HOME}"/>
-    <echo>DYNAMIDE_HOME: ${DYNAMIDE_HOME}</echo>
 
 
     <property name="propsTemplate"   value="${DYNAMIDE_HOME}/bin/dynamide.local.properties.template"/>
@@ -506,9 +505,11 @@
              <param name="replaceMacrosInConfFile.dest" value="${buildDirTomcat}/conf/Catalina/localhost/ROOT.xml"/>
         </antcall>
         <echo>If you don't use the server.xml file:  ${server.xml.filename}, </echo>
-        <echo>   you can install the above default.xml file into TOMCAT_HOME/conf/Catalina/localhost </echo>
+        <echo>   you can install the above ROOT.xml file into TOMCAT_HOME/conf/Catalina/localhost </echo>
+        <echo>   For example:</echo>
+        <echo>      cp ~/src/dynamide/build/tomcat/conf/Catalina/localhost/* /Users/finbar/apache-tomcat-7.0.42/conf/Catalina/localhost/</echo>
 
-           <antcall target="replaceMacrosInConfFile">
+      <antcall target="replaceMacrosInConfFile">
              <param name="replaceMacrosInConfFile.src" value="${src}/conf/template.context.static.xml"/>
              <param name="replaceMacrosInConfFile.dest" value="${buildDirTomcat}/conf/Catalina/localhost/static.xml"/>
         </antcall>
