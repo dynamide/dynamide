@@ -36,6 +36,7 @@ If you want to change the output directories, or fiddle with your tomcat setup, 
 ####  On our public, unsecured servers, we never install
 ####  ~/dynamide/build/ROOT/homes/dynamide/assemblies/com-dynamide-apps-1/apps/admin/eval.xml
 ####  since this file can do anything the security manager allows.
-#### However, it is installed by default, so you must secure your instance by removing this file if your server is publicly available.
+#### However, it is installed by default, so you must secure your instance 
+####    by removing this file if your server is publicly available.
 ##############################################
 

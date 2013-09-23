@@ -9,8 +9,6 @@
   <component name="ChangeListManager">
     <list default="true" id="0c1499fd-3521-40fb-bf86-987566ff0f7c" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.xml" afterPath="$PROJECT_DIR$/build.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dynamide.local.properties" afterPath="$PROJECT_DIR$/dynamide.local.properties" />
     </list>
     <ignored path="dynamide.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -175,7 +173,7 @@
       <file leaf-file-name="build.xml" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/build.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="518" column="28" selection-start="22538" selection-end="22538" vertical-scroll-proportion="1.7913833">
+            <state line="316" column="29" selection-start="13655" selection-end="13658" vertical-scroll-proportion="0.33294392">
               <folding />
             </state>
           </provider>
@@ -868,7 +866,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/build.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="518" column="28" selection-start="22538" selection-end="22538" vertical-scroll-proportion="1.7913833">
+        <state line="316" column="29" selection-start="13655" selection-end="13658" vertical-scroll-proportion="0.33294392">
           <folding />
         </state>
       </provider>
