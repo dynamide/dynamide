@@ -426,14 +426,6 @@
   <!--     Installation Targets                                                   -->
   <!-- =================================================================== -->
 
-  <target name="noProps">
-        <condition property="no.dynamide.local.properties">
-            <not>
-                <available property="SHP" file="${DYNAMIDE_HOME}/dynamide.local.properties" type="file" />
-            </not>
-        </condition>
-  </target>
-
   <target name="install-bin" depends="init,ROOT">
         <property name="dynamidelocalsh" value="${DYNAMIDE_HOME}/bin/${dynamide.local.script}"/>
         <antcall target="replaceMacros">
