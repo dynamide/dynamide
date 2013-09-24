@@ -164,7 +164,7 @@
   </HEAD>
   <BODY id="publisher" onclick="bodyClicked(this)" bottomMargin="15" leftMargin="10" topMargin="15" rightMargin="10" name="publisher">
     <P>
-      <SPAN class="widget" id="widgetstyle1"/>
+      <SPAN class="widget" foo="bar" id="widgetstyle1"/>
       <SPAN class="widget" id="standardIncludes"/>
       <SPAN class="widget" id="includes1"/>
     </P>
@@ -192,65 +192,7 @@
          }
        </table>
 
-        ###  =========== publishable =========================================
-
-        #macro publishable($webAppsSearchPath){
-        <h4>in publishable</h4>
-            <h4>$webAppsSearchPath</h4>
-            <table border='1' cellpadding='4' cellspacing='0'>
-            #set $w = $session.getResourceManager().find($webAppsSearchPath)
-            ##w: $w
-
-            #set $i = 0
-            #foreach $thing in $w.getContexts().values() {
-            #set $wae = $thing ##$w.getAttribute($thing)
-                #set $i = $i + 1
-                #if ($wae.getClass().getName().endsWith("WebAppEntry")) {
-                <tr>
-                    <td>$wae.URI</td>
-                    <td>$wae.Home</td>
-                    <td>$wae.Interface</td>
-                    <td>$wae.Build</td>
-                    <td>
-                    #comment {
-                        The better way to do this is to create one widget
-                        with an array value
-                        widget.index[i].field =
-                        widget.index[i].uri =
-
-                        Or, have a datasource provide values.
-                        for i = start to start+$datasource.displaySize
-                        if hasNext()...
-                        $datasource.next()
-                        $widget1.output()
-                        $widgetcol2.output()
-                        $widgetcol3.output()
-                    }
-                    ## This works:
-                    #if ($session.getFieldValue("cbPublish_$i") == ""){
-                        $session.setFieldValue("cbPublishURI_$i", "$wae.URI")
-                        $session.setFieldValue("cbPublish_$i", "off")
-                        <input type="checkbox" name="cbPublish_$i" />
-                    } #else {
-                        #if ($session.getFieldValue("cbPublish_$i") == "on") {
-                           <input type="checkbox" name="cbPublish_$i" checked='1'   />
-                        } #else {
-                           <input type="checkbox" name="cbPublish_$i" />
-                        }
-                    }
-                    </td>
-
-                </tr>
-
-                }
-            }
-
-            </table>
-            <br />
-        }
-
         ###  =========== publishable2 =========================================
-
 
         #macro publishable2($id){
             <h4>$id</h4>
@@ -288,12 +230,6 @@
             <TR>
               <TD colSpan="1" rowSpan="1">
                ### ============= output tables here =============================================
-                ##  this works: #publishable("/homes/web-apps")
-                ##  this works: #publishable("/homes/dynamide/web-apps")
-                
-#publishable("/homes/web-apps")
-#publishable("/homes/dynamide/web-apps")
-                
                 #publishable2("ROOT_WEBAPPS")
                 #publishable2("DYNAMIDE_WEBAPPS")
                 <br />
