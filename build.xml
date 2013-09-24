@@ -176,7 +176,12 @@
             <fileset dir="${dynamide.lib}" includes="**"/>  
          </copy>
          <copy verbose="yes" overwrite="yes" file="${dynamidejar}" todir="${ROOT.libdir}"/>
-         <copy verbose="yes" overwrite="no" file="${src}/conf/webapps/ROOT/WEB-INF/web.xml" todir="${ROOT.dir}/WEB-INF"/>
+         <copy verbose="yes" overwrite="yes" file="${src}/conf/webapps/ROOT/WEB-INF/web.xml" todir="${ROOT.dir}/WEB-INF"/>
+        <antcall target="replaceMacrosInConfFile">
+             <param name="replaceMacrosInConfFile.src" value="${buildDirTomcat}/webapps/ROOT/WEB-INF/web.xml"/>
+             <param name="replaceMacrosInConfFile.dest" value="${buildDirTomcat}/webapps/ROOT/WEB-INF/web.xml"/>
+        </antcall>
+        <echo>Wrote web.xml file: ${buildDirTomcat}/webapps/ROOT/WEB-INF/web.xml</echo>
     </target>
 
 
@@ -486,12 +491,6 @@
         <echoproperties destfile="${dynamide.generated.properties.filename}"/>
         <echo>Wrote ${dynamide.generated.properties.filename}</echo>
 
-       <antcall target="replaceMacrosInConfFile">
-             <param name="replaceMacrosInConfFile.src" value="${buildDirTomcat}/webapps/ROOT/WEB-INF/web.xml"/>
-             <param name="replaceMacrosInConfFile.dest" value="${buildDirTomcat}/webapps/ROOT/WEB-INF/web.xml"/>
-        </antcall>
-        <echo>Wrote web.xml file: ${buildDirTomcat}/webapps/ROOT/WEB-INF/web.xml</echo>
-
         <property name="server.xml.src.filename" value="${src}/conf/tomcat/template.server.xml" />
         <property name="server.xml.dest.filename" value="${buildDirTomcat}/conf/tomcat/server.xml" />
         <antcall target="replaceMacrosInConfFile">
@@ -524,7 +523,7 @@
 
     <target name="replaceMacrosInConfFile">
         <copy overwrite="yes"
-              verbose="false"
+              verbose="true"
               file="${replaceMacrosInConfFile.src}"
               tofile="${replaceMacrosInConfFile.dest}"
                 />

@@ -19,6 +19,7 @@
         int i = 0;
         for (Iterator it = w.getContexts().values().iterator(); it.hasNext(); ) {
             st.addRow();
+            
             wae = (WebAppEntry)it.next();
             st.addField("URI", wae.getURI());
             st.addField("APPNAME", wae.getAppname());
@@ -35,8 +36,7 @@
             st.post();
             i++;
         }
-        System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^ st.class: "+st.getClass().getName());
-        //st.seekBegin();
+        st.seekBegin();
         session.setFieldObject(id, st);
     }
 ]]></event>
@@ -195,6 +195,7 @@
         ###  =========== publishable =========================================
 
         #macro publishable($webAppsSearchPath){
+        <h4>in publishable</h4>
             <h4>$webAppsSearchPath</h4>
             <table border='1' cellpadding='4' cellspacing='0'>
             #set $w = $session.getResourceManager().find($webAppsSearchPath)
@@ -255,9 +256,7 @@
             <h4>$id</h4>
             <table border='1' cellpadding='4' cellspacing='0'>
             #set $st = $session.get($id).getValue()
-            #set $foo = $st.seekBegin()
-            ## st: $st
-
+            $st.seekBegin()
             #count $i from 0 to ($st.getRowCount()-1) {
                 <tr>
                     <td>$i</td>
@@ -282,7 +281,6 @@
                 #set $OK = $st.next()
             }
             </table>
-            #set $OK = $st.seekBegin()
         }
 
         <TABLE cellSpacing="0" cellPadding="0" border="1">
@@ -292,14 +290,15 @@
                ### ============= output tables here =============================================
                 ##  this works: #publishable("/homes/web-apps")
                 ##  this works: #publishable("/homes/dynamide/web-apps")
-
+                
+#publishable("/homes/web-apps")
+#publishable("/homes/dynamide/web-apps")
+                
                 #publishable2("ROOT_WEBAPPS")
-                <br />
                 #publishable2("DYNAMIDE_WEBAPPS")
                 <br />
 
-                #set $st = $session.get("DYNAMIDE_WEBAPPS").getValue()
-
+                
                 #foreach $thing in $st.getColumnNamesList(){
                     #set $w =$page.createWidget("com.dynamide.edit")
                     $w.setProperty("caption", "$thing")

@@ -33,7 +33,7 @@
 
     <BODY id="page1" bgcolor="white">
           <h2>APPLICATION NOT AVAILABLE: $session.applicationPath</h2>
-          <p>The application you requested is not available until further notice.
+          <p>The application you requested is not available.<br />
           The application administrator has disabled it.
           </p>
       </BODY>

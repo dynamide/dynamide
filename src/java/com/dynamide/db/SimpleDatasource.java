@@ -415,8 +415,14 @@ implements IDatasource {
     public Field addField(String fieldName, Object value, Object metadata)
     throws DatatypeException {
         fieldName = fixCase(fieldName);
-        Field aField = new Field(this, getSession(), fieldName, value);
-        addColumn(fieldName, metadata);
+        Field aField = (Field)m_currentRow.get(fieldName);
+        if (aField == null){
+            aField = new Field(this, getSession(), fieldName, value);
+            addColumn(fieldName, metadata);
+            m_currentRow.addObject(fieldName, aField);
+        } else {
+            aField.setValue(value);
+        }
         return aField;
     }
 
