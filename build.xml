@@ -513,8 +513,16 @@
       </antcall>
   </target>
 
-    <target name="install-to-tomcat" if="tomcat_home.present">
-        <echo>in install-to-tomcat with DM_TOMCAT_HOME = ${DM_TOMCAT_HOME}</echo>
+    <target name="check-DM_TOMCAT_HOME" unless="tomcat_home.present">
+        <echo>  ==============================</echo>
+        <echo>       WARNING: </echo>
+        <echo>             DM_TOMCAT_HOME should be set in ${DYNAMIDE_HOME}/dynamide.local.properties</echo>
+        <echo>             Since it is not set, no configuration files from ${buildDirTomcat} will be installed.</echo>
+        <echo>  ==============================</echo>
+    </target>
+
+    <target name="install-to-tomcat" if="tomcat_home.present" depends="check-DM_TOMCAT_HOME" >
+        <echo>In install-to-tomcat with DM_TOMCAT_HOME=${DM_TOMCAT_HOME}</echo>
         <copy overwrite="yes"
               verbose="no"
               file="${static.xml.dest.filename}"
@@ -523,7 +531,6 @@
               verbose="no"
               file="${ROOT.xml.dest.filename}"
               todir="${DM_TOMCAT_HOME}/conf/Catalina/localhost/"/>
-
         <echo></echo>
         <echo></echo>
         <echo>These files</echo>

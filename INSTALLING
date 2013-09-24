@@ -17,7 +17,13 @@ Installation:
     cd dynamide
     ant 
     ant install-bin
-    cp ./build/tomcat/conf/Catalina/localhost/* ${CATALINA_BASE}/conf/Catalina/localhost/
+    
+    Note:  This installs context files in ${DM_TOMCAT_HOME}/conf/Catalina/localhost/
+                  which will take over the ROOT (the default webapp).   
+             Alternatively, you can copy the context elements in the fragment: 
+                 ${DYNAMIDE_HOME}/build/tomcat/conf/server-fragment.xml 
+             into the Host element of 
+                 ${DM_TOMCAT_HOME}/conf/server.xml
     
 Start Tomcat:
     ${CATALINA_HOME}/bin/startup.sh
