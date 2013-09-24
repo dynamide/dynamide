@@ -7,19 +7,14 @@
             <email
               sendAnnounce="true"
               schwarmanizer-from-email="Schwarmanizer@b-rant.com"
-              schwarmanizer-admin-email="schwarmanizer-admin@b-rant.com"
-              schwarmanizer-announce-email="schwarmanizer-announce@b-rant.com"
+              schwarmanizer-admin-email="schwarmanizer-adm@b-rant.com"
+              schwarmanizer-announce-email="schwarmanizer-ann@b-rant.com"
               schwarmanizer-announce-interval="90"
             />
             <groups>
                 <group1 dbname="net_roots_demo" groupID="demo" admin-email="schwarmanizer@b-rant.com" />
                 <group2 dbname="net_roots_eb4dean" groupID="eb4dean" admin-email="schwarmanizer@b-rant.com"/>
-                <group3 dbname="net_roots_evolve" groupID="evolve" admin-email="dan@drob.org" />
-                <group4 dbname="net_roots_advokit" groupID="advokit" admin-email="dan@drob.org" />
-                <group5 dbname="net_roots_unity" groupID="unity" admin-email="dan@drob.org" />
-                <group6 dbname="net_roots_dfatech" groupID="dfatech" admin-email="dfatech@b-rant.com" />
-                <group7 dbname="net_roots_pyhtp" groupID="pyhtp" admin-email="pat_k@mail2pat.com" />
-                <group8 dbname="net_roots_n8" groupID="n8" admin-email="nrushfinn@yahoo.com" />
+                <group8 dbname="net_roots_n8" groupID="n8" admin-email="nateold@b-rant.com" />
             </groups>
          </swarm>
          <doco>
