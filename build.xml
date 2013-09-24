@@ -177,9 +177,9 @@
          </copy>
          <copy verbose="yes" overwrite="yes" file="${dynamidejar}" todir="${ROOT.libdir}"/>
          <copy verbose="yes" overwrite="yes" file="${src}/conf/webapps/ROOT/WEB-INF/web.xml" todir="${ROOT.dir}/WEB-INF"/>
-        <antcall target="replaceMacrosInConfFile">
-             <param name="replaceMacrosInConfFile.src" value="${buildDirTomcat}/webapps/ROOT/WEB-INF/web.xml"/>
-             <param name="replaceMacrosInConfFile.dest" value="${buildDirTomcat}/webapps/ROOT/WEB-INF/web.xml"/>
+        <antcall target="replaceMacros">
+             <param name="replaceMacros.src" value="${buildDirTomcat}/webapps/ROOT/WEB-INF/web.xml"/>
+             <param name="replaceMacros.dest" value="${buildDirTomcat}/webapps/ROOT/WEB-INF/web.xml"/>
         </antcall>
         <echo>Wrote web.xml file: ${buildDirTomcat}/webapps/ROOT/WEB-INF/web.xml</echo>
     </target>
@@ -463,19 +463,13 @@
   </target>
 
   <target name="install-bin" depends="write-dynamide-local-properties,init,ROOT">
-        <echo>install-bin sees JAVA_HOME: ${myenv.JAVA_HOME}</echo>
         <property name="dynamidelocalsh" value="${DYNAMIDE_HOME}/bin/${dynamide.local.script}"/>
-        <copy overwrite="yes"
-                verbose="yes"
-                file="${dynamidelocalsh}.template"
-                tofile="${dynamidelocalsh}"/>
-        <replace file="${dynamidelocalsh}" token="%DYNAMIDE_HOME%" value="${DYNAMIDE_HOME}"/>
-        <replace file="${dynamidelocalsh}" token="%DYNAMIDE_RESOURCE_ROOT%" value="${DYNAMIDE_RESOURCE_ROOT}"/>
-        <replace file="${dynamidelocalsh}" token="%DYNAMIDE_LOGS%" value="${DYNAMIDE_LOGS}"/>
-        <replace file="${dynamidelocalsh}" token="%JAVA_HOME%" value="${myenv.JAVA_HOME}"/>
+        <antcall target="replaceMacros">
+             <param name="replaceMacros.src" value="${dynamidelocalsh}.template"/>
+             <param name="replaceMacros.dest" value="${dynamidelocalsh}"/>
+        </antcall>
         <echo>Created source-able script in "${dynamidelocalsh}"</echo>
 
-        <echo></echo>
 
         <copy overwrite="no"
               verbose="yes"
@@ -493,25 +487,25 @@
 
         <property name="server.xml.src.filename" value="${src}/conf/tomcat/template.server.xml" />
         <property name="server.xml.dest.filename" value="${buildDirTomcat}/conf/tomcat/server.xml" />
-        <antcall target="replaceMacrosInConfFile">
-             <param name="replaceMacrosInConfFile.src" value="${server.xml.src.filename}"/>
-             <param name="replaceMacrosInConfFile.dest" value="${server.xml.dest.filename}"/>
+        <antcall target="replaceMacros">
+             <param name="replaceMacros.src" value="${server.xml.src.filename}"/>
+             <param name="replaceMacros.dest" value="${server.xml.dest.filename}"/>
         </antcall>
         <echo>Your tomcat server.xml has a Host element that can be inserted into TOMCAT/conf/server.xml </echo>
         <echo>Filename: ${server.xml.dest.filename}</echo>
 
-       <antcall target="replaceMacrosInConfFile">
-             <param name="replaceMacrosInConfFile.src" value="${src}/conf/tomcat/template.context.ROOT.xml"/>
-             <param name="replaceMacrosInConfFile.dest" value="${buildDirTomcat}/conf/Catalina/localhost/ROOT.xml"/>
+       <antcall target="replaceMacros">
+             <param name="replaceMacros.src" value="${src}/conf/tomcat/template.context.ROOT.xml"/>
+             <param name="replaceMacros.dest" value="${buildDirTomcat}/conf/Catalina/localhost/ROOT.xml"/>
         </antcall>
         <echo>If you don't use the server.xml file:  ${server.xml.filename}, </echo>
         <echo>   you can install the above ROOT.xml file into TOMCAT_HOME/conf/Catalina/localhost </echo>
         <echo>   For example, to copy body dynamide context files:</echo>
         <echo>      cp ${buildDirTomcat}/conf/Catalina/localhost/* /Users/finbar/apache-tomcat-7.0.42/conf/Catalina/localhost/</echo>
 
-      <antcall target="replaceMacrosInConfFile">
-             <param name="replaceMacrosInConfFile.src" value="${src}/conf/tomcat/template.context.static.xml"/>
-             <param name="replaceMacrosInConfFile.dest" value="${buildDirTomcat}/conf/Catalina/localhost/static.xml"/>
+      <antcall target="replaceMacros">
+             <param name="replaceMacros.src" value="${src}/conf/tomcat/template.context.static.xml"/>
+             <param name="replaceMacros.dest" value="${buildDirTomcat}/conf/Catalina/localhost/static.xml"/>
         </antcall>
         <echo>You can install the above static.xml file into TOMCAT_HOME/conf/Catalina/localhost</echo>
          <echo>If you don't use the server.xml file:  ${server.xml.filename}, </echo>
@@ -521,32 +515,35 @@
 
   </target>
 
-    <target name="replaceMacrosInConfFile">
+    <target name="replaceMacros">
         <copy overwrite="yes"
               verbose="true"
-              file="${replaceMacrosInConfFile.src}"
-              tofile="${replaceMacrosInConfFile.dest}"
+              file="${replaceMacros.src}"
+              tofile="${replaceMacros.dest}"
                 />
-        <replace file="${replaceMacrosInConfFile.dest}" value="${DYNAMIDE_HOME}">
+        <replace file="${replaceMacros.dest}" value="${DYNAMIDE_HOME}">
             <replacetoken expandProperties="false"><![CDATA[${DYNAMIDE_HOME}]]></replacetoken>
         </replace>
-        <replace file="${replaceMacrosInConfFile.dest}" value="${DYNAMIDE_BUILD}">
+        <replace file="${replaceMacros.dest}" value="${DYNAMIDE_BUILD}">
             <replacetoken expandProperties="false"><![CDATA[${DYNAMIDE_BUILD}]]></replacetoken>
         </replace>
-        <replace file="${replaceMacrosInConfFile.dest}" value="${DYNAMIDE_RESOURCE_ROOT}">
+        <replace file="${replaceMacros.dest}" value="${DYNAMIDE_RESOURCE_ROOT}">
             <replacetoken expandProperties="false"><![CDATA[${DYNAMIDE_RESOURCE_ROOT}]]></replacetoken>
         </replace>
-        <replace file="${replaceMacrosInConfFile.dest}" value="${DYNAMIDE_STATIC_ROOT}">
+        <replace file="${replaceMacros.dest}" value="${DYNAMIDE_STATIC_ROOT}">
             <replacetoken expandProperties="false"><![CDATA[${DYNAMIDE_STATIC_ROOT}]]></replacetoken>
         </replace>
-        <replace file="${replaceMacrosInConfFile.dest}" value="${DYNAMIDE_CONTEXT_CONF}">
+        <replace file="${replaceMacros.dest}" value="${DYNAMIDE_CONTEXT_CONF}">
             <replacetoken expandProperties="false"><![CDATA[${DYNAMIDE_CONTEXT_CONF}]]></replacetoken>
         </replace>
-        <echo>Expanded macros in file: ${replaceMacrosInConfFile.dest}</echo>
+        <replace file="${replaceMacros.dest}" value="${DYNAMIDE_LOGS}">
+            <replacetoken expandProperties="false"><![CDATA[${DYNAMIDE_LOGS}]]></replacetoken>
+        </replace>
+        <echo>Expanded macros in file: ${replaceMacros.dest}</echo>
         <!--
         <echo>Contents:</echo>
         <concat>
-            <fileset file="${replaceMacrosInConfFile.dest}"/>
+            <fileset file="${replaceMacros.dest}"/>
         </concat>
         -->
     </target>

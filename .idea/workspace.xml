@@ -8,10 +8,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0c1499fd-3521-40fb-bf86-987566ff0f7c" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/.dynamide.local.sh.template" afterPath="$PROJECT_DIR$/bin/.dynamide.local.sh.template" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.xml" afterPath="$PROJECT_DIR$/build.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/assemblies/dynamide-apps/apps/disabler/page1.xml" afterPath="$PROJECT_DIR$/src/assemblies/dynamide-apps/apps/disabler/page1.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/com/dynamide/db/SimpleDatasource.java" afterPath="$PROJECT_DIR$/src/java/com/dynamide/db/SimpleDatasource.java" />
     </list>
     <ignored path="dynamide.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -119,10 +117,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="build.xml" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="build.xml" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/build.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="184" column="7" selection-start="8142" selection-end="8142" vertical-scroll-proportion="-10.583333">
+            <state line="539" column="75" selection-start="24041" selection-end="24041" vertical-scroll-proportion="0.75059664">
               <folding />
             </state>
           </provider>
@@ -151,10 +149,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="page1.xml" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="page1.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/assemblies/dynamide-apps/apps/disabler/page1.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="9" column="44" selection-start="225" selection-end="225" vertical-scroll-proportion="0.38726333">
+            <state line="9" column="44" selection-start="225" selection-end="225" vertical-scroll-proportion="-6.617647">
               <folding />
             </state>
           </provider>
@@ -209,10 +207,10 @@
         <option value="$PROJECT_DIR$/src/java/com/dynamide/Constants.java" />
         <option value="$PROJECT_DIR$/src/java/com/dynamide/resource/ResourceManager.java" />
         <option value="$PROJECT_DIR$/src/java/com/dynamide/Session.java" />
-        <option value="$PROJECT_DIR$/build.xml" />
         <option value="$PROJECT_DIR$/src/java/com/dynamide/resource/WebApps.java" />
         <option value="$PROJECT_DIR$/src/java/com/dynamide/db/SimpleDatasource.java" />
         <option value="$PROJECT_DIR$/src/java/com/dynamide/Field.java" />
+        <option value="$PROJECT_DIR$/build.xml" />
       </list>
     </option>
   </component>
@@ -466,7 +464,7 @@
   <component name="ShelveChangesManager" show_recycled="false" />
   <component name="StructureViewFactory">
     <option name="AUTOSCROLL_FROM_SOURCE" value="true" />
-    <option name="ACTIVE_ACTIONS" value="VISIBILITY_SORTER,SHOW_INHERITED,ALPHA_COMPARATOR,SHOW_FIELDS" />
+    <option name="ACTIVE_ACTIONS" value="VISIBILITY_SORTER,SHOW_INHERITED,SHOW_FIELDS" />
   </component>
   <component name="SvnConfiguration" maxAnnotateRevisions="500" myUseAcceleration="nothing" myAutoUpdateAfterCommit="false" cleanupOnStartRun="true">
     <option name="USER" value="" />
@@ -498,9 +496,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="22" width="1680" height="1024" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
-      <window_info id="Changes" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32845187" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32845187" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31485355" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -837,13 +835,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/build.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="184" column="7" selection-start="8142" selection-end="8142" vertical-scroll-proportion="-10.583333">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/resource/WebApps.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="67" column="14" selection-start="2270" selection-end="2270" vertical-scroll-proportion="0.0">
@@ -883,7 +874,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/assemblies/dynamide-apps/apps/disabler/page1.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="44" selection-start="225" selection-end="225" vertical-scroll-proportion="0.38726333">
+        <state line="9" column="44" selection-start="225" selection-end="225" vertical-scroll-proportion="-6.617647">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="539" column="75" selection-start="24041" selection-end="24041" vertical-scroll-proportion="0.75059664">
           <folding />
         </state>
       </provider>
