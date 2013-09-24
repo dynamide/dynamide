@@ -166,7 +166,7 @@ public class DynamideServlet extends HttpServlet {
                 throw new ServletException(msg);
             }
             try {
-                Log.info(DynamideServlet.class, "DYNAMIDE_RESOURCE_ROOT [1]: " + DYNAMIDE_RESOURCE_ROOT);
+                //This next line also calls ResourceManager.configureLog()
                 rootResourceManager = ResourceManager.installSingletonRootResourceManager(DYNAMIDE_RESOURCE_ROOT, DYNAMIDE_CONTEXT_CONF, DYNAMIDE_STATIC_ROOT);
                 rootResourceManager.setStaticRoot(DYNAMIDE_STATIC_ROOT);
                 rootResourceManager.setDynamideContextConf(DYNAMIDE_CONTEXT_CONF);

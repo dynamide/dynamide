@@ -153,6 +153,7 @@
     <target name="clean" depends="check-props">
       <echo message="cleaning ${buildDir}/classes"/>
       <delete file="${dynamide.generated.properties.filename}" />
+      <delete dir="${buildDirLib}" />
       <delete dir="${buildDir}/classes" />
       <mkdir dir="${buildDir}/classes" />
     </target>
@@ -173,7 +174,7 @@
         <property name="ROOT.libdir" value="${buildDirTomcat}/webapps/ROOT/WEB-INF/lib" />
         <mkdir dir="${ROOT.dir}" />
         <copy todir="${ROOT.libdir}">
-            <fileset dir="${dynamide.lib}" includes="**"/>  
+            <fileset dir="${dynamide.lib}" includes="**" excludes="tomcat-7-servlet-api.jar"/>
          </copy>
          <copy verbose="yes" overwrite="yes" file="${dynamidejar}" todir="${ROOT.libdir}"/>
          <copy verbose="yes" overwrite="yes" file="${src}/conf/webapps/ROOT/WEB-INF/web.xml" todir="${ROOT.dir}/WEB-INF"/>
