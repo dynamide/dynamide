@@ -42,7 +42,7 @@
   <!--            Targets                                                  -->
   <!-- =================================================================== -->
 
-    <target name="all" depends="init,setup,jar,javadoc,static,ROOT,homes,write-properties">
+    <target name="all" depends="init,setup,jar,javadoc,static,ROOT,homes,write-properties,install-bin">
     </target>
     
     <target name="check-os">
@@ -485,39 +485,62 @@
         <echoproperties destfile="${dynamide.generated.properties.filename}"/>
         <echo>Wrote ${dynamide.generated.properties.filename}</echo>
 
-        <property name="server.xml.src.filename" value="${src}/conf/tomcat/template.server.xml" />
-        <property name="server.xml.dest.filename" value="${buildDirTomcat}/conf/tomcat/server.xml" />
+        <property name="server.xml.src.filename" value="${src}/conf/tomcat/template.server-fragment.xml" />
+        <property name="server.xml.dest.filename" value="${buildDirTomcat}/conf/tomcat/server-fragment.xml" />
         <antcall target="replaceMacros">
              <param name="replaceMacros.src" value="${server.xml.src.filename}"/>
              <param name="replaceMacros.dest" value="${server.xml.dest.filename}"/>
         </antcall>
-        <echo>Your tomcat server.xml has a Host element that can be inserted into TOMCAT/conf/server.xml </echo>
+        <echo>This file has a Host element that can be inserted into TOMCAT/conf/server.xml </echo>
         <echo>Filename: ${server.xml.dest.filename}</echo>
 
+      <property name="ROOT.xml.src.filename" value="${src}/conf/tomcat/template.context.ROOT.xml" />
+      <property name="ROOT.xml.dest.filename" value="${buildDirTomcat}/conf/Catalina/localhost/ROOT.xml" />
        <antcall target="replaceMacros">
-             <param name="replaceMacros.src" value="${src}/conf/tomcat/template.context.ROOT.xml"/>
-             <param name="replaceMacros.dest" value="${buildDirTomcat}/conf/Catalina/localhost/ROOT.xml"/>
+             <param name="replaceMacros.src" value="${ROOT.xml.src.filename}"/>
+             <param name="replaceMacros.dest" value="${ROOT.xml.dest.filename}"/>
         </antcall>
-        <echo>If you don't use the server.xml file:  ${server.xml.filename}, </echo>
-        <echo>   you can install the above ROOT.xml file into TOMCAT_HOME/conf/Catalina/localhost </echo>
-        <echo>   For example, to copy body dynamide context files:</echo>
-        <echo>      cp ${buildDirTomcat}/conf/Catalina/localhost/* /Users/finbar/apache-tomcat-7.0.42/conf/Catalina/localhost/</echo>
 
+      <property name="static.xml.src.filename" value="${src}/conf/tomcat/template.context.static.xml" />
+      <property name="static.xml.dest.filename" value="${buildDirTomcat}/conf/Catalina/localhost/static.xml" />
       <antcall target="replaceMacros">
-             <param name="replaceMacros.src" value="${src}/conf/tomcat/template.context.static.xml"/>
-             <param name="replaceMacros.dest" value="${buildDirTomcat}/conf/Catalina/localhost/static.xml"/>
+             <param name="replaceMacros.src" value="${static.xml.src.filename}"/>
+             <param name="replaceMacros.dest" value="${static.xml.dest.filename}"/>
         </antcall>
-        <echo>You can install the above static.xml file into TOMCAT_HOME/conf/Catalina/localhost</echo>
-         <echo>If you don't use the server.xml file:  ${server.xml.filename}, </echo>
-        <echo>   you can install the above static.xml file into TOMCAT_HOME/conf/Catalina/localhost </echo>
-        <echo>   For example, to copy body dynamide context files:</echo>
-        <echo>      cp ${buildDirTomcat}/conf/Catalina/localhost/* /Users/finbar/apache-tomcat-7.0.42/conf/Catalina/localhost/</echo>
 
+      <available file="${DM_TOMCAT_HOME}/conf" type="dir" property="tomcat_home.present"/>
+      <antcall target="install-to-tomcat">
+      </antcall>
   </target>
+
+    <target name="install-to-tomcat" if="tomcat_home.present">
+        <echo>in install-to-tomcat with DM_TOMCAT_HOME = ${DM_TOMCAT_HOME}</echo>
+        <copy overwrite="yes"
+              verbose="no"
+              file="${static.xml.dest.filename}"
+              todir="${DM_TOMCAT_HOME}/conf/Catalina/localhost/"/>
+        <copy overwrite="yes"
+              verbose="no"
+              file="${ROOT.xml.dest.filename}"
+              todir="${DM_TOMCAT_HOME}/conf/Catalina/localhost/"/>
+
+        <echo></echo>
+        <echo></echo>
+        <echo>These files</echo>
+        <echo>    ${ROOT.xml.dest.filename}</echo>
+        <echo>    ${static.xml.dest.filename}</echo>
+        <echo>Have been installed to:</echo>
+        <echo>    ${DM_TOMCAT_HOME}/conf/Catalina/localhost/</echo>
+        <echo>Alternatively, you can manually modify </echo>
+        <echo>    ${DM_TOMCAT_HOME}/conf/server.xml</echo>
+        <echo>with the changes here:</echo>
+        <echo>    ${server.xml.dest.filename}</echo>
+    </target>
+
 
     <target name="replaceMacros">
         <copy overwrite="yes"
-              verbose="true"
+              verbose="false"
               file="${replaceMacros.src}"
               tofile="${replaceMacros.dest}"
                 />

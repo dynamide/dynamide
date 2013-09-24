@@ -1,15 +1,31 @@
 #  This is the only file you need to modify to build Dynamide.
 #  DO NOT modify build.xml, it will pull in this file.
-#  For help on this file, see ${DYNAMIDE_HOME}/bin/dynamide.local.properties.README
+#  The expansions in this file are used by 
+#        1) bash/sh when called by scripts in ${DYNAMIDE_HOME}/bin/
+#        2) com.dynamide.DynamideServlet which reads DYNAMIDE_HOME from the servlet config init param, 
+#            and then calls com.dynamide.resource.ResourceManager, which expands these macros independently
+#        3) by ant when it pulls this file in from ${DYNAMIDE_HOME}/build.xml
+#  You can use full paths, or paths with the following macros:
+#       ${DYNAMIDE_HOME}    
+#                The directory where you installed dynamide.
+#       ${DYNAMIDE_BUILD}    
+#                The directory where build.xml will output all artifacts.  
+#                Defaults to ${DYNAMIDE_HOME}/build
+#       ${DYNAMIDE_RESOURCE_ROOT}    
+#                The directory that the DynamideServlet and the ResourceManager look for all dynamide files.  
+#                Defaults to ${DYNAMIDE_HOME}/build/dynamide_resource_root
 
 DYNAMIDE_LOGS=/Users/laramie/tmp/dynamide-logs
 
+DM_TOMCAT_HOME=
+
 DYNAMIDE_BUILD=${DYNAMIDE_HOME}/build
 
-DYNAMIDE_RESOURCE_ROOT=${DYNAMIDE_BUILD}/DYNAMIDE_RESOURCE_ROOT
+DYNAMIDE_RESOURCE_ROOT=${DYNAMIDE_BUILD}/resource_root
 
 DYNAMIDE_CONTEXT_CONF=${DYNAMIDE_RESOURCE_ROOT}/conf/context.xml
 
 DYNAMIDE_STATIC_ROOT=${DYNAMIDE_RESOURCE_ROOT}/static
 
-fileversion=20130921
+
+fileversion=20130923
