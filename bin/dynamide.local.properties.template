@@ -13,9 +13,8 @@
 #                Defaults to ${DYNAMIDE_HOME}/build
 #       ${DYNAMIDE_RESOURCE_ROOT}    
 #                The directory that the DynamideServlet and the ResourceManager look for all dynamide files.  
-#                Defaults to ${DYNAMIDE_HOME}/build/dynamide_resource_root
+#                Defaults to ${DYNAMIDE_HOME}/build/resource_root
 
-DYNAMIDE_LOGS=/Users/laramie/tmp/dynamide-logs
 
 DM_TOMCAT_HOME=
 
@@ -27,5 +26,6 @@ DYNAMIDE_CONTEXT_CONF=${DYNAMIDE_RESOURCE_ROOT}/conf/context.xml
 
 DYNAMIDE_STATIC_ROOT=${DYNAMIDE_RESOURCE_ROOT}/static
 
+DYNAMIDE_LOGS=${DYNAMIDE_HOME}/logs
 
 fileversion=20130923

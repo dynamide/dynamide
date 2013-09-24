@@ -13,12 +13,11 @@
     <!-- pull in the User's environment -->
     <property environment="myenv"  />
 
-    <!-- The default DYNAMIDE_HOME.  You can pass in another DYNAMIDE_HOME
-      **  for example:                  ant -DDYNAMIDE_HOME=C:/dynamide clean compile
-      **  or, from your env in win32:   ant -DDYNAMIDE_HOME=%DYNAMIDE_HOME% clean compile
-      **  or, from your env in Unix:    ant -DDYNAMIDE_HOME=$DYNAMIDE_HOME clean compile
+    <!-- The default DYNAMIDE_HOME.  It is picked up:
+      **     1) from the ant command line, e.g. ant -DDYNAMIDE_HOME=/usr/local/dynamide all
+      **     2) from the environment variables
+      **     3) from the directory where this build.xml lives.
     -->
-
     <condition property="DYNAMIDE_HOME" value="${basedir}">
           <not>
             <isset property="myenv.DYNAMIDE_HOME"/>
@@ -29,13 +28,13 @@
 
     <property name="propsTemplate"   value="${DYNAMIDE_HOME}/bin/dynamide.local.properties.template"/>
     <property name="installedProps"  value="${DYNAMIDE_HOME}/dynamide.local.properties"/>
-
     <!-- These property files include definitions such as:
-        DYNAMIDE_LOGS=/export/logs/dynamide
-        DYNAMIDE_RESIN_CONF=${RESIN_HOME}/conf/resin.dynamide.conf
-        DYNAMIDE_RESOURCE_ROOT=${DYNAMIDE_HOME}/build/DYNAMIDE_RESOURCE_ROOT
-        DYNAMIDE_STATIC_ROOT=${DYNAMIDE_RESOURCE_ROOT}/static
-        DYNAMIDE_BUILD=${DYNAMIDE_HOME}/build
+        DYNAMIDE_LOGS
+        DYNAMIDE_BUILD
+        DYNAMIDE_RESOURCE_ROOT
+        DYNAMIDE_STATIC_ROOT
+        DYNAMIDE_CONTEXT_CONF
+        DM_TOMCAT_HOME
     -->
 
   <!-- =================================================================== -->
@@ -68,7 +67,7 @@
         <echo>Unix</echo>
     </target>
 
-    <target name="init-properties" depends="unix-filenames,dos-filenames">
+    <target name="init-properties" depends="write-dynamide-local-properties,unix-filenames,dos-filenames">
         <property file="${installedProps}" />
         
         <!-- turn this "on" for debug symbols (line numbers in bytecode), or "off". -->
@@ -132,6 +131,7 @@
     </target>
 
     <target name="init" depends="check-props">
+      <mkdir dir="${DYNAMIDE_LOGS}" />
       <mkdir dir="${DYNAMIDE_RESOURCE_ROOT}" />
       <mkdir dir="${DYNAMIDE_RESOURCE_ROOT}/assemblies" />
       <mkdir dir="${buildDirClasses}" />
