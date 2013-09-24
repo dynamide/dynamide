@@ -2,7 +2,7 @@
 #
 # WARNING: Do NOT modify this file (.dynamide.local.sh) since it is generated
 #   from ${DYNAMIDE_HOME}/bin/.dynamide.local.sh.template
-#   by ${DYNAMIDE_HOME}build.xml
+#   by ${DYNAMIDE_HOME}/build.xml
 # Instead, modify dynamide.local.properties, and re-run the Ant task "install-bin", e.g.
 #   cd $DYNAMIDE_HOME
 #   vi dynamide.local.properties
