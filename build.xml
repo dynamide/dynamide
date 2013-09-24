@@ -28,7 +28,7 @@
 
     <property name="propsTemplate"   value="${DYNAMIDE_HOME}/bin/dynamide.local.properties.template"/>
     <property name="installedProps"  value="${DYNAMIDE_HOME}/dynamide.local.properties"/>
-    <!-- These property files include definitions such as:
+    <!-- These property files include definitions for:
         DYNAMIDE_LOGS
         DYNAMIDE_BUILD
         DYNAMIDE_RESOURCE_ROOT
@@ -42,6 +42,32 @@
   <!-- =================================================================== -->
 
     <target name="all" depends="init,setup,jar,javadoc,static,ROOT,homes,write-properties,install-bin">
+    </target>
+
+    <target name="help">
+        <echo>
+           Targets:
+
+                all            :  Calls all targets required to build and install dynamide.
+                                      This is the default target.
+                                      Doesn't call "clean".
+                check-props    :  Informational: reads property files and shows expanded properties.
+                clean          :  Cleans the build/classes and build/lib folders.
+                compile        :  Compiles java classes.
+                compile-test   :  Compiles java test classes.
+                homes          :  Installs required home directories and files inside build/resource_root/ .
+                                          Will NOT hose other accounts in dynamide home directory.
+                install-bin    :  Installs files into DM_TOMCAT_ROOT .
+                javadoc        :  Creates the static javadoc.
+                ROOT           :  Creates the default webapp for tomcat.
+                                          Push this to tomcat with install-bin .
+                zip            :  Creates a zip distribution of all source.
+
+            Once dynamide is up, you can look at the call graph here:
+                http://localhost:8080/dynamide/doco/doc/help/FAQ#antCallGraph
+            or you can find it in source:
+                 src/assemblies/dynamide-apps/apps/doco/resources/images/dynamide-ant-call-graph.jpg
+        </echo>
     </target>
     
     <target name="check-os">
@@ -245,10 +271,10 @@
 
     <target name="javadoc-run" depends="init">
         <mkdir dir="${JAVADOCDIR}"/>
-        <javadoc packagenames="com.dynamide,com.dynamide.datatypes,com.dynamide.db,com.dynamide.event,com.dynamide.gui,com.dynamide.interpreters,com.dynamide.resource,com.dynamide.security,com.dynamide.test.samplebeans,com.dynamide.util,com.dynamide.xsl"
+        <javadoc 
                 sourcepath="${src.java}"
                 destdir="${JAVADOCDIR}"
-            classpath="${propCLASSPATH}"
+                classpath="${propCLASSPATH}"
                 author="true"
                 verbose="false"
                 version="true"
@@ -257,21 +283,15 @@
                 use="true"
                 windowtitle="Dynamide API"
                 doctitle="&lt;h2&gt;Dyanamide&lt;/h2&gt;&lt;h3&gt;API Specification&lt;/h3&gt;"
-                bottom="&lt;i&gt;Copyright &#169; 2001, 2002 DYNAMIDE.COM. All Rights Reserved.&lt;i&gt;">
+                bottom="&lt;i&gt;Copyright &#169; 2001-2013 &lt;a target='_blank' href='http://dynamide.com'>DYNAMIDE.COM&lt;/a>. All Rights Reserved.&lt;i&gt;">
 
-            <!-- this will be supported by ant 1.5:
-            <packageset>
-                <dirset dir="${build.dir}">
-                    <include name="apps/**/classes"/>
-                    <exclude name="apps/**/*Test*"/>
-                </dirset>
-
+            <packageset dir="${src.java}">
+                <include name="**"/>
             </packageset>
-            -->
 
             <group title="Core Package" packages="com.dynamide"/>
-            <group title="Core Utility Packages" packages="com.dynamide.*"/>
-            <group title="Test Packages" packages="com.dynamide.test.*"/>
+            <group title="Core Utility Packages" packages="com.dynamide.*" />
+            <group title="Test Packages" packages="com.dynamide.test:com.dynamide.test.*"/>
             <group title="Swing IDE Packages" packages="com.dynamide.gui*"/>
 
             <tag name="dynamide.factorymethod" scope="all" description="&lt;font color='blue'/>Factory Method:&lt;/font>" />
@@ -430,7 +450,7 @@
       <copy toDir="${DYNAMIDE_RESOURCE_ROOT}/homes">
           <fileset dir="${src.homes}" />
       </copy>
-      <copy toDir="${DYNAMIDE_RESOURCE_ROOT}/homes/dynamide/assemblies/com-dynamide-apps-1">
+      <copy verbose="true" toDir="${DYNAMIDE_RESOURCE_ROOT}/homes/dynamide/assemblies/com-dynamide-apps-1">
           <fileset dir="${DYNAMIDE_HOME}/src/assemblies/dynamide-apps" />
       </copy>
       <copy toDir="${DYNAMIDE_RESOURCE_ROOT}/homes/dynamide/assemblies/com-dynamide-test-suite-1">

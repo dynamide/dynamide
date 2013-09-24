@@ -2135,7 +2135,7 @@ public final class ResourceManager extends Pool {
         return getErrorLogsURI()+'/'+id+".html";
     }
 
-    /** @returns the id of the error - which can be turned into a URL with 
+    /** @return the id of the error - which can be turned into a URL with
     */
     public static String writeErrorLog(Session session, String id, String resourcename, String message, String stackTrace, String errorClassname){
         String fullID = id+'.'+(g_errorID++);

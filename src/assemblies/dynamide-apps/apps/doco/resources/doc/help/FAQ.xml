@@ -866,7 +866,6 @@ if (prop!=null) {
          It cannot contain XML Elements.</value>
 </property>]]></example>
 
-
 <example><![CDATA[<property name="caption">
   <value>This is a java.lang.String caption,
          too, since String is the default
@@ -1316,7 +1315,6 @@ public String sendRedirectToPage(String pageID, String action, String moreParams
 
   </text>
 </definition>
-
 
 </section>
 
@@ -1799,6 +1797,37 @@ and execute something like this:
     </p>
   </text>
 </definition>
+
+
+<definition>
+  <caption id="antCallGraph">What is the call graph of all targets in the main Ant build file build.xml?</caption>
+  <text>
+    <p>Here is the call graph:
+        <br/>
+        <br/>
+
+        #set $moreParams = "imageSrc=resources/images/dynamide-ant-call-graph.jpg"
+        #set $moreParams = "$(moreParams)&amp;imageWidth=&amp;imgHeight=&amp;title=Ant+call+graph&amp;center=true&amp;caption=&amp;lt;br/>&amp;lt;h2>Ant+call+graph&amp;lt;/h2>&amp;lt;br/>"
+        #set $srcLarge = $session.createDialogURL("callGraphImgview", "resources/dialogs/com.dynamide.imgview", "$moreParams")
+        #set $src = $session.getInclude("resources/images/dynamide-ant-call-graph.jpg")
+        <center><a href="$srcLarge" target="_blank"><img border="0" src="$src" />
+            <br/>
+            <br/>(click for full-size image)</a>
+        </center>
+        <br/>
+        <br/>
+       Here are the main targets you would want to use:
+       <ul>
+       <li>ant</li>
+       <li>ant all</li>
+       <li>ant check-props</li>
+       <li>ant clean</li>
+       </ul>
+       "all" is the default target.  "all" does NOT call "clean".
+    </p>
+  </text>
+</definition>
+
 
 </section>
 

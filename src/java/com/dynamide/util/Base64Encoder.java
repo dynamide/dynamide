@@ -1,7 +1,5 @@
-// Base64Encoder.java
-// $Id: Base64Encoder.java,v 1.1 2010-07-31 18:38:43 laramiessh Exp $
 // (c) COPYRIGHT MIT and INRIA, 1996.
-// Please first read the full copyright statement in file COPYRIGHT.html
+// Copied from http://www.w3.org/Jigsaw/User/api/w3c.tools.codec.Base6Encoder.html
 
 //package org.w3c.tools.codec ;
 package com.dynamide.util;
@@ -20,7 +18,7 @@ import java.io.UnsupportedEncodingException;
  * encodes the input stream, using the BASE64 encoding rules, as defined
  * in <a href="http://ds.internic.net/rfc/rfc1521.txt">MIME specification</a>
  * and emit the resulting data to the output stream.
- * @see org.w3c.tools.codec.Base64Decoder
+ * @see <a href="http://www.w3.org/Jigsaw/User/api/w3c.tools.codec.Base64Decoder.html">w3c.tools.codec.Base64Decoder</a>
  */
 
 public class Base64Encoder {
