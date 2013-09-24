@@ -325,21 +325,29 @@
     -->
     <target name="dist-src" depends="init">
         <delete file="${buildDir}/dynamide-source-${dynamide.version}.zip" />
-        <zip zipfile="${buildDir}/dynamide-source-${dynamide.version}.zip"
-            basedir="${DYNAMIDE_HOME}/"
-            includes="**/*.*"
-            excludes="build/**/*.*,
-                      ${relative.src.java}/com/dynamide/**/*.class,
-                      ${relative.src.java}/com/dynamide/doc/3rd/**/*.*,
-                      ${relative.src.java}/com/dynamide/doc/internal/3rd/**/*.*,
-                      ${relative.src.java}/com/dynamide/doc/internal/ndas/**/*.*,
-                      **/*.dfPackage,
-                      **/*.zip,
-                      **/*.jar,
-                      **/*.war,
-                      **/*.exe,
-                      **/*.tag"
-        />
+        <zip zipfile="${buildDir}/dynamide-source-${dynamide.version}.zip">
+             <zipfileset
+                     dir="${DYNAMIDE_HOME}"
+                     prefix="dynamide"
+                     includes="**/*"
+                     excludes="build/**,
+                        build,
+                        logs,
+                        out,
+                        logs/**,
+                        out/**,
+                        ${relative.src.java}/com/dynamide/**/*.class,
+                        ${relative.src.java}/com/dynamide/doc/3rd/**/*.*,
+                        ${relative.src.java}/com/dynamide/doc/internal/3rd/**/*.*,
+                        ${relative.src.java}/com/dynamide/doc/internal/ndas/**/*.*,
+                        **/*.dfPackage,
+                        **/*.zip,
+                        **/*.jar,
+                        **/*.war,
+                        **/*.exe,
+                        **/*.tag"
+                     />
+        </zip>
     </target>
 
     <target name="dist-lib" depends="init">
@@ -349,28 +357,27 @@
         />
     </target>
 
-    <!-- Create a full distribution. -->
+    <!-- Create a full distribution.
+    TODO.  Make this do something other than what it does now, which is replicates dist-src
+    -->
     <target name="dist" depends="init,jar">
         <property name="zipfile" value="${buildDir}/dynamide.${dynamide.version}.zip"/>
-        <copy verbose="yes" overwrite="yes" file="${dynamidejar}" tofile="${dynamide.lib}/dynamide.jar"/>
-        <delete file="${dynamidejar}" />
         <delete file="${zipfile}" />
         <echo>dist is using DYNAMIDE_HOME: ${DYNAMIDE_HOME}</echo>
         <zip zipfile="${zipfile}">
             <zipfileset
               dir="${DYNAMIDE_HOME}/"
-              prefix="dynamide-${dynamide.build.number}"
-                includes="${dynamidejar},
-                          **/*.*
-                          "
+              prefix="dynamide"
+                includes="**/*"
                  excludes="${buildDirClasses}/**/*.class,
                           doc/internal/**/*.*,
                           doc/3rd/**/*.*,
-                          build/doxygen/**/*.*,
-                          build/javadoc/**/*.*,
-                          build/test-results/**/*.*,
-                          build/xdoclet/**/*.*,
-                          experimental/**/*.*,
+                          build,
+                          build/**,
+                          out,
+                          out/**,
+                          logs,
+                          logs/**,
                           **/*.dfPackage,
                           **/*.tag,
                           **/*.map,
@@ -383,50 +390,6 @@
                           "
                           />
         </zip>
-        <delete file="${dynamide.lib}/dynamide.jar"/>
-        <echo>Zipfile: ${zipfile}</echo>
-    </target>
-
-    <target name="install-dist" if="DYNAMIDE_DIST_BASE" depends="init,dist">
-        <property name="zipfile" value="${buildDir}/dynamide.${dynamide.version}.zip"/>
-        <echo>Installing ${zipfile} into ${DYNAMIDE_DIST_BASE}</echo>
-        <unzip
-            src="${zipfile}"
-            dest="${DYNAMIDE_DIST_BASE}"
-            />
-    </target>
-
-    <!-- zip up just the Java sources.  Excludes the com/dynamide/delphi dir.
-         hoses the ./dynamide-java-source.zip file, so move it when you are done.
-    -->
-    <target name="zip" depends="init">
-        <tstamp>
-            <format property="zip.timestamp" pattern="yyyy.MM.dd" />
-        </tstamp>
-        <property name="zipfile" value="${buildDir}/dynamide-source.${zip.timestamp}.zip"/>
-        <delete file="${zipfile}" />
-        <zip zipfile="${zipfile}"
-            basedir="${DYNAMIDE_HOME}/"
-            includes="src/java/com/dynamide/**/*.*,
-                      bin/**/*.*,
-                      doc/**/*.*,
-                      src/**/*.*,
-                      "
-                      excludes="src/java/com/dynamide/**/*.class,
-                      doc/internal/ndas/**/*.*,
-                      doc/3rd/**/*.*,
-                      **/*.dfPackage,
-                      **/*.tag,
-                      **/*.map,
-                      **/*.mep,
-                      **/*.men,
-                      **/*.zip,
-                      **/*.jar,
-                      **/*.war,
-                      **/*.exe,
-                      **/*.tag
-                      "
-        />
         <echo>Zipfile: ${zipfile}</echo>
     </target>
 
