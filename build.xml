@@ -523,7 +523,7 @@
     </target>
 
     <target name="install-to-tomcat" if="tomcat_home.present" depends="check-DM_TOMCAT_HOME" >
-        <echo>In install-to-tomcat with DM_TOMCAT_HOME=${DM_TOMCAT_HOME}</echo>
+        <echo>DM_TOMCAT_HOME=${DM_TOMCAT_HOME}</echo>
         <copy overwrite="yes"
               verbose="no"
               file="${static.xml.dest.filename}"
@@ -569,6 +569,9 @@
         </replace>
         <replace file="${replaceMacros.dest}" value="${DYNAMIDE_LOGS}">
             <replacetoken expandProperties="false"><![CDATA[${DYNAMIDE_LOGS}]]></replacetoken>
+        </replace>
+        <replace file="${replaceMacros.dest}" value="${DM_TOMCAT_HOME}">
+            <replacetoken expandProperties="false"><![CDATA[${DM_TOMCAT_HOME}]]></replacetoken>
         </replace>
         <echo>Expanded macros in file: ${replaceMacros.dest}</echo>
         <!--

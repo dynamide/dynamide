@@ -2898,8 +2898,8 @@ System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
         }
     }
 
-    /** Returns specially named values (such as SESSIONID), named pages, Properties, then registered Field objects.
-     * These are the special names, in order:
+    /** Returns values by searching in this order: specially named values,  named pages, Properties, then registered Field objects.
+     * These are the specially named values, in order:
 "SESSIONID",
 "session",
 "application",
