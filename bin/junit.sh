@@ -5,7 +5,7 @@ echo "          JUnit tests for Dynamide  "
 echo ===============================================
 
 
-. $DYNAMIDE_HOME/bin/setjavaClasspathDynamide.sh
+. $DYNAMIDE_HOME/dynamide.local.properties
 
 #Called setjavaClasspathDynamide.sh for the env side effects,
 # now override the classpath, since junit uses XSL beans of a different version.
@@ -16,6 +16,6 @@ echo
  
 pushd $DYNAMIDE_HOME
 
-$ANT_HOME/bin/ant -DDYNAMIDE_HOME=$DYNAMIDE_HOME test-report
+ant -DDYNAMIDE_HOME=$DYNAMIDE_HOME test-report
 
 popd
