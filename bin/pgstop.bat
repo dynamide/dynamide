@@ -1,1 +1,0 @@
-start c:\install\cygwin\bin\sh.exe -c "/c/bin/dpostmaster.sh stop"

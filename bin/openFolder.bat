@@ -1,1 +1,0 @@
-%windir%\explorer.exe /e,/root,C:\dynamide

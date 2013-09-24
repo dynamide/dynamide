@@ -6,8 +6,9 @@ import com.dynamide.event.ScriptEvent;
 
 import com.icl.saxon.*;
 
-xmlname = "C:\\temp\\dynamide-sandboxes\\RESOURCE_ROOT\\homes\\dynamide\\assemblies\\com-dynamide-apps-1\\apps\\doco\\resources\\doc\\help\\FAQ.xml";
-xslname = "C:\\temp\\dynamide-sandboxes\\RESOURCE_ROOT\\homes\\dynamide\\assemblies\\com-dynamide-apps-1\\apps\\doco\\resources\\doc\\help\\glossary.xsl";
+xmlname = "build/resource_root/homes/dynamide/assemblies/com-dynamide-apps-1/apps/doco/resources/doc/help/FAQ.xml";
+xslname = "build/resource_root/homes/dynamide/assemblies/com-dynamide-apps-1/apps/doco/resources/doc/help/glossary.xsl";
+
 boolean useJDOM = false;
 boolean useDynamideSaxonController = true;
 st = new com.dynamide.xsl.SaxonJDOMTransform();
