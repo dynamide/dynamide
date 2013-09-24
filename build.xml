@@ -93,7 +93,7 @@
         <echo>Unix</echo>
     </target>
 
-    <target name="init-properties" depends="write-dynamide-local-properties,unix-filenames,dos-filenames">
+    <target name="init-properties" depends="unix-filenames,dos-filenames">
         <property file="${installedProps}" />
         
         <!-- turn this "on" for debug symbols (line numbers in bytecode), or "off". -->
@@ -149,6 +149,9 @@
         DYNAMIDE_CONTEXT_CONF: ${DYNAMIDE_CONTEXT_CONF}
         DYNAMIDE_LOGS: ${DYNAMIDE_LOGS}
         </echo>
+        <echo>See a dump of all ant properties: </echo>
+        <echo>        ${dynamide.generated.properties.filename}</echo>
+        <echo>        (depends on "write-properties" or "install-bin" tasks)</echo>
     </target>
 
     <target name="write-properties" depends="check-props">
@@ -164,14 +167,8 @@
       <mkdir dir="${JAVADOCDIR}" />
       <mkdir dir="${buildDirLib}" />
       <mkdir dir="${DYNAMIDE_STATIC_ROOT}" />
-      <echo>user.home is ${user.home}</echo>
-      <echo>JAVA_HOME is ${myenv.JAVA_HOME}</echo>
-      <echo>DYNAMIDE_HOME  is ${DYNAMIDE_HOME}</echo>
-      <echo>DYNAMIDE_BUILD  is ${buildDir}</echo>
-      <echo>DYNAMIDE_RESOURCE_ROOT: ${DYNAMIDE_RESOURCE_ROOT}</echo>
       <echo>dynamide.version: ${dynamide.version}</echo>
-      <echo>see all properties ("depends on write-properties" or "install-bin" tasks): ${dynamide.generated.properties.filename}</echo>
-    </target>
+      </target>
 
     <target name="setup"  depends="init,homes,static-apps">         
     </target>
@@ -466,15 +463,6 @@
   <!--     Installation Targets                                                   -->
   <!-- =================================================================== -->
 
-  <target name="write-dynamide-local-properties" depends="noProps" if="no.dynamide.local.properties">
-        <echo>${no.dynamide.local.properties}</echo>
-        <echo>No dynamide.local.properties present in $DYNAMIDE_HOME - writing one.</echo>
-        <copy overwrite="no"
-              verbose="yes"
-              file="${propsTemplate}"
-              tofile="${installedProps}"/>
-  </target>
-
   <target name="noProps">
         <condition property="no.dynamide.local.properties">
             <not>
@@ -483,7 +471,7 @@
         </condition>
   </target>
 
-  <target name="install-bin" depends="write-dynamide-local-properties,init,ROOT">
+  <target name="install-bin" depends="init,ROOT">
         <property name="dynamidelocalsh" value="${DYNAMIDE_HOME}/bin/${dynamide.local.script}"/>
         <antcall target="replaceMacros">
              <param name="replaceMacros.src" value="${dynamidelocalsh}.template"/>
