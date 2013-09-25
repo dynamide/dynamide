@@ -1810,7 +1810,7 @@ and execute something like this:
         #set $moreParams = "$(moreParams)&amp;imageWidth=&amp;imgHeight=&amp;title=Ant+call+graph&amp;center=true&amp;caption=&amp;lt;br/>&amp;lt;h2>Ant+call+graph&amp;lt;/h2>&amp;lt;br/>"
         #set $srcLarge = $session.createDialogURL("callGraphImgview", "resources/dialogs/com.dynamide.imgview", "$moreParams")
         #set $src = $session.getInclude("resources/images/dynamide-ant-call-graph.jpg")
-        <center><a href="$srcLarge" target="_blank"><img border="0" src="$src" />
+        <center><a href="$srcLarge" target="_blank"><img border="0" width="500" height="230" src="$src" />
             <br/>
             <br/>(click for full-size image)</a>
         </center>
@@ -1822,8 +1822,11 @@ and execute something like this:
        <li>ant all</li>
        <li>ant check-props</li>
        <li>ant clean</li>
+       <li>ant help</li>
        </ul>
-       "all" is the default target.  "all" does NOT call "clean".
+       "all" is the default target.  "all" does NOT call "clean". 
+       "help" gives a nice overview of the public targets. 
+       "install-bin" is useful when you modify dynamide.local.properties and wish to regenerate tomcat deployment descriptors and local scripts.
     </p>
   </text>
 </definition>

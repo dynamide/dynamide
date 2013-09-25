@@ -1,3 +1,11 @@
+Licenses
+====================================
+Dynamide's license is in LICENSE in the main directory of this distribution.
+Dynamide depends on many other open source projects, whose binary jar files are in the lib/ directory.
+The licenses and notices for these are in doc/licenses/.
+
+
+
 Steps to installing dynamide as a developer.
 ====================================
 
