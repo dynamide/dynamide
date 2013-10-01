@@ -15,11 +15,194 @@
     <!--
 
     function currentWidgetChanged(theSelect, targetPageID){
-        location = "?next=properties&SESSIONID=$SESSIONID&widgetID="+theSelect.options[theSelect.selectedIndex].text
+        location = "?next=inspectortop&SESSIONID=$SESSIONID&widgetID="+theSelect.options[theSelect.selectedIndex].text
                    +'&targetPageID='+targetPageID+'&SUBSESSIONID=$subsessionID';
     }
 
-    function HIDEgetGetDataURL(widgetID, propertyName, propertyValue, targetPageID){
+    //You can use this function with something like this:
+    //    input type="text" name="inputCaption" value="" onkeydown="widgetPropInputOnkeydown(this);"
+     function widgetPropInputOnkeydown(theInput, widgetID, targetPageID, callerID){
+        //note: "event" is magically defined, so don't define it or you shadow it.
+        if (event.keyCode == 13){
+            //6/18/2002 3:28PM
+            // OK, this is annoying, since hitting the enter key causes focus loss, but it prevents the double-POST
+            //  that results when you call widgetPropInputChanged from here, since that proc calls blur,
+            //  which makes the onchange event fire, which calls widgetPropInputChanged again.
+            theInput.blur(); //cause the onchange event to fire.
+            //  Otherwise, I used to do it this way:
+            //widgetPropInputChanged(theInput, widgetID, targetPageID, callerID, 'false');
+        }
+        return 0;
+    }
+
+    //param callerID is to identify who called this fn, for logging only.
+    function widgetPropInputChanged(theInput, widgetID, targetPageID, callerID, forceReload, noPropUpdate){
+        theInput.blur();  //prevent recursion that happens when input looses focus.
+        if (theInput.type == "checkbox"){
+            //logDebug(dump(theInput));
+            pickit(theInput.name, ""+theInput.checked, widgetID, targetPageID, callerID, forceReload, noPropUpdate);
+        } else {
+            pickit(theInput.name, theInput.value, widgetID, targetPageID, callerID, forceReload, noPropUpdate);
+        }
+    }
+
+    function widgetPropCheckboxChanged(theInput, widgetID, targetPageID, callerID){
+        if (theInput.checked){
+            window.status = "was checked, now false";
+            pickit(theInput.name, "true", widgetID, targetPageID, callerID, false, false);
+        } else {
+            window.status = "unchecked";
+            pickit(theInput.name, "false", widgetID, targetPageID, callerID, false, false);
+        }
+    }
+
+         //This stuff was for debugging in pickit:
+         //worked: +"function logDebugRightHere(theSource){"
+         //worked: +"           logDebug('theSource: '+theSource);"
+         //worked: +"           var foo = parent.opener.mojoWin.document.body.innerHTML; "
+         //worked: +"           var res = foo.replace('<', '&lt;'); "
+         //worked: +"           res = res.replace('>', '&gt;'); "
+         //worked: +"           logDebug('page source: '+res); "
+         //worked: +"           logDebug('outerHTML "+widgetID+" before: '+parent.opener.mojoWin.document.all('"+widgetID+"').outerHTML);"
+         //worked:+"} "
+
+    //ripped out closeAfter after build-10
+    //vremoved function pickitOLD ... see cvs build-10.
+    //ripped out mojoWin after build-41
+
+    //This one is for Widget properties, see pagePropertyChanged() below for Page properties.
+    //forceReload is a js boolean.  It implies that the inspector window must be reloaded
+    // to get the new display value from the back end.
+    //noPropUpdate is a js boolean.  It means that the inspectortop beanshell event will not update the property value.
+    function pickit(propertyName, propertyValue, widgetID, targetPageID, callerID, forceReload, noPropUpdate){
+      var propertyValueSpan = document.all(propertyName+'_value');
+      if (propertyValueSpan != null){
+        propertyValueSpan.innerHTML = propertyValue;  //currently, this is a special value for ServerSideEvent editors.
+      }
+      var url = getGetDataURL(widgetID, propertyName, propertyValue, targetPageID)
+               + "&dmFormat=XML" + "&callerID="+callerID+"&noPropUpdate="+noPropUpdate;
+      var rp = randomParam(); //make a brand new unique function name.
+      var functionName = "afterDone"+rp;
+      if (propertyName == 'name'){
+          forceReload = true;
+      }
+      var myfunction =
+           "function "+functionName+"(){"
+         +"    if (parent != null && parent.opener != null){ \r\n"
+         +"       var thePageWindow = parent.opener.getViewByPageID('"+targetPageID+"');\r\n"
+         +"       if (thePageWindow != null){\r\n"
+         +"           var theSource = parent.frames['inspectorhidden'].document.body.innerHTML;\r\n"
+         +"           var pos = theSource.indexOf('ERROR:');\r\n"
+         +"           if (pos != 0) { \r\n"       //logDebugRightHere(theSource);
+         +"              var widget = thePageWindow.document.all('"+widgetID+"');\r\n"
+         +"              if (widget!=null){\r\n"
+         +"                  widget.outerHTML = theSource; \r\n"
+         //                                            function showInspector(theDiv,  widgetID,      SESSIONID,        pageID,          callingWin)
+         +"                  if ("+forceReload+") parent.opener.showInspector(null, '"+widgetID+"', '$subsessionID', '"+targetPageID+"', null); \r\n"
+      //backed this stuff out so dan could get in and use it without infinite loop.
+      //   +"                  var pwdoc = thePageWindow.document; \r\n"
+      //   +"                  var s = pwdoc.documentElement.outerHTML; \r\n"
+      //   // %% this seems to be working now, maybe move it to page change eval.
+      //   +"                  alert('s: '+s); \r\n"
+      //debug-only:   +"                  alert('widget: '+theSource); \r\n"
+      //debug-only:   +"                  alert('widget.outerHTML after: '+widget.outerHTML); \r\n"
+      //   +"                  pwdoc.open(); \r\n"
+      //   +"                  pwdoc.writeln(s); \r\n"
+      //   +"                  pwdoc.close(); \r\n"
+         //+"                  alert('closed'+"+functionName+");\r\n"
+         +"              } else { var em='ERROR in pickit: '+thePageWindow.name+'.document.all("+widgetID+") could not be found'; \r\n"
+         +"                       logDebug(em);\r\n"
+         +"                       alert(em);\r\n"
+         +"              } \r\n"
+         +"           } else { \r\n"
+         +"              logDebug('ERROR detected in pickit(): '+theSource);\r\n"
+         +"              alert(''+pos+' '+theSource);\r\n"
+         +"           } \r\n"
+         +"       } else { alert('ERROR [pickit:"+"afterDone"+rp+"]: thePageWindow is null');} \r\n"
+         +"    } else { alert('parent or parent.opener is null'); } \r\n"
+         +"} "+functionName+"();";   //This last line closes the body and then calls the function, when eval'd.
+      //logDebug(functionName+" will be called after loading this url: "+url+"\r\n callerID: "+callerID);
+      //verbose version:
+      //logDebug(functionName+": \r\n"+myfunction+"\r\n will be called after loading this URL:\r\n"+url);
+      var foo = loadXMLResourceNew(url, myfunction);
+      return foo;
+    }
+
+    function pagePropInputOnKeyDown(theInput, widgetID, targetPageID){
+        //note: "event" is magically defined, so don't define it or you shadow it.
+        if (event.keyCode == 13){
+             //see note in widgetPropInputChanged above.
+             // I now use blur instead of calling this next line directly. 6/18/2002 3:52PM
+             theInput.blur();
+             //pagePropInputChanged(theInput, widgetID, targetPageID);
+        }
+        return 0;
+    }
+
+    function pagePropInputChanged(theInput, widgetID, targetPageID){
+        pagePropertyChanged(theInput.name, theInput.value, widgetID, targetPageID);
+    }
+
+    function pagePropertyChanged(propertyName, propertyValue, pageID, targetPageID){
+      var propertyValueSpan = document.all(propertyName+'_value');
+      if (propertyValueSpan != null){
+        propertyValueSpan.innerHTML = propertyValue;
+      }
+      var url = getGetDataURL(targetPageID, propertyName, propertyValue, targetPageID) + "&dmFormat=XML";
+      var rp = randomParam(); //make a brand new unique function name.
+      var functionName = "afterDone"+rp;
+      var myfunction =
+           "function "+functionName+"(){ \r\n"
+         +"    if (parent != null && parent.opener != null){ \r\n"
+         +"       var thePageWindow = parent.opener.getViewByPageID('"+targetPageID+"');\r\n"
+         +"       if (thePageWindow != null){ \r\n"
+         +"           var theSource = parent.frames['inspectorhidden'].document.body.innerHTML; \r\n"
+         +"           var pos = theSource.indexOf('ERROR:');\r\n"
+         +"           if (pos != 0) { \r\n"
+         +"             if (theSource != null && theSource.length > 0){ \r\n"
+         +"                try { \r\n"
+         +"                   thePageWindow.eval(theSource); \r\n"
+         +"                } catch (e) {alert('error: '+e); } \r\n"
+         +"             } \r\n"
+         +"           } else { \r\n"
+         +"              logDebug('ERROR detected in pagePropertyChanged(): '+theSource); \r\n"
+         +"              alert(''+pos+' '+theSource);\r\n"
+         +"           } \r\n"
+         +"       } else { alert('thePageWindow is null');} \r\n"
+         +"    } else { alert('parent or parent.opener is null'); } \r\n"
+         +"} "+functionName+"();";   //This last line closes the body and then calls the function, when eval'd.
+      //logDebug("[pagePropertyChanged] "+ functionName+": \r\n"+myfunction+"\r\nThis fn will be called after loading this URL:\r\n"+url);
+      //alert(myfunction);
+      //var foo =
+      loadXMLResourceNew(url, myfunction);
+      //return foo;
+    }
+
+    //Don't need to update any pages, just set the value in the Inspector.
+    function applicationPropertyChanged(propertyName, propertyValue, pageID, targetPageID){
+      var propertyValueSpan = document.all(propertyName+'_value');
+      if (propertyValueSpan != null){
+        propertyValueSpan.innerHTML = propertyValue;
+      }
+    }
+    function showIDEHelp(url){
+      if (parent != null && parent.opener != null){
+         if (parent.opener.showIDEHelp == null){
+            alert('parent.opener.showIDEHelp is null');
+         } else {
+            parent.opener.showIDEHelp(url);
+         }
+      }
+    }
+
+    function showAllWindows(){
+      if (parent != null && parent.opener != null && parent.opener.showAllWindows != null){
+        parent.opener.showAllWindows();
+      }
+      focus();
+    }
+
+    function getGetDataURL(widgetID, propertyName, propertyValue, targetPageID){
       propertyValue = escape(propertyValue);//undo is "unescape"
       var url = "/dynamide/ide?page=inspectortop&action=getData&"
                                     +"SESSIONID=$SESSIONID&propertyName="+propertyName
@@ -27,7 +210,7 @@
       return url;
     }
 
-    function HIDEgetData(widgetID, propertyName, propertyValue, targetPageID){
+    function getData(widgetID, propertyName, propertyValue, targetPageID){
       //the tag at the end, dmFormat=XML, ensures that a valid root will be returned.
       //if an error is returned, it will be xml, and the caller should pop up a window
       // to the same url without the dmFormat param to see what happened.
@@ -39,6 +222,17 @@
       //alert("after calling loadXMLResource");
       alert(newHtml);
       return newHtml;
+    }
+
+    function getDataDone(){
+        alert("getDataDone");
+    }
+
+    #set $str= "&action=getData&SUBSESSIONID=$subsessionID"
+    function loadXMLResourceNew(url, onDoneFunction){
+        parent.functionExpression = onDoneFunction;
+        parent.frames['inspectorhidden'].location = url;
+        return "HELLO";
     }
 
     //-->
@@ -72,7 +266,7 @@ SESSIONID: $SESSIONID
 -->
 
 #if ($subsession == null){
-    #if ($pageID == "properties"){
+    #if ($pageID == "inspectortop"){
          <h2>SUBSESSION IS NULL</h2>The IDE Session or the Subsession (the project you were working on) timed out
      } #else {
          <h2>SUBSESSION IS NULL</h2>THIS WIDGET ONLY WORKS IN THE IDE.
@@ -93,19 +287,28 @@ SESSIONID: $SESSIONID
         #set $widgetByID = $subpage.getWidgetByID($LAST_WIDGET_ID)
         #set $wgname = "$LAST_WIDGET_ID"
     }
-    <TABLE border="0" cellpadding="5" cellspacing="0">
+    <TABLE width="100%" border="0" cellpadding="5" cellspacing="0">
       <TR>
         <TD>
-          <b>pageID:</b> $pageIDParam
+          <table border='0' cellpadding='0' cellspacing='0'>
+            <tr>
+              <td width='100%'>
+                 <b>pageID:</b> $pageIDParam
+              </td>
+              <td align='right'>
+                 <a href='javascript:showAllWindows();'><small>Show<dm_nbsp/>All<dm_nbsp/>Windows</small></a>
+              </td>
+            </tr>
+          </table>
+
+
+
+
         </TD>
       </TR>
       <TR>
         <TD align="left" colspan="2">
-            #if ("$wgname" == "$pageIDParam") {
-	         <b>Object:<dm_nbsp/></b>
-            } #else {
-	         <b>Object:<dm_nbsp/>$pageIDParam.</b>
-            }
+            <b>Object:<dm_nbsp/></b>
             <select name="currentWidgetSelect" onchange="currentWidgetChanged(this, '$pageIDParam');">
             <option>
                 Application
@@ -161,7 +364,7 @@ SESSIONID: $SESSIONID
                         ## Let the page get the appropriate editor type for this widget and property.
                         #set $okd = "\"pagePropInputOnKeyDown(this, '$subpage.id', '$subpage.id');\""
                         #set $och = "\"pagePropInputChanged(this, '$subpage.id', '$subpage.id');\""
-                        ###$session.getApplicationPropertyEditor($session, $subsession, $prop, "$okd", "$och")
+                        $session.getApplicationPropertyEditor($session, $subsession, $prop, "$okd", "$och")
                     </TD>
                 </TR>
             }
@@ -178,7 +381,7 @@ SESSIONID: $SESSIONID
         currentWidget: $currentWidget
         -->
             ## PAGE PROPERTIES:
-            <TABLE border="1" cellpadding="0" cellspacing="0" width="300" >
+            <TABLE border="1" cellpadding="0" cellspacing="0" width="100%" >
             #foreach $prop in $subpage.getPageProperties() {
                 <TR>
                     <TD width="100%" title="$widget.helpTip">
@@ -196,7 +399,7 @@ SESSIONID: $SESSIONID
             </TABLE>
     } #else {
         ## WIDGET PROPERTIES:
-        <TABLE border="1" cellpadding="0" cellspacing="0" width="300" >
+        <TABLE border="1" cellpadding="0" cellspacing="0" width="100%" >
         #foreach $prop in $currentWidget.Properties {
             #if ("$prop.hidden" != "true"){
             <TR>
