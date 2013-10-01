@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<widget>
+    <properties>
+        <property name="type"><defaultValue>com.dynamide.ide.widgetlist</defaultValue><readOnly>true</readOnly></property>
+        <property name="name"><defaultValue>pagelist</defaultValue></property>
+        <property name="caption"><defaultValue></defaultValue></property>
+        <property name="dropdown"><defaultValue>false</defaultValue></property>
+        <property name="selectName"><defaultValue></defaultValue></property>
+    </properties>
+
+    <htmlsrc browser="*"><![CDATA[
+        #if ($widget.dropdown == "true") {
+            #if ($widget.caption.length() > 0) {
+                $widget.caption
+            }
+            <select name="$widget.selectName" id="$widget.selectName">
+                #foreach $pagename in $session.Pages {
+                    <option>$pagename</option>
+                }
+            </select>
+        } #else {
+            <font size="+1">session.Pages</font>
+            <table border='1' cellspacing='0' cellpadding='0'>
+                #foreach $pagename in $session.Pages {
+                    <tr>
+                        <td>
+                        $pagename
+                        </td>
+                    </tr>
+                }
+            </table>
+        }
+    ]]></htmlsrc>
+</widget>

@@ -147,7 +147,7 @@ public class Assembly extends Pool implements IFileDiverListener, IContext {
                                           String RESOURCE_ROOT,
                                           boolean isCacheOn)
     throws Exception {
-      System.out.println("Assembly.createAssembly: "+assemblyName+":"+account+":"+isCacheOn);
+        com.dynamide.util.Log.info(Assembly.class, "Assembly.createAssembly: "+assemblyName+":"+account+":"+isCacheOn);
         String assemblyXMLName = assemblyDir.getCanonicalPath()+File.separator+"assembly.xml";
         File assemblyXML = new File(assemblyXMLName);
         if ( ! assemblyXML.exists() ) {
@@ -170,7 +170,7 @@ public class Assembly extends Pool implements IFileDiverListener, IContext {
             Log.warn(Assembly.class, "/assembly/interface element not found in assembly.xml in "+assemblyXMLName
                    +" Using default interface number: "+Assembly.DEFAULT_INTERFACE_NUMBER);
         }
-      System.out.println("basename: "+assemblyBasename+" interface: "+assemblyInterfaceNumber+" xml: "+assemblyXMLName+" RESOURCE_ROOT:"+RESOURCE_ROOT);
+        com.dynamide.util.Log.info(Assembly.class, "basename: "+assemblyBasename+" interface: "+assemblyInterfaceNumber+" xml: "+assemblyXMLName+" RESOURCE_ROOT:"+RESOURCE_ROOT);
         Assembly assembly = resourceManager.createAssembly(resourceManager, assemblyNameBuild, account, RESOURCE_ROOT);
         assembly.setAssemblyDirectory(assemblyDirPath);
         assembly.bindAttribute(BUILD, assemblyBuild);
@@ -268,13 +268,13 @@ public class Assembly extends Pool implements IFileDiverListener, IContext {
         String assembliesFullpath = (String)assemblies.getAttribute(FULLPATH);
         // First rule: find assembly pointer for build number
         if (build!=null && build.length()>0){
-            System.out.println("find by build: "+build);
+            com.dynamide.util.Log.debug(Assembly.class, "find by build: "+build);
             result = (Assembly)assemblies.getContext(basename+'-'+build);
             if ( result != null ) {
-                System.out.println("found: "+result);
+               com.dynamide.util.Log.debug(Assembly.class, "found: "+result);
                 return result;
             }
-            System.out.println("NOT found");
+            com.dynamide.util.Log.debug(Assembly.class, "NOT found");
         }
         // Second rule: find assembly pointer for interface number
         IContext basenames = (IContext)assemblies.getContext(BASENAMES);

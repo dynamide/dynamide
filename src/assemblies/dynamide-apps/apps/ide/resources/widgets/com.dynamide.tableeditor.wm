@@ -1,0 +1,191 @@
+<style id='toolbox'>
+.selected \{border-width: 4; border-color: blue;\}
+</style>
+  <script language="javascript">
+
+    function ideAddRowBefore()\{
+       parent.opener.ideAddRowBefore();
+    \}
+
+    function ideAddRowAfter()\{
+        parent.opener.ideAddRowAfter();
+    \}
+
+    function ideAddColumnBefore()\{
+        parent.opener.ideAddColumnBefore();
+    \}
+
+    function ideAddColumnAfter()\{
+        parent.opener.ideAddColumnAfter();
+    \}
+
+    function ideInsertTable()\{
+         parent.opener.ideInsertTable();
+    \}
+
+    function ideApplyFormat()\{
+      if (event != null) event.cancelBubble = true;
+      var currentTableWindow =  parent.opener.getCurrentTableWindow();
+      if ( currentTableWindow != null ) \{
+        if ( currentShowTarget == SHOW_TB ) \{
+            var table = currentTableWindow.dmDesign_GetTable();
+            table.setAttribute("align", document.all["align"].value);
+            table.setAttribute("bgColor", document.all["bgcolor"].value);
+            table.setAttribute("border", document.all["border"].value);
+            table.setAttribute("cellSpacing", document.all["cellspacing"].value);
+            table.setAttribute("cellPadding", document.all["cellpadding"].value);
+            table.setAttribute("height", document.all["height"].value);
+            table.setAttribute("vAlign", document.all["valign"].value);
+            table.setAttribute("width", document.all["width"].value);
+            //alert(table.outerHTML);
+        \} else if (currentShowTarget == SHOW_TR)\{
+            var tr = currentTableWindow.dmDesign_GetTR();
+            if ( tr != null ) \{
+              tr.setAttribute("align", document.all["align"].value);
+              tr.setAttribute("bgColor", document.all["bgcolor"].value);
+              tr.setAttribute("height", document.all["height"].value);
+              tr.setAttribute("vAlign", document.all["valign"].value);
+            \}
+
+        \} else if (currentShowTarget == SHOW_TD)\{
+            var td = currentTableWindow.dmDesign_GetTD();
+            if ( td != null ) \{
+              td.setAttribute("align", document.all["align"].value);
+              td.setAttribute("bgColor", document.all["bgcolor"].value);
+              td.setAttribute("height", document.all["height"].value);
+              td.setAttribute("vAlign", document.all["valign"].value);
+              td.setAttribute("width", document.all["width"].value);
+            \}
+
+        \}
+      \}
+    \}
+
+var SHOW_TB = 1;
+var SHOW_TR = 2;
+var SHOW_TD = 3;
+
+var currentShowTarget = SHOW_TB;
+
+function changeStyle(index)\{
+  currentShowTarget = index;
+  if (index == SHOW_TB)\{
+    document.all["display_align"].style.display = "inline";
+    document.all["display_bgcolor"].style.display = "inline";
+    document.all["display_border"].style.display = "inline";
+    document.all["display_cellspacing"].style.display = "inline";
+    document.all["display_cellpadding"].style.display = "inline";
+    document.all["display_height"].style.display = "inline";
+    document.all["display_valign"].style.display = "inline";
+    document.all["display_width"].style.display = "inline";
+  \} else if (index == SHOW_TR) \{
+    document.all["display_align"].style.display = "inline";
+    document.all["display_bgcolor"].style.display = "inline";
+    document.all["display_border"].style.display = "none";
+    document.all["display_cellspacing"].style.display = "none";
+    document.all["display_cellpadding"].style.display = "none";
+    document.all["display_height"].style.display = "inline";
+    document.all["display_valign"].style.display = "inline";
+    document.all["display_width"].style.display = "none";
+  \} else if (index == SHOW_TD)\{
+    document.all["display_align"].style.display = "inline";
+    document.all["display_bgcolor"].style.display = "inline";
+    document.all["display_border"].style.display = "none";
+    document.all["display_cellspacing"].style.display = "none";
+    document.all["display_cellpadding"].style.display = "none";
+    document.all["display_height"].style.display = "inline";
+    document.all["display_valign"].style.display = "inline";
+    document.all["display_width"].style.display = "inline";
+  \}
+\}
+
+</script>
+
+<CENTER>
+<table border='0' cellpadding='3' cellspacing='0'>
+  <tr VALIGN="top">
+    <td>
+    <span onclick="ideInsertTable()"><img src='$session.getInclude("resources/images/new-table.gif")'></img><br/><font size="-3">Insert Table</font></span>
+    </td>
+    <td>
+    <span onclick="ideAddRowBefore()"><img src='$session.getInclude("resources/images/insert-row-before.jpg")'></img><br/><font size="-3">Row before</font></span>
+    </td>
+    <td>
+    <span onclick="ideAddRowAfter()"><img src='$session.getInclude("resources/images/insert-row-after.jpg")'></img><br/><font size="-3">Row after</font></span>
+    </td>
+    <td>
+    <span onclick="ideAddColumnBefore()"><img src='$session.getInclude("resources/images/insert-column-before.jpg")'></img><br/><font size="-3">Col before</font></span>
+    </td>
+    <td>
+    <span onclick="ideAddColumnAfter()"><img src='$session.getInclude("resources/images/insert-column-after.jpg")'></img><br/><font size="-3">Col after</font></span>
+    </td>
+  </tr>
+</table>
+</CENTER>
+
+<br/>
+<br/>
+
+<CENTER>
+<a href="javascript:changeStyle(SHOW_TB);">Table</a>
+<a href="javascript:changeStyle(SHOW_TR);">Row</a>
+<a href="javascript:changeStyle(SHOW_TD);">Cell</a>
+
+<br/>
+<table border='1' cellpadding='5' cellspacing='0'>
+  <tr id="display_align">
+    <td><b>align</b>
+    </td>
+    <td><INPUT id="align" VALUE=""></INPUT>
+    </td>
+  </tr>
+  <tr id="display_bgcolor">
+    <td><b>bgcolor</b>
+    </td>
+    <td><INPUT id="bgcolor" VALUE=""></INPUT>
+    </td>
+  </tr>
+  <tr id="display_border">
+    <td><b>border</b>
+    </td>
+    <td><INPUT id="border" VALUE="1"></INPUT>
+    </td>
+  </tr>
+  <tr id="display_cellpadding">
+    <td><b>cellpadding</b>
+    </td>
+    <td><INPUT id="cellpadding" VALUE="0"></INPUT>
+    </td>
+  </tr>
+  <tr id="display_cellspacing">
+    <td><b>cellspacing</b>
+    </td>
+    <td><INPUT id="cellspacing" VALUE="0"></INPUT>
+    </td>
+  </tr>
+  <tr id="display_height">
+    <td><b>height</b>
+    </td>
+    <td><INPUT id="height" VALUE="100%"></INPUT>
+    </td>
+  </tr>
+  <tr id="display_valign">
+    <td><b>valign</b>
+    </td>
+    <td><INPUT id="valign" VALUE=""></INPUT>
+    </td>
+  </tr>
+  <tr id="display_width">
+    <td><b>width</b>
+    </td>
+    <td><INPUT id="width" VALUE="100%"></INPUT>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" colspan="2">
+    <a href="javascript:ideApplyFormat();">Apply</a>
+    </td>
+  </tr>
+</table>
+</CENTER>
+

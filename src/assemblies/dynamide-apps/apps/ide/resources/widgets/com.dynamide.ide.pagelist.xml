@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<widget>
+    <properties>
+        <property name="type"><defaultValue>com.dynamide.ide.pagelist</defaultValue><readOnly>true</readOnly></property>
+        <property name="name"><defaultValue>pagelist</defaultValue></property>
+        <property name="value"><defaultValue></defaultValue></property>
+        <property name="caption">
+          <defaultValue></defaultValue>
+          <intl>1</intl>
+        </property>
+        <property name="dropdown"><defaultValue>false</defaultValue></property>
+        <property name="useSUBSESSIONID"><defaultValue>false</defaultValue></property>
+        <property name="selectName"><defaultValue></defaultValue></property>
+    </properties>
+
+    <htmlsrc browser="*"><![CDATA[
+        #set $subsessionID = $session.getQueryParam("SUBSESSIONID")
+        <script language="javascript">
+	<!--
+	function currentPageChanged(targetPageID) \{
+	  ##widget.selectName will be something like "targetPageID", which is the name of our select, and contains the targetPageID we are on.
+	  location = "?next=properties&SESSIONID=$SESSIONID&$widget.selectName="+targetPageID+"&SUBSESSIONID=$subsessionID";
+        \}
+	-->
+	</script>
+        #if ($widget.dropdown == "true") {
+            #if ($widget.caption.length() > 0) {
+                $widget.caption
+            }
+	    <select name="$widget.selectName" id="$widget.selectName"   onchange="currentPageChanged(this.options[this.selectedIndex].text);">
+                #if ($widget.useSUBSESSIONID == "true") {
+		    #set $targetPageID = $session.getQueryParam("targetPageID")
+		    #set $SUBSESSIONID = $session.getFieldValue("SUBSESSIONID")
+		    #set $subsession = $session.findSession($SUBSESSIONID)
+		    #set $list = $subsession.getPageList()
+		    #foreach $pageName in $list {
+		        #set $sel = ""
+			#if ("$targetPageID" == "$pageName"){
+				#set $sel = " selected='true'"
+			}
+		        <option $sel>$pageName</option>
+                    }
+		} #elseif (($widget.getNamedObject("pagelist")) != null){
+		    #foreach $pageName in $widget.getNamedObject("pagelist") {
+                        <option>$pageName</option>
+                    }
+                }
+            </select>
+        } #else {
+            <font size="+1">session.Pages</font>
+            <table border='1' cellspacing='0' cellpadding='0'>
+                #if (($widget.getNamedObject("pagelist")) != null){
+                    #foreach $pageName in $widget.getNamedObject("pagelist") {
+                    <tr>
+                        <td>$pageName</td>
+                    </tr>
+                    }
+                }
+            </table>
+        }
+    ]]></htmlsrc>
+</widget>

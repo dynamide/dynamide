@@ -1,0 +1,11 @@
+source("C:/dynamide/src/shell/dynamideShell.bs");
+
+s = Session.createSession("/dynamide/ide", "/dynamide/ide?SESSIONID=test-ide", Session.MODE_BATCH);
+
+r = s.handleURL("?next=newProjectDlg");
+
+r = s.handleURL("?assemblyInterface=1&assemblyBasename=com-dynamide-apps&build=&urlPath=%2Ffoo&account=dynamide&appName=foo&loadOnStartup=off&checkbox_loadOnStartup=checkbox%3Averify&newProject=Create+Project&page=newProjectDlg");
+
+print("\r\n\r\nresult:\r\n"+r);
+
+print("PROJECT CREATED, BUT NOT PAGES ADDED BY THIS TEST");

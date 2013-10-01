@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm  >
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<dynamideForm>
+
+<properties>
+    <property name="type"><value>pagetypes/com.dynamide.form</value></property>
+    <property name="bgcolor"><value>#A4BFDD</value></property>
+</properties>
+
+<htmlsrc><![CDATA[
+<html>
+    <head>
+        <title>Eval in Server-Side Interpreter</title>
+        $session.getInclude("resources/css/ide.css")
+        $session.getInclude("resources/js/page.js")
+    </head>
+    <body bgcolor="#A4BFDD" onload="document.all.source.focus();">
+    <form name="frmEval" action="/dynamide">
+        <table border="1" width="100%">
+        <tr>
+        <td>
+
+            <b><label for='source' accesskey='s'><U>S</U>ource</label></b>
+            <br/>
+            #if ($WEBMACRO_CONTEXT.getContext().containsKey("source")){
+                #if ($source != null){
+                    #set $s = $source
+                } #else {
+                    #set $s = "print('h');"
+                }
+                <textarea class="codewindow" cols="110" rows="25" id="source" name="source" value="">$s</textarea>
+            }
+        </td>
+        </tr>
+        <tr>
+        <td>
+            <nobr>
+                <input id="eval" name="eval" type="submit" value="eval" accesskey='e'/>
+                <small>(accelerator key: e)</small>
+            </nobr>
+            #set $SUBSESSIONID = $session.getFieldValue("SUBSESSIONID")
+            #set $time = $session.getTimestampLocale()
+            <small><b>SESSIONID:</b> $SUBSESSIONID <b>time:</b> [$time]</small>
+        </td>
+        </tr>
+        </table>
+        #if ($WEBMACRO_CONTEXT.getContext().containsKey("evalResult") ){
+            #if ($evalResult){
+                $evalResult
+            }
+        }
+
+        <input type="hidden" id="SUBSESSIONID" name="SUBSESSIONID" value="$SUBSESSIONID" />
+        <input type="hidden" id="SESSIONID" name="SESSIONID" value="$SESSIONID" />
+        <input type="hidden" id="action" name="action" value="eval" />
+    </form>
+    </body>
+  </html>
+]]></htmlsrc>
+
+<widgets>
+</widgets>
+<event language="beanshell" name="evaltop_onAction">
+  <![CDATA[
+    //This won't get called since I don't have a pageID  on this page.
+    event.println("in evaltop_onAction: "+event.action);
+  ]]>
+</event>
+
+</dynamideForm>

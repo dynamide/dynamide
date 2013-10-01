@@ -1,0 +1,18 @@
+BODY {font: Arial,Helvetica,sans-serif; }
+TD {font: 17px Arial,Helvetica,sans-serif; }
+A {color: #31324E; text-decoration: underline; font: 15px}
+A:active {color: green; text-decoration: underline}
+A:hover {color: #FF9933; text-decoration: underline}
+p {font: 17px Arial,Helvetica,sans-serif; }
+p {font: 17px Arial,Helvetica,sans-serif; }
+td {font: 17px Arial,Helvetica,sans-serif; }
+small {font: 7pt Arial,Helvetica,sans-serif; }
+td {font: 17px Arial,Helvetica,sans-serif; }
+th {font: 17px Arial,Helvetica,sans-serif; font-weight: bold;}
+li {font: 16px Arial,Helvetica,sans-serif; margin-right: 50px;}
+pre {margin-left:30px; font: 12px; font-weight: bold; }
+h1 {font: 28px Arial,Helvetica,sans-serif; }
+h2 {font: 25px Arial,Helvetica,sans-serif; }
+h3 {font: 21px Arial,Helvetica,sans-serif; }
+h4 {font: 18px Arial,Helvetica,sans-serif; }
+.codewindow {font-size: 8pt;}

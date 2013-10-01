@@ -1,0 +1,161 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<widget>
+    <properties>
+        <property name="type"><defaultValue>com.dynamide.ide.widgethelp</defaultValue><readOnly>true</readOnly></property>
+        <property name="name"><defaultValue>widgethelp</defaultValue></property>
+        <property name="showInstalledWidgets"><defaultValue>true</defaultValue></property>
+    </properties>
+
+<htmlsrc browser="*"><![CDATA[
+    #set $SUBSESSIONID = $session.getQueryParam("SUBSESSIONID")
+    #if ($SUBSESSIONID == ""){
+        #set $SUBSESSIONID = $session.getString("SUBSESSIONID")
+    }
+
+    #set $subsession = $session.findSession($SUBSESSIONID)
+    #if ($subsession == null){
+       #set $subsession = $session
+    }
+
+    #set $widgetType = $session.getQueryParam("widgetType")
+    #set $res = $session.renderWidgetHelp($widgetType)
+
+    #set $paramShowInstalledWidgets = $session.getQueryParam("showInstalledWidgets")
+    #if ($paramShowInstalledWidgets != "") {
+        $widget.setProperty("showInstalledWidgets", $paramShowInstalledWidgets)
+    }
+
+    #if ($widget.showInstalledWidgets == "true") {
+        #set $showParam = "&showInstalledWidgets=true"
+        #set $hideURL = "?next=idehelp&showDynamideHelp=1&widgetType=$widgetType&showInstalledWidgets=false&SESSIONID=$SESSIONID"
+    } #else {
+        #set $showParam = "&showInstalledWidgets=false"
+        #set $hideURL = "?next=idehelp&showDynamideHelp=1&widgetType=$widgetType&showInstalledWidgets=true&SESSIONID=$SESSIONID"
+    }
+    #set $alwaysShowURL = "?next=idehelp&showDynamideHelp=1&widgetType=$widgetType&showInstalledWidgets=true&SESSIONID=$SESSIONID"
+
+    <table border='0' cellpadding='0' cellspacing='0' width="100%">
+    <tr>
+    #if ($widget.showInstalledWidgets == "true"){
+    <td valign="top">
+        <table bgcolor='#D5D7DB' border='1' cellpadding='10' cellspacing='1'>
+        <tr>
+        <td>
+        <table border='0' cellpadding='0' cellspacing='0'>
+          <tr>
+            <td width='100%'>
+            <b>Installed<dm_nbsp/>Widgets</b>
+            </td>
+            <td>
+               <span align='right'><dm_nbsp/><dm_nbsp/>[<a href="$hideURL">Hide</a>]</span>
+            </td>
+          </tr>
+        </table>
+        </td>
+        </tr>
+        <tr>
+        <td>
+            #foreach $assembly in $subsession.getAssembly().getImports() {
+                <b>$assembly.toString()</b>
+                #foreach $key in $assembly.listTemplates("resources/widgets").keySet() {
+                   <nobr><a href="?next=idehelp&widgetType=$key$showParam&SESSIONID=$SESSIONID">$key</a><br/></nobr>
+                }
+            }
+        </td>
+        </tr>
+        </table>
+    </td>
+    <td><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/><dm_nbsp/></td>
+    }
+    <td width="100%" valign="top">
+        <table border='0' cellpadding='0' cellspacing='0'>
+          <tr>
+            <td width='100%'>
+               <span class="helpsechead">Widget Help [$widgetType] <small>session: $subsession.applicationPath [ $subsession.SESSIONID ]</small></span>
+            </td>
+            #if ( $widget.showInstalledWidgets == "false" ){
+            <td align='right'>
+                <span align='right'><a href="$hideURL">Show<dm_nbsp/>Installed<dm_nbsp/>Widgets</a></span>
+            </td>
+            }
+          </tr>
+
+        </table>
+        <hr />
+        #if ($res.trim().length() == 0){
+            ##<p>There is no help file for this Widget.</p>
+            <br />
+        } #else {
+            $res
+        }
+        #set $currentWidget = null
+        #if ($widgetType != ""){
+            #set $currentWidget = $session.getPageByID($page.ID).createWidgetSafe("$widgetType")
+        }
+        #if ($currentWidget == null){
+            <span class="helpsechead">Properties []</span>
+            <hr />
+            <br />
+            #if ( $widget.showInstalledWidgets == "false" ){
+                Click here to <span align='right'><a href="$alwaysShowURL">Show<dm_nbsp/>Installed<dm_nbsp/>Widgets</a></span>
+            } #else {
+                Select a Widget type from the list on the left.
+            }
+        } #else {
+        <br />
+        <br />
+
+        <span class="helpsechead">Properties [$widgetType]</span>
+        <hr />
+        <br />
+            <TABLE border="1" cellpadding="3" cellspacing="0">
+                <TR>
+                    <TD>
+                        <b>Property</b>
+                    </TD>
+                    <TD>
+                        <b>Default Value</b>
+                    </TD>
+                    <TD>
+                        <b>Category</b>
+                    </TD>
+                    <TD>
+                        <b>HelpTip</b>
+                    </TD>
+                </TR>
+            #foreach $prop in $currentWidget.Properties {
+                <TR>
+                    <TD>
+                        $prop.Name<dm_nbsp/>
+                    </TD>
+                    <TD>
+                        $prop.Value<dm_nbsp/>
+                    </TD>
+                    <TD>
+                        #if ($prop.readOnly == "true") {
+                            read-only
+                        } #else {
+                            $prop.category<dm_nbsp/>
+                        }
+                    </TD>
+                    <TD>
+                        $prop.helpTip<dm_nbsp/>
+                    </TD>
+                </TR>
+            }
+            </TABLE>
+        }
+        <br />
+        <hr />
+        <br />
+    </td>
+    </tr>
+    </table>
+
+
+
+]]></htmlsrc>
+</widget>

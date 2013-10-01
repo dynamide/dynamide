@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm  >
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<dynamideForm>
+
+<properties>
+    <property name="type"><value>pagetypes/com.dynamide.form</value></property>
+</properties>
+
+<htmlsrc><![CDATA[
+  <html>
+    <head>
+    <title>Property Designer</title>
+    </head>
+        $session.getInclude("resources/js/scripts.js")
+        $session.getInclude("resources/js/msdom.js")
+        $session.getInclude("resources/js/windowing.js")
+        $session.getInclude("resources/js/queryString.js")
+
+    <script language='javascript'>
+    <!--
+    function framesetOnload(){
+        QueryString_Parse(location);
+        excludeArray = new Array();
+        excludeArray["next"] = "true"; //any value will make it excluded
+        excludeArray["action"] = "true";
+        excludeArray["SESSIONID"] = "true";
+        var qs = getQueryStringExcluding(QueryString, excludeArray);
+        designertop.location = "/dynamide/ide?SESSIONID=$SESSIONID&next=designertop&"+qs;
+
+    }
+
+    var functionExpression = "";//"alert('initial');";
+
+    function framehiddenOnload(){
+        eval(functionExpression);
+    }
+
+    // -->
+    </script>
+    <frameset rows="100%,*" framespacing="0" onload="javascript:framesetOnload();" >
+        <frame NAME="designertop" />
+        <frame onload="javascript:framehiddenOnload();"
+                src="/dynamide/ide?next=designerhidden&amp;SESSIONID=$SESSIONID"
+                NAME="designerhidden" />
+    </frameset>
+  </html>
+]]></htmlsrc>
+
+<widgets>
+</widgets>
+
+</dynamideForm>

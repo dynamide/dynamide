@@ -5,7 +5,7 @@
 
 . ${DYNAMIDE_HOME}/dynamide.local.properties
 
-export CLASSPATH="${DYNAMIDE_BUILD}/tomcat/webapps/ROOT/WEB-INF/lib/"
+export CLASSPATH="${DYNAMIDE_BUILD}/lib/"
 CLASSPATH+='*'
 if [ "$1" = "-outputclasspath" ]; then
   echo "$CLASSPATH"

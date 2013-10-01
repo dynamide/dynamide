@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm  >
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<dynamideForm>
+<htmlsrc><![CDATA[
+  <html>
+    <head>
+    <title>Dynamide</title>
+    </head>
+        <frameset rows="99,1">
+            <frame src="/dynamide/ide?next=inspector&amp;SESSIONID=$SESSIONID" NAME="inspectortop" />
+            <frame src="/dynamide/ide?next=inspectorhidden&amp;SESSIONID=$SESSIONID" NAME="inspectorhidden" />
+        </frameset>
+  </html>
+]]></htmlsrc>
+
+<widgets>
+</widgets>
+
+</dynamideForm>

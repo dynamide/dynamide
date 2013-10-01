@@ -1,0 +1,212 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<!--
+    OBVIATED:
+    This file initializes a Property Designer window, then pulls in a specific designer for the datatype.
+    It initializes a bunch of things in the context:
+        targetOwnerID
+        targetClass
+        targetID
+        session
+        subsession
+        SUBSESSIONID
+        propertyName
+            and
+        propertyDesigner_SubmitButton
+-->
+<dynamideForm>
+
+<properties>
+    <property name="type"><value>pagetypes/com.dynamide.form</value></property>
+    <property name="bgcolor"><value>#A4BFDD</value></property>
+    <property name="dialog"><value></value></property>
+</properties>
+
+<htmlsrc><![CDATA[
+    #set $targetOwnerID = ""
+        #set $propertyName = $session.getQueryParam("propertyName")
+        #set $SUBSESSIONID = $session.getFieldValue("SUBSESSIONID")
+        #set $targetID =  $session.getQueryParam("targetID")
+        #set $targetOwnerID =  $session.getQueryParam("targetOwnerID")
+        #set $targetClass =  $session.getQueryParam("targetClass")
+
+        #set $targetWidget = null
+        #set $targetPage = null
+        #set $property = null
+        #set $datatype = ""
+
+        $session.logDebug("***** propertyName: $propertyName ")
+
+        #set $subsession = $session.findSession($SUBSESSIONID)
+        #if ($subsession){
+            #if ($targetClass == "Widget"){
+                #set $targetPage = $subsession.findPageByID($targetOwnerID)
+                #set $targetWidget = $targetPage.getWidgetByID($targetID)
+                #set $target = $targetWidget
+                #set $property = $targetWidget.getProperty("$propertyName")
+            } #elseif ($targetClass == "Page") {
+                ## This is a Page property, not a Widget property.
+                #set $targetPage = $subsession.findPageByID($targetOwnerID)
+                #set $target = $targetPage
+                #set $property = $targetPage.getProperty("$propertyName")
+            } #elseif ($targetClass == "Session") {
+                #set $target = $subsession
+                #set $property = $subsession.getProperty("$propertyName")
+            }
+            #set $datatype = $property.getDatatype().getDatatypeClassName()
+        }
+        
+
+        #set $doneURL = "/dynamide/ide?SESSIONID=$SESSIONID&page=$pageID"
+        #set $doneURL = "$doneURL&targetID=$targetID"
+        #set $doneURL = "$doneURL&targetOwnerID=$targetOwnerID"
+        #set $doneURL = "$doneURL&targetClass=$targetClass"
+        #set $doneURL = "$doneURL&datatype=$datatype"
+        #set $doneURL = "$doneURL&propertyName=$propertyName"
+
+        #if ($subsession == null){
+            <div>
+            <h2>SUBSESSION IS NULL</h2>THIS PAGE ONLY WORKS IN THE IDE.
+            SUBSESSIONID: $SUBSESSIONID
+            </div>
+        } #else {
+            #if ("$datatype" == ""){
+                <html><body>[page: $pageID] datatype param not set</body></html>
+            } #else {
+                ## Everything is based on the $datatype, which will have a value like:
+                ##     com.dynamide.datatypes.ServerSideEvent
+                ## which we then translate into a resource name, like this:
+                ##     widgets/designers/com.dynamide.datatypes.ServerSideEvent.designer.xml
+                ## by a statement like this:
+                ##     "widgets/designers/$datatype\.designer"
+                ## for example:
+                ##    set $designerContainer = $session.getContainer("widgets/designers/$datatype\.designer", $page??)
+                ##    if ($designerContainer){
+                ##    }
+                ##
+                ## worked a while ago, doesn't work now (5/22/2002 2:08AM)
+                ##    #parse as template "/apps/ide/resources/widgets/designers/$datatype\.designer.xml"
+                ##    "widgets/designers/$datatype\.designer"
+
+                ###set $propertyDesigner_SubmitButton = $outer.outputWidget("submitButton", null)
+                ###set $propertyDesigner_SubmitButton = "<nobr>$propertyDesigner_SubmitButton   <small>(accelerator key: s)</small></nobr>"
+                ##set $propertyDesigner_SubmitButton = $session.getStringTools().searchAndReplaceAll("$propertyDesigner_SubmitButton", "<dm_nbsp/>", "&amp;#160;")
+
+                    #set $IDEApp = $session.get("IDEApp").getValue()
+                    #set $dynID = "designer_$targetOwnerID\_$targetID\_$propertyName"
+                    #set $designerName = "resources/widgets/designers/$datatype\.designer"
+                    $session.logDebug("***** designerName: $designerName")
+                    #set $dialog = $session.findOrCreateDialog("$dynID", "$designerName")
+                    #set $designer = $IDEApp.findOrCreateDesigner("$dynID")
+                    $dialog.setObject($designer)
+                    $designer.setTargetClass($targetClass)
+                    $designer.setTargetID($targetID)
+                    $designer.setTargetOwnerID($targetOwnerID)
+                    #set $findPath = "$targetOwnerID\.$targetID"
+                    $designer.setTargetPath("$findPath")
+                    $designer.setTargetProperty($property)
+                    $designer.setPropertyName($propertyName)
+                    $designer.setTargetDatatype($property.getDatatype())
+
+
+                    $session.logDebug("~~~ creating dialog :: $dialog ")
+                    $session.logDebug("~~~ creating dialog :: $designer ")
+                    $session.logDebug("~~~ creating dialog :: $dialog.getFilename() ")
+                    $dialog.outputPage(false, false).toString()
+            }
+        }
+]]></htmlsrc>
+
+<event language="beanshell" name="designertop_onAction">
+  <![CDATA[
+    Designer designer = event.sender.getObject();
+    if ( designer == null ) {
+        System.out.println("ERROR: [designertop.xml] designerObject not found in page.getObject()");
+    } else {
+        event = designer.onAction(event);
+    }
+  ]]>
+</event>
+
+<event language="beanshell" name="designertop_onLoad">
+  <![CDATA[
+    System.out.println(".......... designertop_onLoad ........");
+    Designer designer = new Designer();
+    Page page = event.sender;
+    page.setObject(designer);
+  ]]>
+</event>
+
+<widgets>
+    <widget id="submitButton">
+      <properties>
+        <property name="accesskey">
+          <value>s</value>
+        </property>
+        <property name="action">
+          <value>validateDesigner</value>
+        </property>
+        <property name="caption">
+          <value>Save</value>
+        </property>
+        <property name="class">
+          <defaultValue>dmbutton</defaultValue>
+        </property>
+        <property name="field">
+          <defaultValue>phony</defaultValue>
+        </property>
+        <property name="name">
+          <defaultValue>submitButton</defaultValue>
+        </property>
+        <property name="onClick" isEvent="true">
+          <defaultValue></defaultValue>
+        </property>
+        <property name="text">
+          <defaultValue></defaultValue>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="hiddenSESSIONID">
+      <properties>
+        <property name="field">
+          <value>SESSIONID</value>
+        </property>
+        <property name="name">
+          <defaultValue>hidden</defaultValue>
+        </property>
+        <property name="type">
+          <value>com.dynamide.session</value>
+        </property>
+        <property name="value">
+          <defaultValue></defaultValue>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="hiddenPageID">
+      <properties>
+        <property name="field">
+          <value>page</value>
+        </property>
+        <property name="name">
+          <value></value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.hidden</value>
+        </property>
+        <property name="value">
+          <value>designertop</value>
+        </property>
+      </properties>
+    </widget>
+
+
+</widgets>
+
+</dynamideForm>

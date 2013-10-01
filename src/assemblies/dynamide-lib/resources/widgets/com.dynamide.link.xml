@@ -58,13 +58,13 @@
     <htmlsrc browser="*"><![CDATA[
     #set $fieldID = $widget.field
     ##This needs to be worked out so that field and name don't conflict.
-    #if ($designMode == "true" || $widget.enabled == "false"){
+    #if ($designMode == "true" || $widget.enabled == "false") {
        <u>$widget.caption</u>
-    } #else #if ($widget.URL.length() > 0){
+    } #elseif ($widget.URL.length() > 0) {
         <a class="$widget.class" href="$widget.URL" #if ($widget.tabindex != "") { tabindex='$widget.tabindex' } >$widget.caption</a>
-    } #else #if ($widget.pageJump.length() > 0) {
+    } #elseif ($widget.pageJump.length() > 0) {
         <a class="$widget.class" href="$widget.path?next=$widget.pageJump&amp;$widget.name=$fieldID&amp;SESSIONID=$SESSIONID" #if ($widget.tabindex != "") { tabindex='$widget.tabindex' } >$widget.caption</a>
-    } #else #if ($widget.action.length() > 0) {
+    } #elseif ($widget.action.length() > 0) {
         <a class="$widget.class" href="$widget.path?action=$widget.action&amp;$widget.name=$fieldID&amp;SESSIONID=$SESSIONID" #if ($widget.tabindex != "") { tabindex='$widget.tabindex' } >$widget.caption</a>
     } #else {
         <a class="$widget.class" href="$widget.path?$fieldID=$widget.value&amp;$widget.name=$fieldID&amp;SESSIONID=$SESSIONID" #if ($widget.tabindex != "") { tabindex='$widget.tabindex' } >$widget.caption</a>

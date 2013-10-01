@@ -1,0 +1,41 @@
+source("C:/dynamide/src/shell/dynamideShell.bs");
+s = Session.createSession("/dynamide/ide", "/dynamide/ide?SESSIONID=test-ide");
+
+s.handleURL("?action=startSubsession&projectPath=/mailmerge");
+/*
+hr=s.handleURL("?action=getPagetypeList");
+System.out.println(DynamideHandler.prettyPrintHTML(hr.getResult()));
+*/
+subsession = s.getSubsession();
+
+String pn = subsession.findAppFilename("testPage.xml");
+if ( ! Tools.isBlank(pn)){
+    FileTools.delete(pn);
+}
+
+boolean directCall = false;
+
+Page p;
+if (directCall){
+    p = subsession.newPage("testPage", "pagetypes/com.dynamide.form");
+    String pageSource = p.output(p.getRootElement());
+
+    String xml = JDOMFile.prettyPrintHTML(pageSource,    //String html
+                                "true",   //String newlines -- Netscape can't handle superlong lines.
+                                "true",    //String trim    -- for normal requests, save lots of space. (view source in ide uses different options.)
+                                true,      //boolean xhtml -- don't break DOM parser in IDE.
+                                false,      //boolean expandEmpty
+                                true);    //boolean indent   --save lots of space.
+    //System.out.println("new page source: "+xml);
+} else {
+    //Use url:
+    //works, but causes errors, so let's try the direct call during debugging.
+    hr=s.handleURL("?action=newPage&newPageID=testPage&newPagetype=pagetypes/com.dynamide.form");
+    //System.out.println(DynamideHandler.prettyPrintHTML(hr.getResult()));
+    p = subsession.getPageByID("testPage");
+}
+//System.out.println("new page.margin: "+p.getPropertyDefaultValue("margin"));
+System.out.println("new page.widgetType: "+p.getWidgetType());
+System.out.println("new page.margin: "+p.getWidgetType().getPropertyDefaultValue("margin"));
+System.out.println("new page.margin: "+p.get("margin"));
+System.out.println("listPages: "+subsession.listPages());

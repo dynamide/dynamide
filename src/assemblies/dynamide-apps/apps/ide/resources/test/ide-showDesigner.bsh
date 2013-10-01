@@ -1,0 +1,33 @@
+showDesignerForLinkTEST = false;
+showDesignerForLinks = false;
+showLinkDesigner = false; //true;
+if (bsh.args.length>0){
+    opts = new com.dynamide.util.Opts(bsh.args);
+    whichTest = opts.getOption("-test");
+    if (whichTest.equalsIgnoreCase("onelink")){
+        showDesignerForLinkTEST = true;
+    } else if (whichTest.equalsIgnoreCase("links")){
+        showDesignerForLinks = true;
+    }                       i
+} else {
+    print("no tests called. Use -test and supply a test name.");
+    System.exit();
+}
+source("C:/dynamide/src/shell/dynamideShell.bs");
+
+session = Session.createSession("/dynamide/ide", "/dynamide/ide?SESSIONID=test-ide", Session.MODE_BATCH);
+
+r = session.handleURL("?action=startSubsession&projectPath=/mailmerge");
+print(r.prettyPrintHTML());
+
+//r = s.handleURL("?SESSIONID=test-ide&action=showInspector&targetPageID=testPage&widgetID=linkstrip1");
+//r = s.handleURL("?SESSIONID=test-ide&page=inspector&next=inspectortop&targetPageID=testPage&widgetID=linkstrip1");
+
+if (showDesignerForLinkTEST){
+   r = session.handleURL("?SESSIONID=test-ide&next=designertop&propertyName=linkTEST&propertyValue=&targetOwnerID=testPage&targetClass=Widget&targetID=linkstrip1&datatype=com.dynamide.datatypes.Link");
+   print(r.result);
+}
+if (showDesignerForLinks){
+   r = session.handleURL("?SESSIONID=test-ide&next=designertop&propertyName=links&propertyValue=&targetOwnerID=testPage&targetClass=Widget&targetID=linkstrip1&datatype=com.dynamide.datatypes.Link");
+   print(r.result);
+}

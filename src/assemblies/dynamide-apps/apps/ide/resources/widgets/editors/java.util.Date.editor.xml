@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<widget>
+<properties>
+</properties>
+<htmlsrc browser="*"><![CDATA[
+    #set $thedateString = $property.StringValue
+    #if ("$thedateString" != ""){
+        #set $thedateString = $session.loadClass("com.dynamide.util.Tools").dateLongToLocale($thedateString)
+    }
+    #if ($property.readOnly == "true"){
+        $thedateString
+    } #else {
+        ## todo: make the return value a long with parsedate
+        <INPUT type="text" name="$property.name" value="$thedateString" size="30"
+            onkeydown=$onkeydown
+            ##onchange=$onchange
+            onblur=$onchange />
+    }
+]]></htmlsrc>
+</widget>

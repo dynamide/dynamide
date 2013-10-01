@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<!-- replaces EnumerationDatatype.editor.xml -->
+<widget>
+<properties>
+</properties>
+<htmlsrc browser="*"><![CDATA[
+    <!--com.dynamide.datatypes.EnumeratedDatatype.editor-->
+    #if ($property.readOnly == "true"){
+        <b>$property.StringValue</b>
+    } #else {
+        #set $eventNameValue = ""  ##empty if not set.  There will still be a [...] button
+        #if ($property.StringValue.length() > 0){
+            #set $eventNameValue = $property.StringValue
+        }
+
+        #set $edi = $property.getEnumerationDefaultIndex()
+        #if ($edi == -1){
+            #set $edi = $defaultProperty.getEnumerationDefaultIndex()   ## %% This seems dangerous, since defaultEnum could have more elements.
+        }
+        #set $isFinal = $defaultProperty.getValue().getFinal()
+
+        <table border='0' cellpadding='0' cellspacing='0'>
+          <tr>
+            <td>
+                <SELECT name="$property.name"    ## don't do this, I think, since it overrides options. value="$property.getCurrentStringValue()"
+                onkeydown=$onkeydown
+                onchange=$onchange
+                ##onblur=$onchange
+                >
+                   ########################
+                   ##  Update: 1/1/2004
+                   ##    I added defaultProperty available in property editors, so you don't need DefaultEnumeration any more.
+                   ########################
+                   #if ($isFinal){
+                        #set $iv = 0
+                        #set $pv = $property.StringValue.toString()
+                        #foreach $val in $defaultProperty.Enumeration {
+                            #if ($val.toString().equals($pv)){
+                                <!-- value matched a value in the default enumeration. pv: '$pv'   val: '$val'  edi:  $edi iv: $iv -->
+                                <OPTION SELECTED='true' value='$val'>$val</OPTION>
+                            } #else {
+                                #if ($pv == "" && ($edi == $iv)){
+                                    <!-- defaultIndex used. pv: '$pv'   val: '$val'  edi:  $edi iv: $iv -->
+                                    <OPTION SELECTED='true' value='$val'>$val</OPTION>
+                                } #else {
+                                    <!-- no prop value and index doesn't match. pv: '$pv'   val: '$val'  edi:  $edi iv: $iv -->
+                                    <OPTION value='$val'>$val</OPTION>
+                                }
+                            }
+                            #set $iv = $iv + 1
+                        }
+                   } #else {
+                        #set $iv = 0
+                        #set $pv = $property.StringValue.toString()
+                        #foreach $val in $property.Enumeration {
+                            #if ($val.toString().equals($pv)){
+                                <!-- value matched a value in the default enumeration. pv: '$pv'   val: '$val'  edi:  $edi iv: $iv -->
+                                <OPTION SELECTED='true' value='$val'>$val</OPTION>
+                            } #else {
+                                #if ($pv == "" && ($edi == $iv)){
+                                    <!-- defaultIndex used. pv: '$pv'   val: '$val'  edi:  $edi iv: $iv -->
+                                    <OPTION SELECTED='true' value='$val'>$val</OPTION>
+                                } #else {
+                                    <!-- no prop value and index doesn't match. pv: '$pv'   val: '$val'  edi:  $edi iv: $iv -->
+                                    <OPTION value='$val'>$val</OPTION>
+                                }
+                            }
+                            #set $iv = $iv + 1
+                        }
+                   }
+                </SELECT>
+            </td>
+            #if ($isFinal!=true){
+            <td>
+                ## DURING DEVELOPMENT OF THE IDE, ALWAYS RELOAD THE DESIGNERTOP WINDOW: (use param reloadPage=1)
+                <input type="button" class=".eventDesignerButton"
+                    onClick="parent.opener.openDesigner('?next=designer&reloadPage=1&SUBSESSIONID=$SESSIONID&propertyName=$property.name&propertyValue=$eventNameValue&targetOwnerID=$targetOwnerID&targetClass=$targetClass&targetID=$targetID&datatype=com.dynamide.datatypes.EnumeratedDatatype', 1);"
+                    name="eventDesigner" value="..."
+                    />
+            </td>
+            }
+          </tr>
+        </table>
+
+    }
+]]></htmlsrc>
+</widget>

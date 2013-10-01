@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<widget>
+<properties>
+</properties>
+<htmlsrc browser="*"><![CDATA[
+    #if ($property.readOnly == "true"){
+        <b>$property.StringValue</b>
+    } #else {
+        #set $checked = ""
+        #if ($property.getCurrentStringValue() == "true") {
+            #set $checked = "CHECKED='1' "
+        }
+        <INPUT type="checkbox" name="$property.name" $checked
+        onkeydown=$onkeydown
+        ##onblur=$onchange
+        onClick="widgetPropCheckboxChanged(this, '$widget.ID', '$pageID', 'com.dynamide.datatypes.BooleanDatatype.editor')" ##onchange doesn't fire for checkboxes until blur!
+        />
+    }
+]]></htmlsrc>
+</widget>

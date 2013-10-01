@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<widget>
+    <properties>
+        <property name="type"><defaultValue>com.dynamide.ide.palettelist</defaultValue><readOnly>true</readOnly></property>
+        <property name="name"><defaultValue>palettelist</defaultValue></property>
+        <property name="caption"><defaultValue></defaultValue></property>
+        <property name="selectName"><defaultValue></defaultValue></property>
+    </properties>
+
+<htmlsrc browser="*"><![CDATA[
+            #if ($widget.caption.length() > 0) {
+                $widget.caption
+            }
+            <select name="$widget.selectName" id="$widget.selectName">
+                #if (($widget.getNamedObject("list")) != null){
+                    #foreach $theWidget in $widget.getNamedObject("list") {
+                        <option>$theWidget</option>
+                    }
+                }
+            </select>
+    ]]></htmlsrc>
+</widget>

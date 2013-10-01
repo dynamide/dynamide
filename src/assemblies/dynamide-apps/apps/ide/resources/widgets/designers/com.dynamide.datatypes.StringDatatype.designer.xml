@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<dynamideForm>
+
+<properties>
+    <property name="name"><value>enumerateddatatypedesigner1</value></property>
+    <property name="type"><value>designers/com.dynamide.datatypes.StringDatatype.designer</value></property>
+</properties>
+
+<htmlsrc><![CDATA[
+<span>
+<span>
+    <!--com.dynamide.datatypes.EnumeratedDatatype.designer-->
+    ## This template relies on the Property Designer window initializing a bunch
+    ## of things in the context. See the full list in:
+    ##   {webapp}/com/dynamide/sites/dynamide/apps/ide/designertop.xml
+
+    #set $designerTitle = "$targetID\.$propertyName"
+    #set $source = ""
+    #set $CRLF = $session.StringTools.CRLF
+    #foreach $val in $property.Enumeration {
+        #set $source = "$source$CRLF$val"
+    }
+    <table border="1" cellpadding='3' cellspacing='0'>
+        <tr>
+            <td align='left' valign='bottom' colspan='2'>
+                <span class="eventTitle"><b><nobr>$designerTitle</nobr></b></span>
+                <span class='dynamideRawOutput'>$session.getFieldValue("propertyDesigner_SubmitButton")</span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan='2'>
+                <textarea cols="110" rows="50" id="source" name="source" value="" class="codewindow">$source</textarea>
+            </td>
+        </tr>
+    </table>
+    <SCRIPT LANGUAGE="JavaScript">
+    <!--
+        document.all.source.focus();
+    //-->
+    </SCRIPT>
+</span>
+</span>
+]]></htmlsrc>
+
+<widgets>
+</widgets>
+
+</dynamideForm>

@@ -1,0 +1,180 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<dynamideForm>
+
+<properties>
+    <property name="type"><value>pagetypes/com.dynamide.form</value></property>
+    <property name="bgcolor"><value>#A4BFDD</value></property>
+</properties>
+
+<event language="beanshell" name="htmlsource_onAction">
+  <![CDATA[
+    event.println("in htmlsource_onAction: "+event.action);
+    event.println(event.toString());
+    if (event.action.equals("saveHTMLSource")){
+         String targetPageID = event.getQueryParam("targetPageID");
+         String source = event.getQueryParam("source");
+         Session subsession = event.session.getSubsession();
+         String body = "ERROR: subsession is null";
+         if (subsession!=null){
+            body = "ERROR: can't find page by ID: '"+targetPageID+"'";
+            Page page = subsession.find(targetPageID);
+            if (page != null){
+                try {
+                    page.setHTMLSource(source);
+                    body = "Page saved.  <a href='javascript:window.close();'>Close this window</a>";
+                } catch (XMLFormatException xmle){
+                    body = xmle.getMessage();
+                }
+            }
+         }
+
+        event.resultSrc = "<html><body>"
+                        +body
+                        +"</body></html>";
+        event.resultAction = ScriptEvent.RA_RETURN_SOURCE;
+        return;
+    }
+    event.resultSrc = "<html><body>"
+                    +"ERROR: wrong action '"+action+"'"
+                    +"</body></html>";
+    event.resultAction = ScriptEvent.RA_RETURN_SOURCE;
+    return;
+  ]]>
+</event>
+
+
+
+<htmlsrc><![CDATA[
+  <html>
+    <HEAD>
+        <title>Source Editor</title>
+        $session.getInclude("resources/css/ide.css")
+        $session.getInclude("resources/js/scripts.js")
+        $session.getInclude("resources/js/msdom.js")
+        $session.getInclude("resources/js/windowing.js")
+    </HEAD>
+    <style>
+       .eventTitle {font-size: 10pt; }
+    </style>
+    <body topmargin='8' leftmargin='8'  marginwidth="8" marginheight="8" bgColor="$page.bgcolor">
+    <form name="mojoForm" action="/dynamide/ide" method="POST">
+    #set $SUBSESSIONID = $session.getFieldValue("SUBSESSIONID")
+    #set $subsession = $session.findSession($SUBSESSIONID)
+    #set $targetPageID =  $session.getQueryParam("targetPageID")
+    <!-- ********************** $session.getQueryParam("targetPageID").getClass().getName() ********** -->
+    #set $source = ""
+
+    <input type="hidden" name="targetPageID" value="$targetPageID" />
+    <input type="hidden" name="SUBSESSIONID" value="$SUBSESSIONID" />
+    <SPAN class="widget" id="hiddenSESSIONID"></SPAN>
+    <SPAN class="widget" id="hiddenPageID"></SPAN>
+
+    #if ($subsession == null){
+        SUBSESSION IS NULL: SUBSESSIONID: '$SUBSESSIONID'
+    } #elseif ($subsession.findPageByID($targetPageID) != null){
+        #set $targetPage = $subsession.findPageByID($targetPageID)
+        #set $source = $targetPage.getRawHTMLSource()
+    } #else {
+        PAGE is null: $targetPageID
+    }
+    ##set $source = $session.getStringTools().escape($source)
+    ##set $source = $session.getStringTools().escapeAmpersands($source)
+    $session.setFieldValue("htmlsource", "$source")
+    <table border="1" cellpadding='3' cellspacing='0'>
+        <!--
+        <tr>
+            <td>
+                #set $time = $session.getTimestampLocale()
+                    SESSIONID: $session.getQueryParam("SUBSESSIONID")
+                    now: [$time]
+            </td>
+        </tr>
+        -->
+        <tr>
+            <td align='left' valign='bottom' colspan='2'>
+                <span class="eventTitle"><b><nobr>$targetPageID</nobr></b></span>
+                <SPAN class="widget" id="submitButton"></SPAN>
+            </td>
+        </tr>
+        <tr>
+            <td colspan='2'>
+                <span class='dynamideRawOutput'>
+                <textarea cols="130" rows="50" id="source" name="source" value="" class="codewindow">$source</textarea>
+                </span>
+            </td>
+        </tr>
+    </table>
+    <SCRIPT language='javascript'>
+    <!--
+        document.all.source.focus();
+    //-->
+    </SCRIPT>
+    </form>
+    </body>
+</html>
+]]></htmlsrc>
+
+<widgets>
+
+    <widget id="submitButton">
+      <properties>
+        <property name="accesskey">
+          <value>s</value>
+        </property>
+        <property name="action">
+          <value>saveHTMLSource</value>
+        </property>
+        <property name="caption">
+          <value>Save</value>
+        </property>
+        <property name="class">
+          <defaultValue>dmbutton</defaultValue>
+        </property>
+        <property name="name">
+          <defaultValue>submitButton</defaultValue>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="hiddenSESSIONID">
+      <properties>
+        <property name="field">
+          <value>SESSIONID</value>
+        </property>
+        <property name="name">
+          <defaultValue>hidden</defaultValue>
+        </property>
+        <property name="type">
+          <value>com.dynamide.session</value>
+        </property>
+        <property name="value">
+          <defaultValue></defaultValue>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="hiddenPageID">
+      <properties>
+        <property name="field">
+          <value>page</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.hidden</value>
+        </property>
+        <property name="value">
+          <value>htmlsource</value>
+        </property>
+      </properties>
+    </widget>
+
+
+
+</widgets>
+
+</dynamideForm>

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<widget>
+<properties>
+</properties>
+<htmlsrc browser="*"><![CDATA[
+    #if ($property.readOnly == "true"){
+        <b>$property.StringValue</b>
+    } #else {
+        <INPUT type="text" name="$property.name" value="$property.getCurrentStringValue()" size="30"
+        onkeydown=$onkeydown
+        ##onchange=$onchange
+        onblur=$onchange/>
+    }
+]]></htmlsrc>
+</widget>

@@ -1,0 +1,306 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<dynamideForm>
+
+<properties>
+    <property name="bgcolor"><value>#A4BFDD</value></property>
+    <property name="name"><value>linkdesigner</value></property>
+    <property name="type"><value>designers/com.dynamide.datatypes.Link.designer</value></property>
+</properties>
+
+  <event language="beanshell" name="onAction"><![CDATA[
+      Page p = event.sender;
+      Designer designer = p.getObject();
+      System.out.println("~~~~~~~~~~~~~~~~~ setWidgetValues called. designer: "+designer);
+      dt = designer.getTargetDatatype();
+      dt.set("href", p.getWidget("editHref").getValue());
+      dt.set("text", p.getWidget("editText").getValue());
+      dt.set("key",  p.getWidget("editKey").getValue());
+      cpid = designer.getCallingPageID();
+      if ( cpid.length()>0 ) {
+          event.jumpToPage(designer.getCallingPageID());
+      } else {
+          designer.setDone(true);
+      }
+  ]]></event>
+
+  <event language="beanshell" name="setWidgetValues"><![CDATA[
+      Page p = event.sender;
+      Designer designer = p.getObject();
+      System.out.println("~~~~~~~~~~~~~~~~~ setWidgetValues called. designer: "+designer);
+      dt = designer.getTargetDatatype();
+      print("field: "+p.getWidget("editHref").get("field"));
+      p.getWidget("editHref").setValue(dt.get("href"));
+      p.getWidget("editText").setValue(dt.get("text"));
+      p.getWidget("editKey").setValue(dt.get("key"));
+  ]]></event>
+
+
+<htmlsrc browser="*"><![CDATA[
+#set $designer = $page.getObject()
+#if (($designer.getParentDesigner() == null) && $designer.isDone()){
+  $designer.setDone(false)
+  #set $script = $designer.formatDoneScript("")
+  <html>
+    <body bgColor="$page.bgcolor">
+    property set.  This window should close.
+    <br />
+    If not, <a href="javascript:$script\;parent.window.close();">click here</a>
+    <script>
+    <!--
+      $script
+      parent.window.close();
+    //-->
+    </script>
+    </body>
+</html>
+} #else {
+  <html>
+    <HEAD>
+        <title>Link Designer</title>
+        $session.getInclude("resources/css/ide.css")
+        $session.getInclude("resources/js/scripts.js")
+        $session.getInclude("resources/js/msdom.js")
+        $session.getInclude("resources/js/windowing.js")
+    </HEAD>
+    <body topmargin='0' leftmargin='4'  marginwidth="4" marginheight="4" bgColor="$page.bgcolor">
+    <!--
+        #set $mojo = $page.call("setWidgetValues")
+        #set $IDEApp = $session.get("IDEApp").getValue()
+        <pre>
+        pageID: $page.getID() :: $page.getObjectID()
+        propertyName $designer.PropertyName
+        targetID: $designer.TargetID
+        targetOwnerID: $designer.TargetOwnerID
+        #set $findPath = "$designer.TargetOwnerID\.$designer.TargetID"
+
+        #set $found = $session.getSubsession().findDotted("$findPath")
+        #if ($found != null){
+
+            found: $found
+        } #else {
+            not found
+        }
+        page.getObject: $page.getObject()
+        </pre>
+        ###set $onAction = $page.getEventSource("onAction")
+        ##$session.logDebug("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ onAction: $onAction.source")
+        <br />
+        <a href="?SESSIONID=$SESSIONID&page=$pageID&next=$pageID">add</a>
+        <br />
+        <span class='dynamideRawOutput'>$page.designerDoneURL</span>
+        <br />
+        <b>Link:</b>
+    -->
+<FORM action="$session.applicationPath" method="get" encType="application/x-www-form-urlencoded">
+    ## #set $dt = $designer.getTargetDatatype()
+    ## $session.logDebug("!!!!!!!!!!!!!!!!!! dt: $dt")
+    ## dt: $dt
+
+    <br />
+
+    <center>
+
+  <table border='1' cellpadding='2' cellspacing='0'>
+    <tr>
+      <td  align="center">
+        #set $arr = ""
+        #if ($designer.Index.length()>0){
+             #set $arr = "[$designer.Index]"
+        }
+        <b>$designer.TargetPath\.$designer.PropertyName$arr</b>
+        <br />
+        com.dynamide.datatypes.Link
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <span class="widget" id="editHref" />
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <span class="widget" id="editText" />
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <span class="widget" id="editKey" />
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <span class="widget" id="submit1" />
+      </td>
+    </tr>
+  </table>
+
+          #set $script = $designer.formatDoneScript("")
+          $script
+          <a href="javascript:$script;parent.window.close();">DONE</a>
+
+    </center>
+
+    <input type="hidden" name="page" value="$pageID" />
+    <input type="hidden" name="SESSIONID" value="$SESSIONID" />
+
+</FORM>
+</body>
+</html>
+} ## end isDone test
+]]></htmlsrc>
+
+<widgets>
+    <widget id="editHref">
+      <properties>
+        <property name="caption">
+          <value>href</value>
+        </property>
+        <property name="captionWidth">
+          <value>150</value>
+        </property>
+        <property name="type">
+          <readOnly>true</readOnly>
+          <value>com.dynamide.edit</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="editText">
+      <properties>
+        <property name="caption">
+          <value>text</value>
+        </property>
+        <property name="captionWidth">
+          <value>150</value>
+        </property>
+        <property name="type">
+          <readOnly>true</readOnly>
+          <value>com.dynamide.edit</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="editKey">
+      <properties>
+        <property name="caption">
+          <value>key</value>
+        </property>
+        <property name="captionWidth">
+          <value>150</value>
+        </property>
+        <property name="type">
+          <readOnly>true</readOnly>
+          <value>com.dynamide.edit</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="submit1">
+      <properties>
+        <property name="action">
+          <value>linkDesignerAdd</value>
+        </property>
+        <property name="class">
+          <value>dmbutton</value>
+        </property>
+        <property name="caption">
+          <value>OK</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
+</widgets>
+
+<htmlsrc browser="experimental"><![CDATA[
+<html>
+<body>
+    <table border="1" cellpadding='3' cellspacing='0'>
+        <tr>
+            <td align='left' valign='bottom'>
+            <pre>
+        ( )   This URL: __________________________________________ (you can edit this one directly)
+        (.)   URL: _____________________________________________ (this is built from the below choices)
+
+            ( ) button
+            (.) link
+
+            <input type="checkbox" checked="1"/> Caption:    ___________   (can include macros, such as "User: \$session.getFieldValue("USER")
+            host-port-protocol
+                (.) same as this
+                ( ) specify
+                    <input type="checkbox" checked="1"/> host
+                        (.) same as this by referred name
+                        ( ) specify:___________
+                        ( ) lookup:___________    (\$session.getFieldValue(), or \$session.lookupJNDI(), or...)
+                    <input type="checkbox" checked="1"/> port
+                        (.) same as this
+                        ( ) this by referred name
+                        ( ) other:___________
+                    <input type="checkbox" checked="1"/> protocol
+                        (.) same as this
+                        ( ) this by referred name
+                        ( ) specify:___________
+                        ( ) lookup:___________
+            <input type="checkbox" checked="1"/> Submit Form (or see target, below)
+            <input type="checkbox" checked="1"/> SESSIONID
+            <input type="checkbox" checked="1"/> pageID
+            <input type="checkbox" checked="1"/> URLPath
+                (.) Same as Application
+                ( ) Specify: ___________
+            <input type="checkbox" checked="1"/> single click protection
+            <input type="checkbox" checked="1"/> action:      ___________
+            <input type="checkbox" checked="1"/> nextPageID:  ___________
+            <input type="checkbox" checked="1"/> javascript
+                <input type="checkbox" checked="1"/> inline: ___________
+                <input type="checkbox" checked="1"/> function [...]  (creates a script block and names a function with this widget's name plus....
+            <input type="checkbox" checked="1"/> file
+                <input type="checkbox" checked="1"/> download: ___________ [...]  (uses filedownload widget, not direct url)
+                <input type="checkbox" checked="1"/> url: _____________
+                <input type="checkbox" checked="1"/> mimeType: ____________
+            <input type="checkbox" checked="1"/> file viewer
+                <input type="checkbox" checked="1"/> url: _________________
+                ( ) prettyPrint format name: ___________
+                (.) prettyPrint based on mime type: ___________
+            <input type="checkbox" checked="1"/> target
+                    - new window
+                        - named
+                        - multiple
+                    - named window (focus or create)
+                    -submit
+            <input type="checkbox" checked="1"/> style
+                    - named style (list)
+
+                    picklist of macros
+            +-----------------------------------------------+
+            | \$session.getFieldValue()                      |
+            | \$session.getWidgetValue()                     |
+            | javascript:getWidgetValue('otherwidget.name') |
+            |                                               |
+            +-----------------------------------------------+
+
+            Any other params:
+            Name:                 Value:
+            [__________________]  [_____________________]     (can include macros)
+            [__________________]  [_____________________]
+            [__________________]  [_____________________]
+            [__________________]  [_____________________]
+            [__________________]  [_____________________]
+            [__________________]  [_____________________]
+            [__________________]  [_____________________]
+            [__________________]  [_____________________]
+            [__________________]  [_____________________]
+            [__________________]  [_____________________]
+
+
+            </pre>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+]]></htmlsrc>
+
+
+</dynamideForm>

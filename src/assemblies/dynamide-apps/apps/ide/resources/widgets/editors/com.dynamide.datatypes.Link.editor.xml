@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<widget>
+<properties>
+</properties>
+<htmlsrc browser="*"><![CDATA[
+    #if ($property.readOnly == "true"){
+        <b>$property.StringValue</b>
+    } #else {
+        #set $eventNameValue = ""  ##empty if not set.  There will still be a [...] button
+        #if ($property.StringValue.length() > 0){
+            #set $eventNameValue = $property.StringValue
+        }
+        <table border='0' cellspacing='0' cellpadding='1'><tr>
+        <td width="100%">
+            ## if you change this _value thing, change the com.dynamide.ite.propertytable.xml
+            ##     pickit and pagePropertyChanged code also.
+            <span id='$property.name\_value'>$eventNameValue</span>
+        </td>
+        <td>
+            ## DURING DEVELOPMENT OF THE IDE, ALWAYS RELOAD THE DESIGNERTOP WINDOW: (use param reloadPage=1)
+            <input type="button" class=".eventDesignerButton"
+                onClick="parent.opener.openDesigner('?next=designer&reloadPage=1&SUBSESSIONID=$SESSIONID&propertyName=$property.name&propertyValue=$eventNameValue&targetOwnerID=$targetOwnerID&targetClass=$targetClass&targetID=$targetID&datatype=com.dynamide.datatypes.Link', 1);"
+                name="eventDesigner" value="..."
+                />
+        </td>
+        </tr></table>
+    }
+]]></htmlsrc>
+</widget>

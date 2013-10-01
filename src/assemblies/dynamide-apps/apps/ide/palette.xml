@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+
+
+<dynamideForm>
+<properties>
+    <property name="type">
+      <value>pagetypes/com.dynamide.page</value>
+    </property>
+</properties>
+
+<htmlsrc><![CDATA[
+<html>
+    <head>
+        $session.getInclude("resources/js/scripts.js")
+        $session.getInclude("resources/js/msdom.js")
+        $session.getInclude("resources/js/windowing.js")
+        $session.getInclude("resources/js/page.js")
+
+    </head>
+    <body bgcolor="white" border='0' topmargin='0' leftmargin='0' rightmargin='0' bottommargin='0'
+        marginwidth="0" marginheight="0">
+        <img src="/com/dynamide/images/JUMP.gif"></img>
+        <img src="/com/dynamide/images/orangestar.gif"></img>
+        <img src="/com/dynamide/images/plus.jpg"></img>
+        <img src="/com/dynamide/images/minus.jpg"></img>
+    </body>
+    </html>
+]]></htmlsrc>
+
+<widgets>
+</widgets>
+
+</dynamideForm>

@@ -194,7 +194,7 @@ public class Log {
     }
 
     public static void info(String categoryID, String message) {
-        getInstance().logMessage(categoryID, Priority.DEBUG, message, null);
+        getInstance().logMessage(categoryID, Priority.INFO, message, null);
     }
 
     public static void info(String categoryID, String message, Throwable throwable) {
@@ -218,7 +218,7 @@ public class Log {
     }
 
     public static void warn(String categoryID, String message) {
-        getInstance().logMessage(categoryID, Priority.DEBUG, message, null);
+        getInstance().logMessage(categoryID, Priority.WARN, message, null);
     }
 
     public static void warn(String categoryID, String message, Throwable throwable) {
@@ -242,7 +242,7 @@ public class Log {
     }
 
     public static void error(String categoryID, String message) {
-        getInstance().logMessage(categoryID, Priority.DEBUG, message, null);
+        getInstance().logMessage(categoryID, Priority.ERROR, message, null);
     }
 
     public static void error(String categoryID, String message, Throwable throwable) {

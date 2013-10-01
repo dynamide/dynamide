@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<widget>
+<properties>
+</properties>
+    <componentHelp>
+     <p>This editor helps the user select Fields, using the Widget's current datasource.</p>
+    </componentHelp>
+
+<htmlsrc browser="*"><![CDATA[
+    #if ($property.readOnly == "true"){
+        <b>$property.StringValue</b>
+    } #else {
+        <SELECT name="$property.name" value="$property.getCurrentStringValue()"
+        onkeydown=$onkeydown
+        onchange=$onchange
+        >
+         <OPTION value=''></OPTION>
+         #set $found = 0
+        ##    #set $datasource = $widget.datasource
+        ##    #set $dso = $session.findDatasource($datasource)
+        ##    #foreach $val in $dso.getFields {
+        ##        #if ($val == $property.StringValue){
+        ##            <OPTION SELECTED='true' value='$val'>$val</OPTION>
+        ##            #set $found = 1
+        ##        } #else {
+        ##            <OPTION value='$val'>$val</OPTION>
+        ##        }
+        ##    }
+        #set $dso = $widget.getDatasource()
+        #if ($dso == null){
+            datasource object is null
+        } #else {
+            #foreach $val in $dso.getFields().keySet() {
+                #if ($val == $property.StringValue){
+                    <OPTION SELECTED='true' value='$val'>$val</OPTION>
+                    #set $found = 1
+                } #else {
+                    <OPTION value='$val'>$val</OPTION>
+                }
+            }
+
+        }
+        </SELECT>
+        ##$session.dumpContext($WEBMACRO_CONTEXT.getContext())
+    }
+]]></htmlsrc>
+</widget>

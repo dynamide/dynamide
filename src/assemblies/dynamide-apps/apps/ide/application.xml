@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<application>
+  <fields href="fielddefs.xml"></fields>
+  <event language="beanshell" name="application_onImport"><![CDATA[
+        import com.dynamide.Constants;
+        import com.dynamide.*;
+        import com.dynamide.event.*;
+        import com.dynamide.datatypes.*;
+        import com.dynamide.resource.*;
+        import com.dynamide.util.*;
+        import com.dynamide.util.StringList;
+        import com.dynamide.util.StringTools;
+        import com.dynamide.util.Tools;
+        import com.dynamide.Session;
+        import com.dynamide.Widget;
+
+        import com.dynamide.apps.ide.IDEApp;
+        import com.dynamide.apps.ide.Designer;
+  ]]></event>
+
+  <event language="beanshell" name="application_onStart"><![CDATA[
+        System.out.println("\r\n\r\n\r\n\r\n\r\n\r\n================ IDE STARTED ====================="+Tools.nowLocale());
+        event.println("application_onStart called");
+        IDEApp app = new IDEApp(session);
+        session.setFieldValue("IDEApp", app);
+        System.out.println("@@@@@@@@@@@@22 IDEApp "+session.get("IDEApp"));
+  ]]></event>
+
+  <!-- Magic urls:
+     if you start in batch mode, you won't see the main window.
+     Similarly, if you pass
+       noMainWindow=1
+     you won't see the main window.
+
+     You can automatically open projects with :
+        openProject=[project-url]
+     You can open pages with:
+        openPage=[pageID]
+  -->
+  <event language="beanshell" name="HIDEapplication_queryNextPage"><![CDATA[
+        if (!event.getQueryParam("USER").equals("laramie")){
+        //    event.returnSource("<html><body>USER '"+event.getQueryParam("USER")+"' not allowed</body></html>");
+        //    return;
+        }
+        if (event.getQueryParam("page").equals("inspector") && event.nextPageID.length()==0){
+            event.nextPageID = "inspector";
+            return ;
+        }
+        if (session.isBeforeFirstPage()){
+            String openProject = event.getQueryParam("openProject");
+            String openPage = event.getQueryParam("openPage");
+            event.session.setFieldValue("openPage", openPage);
+            event.session.setFieldValue("openProject", openProject);
+            //System.out.println("==================== noMainWindow: "+event.getQueryParam("noMainWindow"));
+            if (event.getQueryParam("noMainWindow").length()>0){
+                System.out.println("noMainWindow..............");
+                //e.g.
+                //http://apps.dynamide.com:7080/dynamide/ide?SESSIONID=test7&noMainWindow=1&action=startSubsession&openProject=/mailmerge&next=inspectortop&targetPageID=testPage&widgetID=edit1&projectPath=/mailmerge
+            } else if (!session.getBatchMode()){
+                event.nextPageID = "ide";
+                System.out.println("session.isBeforeFirstPage. "+event);
+            }
+         }
+  ]]></event>
+
+  <event language="beanshell" name="application_onAction"><![CDATA[
+    /*
+    if ( event.action.equals("testAddLinks") ) {
+        search = event.getQueryParam("search");
+        w = session.getSubsession().find(search);
+        if ( w == null ) {
+            System.out.println("w was null ~~~~~~~~~~~~~~~~~~~");
+            event.returnSource("<html><body>w was null</body></html>");
+            return;
+        }
+        p = w.getProperty("links");
+        o = p.getValueObjectNoDefault();
+        if ( o == null ) {
+            o = p.getValue();
+            oc = o.clone();
+            p.setValue(oc);
+            o = oc;
+        }
+        if ( o != null ) {
+            link = new com.dynamide.datatypes.Link();
+            link.set("key", "key1");
+            link.set("href", "theHref");
+            link.set("text", "The Text.");
+            o.add(link);
+            link = new com.dynamide.datatypes.Link();
+            link.set("key", "key2");
+            link.set("href", "theHref2");
+            link.set("text", "The Text 2.");
+            o.add(link);
+        } else {
+            System.out.println("o was null ~~~~~~~~~~~~~~~~~~~");
+            event.returnSource("<html><body>o was null</body></html>");
+            return;
+        }
+        event.returnSource("<html><body>added</body></html>");
+        return;
+    }
+    */
+    IDEApp app = session.getFieldValue("IDEApp");
+    if ( app != null ) {
+        app.application_onAction(event, session);
+    }
+  ]]></event>
+
+  <pages>
+    <page name="designer"></page>
+    <page name="designerhidden"></page>
+    <page name="designertop"></page>
+    <page name="evaltop"></page>
+    <page name="htmlsource"></page>
+    <page name="ide"></page>
+    <page name="idehelp"></page>
+    <page name="idehidden"></page>
+    <page name="idetop" default="true"></page>
+    <page name="inspector"></page>
+    <page name="inspectorhidden"></page>
+    <page name="inspectortop"></page>
+    <page name="properties"></page>
+    <page name="palette"></page>
+    <page name="newProjectDlg"></page>
+    <page name="welcome"></page>
+  </pages>
+  <properties>
+    <property name="applicationID">
+      <value>DynamideIDE</value>
+    </property>
+    <property name="defaultLanguage">
+      <value>en-us</value>
+    </property>
+    <property name="lastSave">
+      <value>1026282076941</value>
+      <readOnly>true</readOnly>
+      <datatype>java.util.Date</datatype>
+    </property>
+    <property name="onStart" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+    <property name="title">
+      <value>Dynamide IDE</value>
+    </property>
+    <property name="type">
+      <value>com.dynamide.Session</value>
+      <readOnly>true</readOnly>
+    </property>
+  </properties>
+</application>

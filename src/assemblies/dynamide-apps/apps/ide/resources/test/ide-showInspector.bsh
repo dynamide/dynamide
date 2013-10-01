@@ -1,0 +1,10 @@
+source("C:/dynamide/src/shell/dynamideShell.bs");
+
+s = Session.createSession("/dynamide/ide", "/dynamide/ide?SESSIONID=test-ide", Session.MODE_BATCH);
+
+r = s.handleURL("?action=startSubsession&projectPath=/mailmerge");
+print(r.prettyPrintHTML());
+
+r = s.handleURL("?SESSIONID=test-ide&action=showInspector&targetPageID=testPage&widgetID=edit1");
+r = s.handleURL("?SESSIONID=test-ide&page=inspector&next=inspectortop&targetPageID=testPage&widgetID=edit1");
+print(r.prettyPrintHTML());

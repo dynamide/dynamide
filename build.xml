@@ -450,7 +450,7 @@
         <echo>Wrote ${dynamide.generated.properties.filename}</echo>
 
         <property name="server.xml.src.filename" value="${src}/conf/tomcat/template.server-fragment.xml" />
-        <property name="server.xml.dest.filename" value="${buildDirTomcat}/conf/tomcat/server-fragment.xml" />
+        <property name="server.xml.dest.filename" value="${buildDirTomcat}/conf/server-fragment.xml" />
         <antcall target="replaceMacros">
              <param name="replaceMacros.src" value="${server.xml.src.filename}"/>
              <param name="replaceMacros.dest" value="${server.xml.dest.filename}"/>
@@ -622,6 +622,12 @@
       <ant antfile="${DYNAMIDE_HOME}/build-experimental.xml"
              dir="${DYNAMIDE_HOME}"
              target="info" />
+   </target>
+
+  <target name="sync" depends="check-props">
+      <ant antfile="${DYNAMIDE_HOME}/build-sync.xml"
+             dir="${DYNAMIDE_HOME}"
+             target="sync-all" />
    </target>
 
 </project>

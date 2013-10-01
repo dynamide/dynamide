@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+
+<fields>
+   <field name="phony">
+       <property name="value"><value>phonyvalue</value></property>
+   </field>
+   <field name="userDirectory">
+       <property name="value"><value>drob</value></property>
+   </field>
+   <field name="urlPath">
+       <property name="value"><value>/vstreet.us/solano</value></property>
+   </field>
+   <field name="siteName">
+       <property name="value"><value>vstreet</value></property>
+   </field>
+   <field name="appName">
+       <property name="value"><value>solano</value></property>
+   </field>
+   <field name="idetopWindowName">
+       <property name="value"><value></value></property>
+   </field>
+</fields>

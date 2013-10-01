@@ -1,0 +1,301 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<dynamideForm>
+
+<properties>
+    <property name="bgcolor"><value>#A4BFDD</value></property>
+    <property name="currentItemIndex"><value></value></property>
+    <property name="name"><value>enumerateddatatypedesigner1</value></property>
+    <property name="type"><value>designers/com.dynamide.datatypes.EnumeratedDatatype.designer</value></property>
+</properties>
+
+<event language="beanshell" name="onAction"><![CDATA[
+    Page p = event.sender;
+    Designer designer = p.getObject();
+    session.logDebug("~~~~~~~~~~~~~~~~~ EnumeratedDatatype onAction called. designer: "+designer);
+    //designer.onAction(event);
+    if ( event.action.equals("addStrings") ) {
+        session.logDebug("~~~~~~~~~~~~~~~~~~~~~~~ EnumeratedDatatype onAction: addStrings");
+        designer.setDone(true);
+        String source = event.getQueryParam("source");
+        Collection values = StringTools.parseSeparatedValues(source, "\r\n");
+        edt = designer.getTargetDatatype();
+        edt.clear();
+        edt.addStrings(values);
+    }
+]]></event>
+
+
+<htmlsrc><![CDATA[
+    #################### macro showTextArea ##################################
+    #macro showTextArea(){
+        <html>
+          <HEAD>
+              <title>EnumeratedDatatype designer: $itemDatatypeName</title>
+              $session.getInclude("resources/css/ide.css")
+              $session.getInclude("resources/js/scripts.js")
+              $session.getInclude("resources/js/msdom.js")
+              $session.getInclude("resources/js/windowing.js")
+          </HEAD>
+          <body topmargin='0' leftmargin='4'  marginwidth="4" marginheight="4" bgColor="$page.bgcolor">
+          <FORM action="$session.applicationPath" method="get" encType="application/x-www-form-urlencoded">
+            #set $helpTip = $property.helpTip
+            #if (!$session.Tools.isBlank($helpTip)){
+                Help Tip: $helpTip
+            }
+            #set $source = ""
+            #set $CRLF = $session.StringTools.CRLF
+            #foreach $val in $property.Enumeration {
+               #set $source = "$source$CRLF$val"
+            }
+            ##$session.logDebug("$source")
+            <table border="1" cellpadding='3' cellspacing='0'>
+                 <tr>
+                     <td colspan='2'>
+                         <textarea cols="110" rows="50" id="source" name="source" value="" class="codewindow">$source</textarea>
+                     </td>
+                 </tr>
+             </table>
+             <SCRIPT LANGUAGE="JavaScript">
+             <!--
+                 document.all.source.focus();
+             //-->
+             </SCRIPT>
+            <span class="widget" id="submit1" />
+            #set $script = $designer.formatDoneScript("")
+            ## [DEBUG] script: $script
+            <a href="javascript:$script\;parent.window.close();">DONE</a>
+            <input type="hidden" name="page" value="$pageID" />
+            <input type="hidden" name="SESSIONID" value="$SESSIONID" />
+          </FORM>
+       </body>
+       </html>
+    }
+    #################### macro showTable #####################################
+    #macro showTable($activeRow){
+        <html>
+          <HEAD>
+              <title>EnumeratedDatatype designer: $itemDatatypeName</title>
+              $session.getInclude("resources/css/ide.css")
+              $session.getInclude("resources/js/scripts.js")
+              $session.getInclude("resources/js/msdom.js")
+              $session.getInclude("resources/js/windowing.js")
+          </HEAD>
+          <body topmargin='0' leftmargin='4'  marginwidth="4" marginheight="4" bgColor="$page.bgcolor">
+          <center>
+          <p><font size="+1">EnumeratedDatatype designer for
+           <br />
+              &nbsp;&nbsp;&nbsp;$itemDatatypeName</font></p>
+          <style>
+              td, th \{font-size: 9pt;\}
+          </style>
+          #if ($edt.size() == 0){
+            #set $addDatatypeURL = $session.getAppURL("page=$pageID&enumAction=add")
+            <a href="$addDatatypeURL">add datatype</a>
+          }
+          <table border='1' cellpadding='2' cellspacing='0'>
+            <tr>
+              <td colspan="3" align="left">
+              Target:&nbsp;<b>$designer.TargetPath</b>
+              <br />
+              Property:&nbsp;<b>$designer.PropertyName</b>
+              <br />
+              Datatype:&nbsp;<b>$itemDatatypeName</b>
+              </td>
+            </tr>
+            <tr>
+              <th>toString()
+              </th>
+              <th>dumpHTML()
+              </th>
+              <th>action
+              </th>
+            </tr>
+          #set $i = 0
+          #foreach $idt in $edt.getEnumeration() {
+            #set $activeBG = ""
+            #if ($activeRow == $i){
+                #set $activeBG = " bgcolor='white'"
+            }
+
+            <tr  $activeBG>
+              <td>$idt.toString()
+              </td>
+              <td>$idt.dumpHTML()
+              </td>
+              <td>
+                    #set $editurl = $session.getAppURL("page=$pageID&enumAction=edit&enumItemIndex=$i")
+                    #set $iburl = $session.getAppURL("page=$pageID&enumAction=insertBefore&enumItemIndex=$i")
+                    #set $iaurl = $session.getAppURL("page=$pageID&enumAction=insertAfter&enumItemIndex=$i")
+                    #set $muurl = $session.getAppURL("page=$pageID&enumAction=moveUp&enumItemIndex=$i")
+                    #set $mdurl = $session.getAppURL("page=$pageID&enumAction=moveDown&enumItemIndex=$i")
+                    <table border='0' cellpadding='0' cellspacing='0'>
+                      <tr>
+                        <td><a href="$editurl">edit</a></td><td>&nbsp;<a href="$iburl">insert before</a></td><td>&nbsp;<a href="$muurl">move up</a></td>
+                      </tr>
+                      <tr>
+                        <td></td><td>&nbsp;<a href="$iaurl">insert after</a></td><td>&nbsp;<a href="$mdurl">move down</a></td>
+                      </tr>
+                    </table>
+              </td>
+            </tr>
+            #set $i = $i + 1
+          }
+          </table>
+          <a href="javascript:$designer.getDoneScript()\;parent.close();">Done</a>
+          <a href="javascript:$designer.getForceRefreshScript()\;parent.close();">Force Refresh</a>
+          #set $forceScript = "javascript:var inspectorwin = parent.opener.getInspectortop();if (inspectorwin!=null)inspectorwin.location=inspectorwin.location;parent.close();"
+          <a href="$forceScript">Force Refresh II</a>
+          <br />
+          #set $script = $designer.formatDoneScript("")
+          $script
+          <a href="javascript:$script\;parent.window.close();">DONE</a>
+
+          ##$session.dumpRequestParams()
+          <!--
+          $pageID  :: $page.getObjectID()
+          -->
+          </center>
+       </body>
+       </html>
+    }
+    #################### macro showRedirect ##################################
+    #macro showRedirect(){
+        #set $script = $designer.formatDoneScript("")
+        <html>
+          <body bgColor="$page.bgcolor">
+          property set.  This window should close.
+          <br />
+          If not, <a href="javascript:$script\;parent.window.close();">click here</a>
+          <script>
+          <!--
+            $script
+            parent.window.close();
+          //-->
+          </script>
+          </body>
+        </html>
+    }
+    ###################### BEGIN TEMPLATE ####################################
+    #set $BODYHANDLED = false
+    #set $IDEApp = $session.get("IDEApp").getValue()
+    #set $designer = $page.getObject()
+    ##
+    ##
+    #if (($designer.getParentDesigner() == null) && $designer.isDone()){
+        $designer.setDone(false)
+        #showRedirect()
+        #set $BODYHANDLED = true
+        $session.logDebug("-----------------====------- called showRedirect. BODYHANDLED: $BODYHANDLED")
+    }
+    $session.logDebug(">>>>>>>1 BODYHANDLED: $BODYHANDLED")
+
+    #set $designerTitle = "$designer.TargetID\.$designer.PropertyName"
+    $session.logDebug("in com.dynamide.datatypes.EnumeratedDatatype.designer. designer = $designer")
+    #set $currentItemIndex = $session.Tools.stringToIntSafe("$page.currentItemIndex", -1)
+    #set $property = $designer.getTargetProperty()
+    $session.logDebug("in com.dynamide.datatypes.EnumeratedDatatype.designer. property = $property")
+    #set $edt = $property.getEnumeratedDatatype()
+    #set $itemDatatypeName = $edt.getItemDatatype()
+    #if("$itemDatatypeName" == ""){
+        #set $itemDatatypeName = "com.dynamide.datatypes.StringDatatype"
+    }
+    #if($BODYHANDLED == false && "$itemDatatypeName"=="com.dynamide.datatypes.StringDatatype"){
+        #showTextArea()
+        #set $BODYHANDLED = true
+    }
+    #set $enumAction = $designer.State
+    #if ($enumAction.length() == 0){
+        #set $enumAction = $session.getQueryParam("enumAction")
+    }
+    $session.logDebug(">>>>>>>2 BODYHANDLED: $BODYHANDLED")
+    #if ($BODYHANDLED == false && $enumAction.length()>0){
+        $session.logDebug(">>>>>>>>> 4 BODYHANDLED false and $enumAction.length()")
+        #if ($enumAction == "add"){
+            #set $item = $edt.getDatatypeInstance($edt, "$itemDatatypeName", $session)
+            #set $itemIndex = $edt.add($item)
+            #set $currentItemIndex = $itemIndex
+        } #elseif ($enumAction == "moveUp"){
+            #set $itemIndex = $session.Tools.stringToIntSafe($session.getQueryParam("enumItemIndex"), 0)
+            #set $item = $edt.getValue($itemIndex)
+            $edt.remove($itemIndex)
+            #set $foo = $edt.add(($itemIndex-1), $item)
+            #showTable($foo)
+            #set $currentItemIndex = $foo
+            #set $BODYHANDLED = true
+        } #elseif ($enumAction == "moveDown"){
+            #set $itemIndex = $session.Tools.stringToIntSafe($session.getQueryParam("enumItemIndex"), 0)
+            #set $item = $edt.getValue($itemIndex)
+            $edt.remove($itemIndex)
+            #set $foo = $edt.add(($itemIndex+1), $item)
+            #showTable($foo)
+            #set $currentItemIndex = $foo
+            #set $BODYHANDLED = true
+        } #elseif ($enumAction == "edit"){
+            #set $itemIndex = $session.Tools.stringToIntSafe($session.getQueryParam("enumItemIndex"), 0)
+            #set $item = $edt.getValue($itemIndex)
+            $page.setProperty("editItemIndex", "$itemIndex")
+            #set $currentItemIndex = $itemIndex
+        } #elseif ($enumAction == "insertBefore"){
+            #set $item = $edt.getDatatypeInstance($edt, "$itemDatatypeName", $session)
+            #set $itemIndex = $session.Tools.stringToIntSafe($session.getQueryParam("enumItemIndex"), 0)
+            #set $itemIndex = $edt.add(($itemIndex), $item)
+            #set $currentItemIndex = $itemIndex
+        } #elseif ($enumAction == "insertAfter"){
+            #set $item = $edt.getDatatypeInstance($edt, "$itemDatatypeName", $session)
+            #set $itemIndex = $session.Tools.stringToIntSafe($session.getQueryParam("enumItemIndex"), 0)
+            #set $itemIndex = $edt.add(($itemIndex+1), $item)
+            #set $currentItemIndex = $itemIndex
+        }
+        #if ($BODYHANDLED == false){
+                $session.logDebug(">>>>>>>>> 5 BODYHANDLED false second case")
+
+            ### #set $item = $edt.getValue($itemIndex)
+            #set $dynID = $session.StringTools.identifier("designer_$designer.TargetOwnerID\_$designer.TargetID\_$designer.PropertyName\_$itemIndex")
+            #set $itemDialog = $session.findOrCreateDialog("$dynID", "resources/widgets/designers/$itemDatatypeName\.designer")
+            #if ($itemDialog == null){
+                <html><body>DIALOG WAS NULL $dynID</body></html>
+            } #else {
+                #set $itemDesigner = $IDEApp.findOrCreateDesigner("$dynID")
+                $itemDialog.setObject($itemDesigner)
+                $itemDesigner.initFrom($designer)
+                $itemDesigner.setParentDesigner($designer)
+                $itemDesigner.setTargetDatatype($item)
+                $itemDesigner.setIndex("$itemIndex")
+                $itemDesigner.setCallingPageID("$pageID")
+                $itemDialog.outputPage(false, false).toString()
+                $designer.setState("")
+            }
+        }
+    } #else {
+        $session.logDebug(">>>>>>>3 BODYHANDLED: $BODYHANDLED")
+        #if ($BODYHANDLED == false){
+            $session.logDebug(">>>>>>>>> 6 BODYHANDLED false showTable will be called")
+            #showTable($currentItemIndex)
+        }
+    }
+    $page.setProperty("currentItemIndex", "$currentItemIndex")
+]]></htmlsrc>
+
+<widgets>
+    <widget id="submit1">
+      <properties>
+        <property name="action">
+          <value>addStrings</value>
+        </property>
+        <property name="class">
+          <value>dmbutton</value>
+        </property>
+        <property name="caption">
+          <value>OK</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
+</widgets>
+
+</dynamideForm>

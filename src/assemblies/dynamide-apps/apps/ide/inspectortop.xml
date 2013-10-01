@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<dynamideForm>
+
+<properties>
+    <property name="type"><value>pagetypes/com.dynamide.form</value></property>
+    <property name="bgcolor"><value>#A4BFDD</value></property>
+</properties>
+
+<htmlsrc><![CDATA[
+  <html>
+    <HEAD>
+        <title>Inspector</title>
+        $session.getInclude("resources/css/ide.css")
+        $session.getInclude("resources/js/scripts.js")
+        $session.getInclude("resources/js/msdom.js")
+        $session.getInclude("resources/js/windowing.js")
+    </HEAD>
+    <body topmargin='0' leftmargin='4'  marginwidth="4" marginheight="4" bgColor="$page.bgcolor">
+
+    <form name="mojoForm" action="/dynamide/ide">
+      <div class="widget" id="propertytable1" />
+    </form>
+    </body>
+  </html>
+]]></htmlsrc>
+
+<widgets>
+   <widget id="propertytable1"  >
+     <properties>
+        <property name="type"><value>com.dynamide.ide.propertytable</value></property>
+        <property name="name"><value>propertytable1</value></property>
+        <property name="value"><value>thevalue</value></property>
+     </properties>
+   </widget>
+
+   <widget id="pagelist1"  >
+     <properties>
+        <property name="type"><value>com.dynamide.ide.pagelist</value></property>
+        <property name="name"><value>pagelist1</value></property>
+     </properties>
+   </widget>
+
+</widgets>
+
+<event language="beanshell" name="inspectortop_onAction">
+  <![CDATA[
+    event.println("in inspectortop_onAction: "+event.action);
+    //URL[] urls = getClassPath();
+    //for (int i = 0; i < urls.length; i++){
+    //    event.println("beanshell classpath: "+urls[i]);
+    //}
+
+    if (event.action.equals("getData")){
+         try {
+            print("======================================event.action was getData");
+            request = event.session.getRequest();
+            String propertyValue = "oops";
+            String propertyName = event.getQueryParam("propertyName");
+            propertyValue = event.getQueryParam("propertyValue");
+            String widgetID = event.getQueryParam("widgetID");
+            String targetPageID = event.getQueryParam("targetPageID");
+            String subsessionID = event.session.getFieldValue("SUBSESSIONID");
+            String noPropUpdate = event.getQueryParam("noPropUpdate");
+
+            Session subsession = event.session.findSession(subsessionID);
+            boolean debug = true;
+            //print("----- inspector_onAction ----- "+widgetID +" prop: "+propertyName+" val: "+propertyValue);
+            if (subsession == null){
+                event.resultSrc = "ERROR: subsession is null "+subsessionID;
+            } else {
+                Page targetPage = subsession.getPageByID(targetPageID);
+                String emsg;
+                if (targetPageID.equals(widgetID)){
+                    if (targetPage == null){
+                        emsg = "ERROR: targetPageID (page as widget) was not found: "+targetPageID;
+                        event.resultSrc = "<html><body>"
+                                        +emsg
+                                        +"</body></html>";
+                        event.println("(1) event message is: "+emsg);
+                    } else {
+                        //A page property was changed, and we know this because targetPageID and widgetID are both the page ID
+                        // (but not pageID, since that is the inspector's ID).
+                        emsg = targetPage.getPagePropertyEval(propertyName, propertyValue, request);
+                        event.resultSrc = "<html><body>"
+                                        +emsg
+                                        +"</body></html>";
+                        if (debug) event.println("(2) event message is: "+emsg);
+                    }
+                } else {
+                    if (targetPage == null){
+                        emsg = "ERROR: targetPageID was not found: "+targetPageID;
+                        event.resultSrc = "<html><body>"
+                                        +emsg
+                                        +"</body></html>";
+                        event.println(emsg);
+                    } else {
+                        Widget widget = targetPage.getWidgetByID(widgetID);
+                        if (widget != null){
+                            if ( ! Tools.isTrue(noPropUpdate)){ //empty string results in false.
+                                widget.changeProperty(propertyName, propertyValue);
+                            }
+                            emsg = targetPage.getWidgetDiv(widgetID, request);
+                        } else {
+                            emsg = "ERROR: widget '"+widgetID+"' not found on page '"+targetPageID+"'";
+                        }
+                        event.resultSrc = "<html><body>"
+                                        +emsg
+                                        +"</body></html>";
+                        if (debug) event.println("(3) event message is: "+emsg);
+                    }
+                }
+            }
+         } catch (Throwable t)  {
+            session.logError("Caught Exception in inspectortop_onAction action: "+event.action, t);
+            event.resultSrc = "<html><body>ERROR: Exception caught getting data for property. See Session log</body></html>";
+         }
+         event.println("[getData] event:: "+StringTools.escape(event.toString()));
+         event.println("event.resultSrc preview:: "+event.resultSrc);
+         event.resultAction = ScriptEvent.RA_RETURN_SOURCE;
+    } else if (event.action.equals("showInspector")){
+        //show inspector page,  but first check if widget was clicked.
+        event.println(" event.action is showInspector in inspector.xml");
+    }
+  ]]>
+</event>
+
+
+</dynamideForm>

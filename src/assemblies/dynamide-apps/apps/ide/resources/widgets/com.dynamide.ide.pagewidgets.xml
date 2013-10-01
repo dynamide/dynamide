@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<widget>
+    <properties>
+        <property name="type"><defaultValue>com.dynamide.ide.pagewidgets</defaultValue><readOnly>true</readOnly></property>
+        <property name="name"><defaultValue>pagewidgets</defaultValue></property>
+        <property name="border"><defaultValue>1</defaultValue></property>
+        <property name="flavor"><defaultValue></defaultValue></property>
+        <property name="selectName"><defaultValue>pagewidgets</defaultValue></property>
+    </properties>
+
+<htmlsrc browser="*"><![CDATA[
+        #if ($widget.flavor == "dropdown"){
+            #foreach $W in $page.Widgets {
+                <select name="$widget.selectName" id="$widget.selectName">
+                    <option>$W.name</option>
+                    <TD><input type="text" name="pagewidgets_$W.name" value="$W.value"  onkeydown="inputOnKeyDown(this);" onChange="inputChanged(this);"/></TD>
+                </select>
+            }
+        } #else {
+            <table border="$widget.border" cellpadding="0" cellspacing="0">
+            #foreach $W in $page.Widgets {
+                <TR>
+                    <TD>$W.name</TD>
+                    <TD><input type="text" name="pagewidgets_$W.name" value="$W.value"  onkeydown="inputOnKeyDown(this);" onChange="inputChanged(this);"/></TD>
+                </TR>
+            }
+            </table>
+        }
+    ]]></htmlsrc>
+</widget>
+
+
+
+
+
+
+
+
+

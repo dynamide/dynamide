@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm  >
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<dynamideForm>
+
+<properties>
+    <property name="type"><value>pagetypes/com.dynamide.form</value></property>
+</properties>
+
+<htmlsrc><![CDATA[
+  <html>
+    <body>
+        <form name="frmSaveContents" METHOD="post" ACTION="/dynamide/ide">
+        <textarea name="htmlSource">NADA</textarea>
+        <input type="hidden" name="SESSIONID" value="$SESSIONID"/>
+        <input type="hidden" name="next" value="inspectorhidden"/>
+        <input type="hidden" name="page" value="inspectorhidden"/>
+        <input type="hidden" name="targetPageID" value=""/>
+        <input type="hidden" name="action" value="inspectorHiddenAction"/>
+        </form>
+    </body>
+  </html>
+]]></htmlsrc>
+
+<event language="beanshell" name="inspectorhidden_onAction">
+  <![CDATA[
+    event.println("page idehidden in onAction");
+  ]]>
+</event>
+
+</dynamideForm>

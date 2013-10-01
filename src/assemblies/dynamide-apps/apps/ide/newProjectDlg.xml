@@ -1,0 +1,283 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Created with Dynamide from DYNAMIDE.COM -->
+<dynamideForm>
+  <widgets>
+    <widget id="editAssemblyBasename">
+      <properties>
+        <property name="border">
+          <value>0</value>
+        </property>
+        <property name="caption">
+          <value>Assembly Basename</value>
+          <intl>1</intl>
+        </property>
+        <property name="field">
+          <value>assemblyBasename</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+          <readOnly>true</readOnly>
+        </property>
+      </properties>
+    </widget>
+    <widget id="editAssemblyInterface">
+      <properties>
+        <property name="border">
+          <value>0</value>
+        </property>
+        <property name="caption">
+          <value>Assembly intereface</value>
+          <intl>1</intl>
+        </property>
+        <property name="field">
+          <value>assemblyInterface</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+          <readOnly>true</readOnly>
+        </property>
+      </properties>
+    </widget>
+    <widget id="editAssemblyBuild">
+      <properties>
+        <property name="border">
+          <value>0</value>
+        </property>
+        <property name="caption">
+          <value>Assembly Build</value>
+          <intl>1</intl>
+        </property>
+        <property name="field">
+          <value>build</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+          <readOnly>true</readOnly>
+        </property>
+      </properties>
+    </widget>
+    <widget id="cbLoadOnStartup">
+      <properties>
+        <property name="caption">
+          <value>Load on Startup</value>
+          <intl>1</intl>
+        </property>
+        <property name="field">
+          <value>loadOnStartup</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.checkbox</value>
+          <readOnly>true</readOnly>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="editAppName">
+      <properties>
+        <property name="border">
+          <value>0</value>
+        </property>
+        <property name="caption">
+          <value>Application name relative to apps/</value>
+          <intl>1</intl>
+        </property>
+        <property name="field">
+          <value>appName</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+          <readOnly>true</readOnly>
+        </property>
+      </properties>
+    </widget>
+    <widget id="editAccount">
+      <properties>
+        <property name="border">
+          <value>0</value>
+        </property>
+        <property name="caption">
+          <intl>1</intl>
+          <value>Account</value>
+        </property>
+        <property name="field">
+          <value>account</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+          <readOnly>true</readOnly>
+        </property>
+      </properties>
+    </widget>
+    <widget id="submitCreateProject">
+      <properties>
+        <property name="action">
+          <value>newProject</value>
+        </property>
+        <property name="caption">
+          <value>Create Project</value>
+          <intl>1</intl>
+        </property>
+        <property name="field">
+          <value>newProject</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+          <readOnly>true</readOnly>
+        </property>
+      </properties>
+    </widget>
+    <widget id="editUrlPath">
+      <properties>
+        <property name="border">
+          <value>0</value>
+        </property>
+        <property name="caption">
+          <value>URL Path for New Project</value>
+          <intl>1</intl>
+        </property>
+        <property name="field">
+          <value>urlPath</value>
+        </property>
+        <property name="name">
+          <value>editUrlPath</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+          <readOnly>true</readOnly>
+        </property>
+      </properties>
+    </widget>
+    <widget id="hiddenSESSIONID">
+      <properties>
+        <property name="field">
+          <value>SESSIONID</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.session</value>
+          <readOnly>true</readOnly>
+        </property>
+      </properties>
+    </widget>
+    <widget id="hiddenPageID">
+      <properties>
+        <property name="field">
+          <value>page</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.hidden</value>
+          <readOnly>true</readOnly>
+        </property>
+        <property name="value">
+          <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+          <value>$pageID</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="widgetstyle1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.widgetstyle</value>
+          <readOnly>true</readOnly>
+        </property>
+      </properties>
+    </widget>
+  </widgets>
+  <htmlsrc browser="*"><![CDATA[
+<HTML>
+  <HEAD>
+    <TITLE/>
+<STYLE/>
+<SCRIPT language="javascript" src="/com/dynamide/sites/dynamide/resources/js/page.js"/>
+    <LINK href="/com/dynamide/sites/dynamide/resources/css/dynamide.css" type="text/css" rel="STYLESHEET" />
+  </HEAD>
+  <BODY id="newProjectDlg" onclick="widgetClicked(this)" bottomMargin="15" leftMargin="10" topMargin="15" rightMargin="10" name="newProjectDlg">
+    <SPAN class="widget" id="widgetstyle1" onresizestart="javascript:event.cancelBubble=true;return false;" onclick="widgetClicked(this)"/>
+    <FORM name="mojoForm" accept-charset="UNKNOWN" action="/dynamide/ide" method="get" encType="application/x-www-form-urlencoded">
+      <table border='0' cellpadding='0' cellspacing='10'>
+        <tr>
+          <td align='right'>
+            <SPAN class="widget" id="editAssemblyInterface"         />
+          </td>
+        </tr>
+        <tr>
+          <td align='right'>
+            <SPAN class="widget" id="editAssemblyBasename"         />
+          </td>
+        </tr>
+        <tr>
+          <td align='right'>
+            <SPAN class="widget" id="editAssemblyBuild"         />
+          </td>
+        </tr>
+        <tr>
+          <td align='right'>
+            <SPAN class="widget" id="editUrlPath"         />
+          </td>
+        </tr>
+        <tr>
+          <td align='right'>
+            <SPAN class="widget" id="editAccount"        />
+          </td>
+        </tr>
+        <tr>
+          <td align='right'>
+            <SPAN class="widget" id="editAppName"         />
+          </td>
+        </tr>
+        <tr>
+          <td align='right'>
+            <SPAN class="widget" id="cbLoadOnStartup"         />
+          </td>
+        </tr>
+
+
+
+        <tr>
+          <td align='right'>
+            <SPAN class="widget" id="submitCreateProject" />
+          </td>
+        </tr>
+      </table>
+      <P>
+        <SPAN class="widget" id="hiddenSESSIONID" />
+        <SPAN class="widget" id="hiddenPageID" />
+      </P>
+    </FORM>
+  </BODY>
+</HTML>
+]]></htmlsrc>
+  <properties>
+    <property name="lastSave">
+      <value>1021860524606</value>
+      <readOnly>true</readOnly>
+      <datatype>java.util.Date</datatype>
+    </property>
+    <property name="margin">
+      <value>0</value>
+      <eval>document.body.margin = "$page.margin";</eval>
+    </property>
+    <property name="name">
+      <value>newProjectDlg</value>
+    </property>
+    <property name="onAction" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+    <property name="onLoad" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+    <property name="onValidate" isEvent="true">
+      <value></value>
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+    </property>
+    <property name="title">
+      <value></value>
+    </property>
+    <property name="type">
+      <readOnly>true</readOnly>
+      <value>pagetypes/com.dynamide.form</value>
+    </property>
+  </properties>
+</dynamideForm>

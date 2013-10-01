@@ -1,0 +1,9 @@
+<project name="build-sync" default="sync-all">
+    <target name="sync-all">
+        <copy todir="${buildDirLib}">
+            <fileset dir="${dynamide.lib}" includes="**"/>  
+         </copy>
+         
+    </target>
+    
+</project>

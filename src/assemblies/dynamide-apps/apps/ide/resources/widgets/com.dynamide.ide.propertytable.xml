@@ -1,0 +1,221 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<widget>
+    <properties>
+        <property name="type"><defaultValue>com.dynamide.ide.propertytable</defaultValue><readOnly>true</readOnly></property>
+        <property name="name"><defaultValue>propertytable</defaultValue></property>
+    </properties>
+
+<htmlsrc browser="*"><![CDATA[
+    #set $subsessionID = $session.getQueryParam("SUBSESSIONID")
+    ##set $foo = $session.getFieldValue("SUBSESSIONID")
+
+    <script language="javascript">
+    <!--
+
+    function currentWidgetChanged(theSelect, targetPageID){
+        location = "?next=properties&SESSIONID=$SESSIONID&widgetID="+theSelect.options[theSelect.selectedIndex].text
+                   +'&targetPageID='+targetPageID+'&SUBSESSIONID=$subsessionID';
+    }
+
+    function HIDEgetGetDataURL(widgetID, propertyName, propertyValue, targetPageID){
+      propertyValue = escape(propertyValue);//undo is "unescape"
+      var url = "/dynamide/ide?page=inspectortop&action=getData&"
+                                    +"SESSIONID=$SESSIONID&propertyName="+propertyName
+                                    +"&propertyValue="+propertyValue+"&widgetID="+widgetID+"&targetPageID="+targetPageID;
+      return url;
+    }
+
+    function HIDEgetData(widgetID, propertyName, propertyValue, targetPageID){
+      //the tag at the end, dmFormat=XML, ensures that a valid root will be returned.
+      //if an error is returned, it will be xml, and the caller should pop up a window
+      // to the same url without the dmFormat param to see what happened.
+      var url = getGetDataURL(widgetID, propertyName, propertyValue, targetPageID) + "&dmFormat=XML";
+      var myfunction = "function mojo(){ alert('mojo 2 called'); } mojo();";// myfunc;
+      var foo = loadXMLResourceNew(url, myfunction);
+      //alert("before calling loadXMLResource");
+      var newHtml = loadXMLResource(url);
+      //alert("after calling loadXMLResource");
+      alert(newHtml);
+      return newHtml;
+    }
+
+    //-->
+    </script>
+
+#set $wgname = $session.getQueryParam("widgetID")
+#set $subsessionID = $session.getQueryParam("SUBSESSIONID")
+#set $pageIDParam =  $session.getQueryParam("targetPageID")
+#set $subsession = $session.findSession($(subsessionID))
+#set $subsessionFoundFrom = "request"
+#if ($subsession == null){
+    #set $subsessionID = $session.getFieldValue("SUBSESSIONID")
+    #set $subsession = $session.findSession($(subsessionID))
+    #if ($subsession){
+        #set $subsessionFoundFrom = "getFieldValue"
+    } #else {
+        #set $subsessionFoundFrom = "NOT_FOUND"
+    }
+}
+#set $isBodyClick =  $session.getQueryParam("isBodyClick")
+<!-- debug info 1:
+wgname: $wgname
+#if ($subsession){
+    subsessionID: $subsessionID
+    subsession: $subsession
+}
+pageIDParam: $pageIDParam
+subsession found from: $subsessionFoundFrom
+SESSIONID: $SESSIONID
+
+-->
+
+#if ($subsession == null){
+    #if ($pageID == "properties"){
+         <h2>SUBSESSION IS NULL</h2>The IDE Session or the Subsession (the project you were working on) timed out
+     } #else {
+         <h2>SUBSESSION IS NULL</h2>THIS WIDGET ONLY WORKS IN THE IDE.
+     }
+} #else {
+  #set $subpage = $subsession.findPageByID($pageIDParam)
+  #if ($subpage != null){
+    <!-- debug info 2:
+        " subpage $subpage "
+    -->
+    #set $currentWidget = ""
+    #set $widgetByID = $subpage.getWidgetByID($wgname)
+    #if ($wgname == "LAST_WIDGET"){
+        ## This little hack takes the field value set by the idetop
+        ## See: idetop.xml::designmodeClick() and idetop.xml::showInspector()
+        ## or search for "LAST_WIDGET"
+        #set $LAST_WIDGET_ID = $subsession.getFieldValue("LAST_WIDGET")
+        #set $widgetByID = $subpage.getWidgetByID($LAST_WIDGET_ID)
+        #set $wgname = "$LAST_WIDGET_ID"
+    }
+    <TABLE border="0" cellpadding="5" cellspacing="0">
+      <TR>
+        <TD>
+          <b>pageID:</b> $pageIDParam
+        </TD>
+      </TR>
+      <TR>
+        <TD align="left" colspan="2">
+            #if ("$wgname" == "$pageIDParam") {
+	         <b>Object:<dm_nbsp/></b>
+            } #else {
+	         <b>Object:<dm_nbsp/>$pageIDParam.</b>
+            }
+            <select name="currentWidgetSelect" onchange="currentWidgetChanged(this, '$pageIDParam');">
+            <option>
+                Application
+            </option>
+            ## Note: you can use widget.ID or widget.name.
+            #if ($subpage.Widgets != null) {
+              #if ($wgname == $subpage.id || "$wgname" == "") {
+                <option selected='true'>
+                   $subpage.id
+                </option>
+              } #else {
+                <option>
+                   $subpage.id
+                </option>
+              }
+              #foreach $wg in $subpage.Widgets {
+                #if ($wgname == $wg.name){
+                    #set $selected = " selected='true'"
+                    #set $currentWidget = $wg
+                } #else {
+                    #set $selected = ""
+                }
+                <option $selected>
+                   $wg.name
+                </option>
+              } ##end-for
+            }
+            </select>
+
+          #if ($widgetByID != null){
+             #set $wtp = $widgetByID.type
+          } #else {
+             #set $wtp = ""
+          }
+          <center><a href="javascript:showIDEHelp('/dynamide/ide?next=idehelp&showDynamideHelp=1&SESSIONID=$SESSIONID&widgetType=$wtp');">Widget Help</a></center>
+
+        </TD>
+      </TR>
+    </TABLE>
+  } #else {
+  <!-- SUBPAGE was null: '$pageIDParam' -->
+  } ## end subpage-not-null check.
+
+  #if ($subpage != null){
+    #if ($wgname == "Application") {
+            <TABLE border="1" cellpadding="0" cellspacing="0" width="100%" >
+            #foreach $prop in $subsession.getApplicationProperties() {
+                <TR>
+                    <TD width="100%" title="$widget.helpTip">
+                        $prop.Name
+                    </TD>
+                    <TD>
+                        ## Let the page get the appropriate editor type for this widget and property.
+                        #set $okd = "\"pagePropInputOnKeyDown(this, '$subpage.id', '$subpage.id');\""
+                        #set $och = "\"pagePropInputChanged(this, '$subpage.id', '$subpage.id');\""
+                        ###$session.getApplicationPropertyEditor($session, $subsession, $prop, "$okd", "$och")
+                    </TD>
+                </TR>
+            }
+            </TABLE>
+    } #elseif ($isBodyClick != null && $isBodyClick == "true") {
+        $session.expandResource("resources/widgets/com.dynamide.tableeditor.wm", "com.dynamide.propertytable-isBodyClick")
+    } #elseif ("$currentWidget" == null || "$currentWidget" == "") {
+        ##Leave table empty
+        <!-- currentWidget is empty
+        wgname: $wgname
+        subsessionID: $subsessionID
+        pageIDParam: $pageIDParam
+        subsession: $subsession
+        currentWidget: $currentWidget
+        -->
+            ## PAGE PROPERTIES:
+            <TABLE border="1" cellpadding="0" cellspacing="0" width="300" >
+            #foreach $prop in $subpage.getPageProperties() {
+                <TR>
+                    <TD width="100%" title="$widget.helpTip">
+                        $prop.Name
+                    </TD>
+                    <TD>
+                ## Let the page get the appropriate editor type for this widget and property.
+                #set $okd = "\"pagePropInputOnKeyDown(this, '$subpage.id', '$subpage.id');\""
+                #set $och = "\"pagePropInputChanged(this, '$subpage.id', '$subpage.id');\""
+                $session.getPagePropertyEditor($session, $subsession, $subpage, $prop, "$okd", "$och")
+                ##todo: make an overload using $prop and $subpage. %%
+                </TD>
+                </TR>
+            }
+            </TABLE>
+    } #else {
+        ## WIDGET PROPERTIES:
+        <TABLE border="1" cellpadding="0" cellspacing="0" width="300" >
+        #foreach $prop in $currentWidget.Properties {
+            #if ("$prop.hidden" != "true"){
+            <TR>
+                <TD width="100%" >
+                    $prop.Name
+                </TD>
+                <TD>
+                ## Let the page get the appropriate editor type for this widget and property.
+                #set $okd = "\"widgetPropInputOnkeydown(this, '$currentWidget.ID', '$subpage.id', 'widgetPropInputOnkeydown:dynamic:$currentWidget.ID', 'false');\""
+                #set $och = "\"widgetPropInputChanged(this, '$currentWidget.ID', '$subpage.id', 'widgetPropInputChanged:dynamic:$currentWidget.ID', 'false');\""
+                #set $defaultProperty = $currentWidget.getPropertyDefault($prop.Name)
+                $session.getWidgetPropertyEditor($session, $subsession, $subpage, $currentWidget, $prop, $defaultProperty, "$okd", "$och")
+                </TD>
+            </TR>
+            }
+        }
+        </TABLE>
+    } ##END currentWidget
+  } ##END subpage not null
+}
+]]></htmlsrc>
+</widget>

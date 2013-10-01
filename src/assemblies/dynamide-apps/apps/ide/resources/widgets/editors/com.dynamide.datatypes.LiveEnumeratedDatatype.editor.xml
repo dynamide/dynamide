@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<!-- replaces EnumerationDatatype.editor.xml -->
+<widget>
+<properties>
+</properties>
+    <componentHelp>
+     <p>This editor is just like com.dynamide.datatypes.EnumeratedDatatype.editor.xml except
+        that it gets defaults from the the widget type, and the remaining values from some live
+        expression, and will continually get live values when called.
+     </p>
+    </componentHelp>
+
+<htmlsrc browser="*"><![CDATA[
+    #if ($property.readOnly == "true"){
+        <b>$property.StringValue</b>
+    } #else {
+        <SELECT name="$property.name" value="$property.getCurrentStringValue()"
+        onkeydown=$onkeydown
+        onchange=$onchange
+        ##onblur=$onchange
+        >
+            #set $found = 0
+            #set $pv = $property.StringValue.toString()
+            #foreach $val in $defaultProperty.Enumeration {
+                #if ($val == $pv){
+                    <OPTION SELECTED='true' value='$val'>$val</OPTION>
+                    #set $found = 1
+                } #else {
+                    <OPTION value='$val'>$val</OPTION>
+                }
+            }
+            ## any enum will work:
+            ## set $enum = $session.eval("session.getApplicationProperties();")
+            ## set $enum = $session.eval("session.getFieldNames();")
+            #set $es = $property.liveEvalString
+            #if ($es.length()>0){
+                #set $theSet = $session.eval($es)
+                #foreach $val2 in $theSet {
+                    #if ($val2 == $property.StringValue){
+                        <OPTION SELECTED='true' value='$val2'>$val2</OPTION>
+                        #set $found = 1
+                    } #else {
+                        <OPTION value='$val2'>$val2</OPTION>
+                    }
+                }
+            }
+            #if ($found == 0){
+                ##not sure I want this...<OPTION SELECTED='true' value='$widget.value'>$widget.value</OPTION>
+            }
+
+
+        </SELECT>
+    }
+]]></htmlsrc>
+</widget>

@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<widget>
+<properties>
+    <property name="type"><defaultValue>com.dynamide.ide.internationalize</defaultValue><readOnly>true</readOnly></property>
+    <property name="name"><defaultValue>internationalize</defaultValue></property>
+</properties>
+
+<htmlsrc browser="*"><![CDATA[
+    <form action='/dynamide?SESSIONID=$session.SESSIONID&internationalize=1&USER=laramie'>
+##eval: .. $session.page1.com_dynamide_radiogroup1.items.getClass().getName()
+    #set $sessionIDTitle = "[<dm_nbsp/><small><b>SESSIONID:</b><dm_nbsp/>$session.SESSIONID<dm_nbsp/>]<br/>[<dm_nbsp/><dm_nbsp/><b>Path:<dm_nbsp/></b>$session.getURLPath()<dm_nbsp/>]<br/>[<dm_nbsp/><dm_nbsp/><b>Language:<dm_nbsp/></b>$session.CurrentLanguageCode<dm_nbsp/>]</small>"
+
+    #set $pagesTable = "<table border='1' bgcolor='white' cellspacing='0' cellpadding='5'><tr><th>Internationalize<br/>Session Objects</th></tr>"
+    #set $pagesTable = "$pagesTable<tr><td><a href='/dynamide?action=showInternationalizationForm&SESSIONID=$session.SESSIONID'><b>Fields</b></a></td></tr>"
+    #foreach $pagename in $session.Pages {
+         #set $pagesTableRow = "<tr><td><a href='/dynamide?action=showInternationalizationForm&SESSIONID=$session.SESSIONID&which=page&page=$pagename'>$pagename</a></td></tr>"
+         #set $pagesTable = "$pagesTable$pagesTableRow"
+    }
+    #set $pagesTable = "$pagesTable</table>"
+
+    #set $which = $session.getQueryParam("which")
+    #set $pageID = $session.getQueryParam("page")
+    #set $page = null
+    #if ($pageID != null){
+        #set $page = $session.getPageByID($pageID)
+    }
+    #if ($page != null && $which == "page"){
+        <table border="0" cellpadding="0" cellspacing="0" >
+        <tr>
+        <td valign="top">
+            <table border="0" cellpadding="5" cellspacing="0" ><tr><td  valign="top" width='150'>
+            <b>Page Detail</b><dm_nbsp/><dm_nbsp/><dm_nbsp/></td><td width="20"><dm_nbsp/></td><td>$sessionIDTitle</td></tr>
+            </table>
+
+        </td>
+        <td rowspan="2">
+            $pagesTable
+        </td>
+        </tr>
+        <tr valign='bottom'>
+        <td valign='bottom'>
+        ##links here if you want any...
+        </td>
+        </tr>
+        </table>
+        <hr/>
+
+        <a name="pageproperties"></a>
+        <TABLE bgcolor='white' border="1" cellpadding="3" cellspacing="0" >
+            <TR><TH colspan='3'>Internationalize Page \"$page.getName()\" </TH></TR>
+            <TR>
+                <TH>Name</TH><TH>Value</TH><TH>Value for Language Code: [$session.CurrentLanguageCode]</TH>
+            </TR>
+            #foreach $prop in $page.Properties {
+                #if ($prop.intl > 0){
+                    <TR>
+                        <TD>
+                            $prop.getDotName()
+                        </TD>
+                        <TD>
+                            $prop.value
+                        </TD>
+                        <TD><input type='text' size="60" name="$prop.getDotName()" value="$page.get($prop.name)"/> ##ARG! this is different that everything else here, but consistent with how the page.title will appear in pages.
+                        </TD>
+                    </TR>
+                }
+            }
+            #foreach $detailWidget in $page.Widgets {
+                #if ($detailWidget ==  null || $detailWidget == "") {
+                        ##Leave table empty
+                        empty
+                } #else {
+                    #foreach $prop in $detailWidget.Properties {
+                        #if ($prop.intl > 0){
+                            #set $dotname = $prop.getDotName()
+                            #set $intlval = $session.internationalize($dotname, "   ")
+                            <TR>
+                                <TD>
+                                    $dotname
+                                </TD>
+                                <TD>
+                                    $prop.value
+                                </TD>
+                                <TD><input type='text' size="60" name="$prop.getDotName()" value="$intlval"/>
+                                </TD>
+                            </TR>
+                        }
+                    }
+                }
+            }
+        </TABLE>
+        <p>Page Source: $page.getFilename()</p>
+    } #else { ## Just show Session:
+
+        <table border="0" cellpadding="0" cellspacing="0" >
+        <tr>
+        <td valign="top">
+            <table border="0" cellpadding="5" cellspacing="0" ><tr><td valign="top"  width='150'>
+            <b>Session Detail</b></td><td width="20"><dm_nbsp/></td><td>$sessionIDTitle</td></tr>
+            </table>
+        </td>
+        <td rowspan="2">
+            $pagesTable
+        </td>
+        </tr>
+        </table>
+        <hr/>
+        <table bgcolor='white' border='1' cellspacing='0' cellpadding='1'>
+        <tr><th colspan='3'>Session Field Properties</th></tr>
+        <tr>
+            <th>Name</th><th>Value</th><th>Value for Language Code: [$session.CurrentLanguageCode]</th>
+        </tr>
+        #foreach $key in $session.FieldNames {
+            #set $field = $session.getField($key)
+            #if ($field != null){
+                #set $valueObject = $field.getValueObject("value")
+                #if ($valueObject != null) {
+                    #if ($valueObject.intl > 0){
+                        <tr>
+                        <td>$key</td><td>$valueObject.value</td>  ## Field has no getAsStored() method, so just use the value object.
+                        <td>
+                        <textarea rows='2' cols='50' name="session.$key" >$field.value</textarea> ## this calls Field.getValue(), which will interntionalize.
+                        </td>
+                        </tr>
+                    }
+                }
+            }
+        }
+        </table>
+        <input type="hidden" name="SESSIONID" value="$SESSIONID"/>
+        <input type="submit" name="internationalize" value="internationalize"/>
+        </form>
+        <a href="#top">top</a>
+
+    }
+]]></htmlsrc>
+</widget>

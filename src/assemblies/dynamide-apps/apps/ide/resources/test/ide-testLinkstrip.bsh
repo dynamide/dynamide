@@ -1,0 +1,25 @@
+source("C:/dynamide/src/shell/dynamideShell.bs");
+
+s = Session.createSession("/dynamide/ide", "/dynamide/ide?SESSIONID=test-ide", Session.MODE_BATCH);
+
+r = s.handleURL("?action=startSubsession&projectPath=/test-suite/properties");
+print(r.prettyPrintHTML());
+
+//r = s.handleURL("?SESSIONID=test-ide&action=showInspector&targetPageID=page1&widgetID=edit1");
+//r = s.handleURL("?SESSIONID=test-ide&page=inspector&next=inspectortop&targetPageID=page1&widgetID=edit1");
+r = s.handleURL("?SESSIONID=test-ide&action=testAddLinks&search=page1.linkstrip1");
+
+
+w = s.getSubsession().find("page1.linkstrip1");
+print(r.prettyPrintHTML());
+print("");
+print("links.default: "+w.getProperty("links").getDefaultValueObject().dump(true));
+print("");
+print("links: "+w.getProperty("links").getValue().dump(true));
+print("");
+//print("render: \r\n"+w.render());
+
+
+r = s.handleURL("?SESSIONID=test-ide&action=getData&targetPageID=page1&propertyName=links&propertyValue=The+Text+2.&page=properties&widgetID=linkstrip1&dmFormat=XML");
+//print(r);
+print("DONE");

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+<widget>
+<properties>
+</properties>
+<htmlsrc browser="*"><![CDATA[
+    #if ($property.readOnly == "true"){
+        <b>$property.StringValue</b>
+    } #else {
+        <SELECT name="$property.name" value="$property.getCurrentStringValue()"
+        onkeydown=$onkeydown
+        onchange=$onchange
+        >
+            <OPTION value=''></OPTION>
+            #foreach $dsval in $session.getDatasources() {
+                #if ("$dsval" == $property.StringValue){
+                    <OPTION SELECTED='true' value='$dsval'>$dsval</OPTION>
+                } #else {
+                    <OPTION value='$dsval'>$dsval</OPTION>
+                }
+            }
+        </SELECT>
+
+    }
+]]></htmlsrc>
+</widget>

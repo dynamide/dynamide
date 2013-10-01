@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<dynamideForm>
+
+<properties>
+    <property name="type"><value>pagetypes/com.dynamide.form</value></property>
+    <property name="bgcolor"><value>white</value></property>
+</properties>
+
+<htmlsrc><![CDATA[
+  <html>
+    <HEAD>
+        <title>Dynamide Help</title>
+         <div class="widget" id="widgetstyle1"/>
+        $session.getInclude("resources/css/dynamidedoco.css")
+        $session.getInclude("resources/js/page.js")
+    </HEAD>
+    <body border='0' topmargin='0' leftmargin='0' rightmargin='0' bottommargin='0' bgColor="$page.bgcolor">
+    <br />
+    <form name="mojoForm" action="/dynamide/ide" >
+        <span class='widget' id='help1'/>
+    </form>
+    </body>
+  </html>
+
+]]></htmlsrc>
+
+<widgets>
+
+   <widget id="help1"  >
+     <properties>
+        <property name="type"><value>com.dynamide.ide.widgethelp</value></property>
+        <property name="name"><value>widgethelp</value></property>
+     </properties>
+   </widget>
+    <widget id="session1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.session</value>
+        </property>
+      </properties>
+    </widget>
+   <widget id="hiddenPageID">
+     <properties>
+        <property name="type"><value>com.dynamide.hidden</value></property>
+        <property name="name"><value></value></property>
+        <property name="value"><value>page1</value></property>
+        <property name="field"><value>page</value></property>
+     </properties>
+   </widget>
+
+   <widget id="widgetstyle1">
+     <properties>
+        <property name="type"><value>com.dynamide.widgetstyle</value></property>
+     </properties>
+   </widget>
+
+</widgets>
+
+<event language="beanshell" name="page1_onAction">
+  <![CDATA[
+  ]]>
+</event>
+
+
+</dynamideForm>

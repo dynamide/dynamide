@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm  >
+<!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<dynamideForm>
+
+<properties>
+    <property name="type"><value>pagetypes/com.dynamide.form</value></property>
+    <property name="bgcolor"><value>#A4BFDD</value></property>
+</properties>
+
+<htmlsrc><![CDATA[
+  <html>
+    <head>
+    <script>
+     function openNewProject(projectURL){
+       window.frames['idetop'].openProject(projectURL);
+       window.frames['idetop'].openPage(); //%% this is a kludge to open the default first page in the project
+     }
+    </script>
+    <title>Dynamide</title>
+    </head>
+        <frameset rows="100%,*" framespacing="0">
+            <frame src="/dynamide/ide?next=idetop&amp;SESSIONID=$SESSIONID" NAME="idetop" />
+            <frame src="/dynamide/ide?next=idehidden&amp;SESSIONID=$SESSIONID" NAME="idehidden" />
+        </frameset>
+  </html>
+]]></htmlsrc>
+
+<widgets>
+</widgets>
+
+
+
+<event language="beanshell" name="ide_onAction">
+  <![CDATA[
+    event.println("page ide in onAction");
+  ]]>
+</event>
+
+
+
+</dynamideForm>
