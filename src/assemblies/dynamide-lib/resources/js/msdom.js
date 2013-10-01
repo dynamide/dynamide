@@ -61,8 +61,29 @@ if (!scripts_js_included) {
       }
       return domToString(root);
   }
-
+  
   function loadDocument(resource){
+    function reqListener () {
+      console.log(" this.responseXML ====>");
+      console.log(this.responseXML);
+      console.log(" this.responseText ====>");
+      console.log(this.responseText);
+    };
+    
+    var oReq = new XMLHttpRequest();
+    oReq.onload = reqListener;
+    oReq.open("get", resource, false);  //3rd arg: true==async.  We want false, because dynamide ide was not written with js closures, so some code is synchronous.
+    oReq.send(); 
+    if (oReq.responseText){
+        console.log("oReq.responseText:"+ oReq.responseText);
+        return oReq.responseText;   
+    } else if (oReq.responseXML){
+        console.log("oReq.responseXML:"+ oReq.responseXML);
+        return oReq.responseXML;   
+    }
+  }
+
+  function loadDocumentActiveX(resource){
       //Microsoft.XMLDOM is of type IXMLDOMDocument
       var xmlDoc=new ActiveXObject("Microsoft.XMLDOM")
       xmlDoc.async=false
@@ -98,7 +119,11 @@ if (!scripts_js_included) {
     //Note: I don't support processing instructions, etc.
   function domToStringDiver(passedNode, isRoot){
     var html = '';
-    //alert(""+passedNode.nodeType +":"+ passedNode.nodeName+":"+passedNode.text );
+    var typ = typeof passedNode;
+    if (typ === "string" && passedNode.nodeType === undefined){
+        return passedNode;
+    }
+    console.log(" domToStringDiver ==> "+typ+"="+passedNode.nodeType +":"+ passedNode.nodeName+":"+passedNode.text );
     if (passedNode.nodeType == NODE_TEXT){
         if (!isRoot && passedNode.text != undefined)    html += passedNode.text;
     } else if (passedNode.nodeType == NODE_COMMENT && passedNode.text != undefined){

@@ -35,6 +35,7 @@ function isRightClick(e) {
 }
 
 function bodyClicked(obj){
+    debugger;
   if ( window["dmDesign_TableClicked"] == null ) {
     logDebug("<h2>dmDesign_TableClicked is null</h2>");
     widgetClicked(obj, true);
@@ -47,6 +48,10 @@ function bodyClicked(obj){
 //actually, may apply to divs or body also...
 //Works in IE only.
 function widgetClicked(obj, isBodyClick){
+    debugger;
+    if (obj.document === undefined){
+        obj.document = obj.ownerDocument;
+    }
     if (event != null) event.cancelBubble = true;
     if (opener == null) return invalidOpener(); //for the page designer IDE, this shouldn't apply.
     //alert(""+obj.document.all.pageID.value);
