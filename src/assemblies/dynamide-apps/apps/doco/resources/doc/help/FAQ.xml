@@ -315,7 +315,7 @@ when you should have called this:
         <p>When running in the application server, you must use the Servlet init param:
 <example><![CDATA[<servlet servlet-name='DynamideServlet' servlet-class='com.dynamide.DynamideServlet'>
     <load-on-startup/>
-    <init-param dynamide.RESOURCE_ROOT="C:/dynamide/build/ROOT" />
+    <init-param DYNAMIDE_RESOURCE_ROOT="C:/dynamide/build/resource_root" />
     <init-param ALLOW_SHUTDOWN="false" />
 </servlet>]]></example>
         </p>
@@ -323,15 +323,15 @@ when you should have called this:
         <p>Most convenient if you run on the command-line, is to set an env var.
         for example, in Windows, you can do this, either in the shell, or in your
         System applet:
-                <example>set dynamide.RESOURCE_ROOT="C:\dynamide\build\ROOT"</example>
+                <example>set DYNAMIDE_RESOURCE_ROOT="C:\dynamide\build\resource_root"</example>
         </p>
 
         <p>However, if you are running on the command-line, calling something that shells out and looses your environment variables,
         use the Java -D define argument.  For example, when using JUnit, JUnit shells and looses the environment from the
         OS, so you must set a Java System resource definition like this:
-        <example>java -Ddynamide.RESOURCE_ROOT="C:\dynamide\build\ROOT" com.dynamide.util.LogTest</example>
-        If dynamide.RESOURCE_ROOT is defined in your Windows shell, for example, you could do this:
-        <example>java -Ddynamide.RESOURCE_ROOT=%dynamide.RESOURCE_ROOT% com.dynamide.util.LogTest</example>
+        <example>java -DDYNAMIDE_RESOURCE_ROOT="C:\dynamide\build\resource_root" com.dynamide.util.LogTest</example>
+        If DYNAMIDE_RESOURCE_ROOT is defined in your Windows shell, for example, you could do this:
+        <example>java -DDYNAMIDE_RESOURCE_ROOT=%DYNAMIDE_RESOURCE_ROOT% com.dynamide.util.LogTest</example>
         </p>
       </text>
     </definition>

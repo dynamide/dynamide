@@ -1,9 +1,9 @@
 package com.dynamide;
 //run like this:
-//  java -Ddynamide.RESOURCE_ROOT="C:/dynamide/build/ROOT" com.dynamide.SessionTest -junit
+//  java -DDYNAMIDE_RESOURCE_ROOT="C:/dynamide/build/resource_root" com.dynamide.SessionTest -junit
 //
 //or like this:
-//  java -Ddynamide.RESOURCE_ROOT="C:/dynamide/build/ROOT" com.dynamide.SessionTest -uri /dynamide/demo -params "?USER=laramie" -page page1
+//  java -DDYNAMIDE_RESOURCE_ROOT="C:/dynamide/build/resource_root" com.dynamide.SessionTest -uri /dynamide/demo -params "?USER=laramie" -page page1
 import java.io.*;
 
 import junit.framework.*;

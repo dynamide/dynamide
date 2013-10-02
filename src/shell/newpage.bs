@@ -3,7 +3,7 @@ import com.dynamide.resource.*;
 import com.dynamide.util.*;
 
 try {
-    String RESOURCE_ROOT = com.dynamide.resource.ResourceManager.getEnvironmentVariable("dynamide.RESOURCE_ROOT");
+    String RESOURCE_ROOT = com.dynamide.resource.ResourceManager.getEnvironmentVariable("DYNAMIDE_RESOURCE_ROOT");
     ResourceManager rm = ResourceManager.createStandalone(RESOURCE_ROOT);
 
     session = Session.createSession("/Dynamide/demo");

@@ -6,7 +6,7 @@ if %1a==a goto doUsage
     )
     @rem echo calling: java -Xmx512M -DDYNAMIDE_HOME="%DYNAMIDE_HOME%" %*
     java -Xmx512M -DDYNAMIDE_HOME="%DYNAMIDE_HOME%" %*
-    rem java -Ddynamide.RESOURCE_ROOT="%dynamide.RESOURCE_ROOT%" %*
+    rem java -DDYNAMIDE_RESOURCE_ROOT="%DYNAMIDE_RESOURCE_ROOT%" %*
 @goto END
 
 :doUsage
