@@ -82,6 +82,8 @@
               $session.getInclude("resources/js/scripts.js")
               $session.getInclude("resources/js/msdom.js")
               $session.getInclude("resources/js/windowing.js")
+              ## not needed here, but was needed in designer.xml ::
+              ##     $session.getInclude("resources/js/queryString.js")
           </HEAD>
           <body topmargin='0' leftmargin='4'  marginwidth="4" marginheight="4" bgColor="$page.bgcolor">
           <center>
@@ -182,15 +184,14 @@
     #set $BODYHANDLED = false
     #set $IDEApp = $session.get("IDEApp").getValue()
     #set $designer = $page.getObject()
-    ##
-    ##
+    
     #if (($designer.getParentDesigner() == null) && $designer.isDone()){
         $designer.setDone(false)
         #showRedirect()
         #set $BODYHANDLED = true
         $session.logDebug("-----------------====------- called showRedirect. BODYHANDLED: $BODYHANDLED")
     }
-    $session.logDebug(">>>>>>>1 BODYHANDLED: $BODYHANDLED")
+    $session.printStdOut(">>>>>>>1 BODYHANDLED: $BODYHANDLED")
 
     #set $designerTitle = "$designer.TargetID\.$designer.PropertyName"
     $session.logDebug("in com.dynamide.datatypes.EnumeratedDatatype.designer. designer = $designer")

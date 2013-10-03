@@ -64,7 +64,6 @@ $session.printStdOut("================...========== $designer")
         document.all.source.focus();
     //-->
     </SCRIPT>
-    }
 </span>
 </span>
 ]]></htmlsrc>
