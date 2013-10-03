@@ -150,6 +150,7 @@ public abstract class DynamideObject implements com.dynamide.util.IGet {
     }
 
     public void logWarn(String message) {
+        System.out.println("!!!!!!!!!!!!!! "+message);
         Log.warn(this, message, null);
     }
 

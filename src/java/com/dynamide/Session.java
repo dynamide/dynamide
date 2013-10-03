@@ -86,6 +86,11 @@ import com.dynamide.util.trace.ExpansionLog;
  */
 public class Session extends Persistent
 implements ISession, ISessionItem, ISessionTableItem, IDatasource, IContext {
+
+    public void printStdOut(String message) {
+        System.out.println("!!!!!!!!!!!!!! "+message);
+    }
+
     //================= Constructor ==============================================================
     /** Call the factory method: createSession rather than using this constructor outside of this class.*/
     private Session(DynamideObject owner,

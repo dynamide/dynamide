@@ -121,7 +121,7 @@ public class Designer {
 
 
     public String toString(){
-        return "{Designer:id:"+id+",targetPath:"+targetPath+",targetOwnerID:"+targetOwnerID+",targetID:"+targetID+",propertyName:"+propertyName+",index:"+index+",targetDatatype:"+targetDatatype+"}";
+        return "{Designer:id:"+id+",target:"+target+",targetPath:"+targetPath+",targetOwnerID:"+targetOwnerID+",targetID:"+targetID+",propertyName:"+propertyName+",index:"+index+",targetDatatype:"+targetDatatype+"}";
     }
 
     public String formatDoneScript(String newPropertyValue){

@@ -24,6 +24,12 @@
     <property name="dialog"><value></value></property>
 </properties>
 
+<htmlsrcHIDE><![CDATA[
+<html><body>#set $foo = $session.dumpContext($WEBMACRO_CONTEXT.getContext())
+$session.printStdOut($foo)
+$foo</body></html>
+]]></htmlsrcHIDE>
+
 <htmlsrc><![CDATA[
     #set $targetOwnerID = ""
         #set $propertyName = $session.getQueryParam("propertyName")
@@ -101,6 +107,7 @@
                     #set $dialog = $session.findOrCreateDialog("$dynID", "$designerName")
                     #set $designer = $IDEApp.findOrCreateDesigner("$dynID")
                     $dialog.setObject($designer)
+                    $designer.setTarget($target)
                     $designer.setTargetClass($targetClass)
                     $designer.setTargetID($targetID)
                     $designer.setTargetOwnerID($targetOwnerID)

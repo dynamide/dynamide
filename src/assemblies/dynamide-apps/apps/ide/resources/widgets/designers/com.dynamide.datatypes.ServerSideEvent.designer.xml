@@ -12,16 +12,30 @@
 <htmlsrc><![CDATA[
 <span>
 <span>
+#set $designer = $page.getObject()
+$session.printStdOut("================...========== $designer")
+
+#comment {Designer:
+    id:designer_page1_page1_onAction
+    targetPath:page1.page1
+    targetOwnerID:page1
+    targetID:page1
+    propertyName:onAction
+    index:
+    targetDatatype:page1_onAction
+    target:
+}
+
     ## This template relies on the Property Designer window initializing a bunch
-    ## of things in the context. See the full list in:
+    ## of things in the context, placed in the "designer" object. See the full list in:
     ##   {webapp}/com/dynamide/sites/dynamide/apps/ide/designertop.xml
 
-    #set $thing = $target
-    #if ($targetClass == "Widget"){
+    #set $thing = $designer.getTarget()
+    #if ($designer.getTargetClass() == "Widget"){
         ## Magic trick: the Widget doesn't save it's events, the page saves them.
-        #set $thing = $targetPage
+        #set $thing = $designer.getTargetPage()
     }
-    #set $newEventName = "$targetID\_$propertyName"
+    #set $newEventName = "$designer.getTargetID()\_$designer.getPropertyName()"
 
     ##  These two methods are like-named, but run against different classes: Session, Page, and Widget.
     ##  However, Webmacro uses introspection, not interfaces or inheritance.
@@ -50,6 +64,7 @@
         document.all.source.focus();
     //-->
     </SCRIPT>
+    }
 </span>
 </span>
 ]]></htmlsrc>
