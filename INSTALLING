@@ -34,6 +34,7 @@ Installation:
                  ${DM_TOMCAT_HOME}/conf/server.xml
     
 Start Tomcat:
+    export CATALINA_OPTS= -Xmx3072m
     ${DM_TOMCAT_HOME}/bin/startup.sh
     
 Browse to: 

@@ -8,9 +8,6 @@
     <property name="type">
         <value>pagetypes/com.dynamide.form</value>
     </property>
-    <property name="onloadsrc">
-        <value></value>
-    </property>
 </properties>
 
 <htmlsrc><![CDATA[
@@ -18,16 +15,8 @@
     <head>
         $session.getInclude("resources/js/scripts.js")
         $session.getInclude("resources/js/windowing.js")
-        <script language='javascript'>
-        <!--
-        function showConsoleLog(){
-            var  msg = "ERROR: see <a href=\\"javascript:window.open('/dynamide?showSessionConsoleLog=1&SESSIONID=$SESSIONID');window.close();\\">Console Log</a>";
-            messageBox('Save Page', msg);
-        }
-        //-->
-        </script>
     </head>
-    <body onload="$page.onloadsrc">
+    <body>
         <form name="frmSaveContents" METHOD="post" ACTION="/dynamide/ide">
         <textarea name="htmlSource">NADA</textarea>
         <input type="hidden" name="SESSIONID" value="$SESSIONID"/>
@@ -42,50 +31,31 @@
 
 <event language="beanshell" name="idehidden_onAction">
   <![CDATA[
-    event.currentPage.setProperty("onloadsrc", "");
-    event.println("page idehidden in onAction");
     if (event.action.equals("SaveLayoutView")){
         request = event.session.getRequest();
         String pagepost = event.getQueryParam("htmlSource");
-        //very verbose: event.println("POSTED Page: \r\n"+pagepost);
         String subsessionID = event.session.getFieldValue("SUBSESSIONID");
-        event.println("subsessionID: "+subsessionID);
         Session subsession = event.session.findSession(subsessionID);
         String targetPageID = event.getQueryParam("targetPageID");
-        event.println("targetPageID: "+targetPageID);
-        String body = "";
+        
         if (subsession == null){
-            body = "subsession was null";
-            event.println(body);
+            event.println("subsession was null");
         } else {
-            event.println("subsession was OK");
-            body = "targetPage is null";
             Page targetPage = subsession.getPageByID(targetPageID);
             if (targetPage != null){
-                body = "got targetPage";
-                event.println(body);
                 try {
-                    //set this to a local dir for debugging: FileTools.saveFile("C:/java", "pagepost.html", pagepost);
-                    //debugging: event.println("SEE: C:/java/pagepost.html for source from browser");
-                    //6/1/2002 2:56PMtargetPage.setHTMLSourceIE(pagepost); //throws XMLFormatException
-                    targetPage.setHTMLSource(pagepost); //throws XMLFormatException
-                    boolean result = targetPage.saveToFile(); //This flushes the whole XML in-memory tree to disk.
-                    if (result){
-                        body = "Page "+targetPageID+" saved";
-                        event.println(body);
+                    targetPage.setHTMLSource(pagepost);                //throws XMLFormatException
+                    if (targetPage.saveToFile()){                      //This flushes the whole XML in-memory tree to disk.
+                        event.println("Page "+targetPageID+" saved");
                     } else {
-                        body = "ERROR: couldn't save page "+targetPageID;
-                        event.println(body);
+                        event.println("ERROR: couldn't save page "+targetPageID);
                     }
                 } catch (XMLFormatException xmle){
-                    body = xmle.getMessage();
-                    event.println(body);
-                    event.currentPage.setProperty("onloadsrc", "javascript:showConsoleLog();");
-                    return; // override the result.
+                    event.println(xmle.getMessage());
+                    return; 
                 }
             }
         }
-        event.currentPage.setProperty("onloadsrc", "javascript:alert('"+body+"');");
         return;
     }
   ]]>

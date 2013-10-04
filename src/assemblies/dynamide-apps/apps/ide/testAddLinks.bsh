@@ -1,0 +1,40 @@
+/*
+
+This used to be part of ide/application.xml, but I don't have any callers for it, so I moved it to this file, just in case.
+
+    if ( event.action.equals("testAddLinks") ) {
+        search = event.getQueryParam("search");
+        w = session.getSubsession().find(search);
+        if ( w == null ) {
+            System.out.println("w was null ~~~~~~~~~~~~~~~~~~~");
+            event.returnSource("<html><body>w was null</body></html>");
+            return;
+        }
+        p = w.getProperty("links");
+        o = p.getValueObjectNoDefault();
+        if ( o == null ) {
+            o = p.getValue();
+            oc = o.clone();
+            p.setValue(oc);
+            o = oc;
+        }
+        if ( o != null ) {
+            link = new com.dynamide.datatypes.Link();
+            link.set("key", "key1");
+            link.set("href", "theHref");
+            link.set("text", "The Text.");
+            o.add(link);
+            link = new com.dynamide.datatypes.Link();
+            link.set("key", "key2");
+            link.set("href", "theHref2");
+            link.set("text", "The Text 2.");
+            o.add(link);
+        } else {
+            System.out.println("o was null ~~~~~~~~~~~~~~~~~~~");
+            event.returnSource("<html><body>o was null</body></html>");
+            return;
+        }
+        event.returnSource("<html><body>added</body></html>");
+        return;
+    }
+    */
