@@ -5517,6 +5517,7 @@ System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
             variables.addObject("onkeydown", onkeydown);
             variables.addObject("onchange", onchange);
             String datatype = property.get("datatype").toString();
+            System.out.println("\n\n===============>>> datatype: "+datatype);
             if ( datatype.length()==0 ) {
                 //System.out.println("ERROR: property.get(datatype); didn't work!! "
                 //   +" propertyName:"+propertyName
@@ -5524,6 +5525,8 @@ System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
                 //   +" (in Page.java)");
             }
             String propertyDataType = Datatype.getDatatypeClassName(datatype); //defaults to StringDatatype if datatype == "".
+            System.out.println("===============>>> propertyDataType: "+propertyDataType);
+            variables.addObject("propertyDataType", propertyDataType);
             WidgetType wt = session.findWidgetType("editors/"+propertyDataType+".editor");  //%% todo: also do designers.
             if ( wt == null ) {
                 return "ERROR: [16] type not found: "+"editors/"+propertyDataType+".editor";
@@ -5536,6 +5539,7 @@ System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
             //    session.logHandlerProc("ERROR", "caught TemplateSyntaxException in getAbstractWidgetEditor()");
             //    htmlText = te.getErrorHTML();
             //}
+            System.out.println("===============>>> htmlText: "+htmlText);
             return htmlText;
         } catch (Exception e2){
             session.logHandlerProc("ERROR", "caught Exception in getPropertyEditor() "+logName);

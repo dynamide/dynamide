@@ -9,9 +9,12 @@ import java.util.TreeMap;
 import com.dynamide.DynamideObject;
 import com.dynamide.JDOMFile;
 import com.dynamide.Page;
+import com.dynamide.Property;
 import com.dynamide.Session;
 import com.dynamide.Widget;
 import com.dynamide.XMLFormatException;
+import com.dynamide.datatypes.Datatype;
+import com.dynamide.datatypes.DatatypeException;
 import com.dynamide.event.ScriptEvent;
 
 import com.dynamide.resource.Assembly;
@@ -97,6 +100,8 @@ public class IDEApp extends DynamideObject {
             renamePage(in, out);
         } else if (action.equals("SaveLayoutView")) {
             SaveLayoutView(in, out);
+        } else if (action.equals("setApplicationProperty")) {
+            setApplicationProperty(in, out);
         }
 
         if (out.body.length() > 0) {
@@ -395,6 +400,18 @@ public class IDEApp extends DynamideObject {
                 }
             }
         }
+    }
+
+    private void setApplicationProperty(ActionInParams in, ActionOutParams out) throws Exception {
+         String name = in.event.getQueryParam("propertyName");
+         String value = in.event.getQueryParam("propertyValue");
+         String propertyDataType = in.event.getQueryParam("propertyDataType");
+        System.out.println("===IDEApp.setApplicationProperty==(questionable)===]]] "+propertyDataType);   // %%TODO: what about other types???
+        Datatype d = (Datatype)Class.forName(propertyDataType).newInstance();
+        d.set("value", value);
+        Property p = new Property(in.event.session, "value", d);
+        in.subsession.setProperty(name, p);
+        out.body = in.subsession.getPropertyStringValue(name);
     }
     
     //============== END Action handlers =======================================================

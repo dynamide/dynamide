@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import com.dynamide.datatypes.StringDatatype;
 import org.jdom.Element;
 
 import com.dynamide.datatypes.Datatype;
@@ -278,7 +279,7 @@ public class Property extends DynamideObject {
         if (obj != null && obj instanceof Datatype){
             return (Datatype)obj;
         }
-        return null;
+        return new StringDatatype();
     }
 
     /** Returns the Object stored in "value", or, if that is null, reutrns the default value.

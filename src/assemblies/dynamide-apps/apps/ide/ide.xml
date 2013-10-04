@@ -579,11 +579,8 @@
     }
 
     function closeSubsession(sessionID){
-        console.log('\n\n\n\n $$$$$$$$$$$$$$$$$$ in closeSubsession');
         var closeURL = '/dynamide/ide?action=Close&SESSIONID='+sessionID;
-        console.log('closing '+closeURL);
-        var msg = loadXMLResource(closeURL);
-        console.log('close message: '+msg);
+        loadXMLResource(closeURL);
     }
 
 
@@ -644,9 +641,6 @@
     <body bgcolor='$page.bgcolor'
         border='0' topmargin='0' leftmargin='0' rightmargin='0' bottommargin='0'
         marginwidth="0" marginheight="0" onunload="$bOnUnload" onload="$bOnLoad">
-        designMode $designMode
-        bOnUnload $bOnUnload
-        
     <form name="frmDynamide" action='mojo'>
       <table border="1">
       <tr>

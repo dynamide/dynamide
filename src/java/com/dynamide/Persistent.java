@@ -165,11 +165,16 @@ public class Persistent extends JDOMFile implements IPropertyProvider {
 
     public void setProperty(String name, String value) throws DatatypeException {
         if (DEBUG_PROPS) logDebug("setProperty(S,S): "+getID()+':'+name+':'+value);
+        System.out.println("setProperty(S,S)0: "+getID()+':'+name+':'+value+';');
         Property property = getProperty(name);
         if ( property != null ) {
+            System.out.println("setProperty(S,S)1: "+property.dump()+';'+property.getClass().getName());
             property.setValue(value);
+            System.out.println("setProperty(S,S)2: "+property.dump()+';'+property.getClass().getName());
+            System.out.println("setProperty(S,S)3: "+value+';'+value.getClass().getName());
         } else {
             property = new Property(this, name, value);
+            System.out.println("setProperty(S,S)4: "+value+';'+value.getClass().getName());
         }
         setProperty(name, property);
     }
