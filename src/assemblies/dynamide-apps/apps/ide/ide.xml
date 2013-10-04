@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
-<!DOCTYPE dynamideForm  >
+<!DOCTYPE dynamideForm>
 <!-- Copyright (c) 2001, 2002 DYNAMIDE.COM -->
+
+<!-- Removed old stuff. See cvs'd versions 1.4 and 1.3 -->
 
 <dynamideForm>
 
@@ -11,22 +13,888 @@
 
 <htmlsrc><![CDATA[
   <html>
+    <!-- page variable is: $page -->
+    <!-- page name is: $page.bgcolor -->
+    <!-- page name is: $page.name -->
     <head>
-    <script>
-     function openNewProject(projectURL){
-       window.frames['idetop'].openProject(projectURL);
-       window.frames['idetop'].openPage(); //%% this is a kludge to open the default first page in the project
+        <style>
+        <!--
+            A {color: \#31324E; text-decoration: underline; font: 15px}
+            A:active {color: green; text-decoration: underline}
+            A:hover {color: \#FF9933; text-decoration: underline}
+        -->
+        </style>
+        $session.getInclude("resources/css/ide.css")
+        $session.getInclude("resources/js/scripts.js")
+        $session.getInclude("resources/js/msdom.js")
+        $session.getInclude("resources/js/windowing.js")
+        $session.getInclude("resources/js/page.js")
+
+    <SCRIPT Language="javascript">
+    <!--
+
+    //NOTE: you can show the palette with this url:
+    // var url = "?SESSIONID="+SESSIONID+"&next=palette";
+
+
+    var gIDEMainWindow = this.window;   //globally known singleton window for main IDE:
+    //alert("gIDEMainWindow:: "+gIDEMainWindow);
+
+    var gOtherViews = new Object(); //One array to hold all the non-layoutView windows.
+
+    var gLayoutViews = new Object();  //All the layout view pages.
+
+    var g_lastLayoutViewName = "";
+
+    var g_projectPath = "";
+
+    var gInspectorWindow = null; //globally known singleton window for property inspector,
+                                 // special because I close and open it so often and need the reference.
+
+    function updateLayoutViews(){
+        var layoutViews = gLayoutViews;
+        var oneName  = "";
+        var i = 0;
+        for (var r = document.forms[0].selectLayoutViews.options.length - 1; r>=0; r=r-1) {
+            document.forms[0].selectLayoutViews.options.remove(r);
+        }
+        for (var item in layoutViews){
+            var rec = layoutViews[item];
+            if (rec != null) {
+                if (rec.name != null) {
+                    oneName = rec.name;
+                    caption = rec.caption;
+                    //Option constructor is (name, value)
+                    //var myNewOption = new Option(oneName, oneName);
+                    var myNewOption = new Option(caption, oneName);
+                    document.forms[0].selectLayoutViews.options[i] = myNewOption;
+                    document.forms[0].selectLayoutViews.selectedIndex = i;
+                    i++;
+                }
+            }
+        }
+    }
+
+    function getTargetPageName(){
+        if (document.all.selectPagename == null){
+            return "";
+        } else {
+            return document.all.selectPagename.options[document.all.selectPagename.selectedIndex].innerText;
+        }
+    }
+
+    // %% this is very bad:  it depends on the dropdown, not the active page.
+    function getSelectedLayoutView(){
+        return document.forms[0].selectLayoutViews.options[document.forms[0].selectLayoutViews.selectedIndex].value;
+    }
+    getTargetPageName
+
+
+
+    function layoutViewSelected(theSelect){
+       if (theSelect != null && theSelect.selectedIndex > -1){
+          showView(gLayoutViews, theSelect.options[theSelect.selectedIndex].value);
+       }
+    }
+
+    function getPageList(){
+        var body = loadXMLResource("/dynamide/ide?action=getPageList&SESSIONID=$SESSIONID&SUBSESSIONID="+g_subsessionID+"&selectName=selectPagename");
+        if (body.substring(0,5) == "ERROR") {
+            alert("ERROR in getPageList: "+body);
+            return "ERROR";
+        }
+        document.all.pagelist2.innerHTML = body;
+        return body;
+    }
+
+    function emptyPageList(){
+         document.all.pagelist2.innerHTML = "<select id='selectPagename' name='selectPagename'></select>";
+    }
+
+    function getPaletteList(){
+        var body = loadXMLResource("/dynamide/ide?action=getPaletteList&SESSIONID=$SESSIONID&SUBSESSIONID="+g_subsessionID+"&selectName=selectPalette");
+        if (body.substring(0,5) == "ERROR") {
+            alert("ERROR in getPaletteList: "+body);
+            return "ERROR";
+        }
+        document.all.palettelist1.innerHTML = body;
+        return body;
+    }
+
+    function getPagetypeList(){
+        var body = loadXMLResource("/dynamide/ide?action=getPagetypeList&SESSIONID=$SESSIONID&SUBSESSIONID="+g_subsessionID+"&selectName=selectPagetype");
+        if (body.substring(0,5) == "ERROR") {
+            alert("ERROR in getPagetypeList: "+body);
+            return "ERROR";
+        }
+        document.all.pagetypelist1.innerHTML = body;
+        return body;
+    }
+
+    var g_subsessionID = "";
+
+    function startSubsession(projectPath){
+        if (projectPath == ""){
+            projectPath = prompt('Enter the project URL Path', '/dynamide/demo');//document.forms[0].newFormURL.value;
+        }
+        if (projectPath == null){
+            parent.document.title = "Dynamide []";
+            return "ERROR";
+        }
+        g_projectPath = projectPath;
+        parent.document.title = "Dynamide ["+projectPath+"]";
+        var body = loadXMLResource("/dynamide/ide?action=startSubsession&SESSIONID=$SESSIONID&projectPath="+projectPath);
+        if (body.substring(0,5) == "ERROR") {
+            alert("ERROR in startSubsession: "+body);
+            return "ERROR";
+        }
+        g_subsessionID = body;
+        return body;
+    }
+
+    function openProject (projectPath){
+       if (closeCurrentProject() == false){
+            return;
+       }
+       if (projectPath == null){
+            projectPath = "";
+       }
+       g_projectPath = projectPath;
+       var newSessionID = startSubsession(projectPath);  //pass in a real URL Path that exists in the SearchLocations. Empty string will cause a prompt.
+       if (newSessionID != "ERROR"){
+          updateLayoutViews();
+          getPageList();
+          getPaletteList();
+          getPagetypeList();
+          updateLayoutViews();
+       }
+    }
+
+    function newProject (){
+       if (closeCurrentProject() == false){
+            return;
+       }
+        var url = "/dynamide/ide?SESSIONID=$SESSIONID&amp;next=newProjectDlg&ideWindowName="+parent.window.name;
+        popupNewView(gOtherViews, url, "newProjectDialog$SESSIONID", "newProjectDialog", WINPARAMS_UTILITYPAGE);
+    }
+    
+    function openNewProject(projectURL){
+       openProject(projectURL);
+       openPage(); //%% this is a kludge to open the default first page in the project
      }
-    </script>
-    <title>Dynamide</title>
+
+    function clearWidgetTypePool(){
+        var body = loadXMLResource("/dynamide/ide?action=clearWidgetTypePool&SESSIONID=$SESSIONID&SUBSESSIONID="+g_subsessionID);
+        return "";
+    }
+
+    function pageExistsInProject(pagename){
+        var oneval = "";
+        if(document.all.selectPagename == null){
+            return false;
+        }
+        for (var r = document.all.selectPagename.options.length - 1; r>=0; r=r-1) {
+            oneval = document.all.selectPagename.options[r].innerText;
+            if (oneval == pagename){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function newPage (){
+        var thePrompt = 'Enter a name for the new page';
+        var baseURL = g_projectPath;
+        var newPageName = generatePageName();
+        while (pageExistsInProject(newPageName)){
+            newPageName = generatePageName();
+        }
+        var checkname = true;
+        while (checkname){
+            newPageName = prompt(thePrompt, newPageName);
+            if (newPageName == null){  //cancelled
+                return;
+            }
+            if (newPageName.length == 0){
+                newPageName = generatePageName();
+                while (pageExistsInProject(newPageName)){
+                    newPageName = generatePageName();
+                }
+                newPageName = prompt(thePrompt, newPageName);
+                if (newPageName == null){  //cancelled
+                    return;
+                }
+            }
+            if ( ! pageExistsInProject(newPageName)){
+                checkname = false;
+            } else {
+                thePrompt = "Page "+newPageName+" exists in project, choose another name:";
+            }
+        }
+        var pagetype = document.all.selectPagetype.options[document.all.selectPagetype.selectedIndex].innerText;
+        // %% Note: I put "pagetypes/" in the next string, to represent the dir that all pagetypes are in.
+        var url = '/dynamide/ide?SESSIONID=$SESSIONID&action=newPage&newPageID='+newPageName+'&newPagetype=pagetypes/'+pagetype;
+        //logDebug("url: "+url);
+        g_lastLayoutViewName = popupNewView(gLayoutViews, url, newPageName+"$SESSIONID", newPageName, newPageName, WINPARAMS_NEWPAGE, true);
+        var myNewOption = new Option(newPageName, newPageName);
+        var i = document.all.selectPagename.options.length;
+        //logDebug("i: "+i);
+        //logDebug("myNewOption: "+myNewOption);
+        document.all.selectPagename.options[i] = myNewOption;
+        document.all.selectPagename.selectedIndex = i;
+        var popupwin = showInspector(null, "", g_subsessionID, newPageName, null, false);
+        //logDebug("newPage done");
+        updateLayoutViews();
+    }
+
+    //OK to call with theDiv==null and emtpy string for widgetID
+    function showInspector(theDiv, widgetID, SESSIONID, pageID, callingWin, isBodyClick){
+        if (window != null) {
+            window.status = 'showInspector';
+            window.mojoDiv = theDiv;
+            if (theDiv != null && callingWin != null){
+                //worked: logDebug(theDiv.document.parentWindow);
+                //worked: logDebug("inner "+callingWin.document.all("link1").id);
+                //logDebug(dump(callingWin));
+            }
+            window.widgetID = widgetID;
+            var url = '/dynamide/ide?action=showInspector&widgetID='+widgetID
+                        +'&page=inspector&targetPageID='+pageID+'&SUBSESSIONID='+SESSIONID+'&SESSIONID=$SESSIONID'
+                        +'&isBodyClick='+isBodyClick;
+            if ( gInspectorWindow == null ) {
+                gInspectorWindow = window.open(url, "inspector$SESSIONID", WINPARAMS_INSPECTOR);
+            } else {
+                gInspectorWindow.location = url;
+            }
+            if (theDiv != null) theDiv.focus();
+        }
+        return gInspectorWindow;
+    }
+
+    function saveProject(){
+        // %% todo: make it prompt/save all the forms (or don't prompt and use CVS".
+        var body = loadXMLResource("/dynamide/ide?action=saveProject&SESSIONID=$SESSIONID&SUBSESSIONID="+g_subsessionID);
+        alert(body);
+        updateLayoutViews();
+    }
+
+    function refreshPage(){
+        var pageID = getTargetPageName();
+        savePage(pageID, false);
+        openPageByName(pageID);
+    }
+
+    function openPage(){
+        var pageID = getTargetPageName();
+        openPageByName(pageID);
+    }
+
+    function openPageByName(pageID){
+        if (g_subsessionID.length == 0){
+            alert("Can't run openPageByName("+pageID+") because subsession did not initialize.");
+            return;
+        }
+        // %% This is wacky by the way, it uses the sessionid of the subsession and calls nextPageID
+        //param on that session, which simply renders the page and passes it back.
+        var url = g_projectPath+'?SESSIONID='+g_subsessionID+'&next='+pageID;
+        g_lastLayoutViewName = popupNewView(gLayoutViews, url, pageID+"$SESSIONID", pageID, WINPARAMS_NEWPAGE, true);
+        var popupwin = showInspector(null, "", g_subsessionID, pageID, null, false);
+        updateLayoutViews();
+    }
+
+    function openPageSource (){
+        var pagename = getTargetPageName();
+        var url = g_projectPath+'?SESSIONID='+g_subsessionID+'&next='+pagename+'&dmFormat=SOURCE';//&tidy=1 - don't tidy for now, since tidy changes the source so much.
+        popupNewView(gOtherViews, url, null, null, WINPARAMS_UTILITYPAGE, true);
+    }
+
+    function editPageSource (){
+        var pagename = getTargetPageName();
+        var url = g_projectPath+'?SESSIONID=$SESSIONID&next=htmlsource&targetPageID='+pagename+'&SUBSESSIONID='+g_subsessionID;
+        popupNewView(gOtherViews, url, null, null, WINPARAMS_BIGPAGE, true);
+    }
+
+    function openDesigner(url, big){
+        //alert("callingWindow:" + callingWindow.name);
+        var params = WINPARAMS_UTILITYPAGE;
+        if (big) params = WINPARAMS_BIGPAGE;
+        popupNewView(gOtherViews, url+"&SESSIONID=$SESSIONID", "designer$SESSIONID", "designer", params);
+    }
+
+    function getWidgetPrototypeURL(pageID){
+        var widgetType = document.all.selectPalette.options[document.all.selectPalette.selectedIndex].innerText;
+        var url = "/dynamide/ide?action=getWidgetPrototype&SESSIONID=$SESSIONID&SUBSESSIONID="+g_subsessionID
+                                   +"&widgetType="+widgetType+"&targetPageID="+pageID+"&now="+randomParam();
+        return url;
+    }
+
+    function getWidgetPrototype(pageID){
+        var url = getWidgetPrototypeURL(pageID);
+        var body = loadXMLResource(url);
+        return body;
+    }
+
+    function popupWidgetPrototype(pageID){
+        var pageID = getTargetPageName();
+        var url = getWidgetPrototypeURL(pageID)+"&format=debug";
+        popupNewView(gOtherViews, url, "prototype$SESSIONID", "prototype", WINPARAMS_UTILITYPAGE);
+        return null;
+    }
+
+    function showIDEHelp (url){
+        popupNewView(gOtherViews, url, null, null, WINPARAMS_HELPPAGE);
+    }
+
+    function showSessionObjectDetail(){
+        var url = '/dynamide/admin?next=sessionDetailPage&showSessionObjectDetail=1&SUBSESSIONID='+g_subsessionID+'&USER=laramie';
+        popupNewView(gOtherViews, url, "sessiondetail$SESSIONID", "sessiondetail", WINPARAMS_UTILITYPAGE);
+    }
+
+    function showEval(){
+        var url = '/dynamide/ide?SESSIONID=$SESSIONID&action=showEval&USER=laramie';
+        popupNewView(gOtherViews, url, "eval$SESSIONID", "eval", WINPARAMS_BIGPAGE);
+    }
+
+    function showAllWindows(){
+       if (gInspectorWindow != null) gInspectorWindow.focus();
+       showAllViews(gLayoutViews);
+       showAllViews(gOtherViews);
+       focus();
+    }
+
+    function showDynamicPageSource(){
+        var targetPageID = getTargetPageName();
+        var thePageWindow = getViewByPageID(targetPageID);
+        if (thePageWindow != null){
+             var pwdoc = thePageWindow.document;
+             var s = pwdoc.documentElement.outerHTML;
+             logDebug(s);
+        }
+    }
+
+    //================ Given a changed layout, save it to the server ========
+
+    function savePage(){
+        //input("pagename");
+        //var tempwin = window.open("", "temp"+randomParam(), 'left=400,top=300,width=200,height=120');
+        //tempwin.document.open();
+        //tempwin.document.write("<html><body bgcolor='$page.bgcolor'><h4>Saving Page</h4><blink>   Working...</blink></body></html>");
+        saveLayoutView(getSelectedLayoutView());
+        //if (tempwin) tempwin.close();
+        //alert("Page Saved");  the server side event will set a message in the idehidden.xml form that comes back which will pop up the alert
+    }
+
+    function saveLayoutView(name){
+      var pagename = getTargetPageName();
+      if (pagename != null && pagename.length != 0 && gLayoutViews[name] != null){
+        var view = gLayoutViews[name]; //view is a javascript object.
+        if (view == null){
+            alert('view '+name+' is null');
+        } else {
+            if (gIDEMainWindow != null){
+                var frmSC = gIDEMainWindow.parent.frames['idehidden'].document.frmSaveContents;
+                frmSC.targetPageID.value = pagename;
+                //5/23/2002 6:40PM  var src = domWidgetToString(view.window.document);
+                //gIDEMainWindow.parent.frames['idehidden'].document.frmSaveContents.htmlSource.value = domWidgetToString(win.document);
+                //gIDEMainWindow.parent.frames['idehidden'].document.frmSaveContents.submit();
+                //5/24/2002 10:46AM this is the new way, let the back end parse IE's stripped-down html:
+                //6/1/2002 2:55PM var src = view.window.document.documentElement.outerHTML;
+                 //alert('calling view.window.eval...');
+                 //alert("w: "+view.window.domWidgetToString);
+                var src = view.window.eval("domWidgetToString(window.document);");
+                //alert("src, ready to submit\r\n"+src);
+                //this is the 'old way' and is very slow: var src = domWidgetToString(view.window.document);
+                logDebug("<h2>page source</h2><pre>"+src.replace(/</g, "&lt;")+"</pre>");
+                frmSC.htmlSource.value = src;
+                frmSC.submit();
+            } else {
+                alert("ERROR: gIDEMainWindow is null");
+            }
+        }
+      } else {
+        alert("something is null. pagename:"+pagename+" name:"+name+" gLayoutViews[name]:"+gLayoutViews[name]);
+      }
+    }
+
+    function layoutViewFocused(pageID){
+        //logDebug("ide.xml.layoutViewFocused("+pageID+")");
+        setSelectedByValue(document.forms[0].selectLayoutViews, pageID);
+    }
+
+    //    HANDLE ANY CLICKS ON DESIGN-MODE FORM
+    //This function used to be called "doit(), and use to set this: obj.className = 'widgetRO';
+    //Now it only handles showing the inspector and dropping components. See cvs'd version 1.4
+    function designmodeClick(obj, callingWin, pageID, isBodyClick){
+      // you must call cancel bubble at some point...otherwise the parent div gets called with the event.
+      if (event != null) event.cancelBubble = true;
+      if (gInspectorWindow != null) gInspectorWindow.focus(); //2/11/2002 10:18PM The other windows are handled by plainFocus().
+      var designmodeClickHandled = false;
+      if (document.frmDynamide.cbDropWidgets.checked){
+        if (obj != null) {
+          if (obj.contentEditable == "true"){
+            var str = getWidgetPrototype(pageID);
+            var selection = obj.document.selection.createRange();
+            try {
+                selection.pasteHTML(str);
+                selection.select();
+            } catch (selectionError){
+                logDebug("designmodeClick had an error, probably clicking too fast: "+selectionError);
+            }
+            designmodeClickHandled = true;
+            // %% Add this in when you change getWidgetPrototype to return a struct with source and widgetID.
+            //var popupwin = showInspector(obj, obj.id, g_subsessionID, pageID, callingWin, false);
+            //For now, this little hack takes the field value set by the ide
+            // and in application.xml:: for the case action.equals("getWidgetPrototype")
+            // See: ide.xml::designmodeClick() and ide.xml::showInspector()
+            // or search for "LAST_WIDGET"
+            var popupwin = showInspector(null, "LAST_WIDGET", g_subsessionID, pageID, callingWin, false);
+          }
+        } else {
+            logDebug("designmodeClick: obj == null");
+        }
+      }
+
+      if (!designmodeClickHandled){
+        var tempSelection = null;
+        if (obj != null) {
+            if (obj.contentEditable == "true"){
+                tempSelection = obj.document.selection.createRange();
+            } else {
+                //obj.document.body.setActive();//this doesn't do squat!  The object is still editable in the browser.
+            }
+        }
+        var cToolBar = "toolbar=0,location=0,directories=0,status=0,menubar=0,resizable=1,left=0,top=200,width=250,height=400"
+        var popupwin = showInspector(obj, obj.id, g_subsessionID, pageID, callingWin, isBodyClick);
+        //do this to bring the ide to the surface, may be annoying.
+        //logDebug(".");
+        //logDebug('==== designmodeClick');
+        plainFocus();
+        if (tempSelection != null){
+            //logDebug("obj: "+obj.id+" obj.CE: "+obj.contentEditable);
+            if (obj.contentEditable == "true"){
+                tempSelection.select();
+            }
+        }
+        if (callingWin != null){
+            callingWin.focus();
+        } else {
+            logDebug('callingWin is null in designmodeClick');
+        }
+      }
+    }
+
+    function bodyOnload (){
+        //handle: /dynamide/ide?openProject=/dynamide/admin&openPage=adminMain
+        #set $url = $session.getFieldValue("openProject")
+        #set $openPage = $session.getFieldValue("openPage")
+
+        openProject('$url');
+        if ('$openPage'.length > 0) openPageByName('$openPage');
+        showAllWindows();
+        focus();
+    }
+
+    function getViewByPageID(pageID){
+        return getView(gLayoutViews, pageID+"$SESSIONID");
+    }
+
+    function getInspectortop(){
+        return gInspectorWindow.frames['inspectortop'];
+    }
+
+    function renamePage(){
+        var targetPageID = getTargetPageName();
+        var url = "/dynamide/ide?action=renamePage&targetPageID="+targetPageID+"&SESSIONID=$SESSIONID&SUBSESSIONID="+g_subsessionID;
+        var body = loadXMLResource(url);
+        if (body.substring(0,5) == "ERROR") {
+            alert("ERROR in renamePage: "+body);
+            //return "ERROR";
+        }
+
+    }
+
+    var skipNext = false;
+
+    function bodyOnfocus (msg){
+        //logDebug('.');
+        //logDebug('enter bodyOnFocus, msg: '+msg);
+        if (!skipNext){
+            showAllWindows(); //2/11/2002 10:14PM
+            focus();
+            //logDebug('    skipNext');
+        }   else {
+            skipNext = false;
+            //logDebug('    cancelled skipNext');
+        }
+        //logDebug('leave bodyOnFocus');
+    }
+
+    function plainFocus(){
+        skipNext = true;
+        focus();
+    }
+
+    function bodyOnunload(){
+       //remove all layout views and inspector:
+       if (gInspectorWindow != null) gInspectorWindow.close();
+       closeAllViews(gLayoutViews);
+       closeAllViews(gOtherViews);
+       closeSubsession(g_subsessionID);
+       closeSubsession("$SESSIONID");
+    }
+
+    //returns true if user saved/closed project.  False if they aborted.
+    function closeCurrentProject(){
+        if (g_subsessionID != null && g_subsessionID.length > 0){
+            answer = window.confirm("Abandon current project?");
+            if ( ! answer){
+               return false;
+            }
+            //answer = prompt("Abandon current project?", " (Click Cancel to go back)");
+            //if (answer == null){  //cancelled
+            //    return false;
+            //}
+            closeAllViews(gLayoutViews);
+            closeAllViews(gOtherViews);
+            closeSubsession(g_subsessionID);
+            g_subsessionID = "";
+            resetCascade(); //in windowing.js
+            emptyPageList();
+            updateLayoutViews();
+        }
+        return true;
+    }
+
+    function closeSubsession(sessionID){
+        killme = window.open('/dynamide/ide?action=Close&SESSIONID='+sessionID,
+                                'dynamideHidden'+sessionID,
+                                WINPARAMS_TINYPAGE);
+        killme.setTimeout('close();',500);
+    }
+
+
+    //============== table editing functions =================================
+
+    currentTableWindow = null;
+    function getCurrentTableWindow(){
+        return currentTableWindow;
+    }
+
+    function ideSetCurrentTableWindow(callingWindow){
+       currentTableWindow = callingWindow;
+    }
+
+    function ideSetCurrentElementPath( path ){
+       document.all["currentElementPath"].innerHTML = path;
+    }
+
+    function ideAddRowBefore(){
+       alert("in ide ideAddRowBefore: "+currentTableWindow);
+
+       if (currentTableWindow!=null) currentTableWindow.dmDesign_TableAddRow(0);
+    }
+
+    function ideAddRowAfter(){
+       if (currentTableWindow!=null) currentTableWindow.dmDesign_TableAddRow(1);
+    }
+
+    function ideAddColumnBefore(){
+       if (currentTableWindow!=null) currentTableWindow.dmDesign_TableAddColumn(0);
+    }
+
+    function ideAddColumnAfter(){
+       if (currentTableWindow!=null) currentTableWindow.dmDesign_TableAddColumn(1);
+    }
+
+    function ideInsertTable(){
+       var rows = document.all['editTableRows'].value;
+       var columns = document.all['editTableColumns'].value;
+       if (currentTableWindow!=null) currentTableWindow.dmDesign_TableInsertTable(rows, columns);
+    }
+
+    //========================================================================
+    // -->
+    </SCRIPT>
     </head>
-        <frameset rows="100%,*" framespacing="0">
-            <frame src="/dynamide/ide?next=idetop&amp;SESSIONID=$SESSIONID" NAME="idetop" />
-        </frameset>
+    #set $bOnUnload = ""
+    #set $bOnLoad = ""
+    #if ($designMode == "false"){
+       ## have to do it this way because JDOM gets first crack at Page files, so the body tag attributes must
+       ## be real, not webmacro things.  In Widgets, JDOM sees the htmlsrc as CDATA sections, so webmacro gets the first
+       ## real crack at it.
+       ## By setting these in non-designMode only, the load and unload are disabled when you have the ide
+       ## itself open in the ide.
+       #set $bOnLoad = "bodyOnload()"
+       #set $bOnUnload = "bodyOnunload()"
+    }
+    <body bgcolor='$page.bgcolor'
+        border='0' topmargin='0' leftmargin='0' rightmargin='0' bottommargin='0'
+        marginwidth="0" marginheight="0" onunload="$bOnUnload" onload="$bOnLoad">
+    <form name="frmDynamide" action='mojo'>
+      <table border="1">
+      <tr>
+        <td valign='top'>
+            <table border='1' cellpadding='0' cellspacing='0'  bgcolor="white">
+              <tr>
+                <td>
+                    <b>Project:</b>
+                </td>
+              </tr>
+            </table>
+            <table border='1' cellpadding='0' cellspacing='0'  bgcolor="white">
+              <tr>
+                <td>
+                  <nobr>
+                    <dm_nbsp/><SPAN class="widget" id="imgOpen"/><a href="javascript:openProject();">Open</a>
+                    <SPAN class="widget" id="imgNew"/><a href="javascript:newProject();">New</a>
+                    <SPAN class="widget" id="imgSaveFile"/><a href="javascript:saveProject();">Save</a>
+                  </nobr>
+                </td>
+              </tr>
+            </table>
+        </td>
+        <td valign='top'>
+            <table border='1' cellpadding='0' cellspacing='0'  bgcolor="white">
+              <tr>
+                <td>
+                    <b>Page:</b>
+                </td>
+              </tr>
+            </table>
+            <table border='1' cellpadding='0' cellspacing='0'  bgcolor="white">
+              <tr>
+                <td>
+                <nobr>
+                <dm_nbsp/><SPAN class="widget" id="imgOpen"/><a href="javascript:openPage();updateLayoutViews();">Open</a>
+                <SPAN class="widget" id="imgNew"/><a href="javascript:newPage();">New</a>
+                <SPAN class="widget" id="imgSaveFile"/><a href="javascript:savePage();">Save</a>
+                <a href="javascript:renamePage();">Rename</a>
+                <SPAN class="widget" id="imgViewSource"/><a href="javascript:openPageSource();updateLayoutViews();">Open Source</a>
+                <SPAN class="widget" id="imgViewSource"/><a href="javascript:editPageSource();updateLayoutViews();">Edit Source</a>
+                <a href="javascript:showDynamicPageSource();updateLayoutViews();">Show Source</a>
+                </nobr>
+                </td>
+            </tr>
+            </table>
+
+            <table border='0' cellpadding='0' cellspacing='3'>
+              <tr>
+                <td>
+                    <a href="javascript:showSessionObjectDetail();">Show Session</a>
+                </td>
+                <td>
+                    <a href="javascript:showEval();">Show Eval</a>
+                </td>
+                <td>
+                    <table border='1' cellpadding='0' cellspacing='0'>
+                      <tr>
+                        <td>
+                        <input type="text" id="editTableRows" size="3" value="1"></input>
+                        </td>
+                        <td>
+                        <input type="text" id="editTableColumns" size="3" value="1"></input>
+                        </td>
+                        <td>
+                        <span onclick="ideInsertTable()"><SPAN class="widget" id="imgNewTable"/></span>
+                        </td>
+                        <td>
+                        <span onclick="ideAddRowBefore()"><SPAN class="widget" id="imgTRB"/></span>
+                        </td>
+                        <td>
+                        <span onclick="ideAddRowAfter()"><SPAN class="widget" id="imgTRA"/></span>
+                        </td>
+                        <td>
+                        <span onclick="ideAddColumnBefore()"><SPAN class="widget" id="imgTCB"/></span>
+                        </td>
+                        <td>
+                        <span onclick="ideAddColumnAfter()"><SPAN class="widget" id="imgTCA"/></span>
+                        </td>
+                      </tr>
+                    </table>
+                </td>
+              </tr>
+            </table>
+        </td>
+        <td>
+           <nobr>Page List:</nobr>
+            <span id="pagelist2">
+                <select id='selectPagename' name='selectPagename'>
+                </select>
+            </span>
+        </td>
+        <td>
+         Windows: <select name="selectLayoutViews" onchange="layoutViewSelected(this);">
+         </select>
+         <br /><a href="javascript:showAllWindows();">Show All Windows</a>
+         <!-- this is not good for the user to see:
+             <a href="javascript:removeView(gLayoutViews, document.forms[0].selectLayoutViews.options[document.forms[0].selectLayoutViews.selectedIndex].value);updateLayoutViews();">Remove</a>
+        -->
+        </td>
+      </tr>
+      <tr>
+         <td colspan="4">
+              <a href="javascript:popupWidgetPrototype();updateLayoutViews();">ShowWidgetPrototype</a>
+              <span id="palettelist1"></span>
+              Drop Components: <input id="cbDropWidgets" name="cbDropWidgets" type="checkbox"></input>
+              <a href="javascript:clearWidgetTypePool();updateLayoutViews();">clearWidgetTypePool</a>
+              Pagetypes: <span id="pagetypelist1"></span>
+          </td>
+      </tr>
+      <tr>
+          <td colspan='4'>
+            <b><font size="-3"><span id="currentElementPath"></span></font></b>
+          </td>
+      </tr>
+
+      </table>
+
+    <table border='1' cellpadding='0' cellspacing='0' width="100%">
+      <tr>
+        <td>
+            <font color='red'>WARNING: these don't work</font>
+            <a href='/dynamide/ide?action=showInternationalizationForm&amp;SESSIONID=$SESSIONID&amp;language=en-us'>Internationalize (en-us)</a>
+            <a href='/dynamide/ide?action=showInternationalizationForm&amp;SESSIONID=$SESSIONID&amp;language=en-uk'>Internationalize (en-uk)</a>
+            <a href='/dynamide/ide?action=showInternationalizationForm&amp;SESSIONID=$SESSIONID&amp;language=es'>Internationalize (es)</a>
+        </td>
+      </tr>
+    </table>
+
+
+    </form>
+    </body>
   </html>
 ]]></htmlsrc>
 
 <widgets>
+   <widget id="pagelist1"  >
+     <properties>
+        <property name="type"><value>com.dynamide.ide.pagelist</value></property>
+        <property name="name"><value>pagelist1</value></property>
+        <property name="caption"><value>Page List: </value></property>
+        <property name="dropdown"><value>true</value></property>
+     </properties>
+   </widget>
+
+    <widget id="imgNew">
+      <properties>
+        <property name="src">
+          <value>resources/images/new.gif</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.img</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="imgSaveFile">
+      <properties>
+        <property name="src">
+          <value>resources/images/save-file.gif</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.img</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="imgOpen">
+      <properties>
+        <property name="src">
+          <value>resources/images/open.gif</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.img</value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="imgViewSource">
+      <properties>
+        <property name="src">
+          <value>resources/images/view-source.gif</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.img</value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="imgTRB">
+      <properties>
+        <property name="src">
+          <value>resources/images/insert-row-before.jpg</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.img</value>
+        </property>
+        <property name="height">
+          <value>25</value>
+        </property>
+        <property name="width">
+          <value>25</value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="imgTRA">
+      <properties>
+        <property name="src">
+          <value>resources/images/insert-row-after.jpg</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.img</value>
+        </property>
+        <property name="height">
+          <value>25</value>
+        </property>
+        <property name="width">
+          <value>25</value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="imgTCB">
+      <properties>
+        <property name="src">
+          <value>resources/images/insert-column-before.jpg</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.img</value>
+        </property>
+        <property name="height">
+          <value>25</value>
+        </property>
+        <property name="width">
+          <value>25</value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="imgTCA">
+      <properties>
+        <property name="src">
+          <value>resources/images/insert-column-after.jpg</value>
+        </property>
+        <property name="height">
+          <value>25</value>
+        </property>
+        <property name="width">
+          <value>25</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.img</value>
+        </property>
+      </properties>
+    </widget>
+
+    <widget id="imgNewTable">
+      <properties>
+        <property name="src">
+          <value>resources/images/new-table.gif</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.img</value>
+        </property>
+      </properties>
+    </widget>
 </widgets>
 
 
@@ -36,7 +904,5 @@
     event.println("page ide in onAction");
   ]]>
 </event>
-
-
 
 </dynamideForm>

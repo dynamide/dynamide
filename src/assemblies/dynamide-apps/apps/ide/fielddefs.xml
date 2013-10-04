@@ -17,7 +17,7 @@
    <field name="appName">
        <property name="value"><value>solano</value></property>
    </field>
-   <field name="idetopWindowName">
+   <field name="ideWindowName">
        <property name="value"><value></value></property>
    </field>
 </fields>

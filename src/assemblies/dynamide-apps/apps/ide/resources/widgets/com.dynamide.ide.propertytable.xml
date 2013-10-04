@@ -280,8 +280,8 @@ SESSIONID: $SESSIONID
     #set $currentWidget = ""
     #set $widgetByID = $subpage.getWidgetByID($wgname)
     #if ($wgname == "LAST_WIDGET"){
-        ## This little hack takes the field value set by the idetop
-        ## See: idetop.xml::designmodeClick() and idetop.xml::showInspector()
+        ## This little hack takes the field value set by the ide
+        ## See: ide.xml::designmodeClick() and ide.xml::showInspector()
         ## or search for "LAST_WIDGET"
         #set $LAST_WIDGET_ID = $subsession.getFieldValue("LAST_WIDGET")
         #set $widgetByID = $subpage.getWidgetByID($LAST_WIDGET_ID)

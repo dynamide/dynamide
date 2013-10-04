@@ -271,7 +271,7 @@ public class IDEApp extends DynamideObject {
     }
 
     private void showEval(ActionInParams in, ActionOutParams out) throws Exception {
-        Page newPage = in.event.session.getPageByID("evaltop");
+        Page newPage = in.event.session.getPageByID("eval");
         StringList variables = new StringList();
         variables.addObject("evalResult", "");
         variables.addObject("source", "");
@@ -280,7 +280,7 @@ public class IDEApp extends DynamideObject {
     }
 
     private void eval(ActionInParams in, ActionOutParams out) throws Exception {
-        Page newPage = in.event.session.getPageByID("evaltop");
+        Page newPage = in.event.session.getPageByID("eval");
         String USER = in.event.getQueryParam("USER");
         String source = in.event.getQueryParam("source");
         String evalResult;

@@ -81,7 +81,7 @@
     <page name="ide"></page>
     <page name="idehelp"></page>
     <page name="idehidden"></page>
-    <page name="idetop" default="true"></page>
+    <page name="ide" default="true"></page>
     <page name="inspector"></page>
     <page name="inspectorhidden"></page>
     <page name="inspectortop"></page>
