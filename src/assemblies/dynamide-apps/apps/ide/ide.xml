@@ -22,7 +22,6 @@
     </head>
         <frameset rows="100%,*" framespacing="0">
             <frame src="/dynamide/ide?next=idetop&amp;SESSIONID=$SESSIONID" NAME="idetop" />
-            <frame src="/dynamide/ide?next=idehidden&amp;SESSIONID=$SESSIONID" NAME="idehidden" />
         </frameset>
   </html>
 ]]></htmlsrc>

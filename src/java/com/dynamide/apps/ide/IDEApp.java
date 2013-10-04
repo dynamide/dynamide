@@ -163,7 +163,6 @@ public class IDEApp extends DynamideObject {
             out.body = wd.render();
             //logDebug("paletteList: "+out.body);
         }
-
     }
 
     private void getPagetypeList(ActionInParams in, ActionOutParams out) throws Exception {
@@ -371,11 +370,10 @@ public class IDEApp extends DynamideObject {
                 out.body = "OK";
             }
         }
-
     }
 
     private void SaveLayoutView(ActionInParams in, ActionOutParams out) throws Exception {
-        //This is untested code.  Moved here 2013-10-03, but there's no caller in the source tree.
+        //This is untested code.  Moved here 2013-10-03 from idehidden.xml, but there's no caller in the source tree.
         String pagepost = in.event.getQueryParam("htmlSource");
         String targetPageID = in.event.getQueryParam("targetPageID");
 

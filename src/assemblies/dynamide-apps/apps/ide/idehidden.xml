@@ -29,36 +29,5 @@
   </html>
 ]]></htmlsrc>
 
-<event language="beanshell" name="idehidden_onAction">
-  <![CDATA[
-    if (event.action.equals("SaveLayoutView")){
-        request = event.session.getRequest();
-        String pagepost = event.getQueryParam("htmlSource");
-        String subsessionID = event.session.getFieldValue("SUBSESSIONID");
-        Session subsession = event.session.findSession(subsessionID);
-        String targetPageID = event.getQueryParam("targetPageID");
-        
-        if (subsession == null){
-            event.println("subsession was null");
-        } else {
-            Page targetPage = subsession.getPageByID(targetPageID);
-            if (targetPage != null){
-                try {
-                    targetPage.setHTMLSource(pagepost);                //throws XMLFormatException
-                    if (targetPage.saveToFile()){                      //This flushes the whole XML in-memory tree to disk.
-                        event.println("Page "+targetPageID+" saved");
-                    } else {
-                        event.println("ERROR: couldn't save page "+targetPageID);
-                    }
-                } catch (XMLFormatException xmle){
-                    event.println(xmle.getMessage());
-                    return; 
-                }
-            }
-        }
-        return;
-    }
-  ]]>
-</event>
 
 </dynamideForm>

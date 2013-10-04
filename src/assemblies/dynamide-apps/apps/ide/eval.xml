@@ -62,10 +62,10 @@
 
 <widgets>
 </widgets>
-<event language="beanshell" name="evaltop_onAction">
+<event language="beanshell" name="eval_onAction">
   <![CDATA[
     //This won't get called since I don't have a pageID  on this page.
-    event.println("in evaltop_onAction: "+event.action);
+    event.println("in eval_onAction: "+event.action);
   ]]>
 </event>
 
