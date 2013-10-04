@@ -102,6 +102,8 @@ public class IDEApp extends DynamideObject {
             SaveLayoutView(in, out);
         } else if (action.equals("setApplicationProperty")) {
             setApplicationProperty(in, out);
+        } else if (action.equals("getData")) {
+            getData(in, out);
         }
 
         if (out.body.length() > 0) {
@@ -413,6 +415,73 @@ public class IDEApp extends DynamideObject {
         in.subsession.setProperty(name, p);
         out.body = in.subsession.getPropertyStringValue(name);
     }
+
+     private void getData(ActionInParams in, ActionOutParams out) throws Exception {
+      try {
+            String propertyValue = "oops";
+            String propertyName = in.event.getQueryParam("propertyName");
+            propertyValue = in.event.getQueryParam("propertyValue");
+            String widgetID = in.event.getQueryParam("widgetID");
+            String targetPageID = in.event.getQueryParam("targetPageID");
+            Object subsessionIDObj = in.event.session.getFieldValue("SUBSESSIONID");
+            String subsessionID = (subsessionIDObj == null)
+                                             ? in.event.getQueryParam("SUBSESSIONID")
+                                             : subsessionIDObj.toString();
+            String noPropUpdate = in.event.getQueryParam("noPropUpdate");
+
+            Session subsession = in.event.session.findSession(subsessionID);
+            boolean debug = true;
+            //print("----- inspector_onAction ----- "+widgetID +" prop: "+propertyName+" val: "+propertyValue);
+            if (subsession == null){
+                out.body = "ERROR: subsession is null "+subsessionID;
+                out.fullbody = true;
+            } else {
+                Page targetPage = subsession.getPageByID(targetPageID);
+                String emsg;
+                if (targetPageID.equals(widgetID)){
+                    if (targetPage == null){
+                        emsg = "ERROR: targetPageID (page as widget) was not found: "+targetPageID;
+                        out.body = emsg;
+                        out.fullbody = false;
+                        in.event.println("(1) in.event message is: "+emsg);
+                    } else {
+                        //A page property was changed, and we know this because targetPageID and widgetID are both the page ID
+                        // (but not pageID, since that is the inspector's ID).
+                        emsg = targetPage.getPagePropertyEval(propertyName, propertyValue, in.event.request);
+                        out.body = emsg;
+                        out.fullbody = true;
+                        if (debug) in.event.println("(2) in.event message is: "+emsg);
+                    }
+                } else {
+                    if (targetPage == null){
+                        emsg = "ERROR: targetPageID was not found: "+targetPageID;
+                        out.body = emsg;
+                        out.fullbody = false;
+                        in.event.println(emsg);
+                    } else {
+                        Widget widget = targetPage.getWidgetByID(widgetID);
+                        if (widget != null){
+                            if ( ! Tools.isTrue(noPropUpdate)){ //empty string results in false.
+                                widget.changeProperty(propertyName, propertyValue);
+                            }
+                            emsg = targetPage.getWidgetDiv(widgetID, in.event.request);
+                        } else {
+                            emsg = "ERROR: widget '"+widgetID+"' not found on page '"+targetPageID+"'";
+                        }
+                        //out.body = "<html><body>"+emsg+"</body></html>";
+                        out.body = emsg;
+                        out.fullbody = true;
+                        if (debug) in.event.println("(3) in.event message is: "+emsg);
+                    }
+                }
+            }
+         } catch (Throwable t)  {
+            in.subsession.logError("Caught Exception in inspectortop_onAction action: "+in.event.action, t);
+            out.body = "<html><body>ERROR: Exception caught getting data for property. See Session log</body></html>";
+         }
+         in.event.println("[getData] in.event:: "+StringTools.escape(in.event.toString()));
+         in.event.println("out.body preview:: "+out.body);
+     }
     
     //============== END Action handlers =======================================================
 }

@@ -14,7 +14,7 @@
     <!--
 
     function currentWidgetChanged(theSelect, targetPageID){
-        location = "?next=inspectortop&SESSIONID=$SESSIONID&widgetID="+theSelect.options[theSelect.selectedIndex].text
+        location = "?next=inspector&SESSIONID=$SESSIONID&widgetID="+theSelect.options[theSelect.selectedIndex].text
                    +'&targetPageID='+targetPageID+'&SUBSESSIONID=$subsessionID';
     }
 
@@ -60,7 +60,7 @@
     /*This one is for Widget properties, see pagePropertyChanged() below for Page properties.
      * forceReload is a js boolean.  It implies that the inspector window must be reloaded
      * to get the new display value from the back end.
-     * noPropUpdate is a js boolean.  It means that the inspectortop beanshell event will not update the property value.
+     * noPropUpdate is a js boolean.  It means that the inspector beanshell event will not update the property value.
      */
     function pickit(propertyName, propertyValue, widgetID, targetPageID, callerID, forceReload, noPropUpdate){
       var propertyValueSpan = document.all(propertyName+'_value');
@@ -109,7 +109,7 @@
       }
       
       propertyValue = escape(propertyValue);//undo is "unescape"
-      var url = "/dynamide/ide?page=inspectortop&action=setApplicationProperty"
+      var url = "/dynamide/ide?page=inspector&action=setApplicationProperty"
                                     +"&SESSIONID=$SESSIONID&propertyName="+propertyName
                                     +"&propertyValue="+propertyValue
                                     +"&propertyDataType="+propertyDataType
@@ -136,7 +136,7 @@
 
     function getGetDataURL(widgetID, propertyName, propertyValue, targetPageID){
       propertyValue = escape(propertyValue);//undo is "unescape"
-      var url = "/dynamide/ide?page=inspectortop&action=getData&"
+      var url = "/dynamide/ide?page=inspector&action=getData&"
                                     +"SESSIONID=$SESSIONID&propertyName="+propertyName
                                     +"&propertyValue="+propertyValue+"&widgetID="+widgetID+"&targetPageID="+targetPageID;
       return url;
@@ -231,7 +231,7 @@ SESSIONID: $SESSIONID
 -->
 
 #if ($subsession == null){
-    #if ($pageID == "inspectortop"){
+    #if ($pageID == "inspector"){
          <h2>SUBSESSION IS NULL</h2>The IDE Session or the Subsession (the project you were working on) timed out
      } #else {
          <h2>SUBSESSION IS NULL</h2>THIS WIDGET ONLY WORKS IN THE IDE.
@@ -325,8 +325,7 @@ SESSIONID: $SESSIONID
                     <TD width="100%" title="$widget.helpTip">
                         $prop.Name
                     </TD>
-                    <TD>
-                        ######## %% TODO : this is kinda funky.  What about other datatypes.
+                    <TD>######## %% TODO : this is kinda funky.  What about other datatypes.
                         ## Let the page get the appropriate editor type for this widget and property.
                         #set $onkeydownChunk = "\"pagePropInputOnKeyDown(this, '$subpage.id', '$subpage.id');\""
                         #set $onchangeChunk = "\"applicationPropertyChanged('$prop.Name', this.value, '$prop.getDatatype().getClass().getName()');\""

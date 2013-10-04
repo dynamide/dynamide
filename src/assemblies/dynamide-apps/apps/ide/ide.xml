@@ -511,8 +511,8 @@
         return getView(gLayoutViews, pageID+"$SESSIONID");
     }
 
-    function getInspectortop(){
-        return gInspectorWindow.frames['inspectortop'];
+    function getInspector(){
+        return gInspectorWindow.frames['inspector'];
     }
 
     function renamePage(){

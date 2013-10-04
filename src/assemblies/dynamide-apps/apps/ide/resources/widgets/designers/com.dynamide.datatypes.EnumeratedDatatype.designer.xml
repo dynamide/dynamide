@@ -148,7 +148,7 @@
           </table>
           <a href="javascript:$designer.getDoneScript()\;parent.close();">Done</a>
           <a href="javascript:$designer.getForceRefreshScript()\;parent.close();">Force Refresh</a>
-          #set $forceScript = "javascript:var inspectorwin = parent.opener.getInspectortop();if (inspectorwin!=null)inspectorwin.location=inspectorwin.location;parent.close();"
+          #set $forceScript = "javascript:var inspectorwin = parent.opener.getInspector();if (inspectorwin!=null)inspectorwin.location=inspectorwin.location;parent.close();"
           <a href="$forceScript">Force Refresh II</a>
           <br />
           #set $script = $designer.formatDoneScript("")

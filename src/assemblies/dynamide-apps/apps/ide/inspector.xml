@@ -45,78 +45,13 @@
 
 </widgets>
 
-<event language="beanshell" name="inspectortop_onAction">
+<event language="beanshell" name="inspector_onAction">
   <![CDATA[
-    event.println("in inspectortop_onAction: "+event.action);
-    //URL[] urls = getClassPath();
-    //for (int i = 0; i < urls.length; i++){
-    //    event.println("beanshell classpath: "+urls[i]);
-    //}
-
     if (event.action.equals("getData")){
-         try {
-            print("======================================event.action was getData");
-            request = event.session.getRequest();
-            String propertyValue = "oops";
-            String propertyName = event.getQueryParam("propertyName");
-            propertyValue = event.getQueryParam("propertyValue");
-            String widgetID = event.getQueryParam("widgetID");
-            String targetPageID = event.getQueryParam("targetPageID");
-            String subsessionID = event.session.getFieldValue("SUBSESSIONID");
-            String noPropUpdate = event.getQueryParam("noPropUpdate");
-
-            Session subsession = event.session.findSession(subsessionID);
-            boolean debug = true;
-            //print("----- inspector_onAction ----- "+widgetID +" prop: "+propertyName+" val: "+propertyValue);
-            if (subsession == null){
-                event.resultSrc = "ERROR: subsession is null "+subsessionID;
-            } else {
-                Page targetPage = subsession.getPageByID(targetPageID);
-                String emsg;
-                if (targetPageID.equals(widgetID)){
-                    if (targetPage == null){
-                        emsg = "ERROR: targetPageID (page as widget) was not found: "+targetPageID;
-                        event.resultSrc = "<html><body>"
-                                        +emsg
-                                        +"</body></html>";
-                        event.println("(1) event message is: "+emsg);
-                    } else {
-                        //A page property was changed, and we know this because targetPageID and widgetID are both the page ID
-                        // (but not pageID, since that is the inspector's ID).
-                        emsg = targetPage.getPagePropertyEval(propertyName, propertyValue, request);
-                        event.resultSrc = emsg;
-                        if (debug) event.println("(2) event message is: "+emsg);
-                    }
-                } else {
-                    if (targetPage == null){
-                        emsg = "ERROR: targetPageID was not found: "+targetPageID;
-                        event.resultSrc = "<html><body>"
-                                        +emsg
-                                        +"</body></html>";
-                        event.println(emsg);
-                    } else {
-                        Widget widget = targetPage.getWidgetByID(widgetID);
-                        if (widget != null){
-                            if ( ! Tools.isTrue(noPropUpdate)){ //empty string results in false.
-                                widget.changeProperty(propertyName, propertyValue);
-                            }
-                            emsg = targetPage.getWidgetDiv(widgetID, request);
-                        } else {
-                            emsg = "ERROR: widget '"+widgetID+"' not found on page '"+targetPageID+"'";
-                        }
-                        //event.resultSrc = "<html><body>"+emsg+"</body></html>";
-                        event.resultSrc = emsg;
-                        if (debug) event.println("(3) event message is: "+emsg);
-                    }
-                }
-            }
-         } catch (Throwable t)  {
-            session.logError("Caught Exception in inspectortop_onAction action: "+event.action, t);
-            event.resultSrc = "<html><body>ERROR: Exception caught getting data for property. See Session log</body></html>";
-         }
-         event.println("[getData] event:: "+StringTools.escape(event.toString()));
-         event.println("event.resultSrc preview:: "+event.resultSrc);
-         event.resultAction = ScriptEvent.RA_RETURN_SOURCE;
+        IDEApp app = session.getFieldValue("IDEApp");
+        if ( app != null ) {
+            app.application_onAction(event, session);
+        } 
     } else if (event.action.equals("showInspector")){
         //show inspector page,  but first check if widget was clicked.
         event.println(" event.action is showInspector in inspector.xml");

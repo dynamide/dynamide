@@ -127,13 +127,13 @@ public class Designer {
     public String formatDoneScript(String newPropertyValue){
         String scriptChunk ="alert('Incorrect targetClass ["+targetClass+"] in Designer.formatDoneScript()');";
         if (targetClass.equals("Session")){
-            scriptChunk = "var inspectorwin = parent.opener.getInspectortop();"
+            scriptChunk = "var inspectorwin = opener.getInspector();"
                         +" if (inspectorwin!=null)inspectorwin.applicationPropertyChanged('"+propertyName+"', '"
                                                                       +newPropertyValue+"', '"
                                                                       +targetID+"', '"
-                                                                      +targetOwnerID+"', 'designertop');";
+                                                                      +targetOwnerID+"', 'designer');";
         } else if (targetClass.equals("Page")) {
-            scriptChunk = "var inspectorwin = parent.opener.getInspectortop();"
+            scriptChunk = "var inspectorwin = opener.getInspector();"
                          +" if (inspectorwin!=null) inspectorwin.pagePropertyChanged('"+propertyName+"', '"
                                                                       +newPropertyValue+"', '"
                                                                       +targetID+"', '"
@@ -141,12 +141,12 @@ public class Designer {
 
         } else if (targetClass.equals("Widget")) {
             //js prototype: function pickit(propertyName, propertyValue, widgetID, targetPageID, callerID, forceReload, noPropUpdate){
-            scriptChunk = "var inspectorwin = parent.opener.getInspectortop();"
+            scriptChunk = "var inspectorwin = opener.getInspector();"
                         +" if (inspectorwin!=null)inspectorwin.pickit('"+propertyName+"', '"
                                                                         +newPropertyValue+"', '"
                                                                         +targetID+"', '"
                                                                         +targetOwnerID
-                                                                        +"', 'designertop', true, true);";
+                                                                        +"', 'designer', true, true);";
         }
         return scriptChunk;
     }
@@ -185,8 +185,8 @@ public class Designer {
                         newPropertyValue = targetOwnerID+'_'+propertyName;
                         subsession.setEventSource(newPropertyValue, source); //first param is the new event name
                         validationDesc = "doApplication";
-                        scriptChunk = "  var inspectorwin = parent.opener.getInspectortop();\r\n"
-                                     +"  if (inspectorwin!=null)inspectorwin.applicationPropertyChanged('"+propertyName+"', '"+newPropertyValue+"', '"+targetID+"', '"+targetOwnerID+"', 'designertop');\r\n";
+                        scriptChunk = "  var inspectorwin = opener.getInspector();\r\n"
+                                     +"  if (inspectorwin!=null)inspectorwin.applicationPropertyChanged('"+propertyName+"', '"+newPropertyValue+"', '"+targetID+"', '"+targetOwnerID+"', 'designer');\r\n";
                     } else if (targetClass.equals("Page")) {
                         newPropertyValue = targetOwnerID+'_'+propertyName;
                         Page page = (Page)subsession.find(targetOwnerID);
@@ -194,7 +194,7 @@ public class Designer {
                             validationDesc = "doPage";
                             page.setEventSource(newPropertyValue, source); //first param is the new event name
                             //targetID = "foo";
-                            scriptChunk = "  var inspectorwin = parent.opener.getInspectortop();\r\n"
+                            scriptChunk = "  var inspectorwin = opener.getInspector();\r\n"
                                          +"  if (inspectorwin!=null) inspectorwin.pagePropertyChanged('"+propertyName+"', '"+newPropertyValue+"', '"+targetID+"', '"+targetOwnerID+"');\r\n";
                         }
                      } else {
@@ -208,8 +208,8 @@ public class Designer {
                                     event.println("widget ["+targetID+"] in page ["+targetOwnerID+"] gets event source.");
                                     widget.setEventSource(newPropertyValue, source); //first param is the new event name
                                     validationDesc = "doWidget";
-                                    scriptChunk = "  var inspectorwin = parent.opener.getInspectortop();\r\n"
-                                                +"  if (inspectorwin!=null)inspectorwin.pickit('"+propertyName+"', '"+newPropertyValue+"', '"+targetID+"', '"+targetOwnerID+"', 'designertop', false, false);\r\n";
+                                    scriptChunk = "  var inspectorwin = opener.getInspector();\r\n"
+                                                +"  if (inspectorwin!=null)inspectorwin.pickit('"+propertyName+"', '"+newPropertyValue+"', '"+targetID+"', '"+targetOwnerID+"', 'designer', false, false);\r\n";
                                 }
                             } else {
                                 event.println("page was null when looking for targetOwnerID: "+targetOwnerID);
@@ -263,19 +263,19 @@ public class Designer {
                         newPropertyValue = ""; //try empty string for now.  result should be SELECT with first item selected, I guess.
 
                         String forceRefresh =
-                            "var inspectorwin = parent.opener.getInspectortop();"
+                            "var inspectorwin = opener.getInspector();"
                                         +" if (inspectorwin!=null)inspectorwin.location=inspectorwin.location;";
                         setForceRefreshScript(forceRefresh);
 
                         if (targetClass.equals("Session")){
                             validationDesc = "doApplication";
-                            scriptChunk = "var inspectorwin = parent.opener.getInspectortop();"
+                            scriptChunk = "var inspectorwin = opener.getInspector();"
                                         +" if (inspectorwin!=null)inspectorwin.applicationPropertyChanged('"+propertyName+"', '"
                                                                                       +newPropertyValue+"', '"
                                                                                       +targetID+"', '"
-                                                                                      +targetOwnerID+"', 'designertop');";
+                                                                                      +targetOwnerID+"', 'designer');";
                         } else if (targetClass.equals("Page")) {
-                            scriptChunk = "var inspectorwin = parent.opener.getInspectortop();"
+                            scriptChunk = "var inspectorwin = opener.getInspector();"
                                          +" if (inspectorwin!=null) inspectorwin.pagePropertyChanged('"+propertyName+"', '"
                                                                                       +newPropertyValue+"', '"
                                                                                       +targetID+"', '"
@@ -283,12 +283,12 @@ public class Designer {
 
                         } else if (targetClass.equals("Widget")) {
                             //js prototype: function pickit(propertyName, propertyValue, widgetID, targetPageID, callerID, forceReload, noPropUpdate){
-                            scriptChunk = "var inspectorwin = parent.opener.getInspectortop();"
+                            scriptChunk = "var inspectorwin = opener.getInspector();"
                                         +" if (inspectorwin!=null)inspectorwin.pickit('"+propertyName+"', '"
                                                                                         +newPropertyValue+"', '"
                                                                                         +targetID+"', '"
                                                                                         +targetOwnerID
-                                                                                        +"', 'designertop', true, true);";
+                                                                                        +"', 'designer', true, true);";
                         }
                     } else {
                         validationDesc = "doWidget EnumeratedDatatype called with wrong datatype: "+vo.getClass().getName();
@@ -308,7 +308,7 @@ public class Designer {
              setDoneScript(scriptChunk);
 
              event.println("======================================event.action was validateDesigner");
-             //parent.opener will be idetop.
+             //opener will be idetop.
              event.resultSrc = "<html><body><pre>"
                                 +validationDesc
                                 +"\r\n targetClass: "+targetClass

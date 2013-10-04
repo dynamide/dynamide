@@ -57,7 +57,7 @@
             if (event.getQueryParam("noMainWindow").length()>0){
                 System.out.println("noMainWindow..............");
                 //e.g.
-                //http://apps.dynamide.com:7080/dynamide/ide?SESSIONID=test7&noMainWindow=1&action=startSubsession&openProject=/mailmerge&next=inspectortop&targetPageID=testPage&widgetID=edit1&projectPath=/mailmerge
+                //http://apps.dynamide.com:7080/dynamide/ide?SESSIONID=test7&noMainWindow=1&action=startSubsession&openProject=/mailmerge&next=inspector&targetPageID=testPage&widgetID=edit1&projectPath=/mailmerge
             } else if (!session.getBatchMode()){
                 event.nextPageID = "ide";
                 System.out.println("session.isBeforeFirstPage. "+event);
@@ -74,18 +74,12 @@
 
   <pages>
     <page name="designer"></page>
-    <page name="designerhidden"></page>
-    <page name="designertop"></page>
     <page name="eval"></page>
     <page name="htmlsource"></page>
     <page name="ide"></page>
     <page name="idehelp"></page>
-    <page name="idehidden"></page>
     <page name="ide" default="true"></page>
     <page name="inspector"></page>
-    <page name="inspectorhidden"></page>
-    <page name="inspectortop"></page>
-    <page name="properties"></page>
     <page name="palette"></page>
     <page name="newProjectDlg"></page>
     <page name="welcome"></page>
