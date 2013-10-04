@@ -3,11 +3,11 @@
 
     <target name="sync-all">
     
-        <copy todir="${src}/assemblies/dynamide-apps/apps/ide">
+        <copy todir="${src}/assemblies/dynamide-apps/apps/ide" verbose="yes" >
             <fileset dir="${DYNAMIDE_RESOURCE_ROOT}/homes/dynamide/assemblies/com-dynamide-apps-1/apps/ide" includes="**"/>  
          </copy>
          
-        <copy todir="${src}/assemblies/dynamide-lib">
+        <copy todir="${src}/assemblies/dynamide-lib" verbose="yes" >
             <fileset dir="${DYNAMIDE_RESOURCE_ROOT}/assemblies/com-dynamide-lib-1" includes="**"/>  
          </copy>
          

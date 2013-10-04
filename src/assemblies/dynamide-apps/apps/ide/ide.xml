@@ -79,7 +79,7 @@
         if (document.all.selectPagename == null){
             return "";
         } else {
-            return document.all.selectPagename.options[document.all.selectPagename.selectedIndex].innerText;
+            return document.all.selectPagename.options[document.all.selectPagename.selectedIndex].innerHTML;
         }
     }
 
@@ -194,7 +194,7 @@
             return false;
         }
         for (var r = document.all.selectPagename.options.length - 1; r>=0; r=r-1) {
-            oneval = document.all.selectPagename.options[r].innerText;
+            oneval = document.all.selectPagename.options[r].innerHTML;
             if (oneval == pagename){
                 return true;
             }
@@ -231,7 +231,7 @@
                 thePrompt = "Page "+newPageName+" exists in project, choose another name:";
             }
         }
-        var pagetype = document.all.selectPagetype.options[document.all.selectPagetype.selectedIndex].innerText;
+        var pagetype = document.all.selectPagetype.options[document.all.selectPagetype.selectedIndex].innerHTML;
         // %% Note: I put "pagetypes/" in the next string, to represent the dir that all pagetypes are in.
         var url = '/dynamide/ide?SESSIONID=$SESSIONID&action=newPage&newPageID='+newPageName+'&newPagetype=pagetypes/'+pagetype;
         //logDebug("url: "+url);
@@ -322,7 +322,7 @@
     }
 
     function getWidgetPrototypeURL(pageID){
-        var widgetType = document.all.selectPalette.options[document.all.selectPalette.selectedIndex].innerText;
+        var widgetType = document.all.selectPalette.options[document.all.selectPalette.selectedIndex].innerHTML;
         var url = "/dynamide/ide?action=getWidgetPrototype&SESSIONID=$SESSIONID&SUBSESSIONID="+g_subsessionID
                                    +"&widgetType="+widgetType+"&targetPageID="+pageID+"&now="+randomParam();
         return url;
@@ -384,6 +384,19 @@
         //alert("Page Saved");  the server side event will set a message in the idehidden.xml form that comes back which will pop up the alert
     }
 
+    /* saveLayoutView relied on a form on a hidden frame, which looked like this:
+     *
+     *   <form name="frmSaveContents" METHOD="post" ACTION="/dynamide/ide">
+     *   <textarea name="htmlSource">NADA</textarea>
+     *   <input type="hidden" name="SESSIONID" value="$SESSIONID"/>
+     *   <input type="hidden" name="next" value="idehidden"/>
+     *   <input type="hidden" name="page" value="idehidden"/>
+     *   <input type="hidden" name="targetPageID" value=""/>
+     *   <input type="hidden" name="action" value="SaveLayoutView"/>
+     *   </form>
+     *
+     *  But I have removed that, in preference for some kind of AJAX thing. This code will be broken until then.
+     */
     function saveLayoutView(name){
       var pagename = getTargetPageName();
       if (pagename != null && pagename.length != 0 && gLayoutViews[name] != null){
@@ -566,10 +579,11 @@
     }
 
     function closeSubsession(sessionID){
-        killme = window.open('/dynamide/ide?action=Close&SESSIONID='+sessionID,
-                                'dynamideHidden'+sessionID,
-                                WINPARAMS_TINYPAGE);
-        killme.setTimeout('close();',500);
+        console.log('\n\n\n\n $$$$$$$$$$$$$$$$$$ in closeSubsession');
+        var closeURL = '/dynamide/ide?action=Close&SESSIONID='+sessionID;
+        console.log('closing '+closeURL);
+        var msg = loadXMLResource(closeURL);
+        console.log('close message: '+msg);
     }
 
 
@@ -630,6 +644,9 @@
     <body bgcolor='$page.bgcolor'
         border='0' topmargin='0' leftmargin='0' rightmargin='0' bottommargin='0'
         marginwidth="0" marginheight="0" onunload="$bOnUnload" onload="$bOnLoad">
+        designMode $designMode
+        bOnUnload $bOnUnload
+        
     <form name="frmDynamide" action='mojo'>
       <table border="1">
       <tr>

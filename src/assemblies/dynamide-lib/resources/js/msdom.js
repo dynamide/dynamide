@@ -64,10 +64,10 @@ if (!scripts_js_included) {
   
   function loadDocument(resource){
     function reqListener () {
-      console.log(" this.responseXML ====>");
-      console.log(this.responseXML);
-      console.log(" this.responseText ====>");
-      console.log(this.responseText);
+      //console.log(" this.responseXML ====>");
+      //console.log(this.responseXML);
+      //console.log(" this.responseText ====>");
+      //console.log(this.responseText);
     };
     
     var oReq = new XMLHttpRequest();
@@ -75,10 +75,10 @@ if (!scripts_js_included) {
     oReq.open("get", resource, false);  //3rd arg: true==async.  We want false, because dynamide ide was not written with js closures, so some code is synchronous.
     oReq.send(); 
     if (oReq.responseText){
-        console.log("oReq.responseText:"+ oReq.responseText);
+        //console.log("oReq.responseText:"+ oReq.responseText);
         return oReq.responseText;   
     } else if (oReq.responseXML){
-        console.log("oReq.responseXML:"+ oReq.responseXML);
+        //console.log("oReq.responseXML:"+ oReq.responseXML);
         return oReq.responseXML;   
     }
   }

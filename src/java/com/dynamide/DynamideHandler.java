@@ -358,7 +358,7 @@ public class DynamideHandler extends DynamideObject implements Runnable {
     private HandlerResult closeSession(String sessionID, Session theSession){
         if (theSession != null){
             theSession.close();  //this also sets the handler to null.
-            return new HandlerResult("<html><body>Session closed: "+Tools.now()+"</body></html>");
+            return new HandlerResult("<html><body>Session closed: "+sessionID+" at time: "+Tools.now()+"</body></html>");
         } else {
             return new HandlerResult("<html><body>Invalid SESSIONID:"+sessionID+"</body></html>");
         }
