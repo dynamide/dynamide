@@ -17,7 +17,7 @@
         $session.getInclude("resources/js/page.js")
     </head>
     <body bgcolor="#A4BFDD" onload="document.all.source.focus();">
-    <form name="frmEval" action="/dynamide/ide">
+    <form name="frmEval" action="/dynamide/ide" method="POST">
         <table border="1" width="100%">
         <tr>
         <td>

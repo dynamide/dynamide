@@ -157,6 +157,7 @@ public class Designer {
         //event.println(event.toString());
         if (event.action.equals("validateDesigner")){
 
+             /*
              String propertyName = event.getQueryParam("propertyName");
              String targetOwnerID = event.getQueryParam("targetOwnerID");
              String targetClass = event.getQueryParam("targetClass");
@@ -164,6 +165,15 @@ public class Designer {
              String source = event.getQueryParam("source");
              System.out.println("=============source:\r\n"+source+"\r\n==============");
              String datatype= event.getQueryParam("datatype");
+             */
+            String propertyName = getPropertyName();
+             String targetOwnerID = getTargetOwnerID();
+             String targetClass = getTargetClass();
+             String targetID = getTargetID();
+             String source = event.getQueryParam("source");
+             System.out.println("=============source:\r\n"+source+"\r\n==============");
+             String datatype= getTargetDatatype().getDatatypeClassName();
+
              boolean doPage = false;
              boolean doApplication = false;
              String newPropertyValue = "";

@@ -1,0 +1,84 @@
+<html>
+<head>
+<title>document-dump test page</title>
+    <SCRIPT language="javascript" src="/dynamide/cache/dynamide/ide/resources/js/scripts.js"></SCRIPT>
+    <SCRIPT language="javascript" src="/dynamide/cache/dynamide/ide/resources/js/msdom.js"></SCRIPT>
+    <SCRIPT language="javascript" src="/dynamide/cache/dynamide/ide/resources/js/windowing.js"></SCRIPT>
+    <SCRIPT language="javascript" src="/dynamide/cache/dynamide/ide/resources/js/page.js"></SCRIPT>
+    <script>
+    //this does nothing.  It has no HTML comments, and no type attribute.
+    </script>
+    
+    <script>
+    <!--
+    var foo = "this does nothing, too.  It has HTML comments protecting the javascript";
+    -->
+    </script>
+    
+    <!-- this is an HTML comment.
+    comment line 2
+    comment line 3
+    -->
+    
+    <script type="text/javascript">
+        //<![CDATA[
+        var i=10;
+        if (i<5)
+          {
+          // some code in a CDATA.
+          }
+        //]]>
+    </script> 
+    
+    <script type="text/javascript">
+        //This has a type="text/javascript". Also, it uses no semicolons on multiple javascript lines.
+        var j = 3.1415
+        var k = 3e10
+    </script> 
+
+    <style type="text/css">
+    body {
+        margin: 20pt;
+        padding: 10px;
+        padding-left: 100px;
+        
+        border: 1px solid blue;
+    }
+    p {
+        border: 1px dashed gray;  
+        background-color: white;
+        padding: 5px;
+    }
+    </style>
+</head>
+<body att="foo" bgcolor='lightblue' onload="documentOnLoad()">
+<h2>document-dump test</h2>
+    <p>This page is a test of using document.documentElement, which returns the HTML element.  This page has some representative elements
+    that cover what is allowed in HTML.  Note that the includes in the head point at the /dynamide/ide project, which requires that the IDE 
+    be run at least once, or the scripts won't be in cache.</p>
+    
+    <p>On document onload we then call our dynamide function domToString(window.document) which wraps the HTML tags for us.
+    domToString() calls documentInnerHTML(window.document) to spit out the entire DOM, minus the HTML tag itself, as a string.  
+    <!-- this is an HTML comment with path: html>body>p -->
+    </p>
+    
+    <p>This is an allowed waka: >
+    <br />This is a &amp;lt; entity: &lt;
+    <br></br>This is after an illegal open/close BR tag.
+    <br />This is after a legal single, self-closing BR tag.
+    </p>
+    <p>An alert box: <a href="javascript:alert('Hello, world!');">click me!</a>
+    </p>
+    
+    <p>Note that the body tag has an illegal attribute: att="foo" and a legal one: bgcolor='lightblue', and they have different quote styles.
+    </p>
+    
+    
+    <script>
+      function documentOnLoad(){
+        var s = documentInnerHTML(window.document);
+        console.log("===============]]] innerHTML on document.documentElement: \n"+s);
+      }
+    </script>
+</body>
+</html>

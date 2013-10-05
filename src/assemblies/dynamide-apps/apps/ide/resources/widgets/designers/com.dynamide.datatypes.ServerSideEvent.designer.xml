@@ -6,16 +6,45 @@
 
 <properties>
     <property name="name"><value>serversideeventdesigner1</value></property>
-    <property name="type"><value>com.dynamide.container</value></property>
+    <property name="type"><value>designers/com.dynamide.datatypes.ServerSideEvent.designer</value></property>
 </properties>
 
-<htmlsrc><![CDATA[
-<span>
-<span>
-#set $designer = $page.getObject()
-$session.printStdOut("================...========== $designer")
+<event language="beanshell" name="onAction"><![CDATA[
+    session.printStdOut(" server side event onAction:  "+event.action);
+    Page p = event.sender;
+    Designer designer = p.getObject();
+    designer.onAction(event);
+    
+    if ( event.action.equals("saveServerSideEvent") ) {
+        designer.setDone(true);
+        String source = event.getQueryParam("source");
+        session.printStdOut(" server side event source: "+source);
+        Property p = designer.getTargetProperty();
+        o = p.getValueObjectNoDefault();
+        o.set("value", source);        
+    }
+]]></event>
 
-#comment {Designer:
+<htmlsrc><![CDATA[
+<html>
+<HEAD>
+  <title>ServerSideEvent designer</title>
+  $session.getInclude("resources/css/ide.css")
+  $session.getInclude("resources/js/scripts.js")
+  $session.getInclude("resources/js/msdom.js")
+  $session.getInclude("resources/js/windowing.js")
+</HEAD>
+<body topmargin='0' leftmargin='4'  marginwidth="4" marginheight="4" bgColor="$page.bgcolor">
+<FORM action="$session.applicationPath" method="get" encType="application/x-www-form-urlencoded">
+
+          
+          
+          
+#set $designer = $page.getObject()
+$session.printStdOut("======= rendering page ====== $designer")
+
+#comment {
+   Designer:
     id:designer_page1_page1_onAction
     targetPath:page1.page1
     targetOwnerID:page1
@@ -64,11 +93,34 @@ $session.printStdOut("================...========== $designer")
         document.all.source.focus();
     //-->
     </SCRIPT>
-</span>
-</span>
+<span class="widget" id="submit1" />  
+## This is a SUBMIT button, so this form goes to back end, the response comes back as #showRedirect
+##   which then calls pickit() and window.close().
+
+<input type="hidden" name="page" value="$pageID" />
+<input type="hidden" name="SESSIONID" value="$SESSIONID" />
+</FORM>
+</body>
+</html>
 ]]></htmlsrc>
 
 <widgets>
+    <widget id="submit1">
+      <properties>
+        <property name="action">
+          <value>validateDesigner</value>
+        </property>
+        <property name="class">
+          <value>dmbutton</value>
+        </property>
+        <property name="caption">
+          <value>OK</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
 </widgets>
 
 </dynamideForm>

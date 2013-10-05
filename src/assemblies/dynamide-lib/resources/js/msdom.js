@@ -50,7 +50,7 @@ if (!scripts_js_included) {
   //alert("isIElt6: "+isIElt6);
 
 
-  //=========== Get a document in the background =================
+  //=========== GET a document in the background =================
 
   function loadXMLResource(resource){
       var root = loadDocument(resource);
@@ -69,11 +69,45 @@ if (!scripts_js_included) {
       //console.log(" this.responseText ====>");
       //console.log(this.responseText);
     };
-    
     var oReq = new XMLHttpRequest();
     oReq.onload = reqListener;
     oReq.open("get", resource, false);  //3rd arg: true==async.  We want false, because dynamide ide was not written with js closures, so some code is synchronous.
     oReq.send(); 
+    if (oReq.responseText){
+        //console.log("oReq.responseText:"+ oReq.responseText);
+        return oReq.responseText;   
+    } else if (oReq.responseXML){
+        //console.log("oReq.responseXML:"+ oReq.responseXML);
+        return oReq.responseXML;   
+    }
+  }
+  
+  //=========== POST a document in the background =================
+  
+  function postXMLResource(url, content){
+      var root = postDocument(url, content);
+      if ( root == null ) {
+           return "ERROR: [postXMLResource] root is null. url: "+url;
+      } else if ( root.nodeName == "error" ) {
+           return "ERROR: in postXMLResource (root.nodeName == 'error'). url: "+url;
+      }
+      return domToString(root);
+  }
+  
+  function postDocument(url, content){
+    function reqListener () {
+      //console.log(" this.responseXML ====>");
+      //console.log(this.responseXML);
+      //console.log(" this.responseText ====>");
+      //console.log(this.responseText);
+    };
+    var oReq = new XMLHttpRequest();
+    oReq.onload = reqListener;
+    oReq.open("POST", url, false);  //3rd arg: true==async.  We want false, because dynamide ide was not written with js closures, so some code is synchronous.
+    oReq.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    oReq.setRequestHeader("Content-length", content.length);
+    oReq.setRequestHeader("Connection", "close");
+    oReq.send(content); 
     if (oReq.responseText){
         //console.log("oReq.responseText:"+ oReq.responseText);
         return oReq.responseText;   
@@ -103,7 +137,7 @@ if (!scripts_js_included) {
       return root;
   }
 
-  function domToString(root){
+  function domToStringOLD(root){
     if ( root == null ) {
         alert("ERROR: [domToString] document root is null");
         return "";
@@ -159,18 +193,24 @@ if (!scripts_js_included) {
 
 
   //=========== Keep this in sync with version above... ==========
-
-    function saveThisPage(theWindow){
-        alert(theWindow.document.innerHTML);
-        var st = randomParam()
-        var html = domWidgetToStringDiver(theWindow.document, true);
-        var fin = randomParam()
-        alert("msdom.saveThisPage time: "+(fin-st))
-        return html;
-    }
-
-
-
+  
+  function saveThisPage(theWindow){
+      alert(theWindow.document.innerHTML);
+      var st = randomParam()
+      var html = domWidgetToStringDiver(theWindow.document, true);
+      var fin = randomParam()
+      alert("msdom.saveThisPage time: "+(fin-st))
+      return html;
+  }
+  
+  function domToString(document){
+      return "<HTML>"+documentInnerHTML(document)+"</HTML>";
+  }                                                 
+  
+  function documentInnerHTML(document){
+      return document.documentElement.innerHTML;
+  }
+  
   function domWidgetToString(root){
     if ( root == null ) {
         alert("ERROR: [domWidgetToString] document root is null");
@@ -190,7 +230,7 @@ if (!scripts_js_included) {
 
 
 
-function domWidgetToStringDiver(passedNode, isRoot){
+  function domWidgetToStringDiver(passedNode, isRoot){
     var html = '';
     var nodeName;
     if (passedNode.nodeName != null){

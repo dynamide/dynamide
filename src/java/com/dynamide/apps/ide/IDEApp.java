@@ -380,6 +380,8 @@ public class IDEApp extends DynamideObject {
     }
 
     private void SaveLayoutView(ActionInParams in, ActionOutParams out) throws Exception {
+        System.out.println("in IDEApp::SaveLayoutView");
+        in.event.println("in IDEApp::SaveLayoutView");
         //This is untested code.  Moved here 2013-10-03 from idehidden.xml, but there's no caller in the source tree.
         String pagepost = in.event.getQueryParam("htmlSource");
         String targetPageID = in.event.getQueryParam("targetPageID");

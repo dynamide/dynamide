@@ -398,6 +398,7 @@
      *  But I have removed that, in preference for some kind of AJAX thing. This code will be broken until then.
      */
     function saveLayoutView(name){
+      alert('in saveLayoutView');
       var pagename = getTargetPageName();
       if (pagename != null && pagename.length != 0 && gLayoutViews[name] != null){
         var view = gLayoutViews[name]; //view is a javascript object.
@@ -405,8 +406,8 @@
             alert('view '+name+' is null');
         } else {
             if (gIDEMainWindow != null){
-                var frmSC = gIDEMainWindow.parent.frames['idehidden'].document.frmSaveContents;
-                frmSC.targetPageID.value = pagename;
+             //   var frmSC = gIDEMainWindow.parent.frames['idehidden'].document.frmSaveContents;
+             //   frmSC.targetPageID.value = pagename;
                 //5/23/2002 6:40PM  var src = domWidgetToString(view.window.document);
                 //gIDEMainWindow.parent.frames['idehidden'].document.frmSaveContents.htmlSource.value = domWidgetToString(win.document);
                 //gIDEMainWindow.parent.frames['idehidden'].document.frmSaveContents.submit();
@@ -414,12 +415,21 @@
                 //6/1/2002 2:55PM var src = view.window.document.documentElement.outerHTML;
                  //alert('calling view.window.eval...');
                  //alert("w: "+view.window.domWidgetToString);
-                var src = view.window.eval("domWidgetToString(window.document);");
-                //alert("src, ready to submit\r\n"+src);
+                debugger;
+                //var src = view.window.eval("domWidgetToString(window.document);");
+                var src = view.window.document.innerHTML;
+                
+                alert("src, ready to submit\r\n"+src);
+                var url = "/dynamide/ide";
+                var encoded = encodeURIComponent(src);
+                postXMLResource(url, "action=SaveLayoutView&SESSIONID=$SESSIONID&SUBSESSIONID="+g_subsessionID
+                                       +"&targetPageID="+pagename
+                                       +"&htmlSource="+encoded);
+                
                 //this is the 'old way' and is very slow: var src = domWidgetToString(view.window.document);
                 logDebug("<h2>page source</h2><pre>"+src.replace(/</g, "&lt;")+"</pre>");
-                frmSC.htmlSource.value = src;
-                frmSC.submit();
+            //    frmSC.htmlSource.value = src;
+            //    frmSC.submit();
             } else {
                 alert("ERROR: gIDEMainWindow is null");
             }
@@ -512,7 +522,7 @@
     }
 
     function getInspector(){
-        return gInspectorWindow.frames['inspector'];
+        return gInspectorWindow;
     }
 
     function renamePage(){

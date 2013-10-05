@@ -74,6 +74,9 @@
       }
       loadXMLResourceForInspector(url, "WIDGET", targetPageID, widgetID, forceReload);
     }
+    function pickit2(){
+        return "IN_PICKIT2";
+    }
 
     function pagePropInputOnKeyDown(theInput, widgetID, targetPageID){
         //note: "event" is magically defined, so don't define it or you shadow it.

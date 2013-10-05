@@ -63,10 +63,10 @@
                  document.all.source.focus();
              //-->
              </SCRIPT>
-            <span class="widget" id="submit1" />
-            #set $script = $designer.formatDoneScript("")
-            ## [DEBUG] script: $script
-            <a href="javascript:$script\;parent.window.close();">DONE</a>
+            <span class="widget" id="submit1" />  
+            ## This is a SUBMIT button, so this form goes to back end, the response comes back as #showRedirect
+            ##   which then calls pickit() and window.close().
+            
             <input type="hidden" name="page" value="$pageID" />
             <input type="hidden" name="SESSIONID" value="$SESSIONID" />
           </FORM>
@@ -152,8 +152,7 @@
           <a href="$forceScript">Force Refresh II</a>
           <br />
           #set $script = $designer.formatDoneScript("")
-          $script
-          <a href="javascript:$script\;parent.window.close();">DONE</a>
+          <a href="javascript:$script\;window.close();">DONE</a>
 
           ##$session.dumpRequestParams()
           <!--
@@ -170,13 +169,16 @@
           <body bgColor="$page.bgcolor">
           property set.  This window should close.
           <br />
-          If not, <a href="javascript:$script\;parent.window.close();">click here</a>
+          If not, <a href="javascript:$script\;window.close();">click here</a>
+          
+          #set $script = $designer.formatDoneScript("")
           <script>
           <!--
             $script
-            parent.window.close();
+            window.close();
           //-->
           </script>
+          
           </body>
         </html>
     }
