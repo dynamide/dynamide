@@ -137,7 +137,7 @@ if (!scripts_js_included) {
       return root;
   }
 
-  function domToStringOLD(root){
+  function domToString(root){
     if ( root == null ) {
         alert("ERROR: [domToString] document root is null");
         return "";
@@ -203,8 +203,12 @@ if (!scripts_js_included) {
       return html;
   }
   
-  function domToString(document){
-      return "<HTML>"+documentInnerHTML(document)+"</HTML>";
+  function domBodyToString(bodyElement){
+     return bodyElement.innerHTML;
+  }
+  
+  function domAllToString(document){
+      return "<HTML>\n"+documentInnerHTML(document)+"\n</HTML>";
   }                                                 
   
   function documentInnerHTML(document){

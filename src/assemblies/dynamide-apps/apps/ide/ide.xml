@@ -398,7 +398,7 @@
      *  But I have removed that, in preference for some kind of AJAX thing. This code will be broken until then.
      */
     function saveLayoutView(name){
-      alert('in saveLayoutView');
+      console.log('in saveLayoutView');
       var pagename = getTargetPageName();
       if (pagename != null && pagename.length != 0 && gLayoutViews[name] != null){
         var view = gLayoutViews[name]; //view is a javascript object.
@@ -415,17 +415,22 @@
                 //6/1/2002 2:55PM var src = view.window.document.documentElement.outerHTML;
                  //alert('calling view.window.eval...');
                  //alert("w: "+view.window.domWidgetToString);
-                debugger;
                 //var src = view.window.eval("domWidgetToString(window.document);");
-                var src = view.window.document.innerHTML;
+                console.time("saveLayoutView");
+                console.log("============> BEGIN ====== postXMLRource in saveLayoutVeiw("+name+")");
+                var src = domBodyToString(view.window.document.body);
                 
-                alert("src, ready to submit\r\n"+src);
                 var url = "/dynamide/ide";
                 var encoded = encodeURIComponent(src);
-                postXMLResource(url, "action=SaveLayoutView&SESSIONID=$SESSIONID&SUBSESSIONID="+g_subsessionID
+                console.log("============> POST ====== postXMLRource in saveLayoutVeiw("+name+")");
+                console.timeEnd("saveLayoutView");
+                console.time("saveLayoutView2");
+                var res = postXMLResource(url, "action=SaveLayoutView&SESSIONID=$SESSIONID&SUBSESSIONID="+g_subsessionID
                                        +"&targetPageID="+pagename
                                        +"&htmlSource="+encoded);
-                
+                //alert("result: "+res);
+                console.log("============> DONE ====== postXMLRource in saveLayoutVeiw("+name+")");
+                console.timeEnd("saveLayoutView2");
                 //this is the 'old way' and is very slow: var src = domWidgetToString(view.window.document);
                 logDebug("<h2>page source</h2><pre>"+src.replace(/</g, "&lt;")+"</pre>");
             //    frmSC.htmlSource.value = src;

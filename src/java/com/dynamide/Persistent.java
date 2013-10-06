@@ -9,6 +9,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
 import org.jdom.CDATA;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -165,7 +168,7 @@ public class Persistent extends JDOMFile implements IPropertyProvider {
 
     public void setProperty(String name, String value) throws DatatypeException {
         if (DEBUG_PROPS) logDebug("setProperty(S,S): "+getID()+':'+name+':'+value);
-        System.out.println("setProperty(S,S)0: "+getID()+':'+name+':'+value+';');
+        System.out.println("setProperty(S,S)0: " + getID() + ':' + name + ':' + value + ';');
         Property property = getProperty(name);
         if ( property != null ) {
             System.out.println("setProperty(S,S)1: "+property.dump()+';'+property.getClass().getName());
@@ -790,6 +793,5 @@ public class Persistent extends JDOMFile implements IPropertyProvider {
             }
         }
     }
-
 
 }

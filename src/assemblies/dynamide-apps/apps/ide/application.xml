@@ -66,8 +66,8 @@
   ]]></event>
 
   <event language="beanshell" name="application_onAction"><![CDATA[
-    System.out.println("=============1===========\n"+ServletTools.dumpRequestParams(event.request, "#orange"));
-    System.out.println("=============2===========\n"+ServletTools.dumpRequestParams(event.request, "#orange"));
+    //System.out.println("=============1===========\n"+ServletTools.dumpRequestParams(event.request, "#orange"));
+    //System.out.println("=============2===========\n"+ServletTools.dumpRequestParams(event.request, "#orange"));
     IDEApp app = session.getFieldValue("IDEApp");
     if ( app != null ) {
         app.application_onAction(event, session);

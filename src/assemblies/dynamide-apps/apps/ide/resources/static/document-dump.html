@@ -1,6 +1,16 @@
-<html>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html version="-//W3C//DTD XHTML 1.1//EN"
+      xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.w3.org/1999/xhtml
+                          http://www.w3.org/MarkUp/SCHEMA/xhtml11.xsd">
 <head>
 <title>document-dump test page</title>
+    <link href="/dynamide/cache/dynamide/demo/resources/css/dynamide.css" src="/dynamide/cache/dynamide/demo/resources/css/dynamide.css" 
+          type="text/css" rel="STYLESHEET" ></link>
+
     <SCRIPT language="javascript" src="/dynamide/cache/dynamide/ide/resources/js/scripts.js"></SCRIPT>
     <SCRIPT language="javascript" src="/dynamide/cache/dynamide/ide/resources/js/msdom.js"></SCRIPT>
     <SCRIPT language="javascript" src="/dynamide/cache/dynamide/ide/resources/js/windowing.js"></SCRIPT>
@@ -57,7 +67,7 @@
     that cover what is allowed in HTML.  Note that the includes in the head point at the /dynamide/ide project, which requires that the IDE 
     be run at least once, or the scripts won't be in cache.</p>
     
-    <p>On document onload we then call our dynamide function domToString(window.document) which wraps the HTML tags for us.
+    <p>On document onload we then call our dynamide function domAllToString(window.document) which wraps the HTML tags for us.
     domToString() calls documentInnerHTML(window.document) to spit out the entire DOM, minus the HTML tag itself, as a string.  
     <!-- this is an HTML comment with path: html>body>p -->
     </p>
@@ -76,8 +86,9 @@
     
     <script>
       function documentOnLoad(){
-        var s = documentInnerHTML(window.document);
-        console.log("===============]]] innerHTML on document.documentElement: \n"+s);
+        var s = domAllToString(window.document);
+        console.log('==== innerHTML on document.documentElement: \n'+s);  
+        //NOTE: Firefox will wrap extra quotes around console log output.  These don't come from domToString().
       }
     </script>
 </body>

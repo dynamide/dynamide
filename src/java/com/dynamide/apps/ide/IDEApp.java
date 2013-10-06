@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.dynamide.DynamideObject;
 import com.dynamide.JDOMFile;
@@ -20,6 +22,7 @@ import com.dynamide.event.ScriptEvent;
 import com.dynamide.resource.Assembly;
 import com.dynamide.resource.ResourceManager;
 
+import com.dynamide.util.FileTools;
 import com.dynamide.util.StringList;
 import com.dynamide.util.StringTools;
 import com.dynamide.util.Tools;
@@ -380,11 +383,16 @@ public class IDEApp extends DynamideObject {
     }
 
     private void SaveLayoutView(ActionInParams in, ActionOutParams out) throws Exception {
-        System.out.println("in IDEApp::SaveLayoutView");
+        //System.out.println("in IDEApp::SaveLayoutView");
         in.event.println("in IDEApp::SaveLayoutView");
         //This is untested code.  Moved here 2013-10-03 from idehidden.xml, but there's no caller in the source tree.
         String pagepost = in.event.getQueryParam("htmlSource");
         String targetPageID = in.event.getQueryParam("targetPageID");
+        //FileTools.saveFile("/Users/laramie/tmp", "dynamide-ide-pagepost-body.html", pagepost);
+        pagepost = IDEApp.closeLinkTags(pagepost);
+        String DOCTYPE = "<!DOCTYPE html  [  <!ENTITY nbsp  \"&#160;\"> <!ENTITY foo \"&#8220;\">  ] >";
+        pagepost = DOCTYPE+"<html><head></head><body>"+pagepost+"</body></html>";
+        //FileTools.saveFile("/Users/laramie/tmp", "dynamide-ide-pagepost-full.html", pagepost);
 
         if (in.subsession == null) {
             in.event.println("in.subsession was null");
@@ -392,15 +400,19 @@ public class IDEApp extends DynamideObject {
             Page targetPage = in.subsession.getPageByID(targetPageID);
             if (targetPage != null) {
                 try {
+                    System.out.println("START:"+Tools.now());
                     targetPage.setHTMLSource(pagepost);                //throws XMLFormatException
+                    System.out.println("END:"+Tools.now());
                     if (targetPage.saveToFile()) {                      //This flushes the whole XML in-memory tree to disk.
                         in.event.println("Page " + targetPageID + " saved");
                     } else {
                         in.event.println("ERROR: couldn't save page " + targetPageID);
                     }
                 } catch (XMLFormatException xmle) {
+                    System.out.println("CATCH:"+Tools.now());
                     in.event.println(xmle.getMessage());
                     out.body = "ERROR: " + xmle.getMessage();
+                    System.out.println(out.body.substring(0,1000));
                 }
             }
         }
@@ -486,4 +498,50 @@ public class IDEApp extends DynamideObject {
      }
     
     //============== END Action handlers =======================================================
+
+
+    public static String  closeLinkTags(String src){
+        StringBuffer buffer = new StringBuffer((int)(src.length()*1.1));
+        //String regex = "\\<link[^>]*[^/]\\>";
+        //String regex = "\\<(link|LINK|img|IMG|hr|HR|br|BR|input|INPUT)[^>]*[^/]\\>";
+        String regex = "\\<(link|LINK|img|IMG|hr|HR|br|BR|input|INPUT)[^>]*[^/]\\>|\\<(link|LINK|img|IMG|hr|HR|br|BR|input|INPUT)\\>";
+        Pattern pattern =  Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(src);
+
+        boolean found = false;
+        String chunk;
+        int start, end;
+        int lastEnd = -1;
+        while (matcher.find()) {
+            start = matcher.start();
+            end  = matcher.end();
+            if (lastEnd>-1){
+                buffer.append(src.substring(lastEnd, start));
+            } else {
+                buffer.append(src.substring(0, start));
+            }
+            lastEnd = end;
+            chunk = src.substring(start, end-1);
+            //System.out.println("\n\nchunk trimmed:      "+chunk);
+            buffer.append(chunk).append(" />");
+            //System.out.println("buffer now:      "+buffer.toString());
+            found = true;
+        }
+        if (found){
+            buffer.append(src.substring(lastEnd, src.length()));
+            return buffer.toString();
+        } else {
+            return src;
+        }
+    }
+
+    public static void main(String[] args) {
+        long start = System.currentTimeMillis();
+        String src = FileTools.readFile("/Users/laramie/tmp", "dynamide-ide-pagepost-body.html");
+        String txt = closeLinkTags(src);
+        FileTools.saveFile("/Users/laramie/tmp", "src.html", src);
+        long diff = System.currentTimeMillis() - start;
+        System.out.println("FIXED (ms): " + diff);
+    }
+
 }
