@@ -345,6 +345,7 @@ public class Assembly extends Pool implements IFileDiverListener, IContext {
             mimeMap.put(".JPEG", "image/jpeg");
             mimeMap.put(".BMP", "image/bmp");
             mimeMap.put(".GIF", "image/gif");
+            mimeMap.put(".CSS", "text/css");
             mimeMap.put(".HTML", "text/html");
             mimeMap.put(".ICO", "image/x-icon");
             mimeMap.put(".JS", "application/x-javascript");
@@ -356,6 +357,7 @@ public class Assembly extends Pool implements IFileDiverListener, IContext {
 
         //TODO: replace this with Tomcat default handling.
         public static String getMimeType(String key) {
+            String orig = key;
             int dot = key.lastIndexOf(".");
             key = key.substring(dot);
             key = key.toUpperCase();
@@ -363,6 +365,7 @@ public class Assembly extends Pool implements IFileDiverListener, IContext {
             if (mimeType == null) {
                 mimeType = "text/html";
             }
+            //System.out.println("====> name: "+orig+" key: "+key+" mime: "+mimeType);
             return mimeType;
         }
 
