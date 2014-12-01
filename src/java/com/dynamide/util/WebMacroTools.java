@@ -27,6 +27,7 @@ public class WebMacroTools {
 
     private Opts m_opts = null;
     public Opts getOpts(){
+        m_opts.getOption("infile");
         return m_opts;
     }
 
@@ -400,7 +401,7 @@ public class WebMacroTools {
                 shellInit(opts);
             }
             String[] remaining = opts.getRemainingArgs();
-            //println("remaining: "+Tools.arrayToString(remaining, "::")+" quiet: "+getQuietInit());
+            //println("remaining: "+Tools.arrayToString(remaining, "::")+"; quiet: "+getQuietInit());  //remaining is the args after the last arg defined in Opts init.
             String fn = opts.getOption("-o");
             boolean print = fn.length()<=0;
             for (int i=0; i < remaining.length; i++) {
@@ -641,6 +642,7 @@ public class WebMacroTools {
         opts.addOption("-logconf", String.class, false);
         opts.addOption("-noInit", Boolean.class, false);
         opts.addOption("-quietInit", Boolean.class, false);
+        opts.addOption("-in", String.class, false);
 
         if ( opts.getOptionBool("-help") ) {
             usage();
@@ -651,6 +653,7 @@ public class WebMacroTools {
         	Log.configure(logconf);        	
         }
         //find the resource on the classpath
+        //System.out.println("PWD: "+(new File(".")).getCanonicalPath());
         new WebMacroTools("", "com/dynamide/util/WebMacroTools.properties", false).shell(opts);
         System.exit(0);
     }

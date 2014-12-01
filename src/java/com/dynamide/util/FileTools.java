@@ -2,13 +2,7 @@ package com.dynamide.util;
 
 import java.io.*;
 
-import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Scanner;
+import java.util.*;
 
 //import java.util.Properties;
 
@@ -823,6 +817,15 @@ public class FileTools implements IFileDiverListener {
           scanner.close();
         }
         return list;
+    }
+
+    public static File linesToFile(List<String> lines, String dir, String filename){
+        String n = System.getProperty("line.separator");
+        StringBuffer b = new StringBuffer();
+        for (String line: lines){
+            b.append(line).append(n);
+        }
+        return saveFile(dir, filename, b.toString());
     }
 
     public static void usage(){

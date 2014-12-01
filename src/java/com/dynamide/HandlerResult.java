@@ -26,6 +26,7 @@ public class HandlerResult {
         this.prettyPrint = false;
         this.binary = true;
         this.expires = expires;
+        this.mimeType = mimeType;
     }
     public String toString(){
         return result;

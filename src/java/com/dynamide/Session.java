@@ -2023,6 +2023,7 @@ System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
             if ( ra != null ) {
                 event = fireEvent(this, ra.inputObject, ra.scriptEventSource.name, pageID, nextPageID, action, ra.scriptEventSource, "", false, null, "");
                 handlerResult.prettyPrint = event.prettyPrint;
+                handlerResult.mimeType = event.mimeType;
                 if ( event.resultCode == ScriptEvent.RC_ERROR ) {
                     logError("[handleAction_inner]"+ event.evalErrorMsg);
                     handlerResult.result = hookException(event.evalErrorMsg, (Throwable)null, event, ErrorHandlerInfo.EC_SESSION, true);
@@ -2052,6 +2053,8 @@ System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
                     if ((event.resultAction == ScriptEvent.RA_RETURN_SOURCE) && (event.resultSrc.length()>0)){
                         logHandlerProc("INFO", "returning event.resultSrc");
                         handlerResult.result = event.resultSrc;
+                        handlerResult.mimeType = event.mimeType;
+                        handlerResult.setResponseCode(event.getResponseCode());
                         setActivePage("");
                         return handlerResult;
                     }
@@ -2129,7 +2132,9 @@ System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
                     if ((event.resultAction == ScriptEvent.RA_RETURN_SOURCE) && (event.resultSrc.length()>0)){
                         logHandlerProc("INFO", "returning event.resultSrc");
                         handlerResult.result = event.resultSrc;
+                        handlerResult.mimeType = event.mimeType;
                         handlerResult.prettyPrint = event.prettyPrint;
+                        handlerResult.setResponseCode(event.getResponseCode());
                         setActivePage("");
                         
                         
@@ -2202,6 +2207,7 @@ System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
                     logHandlerProc("INFO", "returning event.resultSrc from application_queryNextPage");
                     handlerResult.result = event.resultSrc;
                     handlerResult.prettyPrint = event.prettyPrint;
+                    handlerResult.setResponseCode(event.getResponseCode());
                     setActivePage("");
                     return handlerResult;
                 }
@@ -5986,7 +5992,6 @@ System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
             }
             String RESOURCE_ROOT = args[0];
             String urlPath = args[1];
-
             ResourceManager rootResourceManager = ResourceManager.createStandalone(RESOURCE_ROOT);
 
             Session s = Session.createSession(urlPath);

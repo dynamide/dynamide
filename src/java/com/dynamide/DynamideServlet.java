@@ -175,6 +175,7 @@ public class DynamideServlet extends HttpServlet {
                 //log is now initialized with correct format string.
                 context.setAttribute("DynamideRootResourceManager", rootResourceManager);
 
+                Log.info(DynamideServlet.class, "DynamideServlet updated 20141009");
                 Log.info(DynamideServlet.class, "DYNAMIDE_HOME: " + DYNAMIDE_HOME);
                 Log.info(DynamideServlet.class, "DYNAMIDE_RESOURCE_ROOT: " + (String) rootResourceManager.getAttribute("RESOURCE_ROOT"));
                 Log.info(DynamideServlet.class, "DYNAMIDE_STATIC_ROOT: " + rootResourceManager.getStaticRoot());
@@ -191,27 +192,18 @@ public class DynamideServlet extends HttpServlet {
         if (DEBUG_SERVLET) System.out.println(dumpServletInfo(context));
     }
 
-    public void doGet(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException {
+    public void service(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException {
         try {
-            doGetPost(req, response);
+            doService(req, response);
         } catch (Throwable t) {
-            Log.error(DynamideServlet.class, "in doGet()", t);
-            printResult(response, "text/plain", "Error in DynamideServlet.");
-        }
-    }
-
-    public void doPost(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            doGetPost(req, response);
-        } catch (Throwable t) {
-            Log.error(DynamideServlet.class, "in doPost()", t);
+            Log.error(DynamideServlet.class, "in service()", t);
             printResult(response, "text/plain", "Error in DynamideServlet.");
         }
     }
 
     private static final boolean PARANOID_GC = false;  //do not turn this on in jdk 1.4 esp. on Solaris, it makes GC be concurrent!
 
-    public void doGetPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doService(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //Log.debug(DynamideServlet.class, "DynamideServlet classloader >>>>>>>>>>>>>>>>>> "+getClass().getClassLoader().getClass().getName());
         ResourceManager rm1 = ResourceManager.getRootResourceManager();
         String rmid = "";
@@ -219,16 +211,16 @@ public class DynamideServlet extends HttpServlet {
             rmid = rm1.getID();
         }
         if (DEBUG_SERVLET)
-            System.out.println("\r\n==================================\r\n     doGetPost " + rmid + "\r\n==============================\r\n");
+            System.out.println("\r\n==================================\r\n     doService " + rmid + "\r\n==============================\r\n");
 
         long startDoGetPost = Tools.now().longValue();
         String fullURI = request.getRequestURI();
-        //System.out.println("servlet.doGetPost: "+fullURI);
+        //System.out.println("servlet.doService: "+fullURI);
         com.dynamide.util.Profiler profiler = null;
         boolean PROFILE = com.dynamide.Constants.PROFILE;
         if (PROFILE) {
             profiler = com.dynamide.util.Profiler.getThreadSharedProfiler();
-            profiler.enter("servlet.doGetPost: " + fullURI);
+            profiler.enter("servlet.doService: " + fullURI);
         }
         try {
             if (Constants.DEBUG_OBJECT_LIFECYCLE) com.dynamide.util.Profiler.getSharedProfiler().outputObjects();
@@ -374,7 +366,9 @@ public class DynamideServlet extends HttpServlet {
                     writeResult(response, result.mimeType, result.binaryResult);
                     if (com.dynamide.Constants.PROFILE) profiler.leave("servlet.writeResult: " + fullURI);
                 } else if (result.getResponseCode() > 0) {
-                    response.sendError(result.getResponseCode(), result.getErrorMessage());
+                    //response.sendError(result.getResponseCode(), result.getErrorMessage());
+                    response.setStatus(result.getResponseCode());
+                    response.getWriter().print(result.result);
                 } else {
                     if (com.dynamide.Constants.PROFILE) profiler.enter("servlet.printResult: " + fullURI);
                     printResult(response, result.mimeType, result.result);
@@ -407,7 +401,7 @@ public class DynamideServlet extends HttpServlet {
                         }
                     }
                 } catch (IllegalThreadStateException itse) {
-                    System.out.println("****** in DynamideServlet.doGetPost destroying threadGroup: IllegalThreadStateException: " + itse);
+                    System.out.println("****** in DynamideServlet.doService destroying threadGroup: IllegalThreadStateException: " + itse);
                 }
             }
             threadGroup = null;
@@ -420,7 +414,7 @@ public class DynamideServlet extends HttpServlet {
             //dumpThreadGroups(response.getWriter());
         } finally {
             if (com.dynamide.Constants.PROFILE) {
-                profiler.leave("servlet.doGetPost: " + fullURI);
+                profiler.leave("servlet.doService: " + fullURI);
                 Log.debug(DynamideServlet.class, "\r\n" + profiler.getOutputString());
                 long now = Tools.now().longValue();
                 Log.debug(DynamideServlet.class, "millis since last request complete: " + (now - lastRequestAt));

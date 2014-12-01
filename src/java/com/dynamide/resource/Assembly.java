@@ -357,12 +357,15 @@ public class Assembly extends Pool implements IFileDiverListener, IContext {
 
         //TODO: replace this with Tomcat default handling.
         public static String getMimeType(String key) {
+            //System.out.println("getMimeType====================================[[[[[[[ "+key);
             String orig = key;
             int dot = key.lastIndexOf(".");
             key = key.substring(dot);
             key = key.toUpperCase();
             String mimeType = mimeMap.get(key);
             if (mimeType == null) {
+                System.out.println("WARN: ========================= mime type not found, using text/html for key: "+key);
+                //System.out.println("WARN: ========================= mime map: "+mimeMap.toString());
                 mimeType = "text/html";
             }
             //System.out.println("====> name: "+orig+" key: "+key+" mime: "+mimeType);

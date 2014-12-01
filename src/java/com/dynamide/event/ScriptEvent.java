@@ -11,6 +11,8 @@ import com.dynamide.util.ServletTools;
 import com.dynamide.util.StringTools;
 import com.dynamide.util.Tools;
 
+import java.io.BufferedReader;
+
 /** In order to make this class as easy to use as possible from multiple scripting languages
  *  supported by events, the important fields are available as public fields and as bean properties
  *  with proper getters and setters.  That is, foo, getFoo() and setFoo() are all public.
@@ -92,6 +94,14 @@ public class ScriptEvent extends DynamideObject implements java.io.Serializable 
     }
 
     public boolean prettyPrint = true;
+
+    private int responseCode = 0;
+    public int getResponseCode(){
+        return responseCode;
+    }
+    public void setResponseCode(int code){
+        responseCode = code;
+    }
 
     public String redirectURL = "";
 
@@ -177,6 +187,17 @@ public class ScriptEvent extends DynamideObject implements java.io.Serializable 
         resultAction = RA_JUMP_TO_PAGE;
     }
 
+    /** Sets the event resultAction to RA_RETURN_SOURCE, and sets the resultSrc property,
+     *  and the mimeType, but the
+     *  action will occur when the event returns.
+     */
+    public void returnSource(String src, boolean prettyPrint, String mimeType){
+        returnSource(src);
+        this.prettyPrint = prettyPrint;
+        this.mimeType = mimeType;
+    }
+
+
     /** Sets the event resultAction to RA_RETURN_SOURCE, and sets the resultSrc property, but the
      *  action will occur when the event returns.
      */
@@ -216,6 +237,7 @@ public class ScriptEvent extends DynamideObject implements java.io.Serializable 
     public ScriptEvent setResultsFrom(ScriptEvent other){
         if (other == null) return this;
         this.resultSrc = other.resultSrc;
+        this.mimeType = other.mimeType;
         this.resultAction = other.resultAction;
         this.resultCode = other.resultCode;
         this.errorLineNumber = other.errorLineNumber;
@@ -266,6 +288,14 @@ public class ScriptEvent extends DynamideObject implements java.io.Serializable 
     public String  getResultSrc(){return resultSrc;}
     public void setResultSrc(String  new_value){resultSrc = new_value;}
 
+    public String mimeType = "";
+    public String getMimeType(){
+        return mimeType;
+    }
+    public void setMimeType(String type){
+        mimeType = type;
+    }
+
     public transient Object inputObject = null;
     public Object getInputObject(){return inputObject;}
     public void setInputObject(Object new_value){inputObject = new_value;}
@@ -283,6 +313,21 @@ public class ScriptEvent extends DynamideObject implements java.io.Serializable 
     /** This is informational only. */
     public String getEventName(){return eventName;}
     public void setEventName(String new_value){eventName = new_value;}
+
+    public String getRequestBody() throws Exception {
+        StringBuffer sb = new StringBuffer();
+        BufferedReader reader = request.getReader();
+        try {
+            char[] charBuffer = new char[1024];
+            int bytesRead;
+            while ( (bytesRead = reader.read(charBuffer)) != -1 ) {
+                sb.append(charBuffer, 0, bytesRead);
+            }
+            return sb.toString();
+        } finally {
+            reader.close();
+        }
+    }
 
     /** Don't set this directly, it will get overwritten by the returned Object of the event.
      */
@@ -369,6 +414,7 @@ public class ScriptEvent extends DynamideObject implements java.io.Serializable 
           +d1+"redirectURL"+d2+redirectURL+d3
           +d1+"prettyPrint"+d2+prettyPrint+d3
           +d1+"resultSrc"+d2+(escapeHTML?"<pre>"+StringTools.escape(resultSrc)+"</pre>":resultSrc)+d3
+          +d1+"mimeType"+d2+mimeType+d3
           +d1+"action"+d2+action+d3
           +d1+"currentPageID"+d2+currentPageID+d3
           +d1+"nextPageID"+d2+nextPageID+d3

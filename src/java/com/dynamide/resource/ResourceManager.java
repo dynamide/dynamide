@@ -1430,6 +1430,10 @@ public final class ResourceManager extends Pool {
                     IContext applicationFileNode = assembly.getApplicationResource(entry.getAppname(), FileTools.join("resources/static",relName));
                     if (applicationFileNode != null) {
                         System.out.println("========== findStaticResource ==> found ==>"+applicationFileNode);
+                        //These were helpful to find mime type errors, for example.
+                        // System.out.println("========== findStaticResource ==> dump attr ==>"+applicationFileNode.dumpAttributes(false));
+                        //System.out.println("========== findStaticResource ==> dump  ctx ==>"+applicationFileNode.dumpContext(false));
+                        //Tools.printStackTrace();
                         return applicationFileNode;
                     }
             }
