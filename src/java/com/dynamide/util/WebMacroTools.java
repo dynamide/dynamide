@@ -27,7 +27,6 @@ public class WebMacroTools {
 
     private Opts m_opts = null;
     public Opts getOpts(){
-        m_opts.getOption("infile");
         return m_opts;
     }
 
