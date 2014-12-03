@@ -109,10 +109,6 @@ implements IInterpreter {
                     ScriptEvent oldEvent = (ScriptEvent)interp.get("event");
                     interp.set("event", event);//interp.setVariable("event", event);
 
-
-                    //uuhhhhh, don't you want to hold onto the previous event,
-                    //and restore it after the call, or use namespaces, maybe?
-
                     Session oldSession = null;
                     try {
                     	//System.out.println("BshInterpreter get session");
@@ -120,7 +116,7 @@ implements IInterpreter {
 					} catch (Throwable eGet) {
 						System.out.println("BshInterpreter error getting 'session' from interp variables: "+eGet);
 					}
-                    
+
                     interp.set("session", event.session);//interp.setVariable("session", event.session);
                     String key;
                     Object obj;
@@ -162,11 +158,11 @@ implements IInterpreter {
                 if (event == null){
                     logError("[42.1] in bsh.EvalError, and event object is null.",e);
                 } else {
-                    String msgHTML = formatError(e, true, eventSource.source, event);
+                    String msgHTML = formatError(e, true, eventSource.source, event, eventSource.resourceName, eventSource.name);
                     String msgTarget = "";
                     if (e!=null && e instanceof bsh.TargetError && ((bsh.TargetError)e).getTarget() != null ){
                     	msgTarget = Tools.errorToString(((bsh.TargetError)e).getTarget(), true, true);
-                    	
+
                     }
                     //StringTools.makeLineNumbers(e.toString(), e.getErrorLineNumber(), -1, false);
                     String id = (event.session != null)
@@ -376,7 +372,7 @@ implements IInterpreter {
         System.out.println("");
     }
 
-    public static String formatError(Exception e, boolean html, String source, ScriptEvent event){
+    public static String formatError(Exception e, boolean html, String source, ScriptEvent event, String resourceName, String procName){
         String result;
             try {
                 bsh.EvalError be = (bsh.EvalError)e;
@@ -426,7 +422,11 @@ implements IInterpreter {
                             +StringTools.escape(Tools.getStackTrace(e))
                             +"</small></pre><hr/>END STACK TRACE<hr/>";
                 } else {
-                    result = errMsg + "\r\n\r\n========== Source ==========\r\n"+StringTools.makeLineNumbers(source, i, -1, false);
+                    result = errMsg
+                            + "\r\n\r\n========== Resource ==========\r\n"
+                            +resourceName+"::"+procName
+                            + "\r\n========== Source ==========\r\n"
+                            +StringTools.makeLineNumbers(source, i, -1, false);
 
                 }
             } catch (Exception badException){

@@ -12,6 +12,7 @@ import java.util.TreeMap;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
+import com.dynamide.interpreters.InterpreterTools;
 import org.jdom.CDATA;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -396,9 +397,7 @@ public class Persistent extends JDOMFile implements IPropertyProvider {
         return new ScriptEventSource();
     }
 
-    public String getEventSignature(String findName){
-        return "void "+findName+"(Object event)";
-    }
+
 
     private Map m_eventSourceCache = new TreeMap();
 
@@ -424,7 +423,9 @@ public class Persistent extends JDOMFile implements IPropertyProvider {
                 //System.out.println("eventSource after: "+Tools.showControlChars(theText, true));
                 String fullsrc;
                 if ( addSignature ) {
-                    fullsrc = getEventSignature(findName)+"{\r\n"
+                    InterpreterTools.SCRIPT_LANGUAGE lang = InterpreterTools.mapScriptLanguage(language);
+
+                    fullsrc = InterpreterTools.getEventSignature(findName, lang)+"{\r\n"
                                 +theText
                                 +"\r\n}\r\n";
                 } else {

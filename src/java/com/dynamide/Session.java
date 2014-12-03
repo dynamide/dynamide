@@ -18,6 +18,7 @@ import java.util.Stack;
 import java.util.TreeMap;
 import java.util.Vector;
 
+import com.dynamide.interpreters.InterpreterTools;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUpload;
 import org.apache.commons.fileupload.FileUploadException;
@@ -4032,7 +4033,7 @@ System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
                     interp.unsetVariable("SESSIONID");
                 }
             } catch (bsh.EvalError e){
-                result = com.dynamide.interpreters.BshInterpreter.formatError(e, true, source, null);
+                result = com.dynamide.interpreters.BshInterpreter.formatError(e, true, source, null, "", "");
             } catch (Exception e2){
                 result = "ERROR: [25] "+e2;
             }
@@ -4186,9 +4187,12 @@ System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
                                                           eLog.printExpansionLog(expansionLogNode));
                     }
                 } else {
+                    eventSourceFilename = StringTools.isEmpty(eventSourceFilename)
+                                          ? eventSource.resourceName
+                                          : eventSourceFilename;
                     String body = "<html><body><h3>An error occurred in an event.</h3>"
                         +"<hr />\r\nEvent Filename: "+eventSourceFilename
-                        +"<hr />\r\n<pre>"+event.evalErrorMsg
+                        +"<hr />\r\n<pre style='white-space: pre-wrap;'>"+event.evalErrorMsg
                         +"</pre><hr />\r\nEvent Source: \r\n<pre>"
                         +StringTools.makeLineNumbers(StringTools.escape(sSource), event.errorLineNumber)
                         +"</pre>"
@@ -4226,7 +4230,7 @@ System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
     }
 
     public IInterpreter getInterpreter(String language){
-        String classname = mapInterpreter(language);
+        String classname = InterpreterTools.mapInterpreter(language);
         IInterpreter interp = (IInterpreter)m_Interpreters.get(classname);
         if (interp == null){
             try {
@@ -4249,7 +4253,7 @@ System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
     }
 
     public IInterpreter getDetachedInterpreter(String language){
-        String classname = mapInterpreter(language);
+        String classname = InterpreterTools.mapInterpreter(language);
             IInterpreter interp = null;
             try {
                 Object o = Class.forName(classname).newInstance();
@@ -4272,16 +4276,6 @@ System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
                 }
                 return interp;
             }
-    }
-
-    private String mapInterpreter(String language){
-        if ( language.startsWith("beanshell") ) {
-            return "com.dynamide.interpreters.BshInterpreter";
-        }
-        if ( language.toUpperCase().startsWith("TCL") ) {
-            return "com.dynamide.interpreters.TclInterpreter";
-        }
-        return "com.dynamide.interpreters.BshInterpreter";
     }
 
     public ScriptEvent callInterpreter(ScriptEvent event, String procName, ScriptEventSource eventSource, String language, boolean sourceOnly){

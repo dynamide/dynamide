@@ -302,6 +302,16 @@ public class DynamideSecurityManager extends SecurityManager {
             System.out.println("\r\n\r\n\r\n==============================\r\nSECURITY MANAGER ALLOWING LIB: "+lib);
             System.out.println("\r\n================================\r\n\r\n\r\n");
             return; //OK for MongoDB, but: TODO: we must make this Mongo-specific, and also check what RDB's get through the dynamide security manager.
+        } else if (  lib.equals("awt")
+                  || lib.indexOf("liblwawt.dylib") > -1
+                  || lib.indexOf("fontmanager") > -1
+                  || lib.indexOf("AppleScriptEngine") > -1
+
+                ) {
+            System.out.println("\r\n\r\n\r\n==============================\r\nSECURITY MANAGER ALLOWING LIB: "+lib);
+            return;
+        } else {
+            System.out.println("\r\n\r\n\r\n==============================\r\nSECURITY MANAGER ***NOT*** ALLOWING LIB: "+lib);
         }
         if (isCurrentThreadWorker()) deny("checkLink");
     }
