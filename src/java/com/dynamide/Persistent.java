@@ -423,9 +423,7 @@ public class Persistent extends JDOMFile implements IPropertyProvider {
                 //System.out.println("eventSource after: "+Tools.showControlChars(theText, true));
                 String fullsrc;
                 if ( addSignature ) {
-                    InterpreterTools.SCRIPT_LANGUAGE lang = InterpreterTools.mapScriptLanguage(language);
-
-                    fullsrc = InterpreterTools.getEventSignature(findName, lang)+"{\r\n"
+                    fullsrc = InterpreterTools.getEventSignature(findName, language)+"{\r\n"
                                 +theText
                                 +"\r\n}\r\n";
                 } else {

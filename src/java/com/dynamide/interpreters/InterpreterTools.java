@@ -18,16 +18,20 @@ public class InterpreterTools {
     }
 
     public static String mapInterpreter(String language){
-        if ( language.startsWith("beanshell") ) {
-            return "com.dynamide.interpreters.BshInterpreter";
-        }
-        if ( language.toUpperCase().startsWith("TCL") ) {
-            return "com.dynamide.interpreters.TclInterpreter";
-        }
-        if ( language.toUpperCase().startsWith("JAVASCRIPT") ) {
-            return "com.dynamide.interpreters.RhinoInterpreter";
+        SCRIPT_LANGUAGE lang = mapScriptLanguage(language);
+        switch (lang){
+            case BEANSHELL:
+                return "com.dynamide.interpreters.BshInterpreter";
+            case TCL:
+                return "com.dynamide.interpreters.TclInterpreter";
+            case JAVASCRIPT:
+                return "com.dynamide.interpreters.RhinoInterpreter";
         }
         return "com.dynamide.interpreters.BshInterpreter";
+    }
+
+    public static String getEventSignature(String findName, String language){
+        return getEventSignature(findName, mapScriptLanguage(language));
     }
 
     public static String getEventSignature(String findName, SCRIPT_LANGUAGE language){
