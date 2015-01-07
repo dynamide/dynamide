@@ -195,3 +195,7 @@ pg73jdbc3.jar
     rhino-driver-mongodb-rhino-2.0.5.jar
     js.jar
     java-driver-mongodb-rhino-2.11.2.jar
+
+2015-01-06
+   Upgraded to mongo-java-driver-2.13.0-rc1.jar, and hid previous in _HIDE
+
