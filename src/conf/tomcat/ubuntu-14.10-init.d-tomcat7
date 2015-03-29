@@ -207,7 +207,10 @@ case "$1" in
 		echo "// AUTO-GENERATED FILE from /etc/tomcat7/policy.d/" \
 			> "$POLICY_CACHE"
 		echo ""  >> "$POLICY_CACHE"
-		cat $CATALINA_BASE/conf/policy.d/*.policy \
+		
+		#Laramie replacing $CATALINA_BASE/conf/policy.d/*.policy 
+		#             with $CATALINA_BASE/conf/catalina.policy
+		cat $CATALINA_BASE/conf/catalina.policy \
 			>> "$POLICY_CACHE"
 
 		# Remove / recreate JVM_TMP directory
