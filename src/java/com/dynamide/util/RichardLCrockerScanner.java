@@ -118,7 +118,7 @@ public class RichardLCrockerScanner {
 
         doit(b);
         b.append("</songs>\r\n");
-        System.out.println("b:\r\n"+b.toString());
+        //System.out.println("b:\r\n"+b.toString());
         FileTools.saveFile("/Users/vcrocla/src/doc.lar/projects/nate/richardlcrocker.com/db", outFilename, b.toString());
     }
 
@@ -284,11 +284,50 @@ public class RichardLCrockerScanner {
         return TAG.NONE;
     }
 
-    public static void main(String[]args) throws FileNotFoundException {
+    public static void alreadyRun() throws FileNotFoundException{
+
         new RichardLCrockerScanner().run2("/Users/vcrocla/src/doc.lar/projects/nate/richardlcrocker.com/batch2/mode34.txt",        "mode34.db.xml");
         new RichardLCrockerScanner().run2("/Users/vcrocla/src/doc.lar/projects/nate/richardlcrocker.com/batch2/mode5.saints.txt",  "mode5.saints.db.xml");
         new RichardLCrockerScanner().run2("/Users/vcrocla/src/doc.lar/projects/nate/richardlcrocker.com/batch2/mode5.txt",         "mode5.db.xml");
         new RichardLCrockerScanner().run2("/Users/vcrocla/src/doc.lar/projects/nate/richardlcrocker.com/batch2/modes17.txt",       "modes17.db.xml");
         new RichardLCrockerScanner().run2("/Users/vcrocla/src/doc.lar/projects/nate/richardlcrocker.com/batch2/modes28.txt",       "modes28.db.xml");
+
+        new RichardLCrockerScanner().run2("/Users/vcrocla/src/doc.lar/projects/nate/richardlcrocker.com/batch3/offertories127.txt",        "offertories127.db.xml");
+        new RichardLCrockerScanner().run2("/Users/vcrocla/src/doc.lar/projects/nate/richardlcrocker.com/batch3/offertories346.txt",        "offertories346.db.xml");
+        new RichardLCrockerScanner().run2("/Users/vcrocla/src/doc.lar/projects/nate/richardlcrocker.com/batch3/offertories58.txt",        "offertories58.db.xml");
+        new RichardLCrockerScanner().run2("/Users/vcrocla/src/doc.lar/projects/nate/richardlcrocker.com/batch4/alleluias13.txt",        "alleluias13.db.xml");
+        new RichardLCrockerScanner().run2("/Users/vcrocla/src/doc.lar/projects/nate/richardlcrocker.com/batch4/alleluias28.txt",        "alleluias28.db.xml");
+        new RichardLCrockerScanner().run2("/Users/vcrocla/src/doc.lar/projects/nate/richardlcrocker.com/batch4/alleluias4567.txt",        "alleluias4567.db.xml");
+
+        new RichardLCrockerScanner().run2("/Users/vcrocla/src/doc.lar/projects/nate/richardlcrocker.com/batch5/introits-1.txt",        "introits-1.db.xml");
+        new RichardLCrockerScanner().run2("/Users/vcrocla/src/doc.lar/projects/nate/richardlcrocker.com/batch5/introits-26.txt",        "introits-26.db.xml");
+        new RichardLCrockerScanner().run2("/Users/vcrocla/src/doc.lar/projects/nate/richardlcrocker.com/batch5/introits-3.txt",        "introits-3.db.xml");
+        new RichardLCrockerScanner().run2("/Users/vcrocla/src/doc.lar/projects/nate/richardlcrocker.com/batch5/introits-45.txt",        "introits-45.db.xml");
+        new RichardLCrockerScanner().run2("/Users/vcrocla/src/doc.lar/projects/nate/richardlcrocker.com/batch5/introits-78.txt",        "introits-78.db.xml");
+
+        new RichardLCrockerScanner().run2("/Users/vcrocla/src/doc.lar/projects/nate/richardlcrocker.com/batch6-communions/communion-13.txt",        "communion-13.db.xml");
+        new RichardLCrockerScanner().run2("/Users/vcrocla/src/doc.lar/projects/nate/richardlcrocker.com/batch6-communions/communion-24.txt",        "communion-24.db.xml");
+        new RichardLCrockerScanner().run2("/Users/vcrocla/src/doc.lar/projects/nate/richardlcrocker.com/batch6-communions/communion-57.txt",        "communion-57.db.xml");
+        new RichardLCrockerScanner().run2("/Users/vcrocla/src/doc.lar/projects/nate/richardlcrocker.com/batch6-communions/communion-68.txt",        "communion-68.db.xml");
+
+
+        new RichardLCrockerScanner().run2("/Users/vcrocla/src/doc.lar/projects/nate/richardlcrocker.com/batch8-final-mode/final-mode-2.txt",        "final-mode-2.db.xml");
+        new RichardLCrockerScanner().run2("/Users/vcrocla/src/doc.lar/projects/nate/richardlcrocker.com/batch8-final-mode/final-mode-8.txt",        "final-mode-8.db.xml");
+
+        new RichardLCrockerScanner().run2("/Users/vcrocla/src/doc.lar/projects/nate/richardlcrocker.com/batch7-introits-again/introits-1.txt",        "introits-1.db.xml");
+        new RichardLCrockerScanner().run2("/Users/vcrocla/src/doc.lar/projects/nate/richardlcrocker.com/batch7-introits-again/introits-26.txt",        "introits-26.db.xml");
+        new RichardLCrockerScanner().run2("/Users/vcrocla/src/doc.lar/projects/nate/richardlcrocker.com/batch7-introits-again/introits-3.txt",        "introits-3.db.xml");
+        new RichardLCrockerScanner().run2("/Users/vcrocla/src/doc.lar/projects/nate/richardlcrocker.com/batch7-introits-again/introits-45.txt",        "introits-45.db.xml");
+        new RichardLCrockerScanner().run2("/Users/vcrocla/src/doc.lar/projects/nate/richardlcrocker.com/batch7-introits-again/introits-78.txt",        "introits-78.db.xml");
+
+
     }
+
+    public static void main(String[]args) throws FileNotFoundException {
+
+       //put instructions from alreadyRun() here.
+
+    }
+
+
 }
