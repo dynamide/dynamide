@@ -1,0 +1,35 @@
+    .tzPopup {
+        display: none;
+        position: absolute;
+        top:0px;
+        left:0px;
+        padding: 3px;
+        z-index: 2000;
+    }
+    .tzMenuBackground {
+       /* If you set no background-color, then the menu is transparent,
+          except for images within. So include this class to have 
+          a colored background with opacity.*/
+        background-color: #FFD;  
+        opacity: 0.95;
+    }
+    .tzShadow {
+        border: 1px solid #EEE;
+        -moz-box-shadow:    -1px -1px 12px 3px #888;
+        -webkit-box-shadow: -1px -1px 12px 3px #888;
+        box-shadow:         -2px 3px 6px 2px rgba(0,0,0,0.5);
+        /*              h-shadow  v-shadow   blur  spread  color
+         *      where spread is the size, and blur is the length of the blur/fade. 
+         */
+    }
+    
+    h5, h4 {
+          font-family: 'Cutive', 'Arial';
+          font-size: 8pt;
+          padding: 1px;
+          padding-top: 4px;
+          padding-left: 2px;
+          padding-right: 4px;
+      margin: 1px;
+    }
+

@@ -1,0 +1,68 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<META HTTP-EQUIV="Access-Control-Allow-Origin" CONTENT="http://localhost:18080" />
+      <link href="/tagonomy/css/stylesheet.css" rel="stylesheet" type="text/css"/>
+      <link href="/tagonomy/js/jquery-ui/themes/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+      <script src="/tagonomy/js/jquery.min.js"></script>
+      <script src="/tagonomy/js/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+      <script src="/tagonomy/js/tagosuggest.js"></script>
+</head>
+<body >
+<div class="spacebox">
+    <div class="spaceboxcaption" >&nbsp;<span class="shortcut">/1</span>   - spaces</div>
+    <div class="spaceborder"><ol id="spacesOL"></ol></div>
+</div>
+<div>
+  <table id="help" class="systable">
+  <tr><td>?</td><td colspan='2'>show help</td></tr>
+  <tr><td>/</td><td colspan='2'>begin a Tag</td></tr>
+   <tr><td>.</td><td colspan='2'>begin a Command</td></tr>
+   <tr><td>{</td><td colspan='2'>begin a brace context</td></tr>
+   <tr><td>}</td><td colspan='2'>end a brace context</td></tr>
+   <tr><td></td><td class="menu2" style="background-color: lightyellow;" >SPACE</td><td>autocomple-open-brace location</td></tr>
+   <tr><td></td><td class="menu2" style="background-color: lightyellow;" >DIGIT</td> <td>extend autocomplete-open-brace to next left option</td></tr>
+   <tr><td>$</td><td colspan='2'>start a variable for substitution</td></tr>
+   <tr><td>$</td><td colspan='2'>start a variable for substitution</td></tr>
+   <tr><td colspan='2'>SPACE</td><td>perform autocompletion</td></tr>
+   <tr><td></td><td class="menu2" style="background-color: lightyellow;" >DIGIT</td> <td>extend last command DIGIT times</td></tr>
+   <tr><td></td><td class="menu2" style="background-color: lightyellow;" >s</td> <td>save tag</td></tr>
+   <tr><td></td><td class="menu2" style="background-color: lightyellow;" >o</td> <td>open previous object</td></tr>
+   <tr><td></td><td class="menu2" style="background-color: lightyellow;" >e</td> <td>edit previous object</td></tr>
+  </table>
+  </div>
+  
+<br />
+<div style="reset:both;"/>
+<div id="searchbox">
+    <form id="searchForm" action="" name="searchForm" method="POST">
+        <table id="grouper" class="layoutTable" border='0'>
+        <tr>
+            <td></td>
+            <td><input id="space" name="tag" size="40" autocomplete="off" /></td>
+        </tr>
+        <tr>
+            <td width="50%" align="right"><span id="buffer" style="text-align: left;">/fav</span></td>
+            <td>
+              <input id="tag" name="tag" size="80" autocomplete="off" /><span class="spanblock ajaxNotifier"><span id="loading" style="background-color: green;"> >>></span>&nbsp;&nbsp;<span id="loadingDone" style="background-color: green;"> &lt;&lt;&lt;</span></span>
+            </td>
+         </tr>
+         <tr>
+            <td align="right" valign="top"><h1 class="horizontal">}</h1>
+            <div style="margin-top: 30px; color: lightgreen; ">
+            Current Tag&nbsp;&nbsp;&nbsp;</div></td>
+            <td><span id="outEl"></span></td>
+        </tr>
+        </table>
+    </form>
+</div>
+
+<br />
+  <table id="parserStack" class="systable" style="display:none;">
+  <thead>
+  <caption>Parser Stack</caption>
+  </thead>
+  <tr><th class="menu2">position</th><th class="menu2">command</th></tr>
+  </table>
+</body>
+</html>

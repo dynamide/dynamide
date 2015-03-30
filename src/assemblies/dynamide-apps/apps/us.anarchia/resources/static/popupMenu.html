@@ -1,0 +1,85 @@
+<html>
+<head>
+    <link href="/tagonomy/js/jquery-ui/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+    <script src="/tagonomy/js/jquery.min.js"></script>
+    <script src="/tagonomy/js/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+    <script src="/tagonomy/js/jquery-ui-touch-punch.js"></script>
+    
+    <link href="/tagonomy/css/jsonEditor.css" rel="stylesheet" type="text/css"/>
+    <link href="/tagonomy/css/tzPopup.css" rel="stylesheet" type="text/css"/>
+    <script src="/tagonomy/js/tzPopup.js"></script>
+
+    <style type="">
+        .menuPadding {
+            padding: 4px;   
+        }
+        #spanDragNavigator2 {
+            position:fixed; 
+            font-size:8pt; 
+            z-index:2; 
+            left: 50px; 
+            top: 0px;
+            width: 500px;
+            padding: 0.5em; 
+            border: 3px outset lightblue;
+            -moz-box-shadow: -1px -1px 12px 3px #888;
+            -webkit-box-shadow: -1px -1px 12px 3px #888;
+            box-shadow: -1px -1px 12px 3px #888;
+            background-color: #eeeeaa;
+        }
+    </style>
+</head>
+<body>
+<div id="spanDragNavigator2" 
+     class="ui-widget-content"
+     style="position:fixed; font-size:8pt; z-index:2; left: 50px; top: 0px;"
+     contenteditable="false">
+    <b>Demo Menus:</b>
+    <br />Drag me!
+    <span id="btn0" class="instrument shadow3">Text+Icon</span>
+    <span id="btn1" class="instrument shadow3">Horizontal</span>
+    <span id="btn2" class="instrument shadow3">Vertical</span>
+    <span id="btn3" class="instrument shadow3">Vertical/no BG</span>
+    <br />
+    <div id="popup0" class="tzPopup tzMenuBackground instrument tzShadow">
+        My popup
+        <hr />
+        <img src="http://thumb.it/shared/assets/media-kit/thumb_icon_512x512-6be79155512c9703061157db9749da67.png" width="30" height="30" />Item 1
+        <img src="http://thumb.it/shared/assets/media-kit/thumb_icon_512x512-6be79155512c9703061157db9749da67.png" width="30" height="30" />Item 2
+        <img src="http://thumb.it/shared/assets/media-kit/thumb_icon_512x512-6be79155512c9703061157db9749da67.png" width="30" height="30" />Item 2
+        <img src="http://thumb.it/shared/assets/media-kit/thumb_icon_512x512-6be79155512c9703061157db9749da67.png" width="30" height="30" />Item 2
+    </div>
+    <div id="popup1" class="tzPopup tzMenuBackground instrument tzShadow">
+        <img src="http://thumb.it/shared/assets/media-kit/thumb_icon_512x512-6be79155512c9703061157db9749da67.png" width="30" height="30" />
+        <img src="http://thumb.it/shared/assets/media-kit/thumb_icon_512x512-6be79155512c9703061157db9749da67.png" width="30" height="30" />
+        <img src="http://thumb.it/shared/assets/media-kit/thumb_icon_512x512-6be79155512c9703061157db9749da67.png" width="30" height="30" />
+        <img src="http://thumb.it/shared/assets/media-kit/thumb_icon_512x512-6be79155512c9703061157db9749da67.png" width="30" height="30" />
+    </div>
+    <div id="popup2"  class="tzPopup instrument tzShadow">
+        <div class="menuPadding"><img src="http://thumb.it/shared/assets/media-kit/thumb_icon_512x512-6be79155512c9703061157db9749da67.png" width="30" height="30" /></div>
+        <div class="menuPadding"><img src="http://thumb.it/shared/assets/media-kit/thumb_icon_512x512-6be79155512c9703061157db9749da67.png" width="30" height="30" /></div>
+    </div>
+    <div id="popup3"  class="tzPopup">
+        <div class="menuPadding"><img src="http://thumb.it/shared/assets/media-kit/thumb_icon_512x512-6be79155512c9703061157db9749da67.png" width="30" height="30" /></div>
+        <div class="menuPadding"><img src="http://thumb.it/shared/assets/media-kit/thumb_icon_512x512-6be79155512c9703061157db9749da67.png" width="30" height="30" /></div>
+        <div class="menuPadding"><img src="http://thumb.it/shared/assets/media-kit/thumb_icon_512x512-6be79155512c9703061157db9749da67.png" width="30" height="30" /></div>
+        <div class="menuPadding"><img src="http://thumb.it/shared/assets/media-kit/thumb_icon_512x512-6be79155512c9703061157db9749da67.png" width="30" height="30" /></div>
+    </div>
+</div>
+<br />
+<br />
+<br />
+<br />
+<p>
+This is the text, a very long text, a very long text, a very long text, a very long text, a very long text, a very long text it is.
+</p>
+
+<script>
+    makeTzPopUp("#btn0",  "#popup0");
+    makeTzPopUp("#btn1",  "#popup1");
+    makeTzPopUp("#btn2",  "#popup2");
+    makeTzPopUp("#btn3",  "#popup3");
+    $('#spanDragNavigator2').draggable();
+</script>
+</body>
+</html>

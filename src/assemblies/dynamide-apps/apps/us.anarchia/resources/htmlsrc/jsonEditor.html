@@ -1,0 +1,156 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+    <META HTTP-EQUIV="Access-Control-Allow-Origin" CONTENT="http://localhost:18080" />
+    
+    <link href="/tagonomy/js/jquery-ui/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+    <script src="/tagonomy/js/jquery.min.js"></script>
+    <script src="/tagonomy/js/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+    <script src="/tagonomy/js/jquery-ui-touch-punch.js"></script>
+    
+    <link href="/anarchia/css/jsonEditor.css" rel="stylesheet" type="text/css"/>
+    <script src="/anarchia/js/stringUtils.js"></script>
+    <script src="/anarchia/js/keycodes.js"></script>
+    <script src="/anarchia/js/dump.js"></script>
+    <script src="/anarchia/js/jsonEditor.js"></script>
+    <script src="/anarchia/js/jsonEditor-page.js"></script>
+    <script src="/anarchia/js/jsonEditor-saveToJson.js"></script>
+    <!--<script src="/anarchia/js/testJsonEditor.js"></script-->
+
+    <!--see notes in javascript-includes-notes.txt for notes on how to do require() from browser-->
+    
+    <link href='http://fonts.googleapis.com/css?family=Cutive' rel='stylesheet' type='text/css' />
+    
+    <style>
+        body {
+             background-image: url('/tagonomy/img/dimpled-paper.jpg'); 
+             background-color: #cccccc;
+             background-size: 40% 40%;
+             FFbackground-repeat: no-repeat;
+             font-family: Arial;
+             font-size: 8pt;
+        }
+        
+        A        {text-decoration: none; }
+        A:active {text-decoration: underline; }
+        A:hover  {text-decoration: underline;}
+         A.tag        {text-decoration: none; }
+         A.tag:active {text-decoration: underline; }
+         A.tag:hover  {text-decoration: underline;}
+
+        
+       .menuPadding {
+            padding: 8px;
+            opacity: 1.0;
+            background-color: white;
+        }
+        
+        .popupBG {
+           background-color: white; 
+        }
+        
+        h6 {
+           /* make h6 for tiny sub-headings, so no margins top and bottom. */
+           margin: 0;
+        }
+        
+        #popupChildren {
+          font-size: 12pt;   
+        }
+        
+        #popupParent {
+          font-size: 12pt; 
+          border: 0;
+        }
+        #popupTree {
+            width: 600px;  
+            font-family: 'Cutive', 'Arial';
+            font-size: 10pt;
+        }
+        #divDocList {
+            font-family: 'Cutive', 'Arial';
+            font-size: 8pt;
+            line-height: 180%;
+        }
+        .tagname {
+            font-weight: bold;
+            color: brown;
+            font-size: 120%;
+        }
+        
+        
+        .tag {
+          font-family: 'Cutive', 'Arial';
+          font-size: 8pt;
+          display: inline-block;
+          border: 1px solid green;
+          border-radius: 2px;
+          background-color: #FFC;
+          padding-bottom: 4px;
+          padding-top: 4px;
+          padding-left: 2px;
+          padding-right: 4px;
+          margin: 1px;
+        }
+        
+        .tagcurrent {
+            font-family: 'Cutive', 'Arial';
+          font-size: 9pt;
+          display: inline-block;
+          border: 1px solid green;
+          border-radius: 2px;
+          background-color: #CFC;
+          padding-bottom: 4px;
+          padding-top: 4px;
+          padding-left: 4px;
+          padding-right: 4px;
+          margin: 2px;
+            
+        }
+        
+        .menubutton {
+            position:relative; z-index:4; left: 0px; top: 0px;
+        }
+        
+        .verblink {
+            font-family: 'Cutive', 'Arial';
+            color: green;
+            font-weight: normal;
+            font-size: 8pt;
+        }
+        
+        .betweenbuttons {
+            height: 0.5em;   
+        }
+        .smallbtntext{
+            font-size: 8pt;   
+        }
+        
+        .todoformctrl {
+            margin: 8px;
+        }
+
+        
+    </style>
+    
+</head>
+<body>
+
+
+<div id="message"></div>
+
+<!-- This is the main document editable tree area -->
+     <h4>Doc</h4>
+    <div id="SDiv" 
+         contenteditable="false" 
+         style="background-color: White; border: 3px solid orange;" 
+         tab-index="1" >
+    </div>
+    
+    <script>
+    populate('{name:"New Doc"}');
+</script>
+
+</body>
+</html>
+

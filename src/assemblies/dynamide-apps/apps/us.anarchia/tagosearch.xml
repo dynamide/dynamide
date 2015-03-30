@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<dynamideForm>
+
+	<event language="beanshell" name="search_onAction"><![CDATA[
+
+	//////////////////////////////////////
+	/// NOTE: This event returns JSON, as used by the autocomplete widget on the front-end.
+	/////////////////////////////////////
+
+	String notes = event.getQueryParam("notes");
+	String tag = event.getQueryParam("tag");
+	if (StringTools.isEmpty(tag)){
+	    tag = event.getQueryParam("autocomplete");
+	}
+
+	if (event.getQueryParam("saveNotesObject").equalsIgnoreCase("json")){
+	        String notesJSON = event.getQueryParam("notesJSON");
+	        String sres = MongoAutoSuggest.storeNotesObject(tag, notesJSON);
+            System.out.println("---------saveNotes result: "+sres);
+            event.returnSource("{msg: 'OK'}", false);
+		   return;
+	} else if (event.getQueryParam("createNotes").length()>0) {
+            System.out.println("---------createNotes before. tag: "+tag+" notes: "+notes);
+            if (StringTools.notEmpty(tag) && StringTools.notEmpty(notes)){
+                String sres = MongoAutoSuggest.storeNotes(tag, notes);
+                System.out.println("---------createNotes result: "+sres);
+            }
+	} else if (event.getQueryParam("getContent").length()>0) {   //getContent=xhtml
+	    String template = session.getAppFileContent("resources/htmlsrc/content.html");
+	    event.returnSource(template, false);
+	    return;
+	} else if (event.getQueryParam("getNotes").length()>0) {
+		DBCursor cursor = MongoAutoSuggest.getNotes(tag);
+		String sser = "";
+		int count = 0;
+		for (Object item: cursor){
+			sser += JSON.serialize(item);
+		    if (cursor.hasNext()){
+		        sser += ",";
+		    }
+		    count++;
+		}
+		if (count>1){
+		    sser = "[" +sser+ "]";
+		}
+		if (event.getQueryParam("getNotes").equals("json")){
+		    System.out.println("---getNotes,tag:"+tag+",result:"+sser);
+		   event.returnSource(sser, false);
+		   return;
+		}
+		String template = session.getAppFileContent("resources/htmlsrc/search.html");
+		//String rwith = "<div id='inputJson'>"+sser+"</div>";
+		//String pgf = StringTools.searchAndReplaceAll(template, "<div id='inputJson'></div>", rwith);
+	    event.returnSource(template, false);
+	    return;
+	}
+    event.jumpToPage("search");
+  ]]></event>
+
+  <widgets>
+  </widgets>
+   
+  <htmlsrc><![CDATA[
+  $session.getAppFileContent("resources/htmlsrc/tagosearch.html")
+  ]]></htmlsrc>
+
+  <properties>
+    <property name="formAction">
+      <value></value>
+    </property>
+    <property name="formName">
+      <value></value>
+    </property>
+    <property name="name">
+      <value>autocomplete</value>
+      <readOnly>true</readOnly>
+    </property>
+    <property name="title">
+      <value>Autocomplete</value>
+      <intl>1</intl>
+    </property>
+    <property name="type">
+      <value>pagetypes/com.dynamide.form</value>
+      <readOnly>true</readOnly>
+    </property>
+  </properties>
+</dynamideForm>

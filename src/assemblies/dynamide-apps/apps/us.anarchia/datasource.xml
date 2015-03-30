@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<dynamideForm>
+
+  <widgets>
+    <widget id="database1">
+      <properties>
+        <property name="dbname">
+          <value>tagonomy</value>
+        </property>
+        <property name="debugSQL">
+          <value>true</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.rdbdatabase</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="dsAll">
+      <properties>
+        <property name="database">
+          <value>database1</value>
+        </property>
+        <property name="sql">
+          <value></value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.rdbdatasource</value>
+        </property>
+      </properties>
+    </widget>
+  </widgets>
+
+
+  <properties>
+    <property name="formAction">
+      <value></value>
+    </property>
+    <property name="formName">
+      <value></value>
+    </property>
+    <property name="name">
+      <value>datasource</value>
+      <readOnly>true</readOnly>
+    </property>
+    <property name="title">
+      <value>Dynamide JDBC Browser</value>
+      <intl>1</intl>
+    </property>
+    <property name="type">
+      <value>pagetypes/com.dynamide.form</value>
+      <readOnly>true</readOnly>
+    </property>
+    <property name="mode">
+      <value>query</value>
+    </property>
+  </properties>
+
+  <htmlsrc browser="*">
+  <![CDATA[
+
+  ]]></htmlsrc>
+
+</dynamideForm>

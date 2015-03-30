@@ -1,0 +1,162 @@
+body,p { 
+    font-weight: normal; font-size: 18pt; 
+    background-color: #030;  
+    color:white;
+}
+.spanblock {display:inline-block; display:-moz-inline-stack;}
+.ajaxNotifier {
+    margin: 0px; 
+           padding: 0px; 
+           border: 1px solid black;  
+           font-size: 6pt;
+       }
+.suggestRow{
+    font-size: 10pt;
+    margin: 0;
+       padding: 0;
+}
+a {color: yellow;}
+.systable {
+    border: 0px solid gray;
+     padding: 0;
+     border-collapse:separate;
+     empty-cells:hide;
+      margin: 0;
+      border-spacing: 0px;
+}
+.systable  tr {
+     padding: 0;
+     margin: 0;
+     border-spacing: 0px;
+}
+.menu2 {
+     background: blue;
+     background-color: lightyellow;
+     font-weight: bold;
+     color: green; 
+}
+.systable  td {
+     padding: 3px; 
+     border: 4px solid black;
+     border-left: 14px solid black;
+     background-color: #111111;
+      margin: 0;
+      border-spacing: 0px;
+}	
+.systable caption {
+     border: 1px solid black;
+}
+.systable td:first-child {
+     background: lightyellow;
+     font-weight: bold;
+     color: black;
+     border-spacing: 0px;
+}
+#searchForm {
+    padding: 0px; 
+    margin: 0px;
+    vertical-align: center;
+}
+#help {
+    float: right;
+    right: 0;
+    top: 0;
+    z-index:1;
+    position: absolute;
+}
+#buffer{
+    font-size: 10pt;
+    font-family: Georgia, Times;
+     text-align: right;  
+     margin: 0;
+     padding: 0;
+     border-spacing: 0px;
+     vertical-align: middle;
+     border-width: 0px;
+}
+#searchbox {
+     text-align: center;
+     border-width: 0px;
+}
+#tag{
+     font-size: 10pt;
+     font-family: Georgia, Times;
+     padding: 0px; 
+     border-spacing: 0px;
+     vertical-align: middle;
+     border-width: 0px;
+     margin-left: -3px;
+}
+#outEl {
+    vertical-align: top;
+    margin: 0;
+     padding: 0;
+     border-width: 0px;
+     text-align: left;
+     position: relative;
+     
+}
+#icenter {
+    text-align: center;
+    width: 200px;
+    border: 1px solid blue;
+}
+.spacebox {
+    border: 1px solid blue;  
+    display: inline-block;
+}
+.spaceboxcaption {
+    display: inline-block;
+    color: black;
+    background-color: darkgray;
+    width: 100%; 
+    border-bottom: 1px solid blue;
+}
+.shortcut {
+   color: brown; font-size: 1.2em;   
+}
+
+ol, li {
+    list-style-position: inside;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.spaceborder {
+    margin: 10px;   
+}
+.fill-height {
+    background-color: #0ff;
+    width: 200px;    
+    position: absolute;
+    top: 0;
+    bottom: 0;
+}
+
+.rotM90 {
+    transform:rotate(90deg);
+    -ms-transform:rotate(90deg); /* IE 9 */
+    -webkit-transform:rotate(90deg); /* Opera, Chrome, and Safari */
+}
+
+h1.horizontal {
+    font-size: 48pt; 
+    color: green; 
+    width:0px;
+    height: 0px;
+    margin: 0;
+    padding: 0;
+    transform:rotate(90deg);
+    -ms-transform:rotate(90deg); /* IE 9 */
+    -webkit-transform:rotate(90deg); /* Opera, Chrome, and Safari */
+}
+.highlight {
+    background-color: lightgreen;  
+    color: green;
+}
+/*Useful for outlining a light font on a light background*/
+#element {
+    color: yellow;
+    text-shadow: -1px 0 black, 0 1px black, -1px 0 black, 0 1px black;
+}

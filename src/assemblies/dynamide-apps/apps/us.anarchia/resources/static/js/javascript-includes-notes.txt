@@ -1,0 +1,17 @@
+<!-- I tried RequireJS from 
+           http://requirejs.org/docs/download.html
+             but it caches stuff so badly that I had to restart
+             dynamide server to get js updates, and even changing the included filename
+             still went to retrieve the old file.  Might be a problem in dynamide caching, 
+             but just using script tags never caused a problem before, so not using this now.
+         
+         I then tried require.js from 
+           http://pixelsvsbytes.com/blog/2013/02/js-require-for-browsers-better-faster-stronger/
+             and it works thusly, but of course makes everything a module, so I'd have to 
+             start using export.foo...
+                <script src="/tagonomy/js/require.js"></script>
+                <script>
+                    var mymod = require('/tagonomy/js/jsonEditor.js');
+                </script>
+        So for now, it is back to script tags. :)
+    -->

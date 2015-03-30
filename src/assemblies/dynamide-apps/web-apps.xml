@@ -19,4 +19,12 @@
         <URI>/dynamide/jdbc-browser</URI>
         <APPNAME>jdbc-browser</APPNAME>
     </app>
+    <app>
+        <URI>/tagonomy</URI>
+        <APPNAME>org.tagland</APPNAME>
+    </app>
+    <app>
+        <URI>/anarchia</URI>
+        <APPNAME>us.anarchia</APPNAME>
+    </app>
 </web-apps>

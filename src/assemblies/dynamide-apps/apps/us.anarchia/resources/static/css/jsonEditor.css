@@ -1,0 +1,163 @@
+body, td {
+    font-size: 8pt;    
+}
+button {
+    fooborder: 1px solid green;
+    margin: 0px;
+    padding: 0px;
+}
+#current {
+    font-family: "American Typewriter";
+    border: 1px solid green;
+    padding: 1px;
+}
+#message {
+    color: orange;
+}
+
+.arrayTABLE {
+      border: 1px solid purple; 
+      padding: 1px;
+      margin: 4px;
+      background-color: #aFF;
+    
+}
+.objectTABLE {
+      border: 1px solid green; 
+      padding: 1px;
+      margin: 4px;
+      background-color: #efe;
+}
+.nameTD {
+      border: 1px dotted tan; 
+      padding: 1px;
+      margin: 1px;
+}
+.valueTD {
+      border: 1px dotted lightblue; 
+      padding: 1px;
+      margin: 1px;
+      white-space: pre;
+}
+.arrayTD {
+      border: 1px dotted red; foo: lightgreen; 
+      padding: 1px;
+      margin: 1px;
+}
+
+
+.text {
+    font-size: 8pt;   
+}
+
+.selected { 
+      border: 1px solid red;
+      background-color: yellow; 
+}
+.selected td { 
+}
+
+.quoted { 
+      border-left: 4px dotted blue;
+}
+.opacityDense {
+    opacity: 0.95;
+}
+.opacityLight {
+    opacity: 0.2;
+}
+.opacityOpaque {
+    opacity: 1.0;
+}
+.opacityClear {
+    opacity: 0.0;
+}
+#spanDragNavigator {
+    width: 500px;
+      padding: 0.5em; 
+      background-color: lightgreen; 
+      
+      border: 3px outset lightblue;
+      -moz-box-shadow: -1px -1px 12px 3px #888;
+      -webkit-box-shadow: -1px -1px 12px 3px #888;
+      box-shadow: -1px -1px 12px 3px #888;
+      fffbackground-color: #eeeeaa;
+      
+}
+
+.ui-widget-content {
+    background-color: #eeeeaa;
+}
+#SDiv {
+    border: 2px solid orange;
+    display: inline-block;
+}
+#theInput {
+   position: absolute;
+   font-size: 8pt;
+   display:inline-block;
+   top: 6px;
+   left: 10px;
+   width: 95%;
+   height: auto;
+   color: black;
+   background-color: white;
+}
+
+/* ********************************************* */
+.menuKeyLetter {
+    font-weight: bold; color: blue;
+}
+.instrument {
+     font-size: 8pt; 
+     color: darkgreen; 
+     font-weight: normal; border: 1px solid green;  
+     margin: 0px; 
+     padding: 0px; 
+     padding-left: 6px; 
+     padding-right: 6px; 
+     font-family: "American Typewriter","Courier New", Courier;
+}
+
+.shadow{
+    -moz-box-shadow: -5px -5px 5px #888;
+    -webkit-box-shadow: -5px -5px 5px #888;
+    box-shadow: -5px -5px 5px #888;
+}
+.shadow2{
+    -moz-box-shadow: -1px -1px 12px 3px #888;
+    -webkit-box-shadow: -1px -1px 12px 3px #888;
+    box-shadow: -1px -1px 12px 3px #888;
+}
+.shadow3{
+    -moz-box-shadow: -2px -2px 4px 1px #AAA;
+    -webkit-box-shadow: -2px -2px 4px 1px #AAA;
+    box-shadow: -2px -2px 4px 1px #AAA;
+    /*                 x-pos, y-pos, shadow-spread/blur, outer-border-extent */
+}
+.shadow4{
+    -moz-box-shadow: -1px -1px 2px 1px #AAA;
+    -webkit-box-shadow: -1px -1px 2px 1px #AAA;
+    box-shadow: -1px -1px 1px 1px #AAA;
+}
+.pointer {
+    cursor: pointer;
+}
+#jsonOutput {
+    white-space: pre;
+    max-width: 600px;
+    min-width: 300px;
+    min-height: 400px;
+    border: 2px solid orange; 
+    margin: 5px; 
+    padding: 5px; 
+    float: right; 
+    background-color: lightyellow;  
+}
+
+#outEl {
+    font-size: 8pt;   
+}
+
+
+

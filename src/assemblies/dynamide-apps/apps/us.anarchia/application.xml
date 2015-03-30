@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<application>
+  <fields href="fielddefs.xml"/>
+  <event language="beanshell" name="application_onImport"><![CDATA[
+    import com.dynamide.*;
+    import com.dynamide.util.*;
+    import com.dynamide.Widget;
+    import com.dynamide.datatypes.*;
+    import com.nebhale.jsonpath.JsonPath;
+    import us.anarchia.db.UserRESTHelper;
+  ]]></event>
+
+  <event language="beanshell" name="application_queryNextPage"><![CDATA[
+  	  //For now, skip login, while we debug other pages:
+  	  return;
+  ]]></event>
+
+  <event language="beanshell" name="application_onAction"><![CDATA[
+        String method = event.request.getMethod();
+        
+        if (method.equals("POST")){
+            UserRESTHelper backend = new UserRESTHelper();
+            backend.setup("anarchia", "bob", "MangoDog");
+            
+            String reqbody = event.getRequestBody();
+            //event.returnSource("{\"msg\":\""+reqbody+"\"}", false, "application/json");
+            //return;
+            
+            System.out.println("\n\n=================== attempting to POST "+reqbody);
+            String res = backend.post("anarchia",
+                         "images",
+                          reqbody);
+            event.returnSource(res, false, "application/json");
+            return;
+        }
+        
+        String mock = event.getQueryParam("test");
+	    if (mock!=null&&mock.length()>0){
+	        if (mock.equals("mongo")){
+	            UserRESTHelper backend = new UserRESTHelper();
+	            backend.setup("anarchia", "bob", "MangoDog");
+	            try {
+                    String query = "{ $query: {'author':'laramie'}, $orderby: { sequence : 1 } }";
+                    String json = backend.getAll("anarchia", "images", query, 0, 1000);
+                    System.out.println("GETALL("+query+"): "+json);
+                    event.returnSource(json,
+	                               false, 
+                                   "application/json");
+	            } finally {
+	                backend.close();
+	            }
+	            return;
+	        }
+	        
+	    }
+      	return;
+  ]]></event>
+
+
+
+  <pages>
+  	<page name="jsonEditor"></page>
+  </pages>
+  <properties>
+    <property name="applicationID">
+      <value>us.anarchia</value>
+    </property>
+    <property name="defaultLanguage">
+      <value>en-us</value>
+    </property>
+    <property name="onImport" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value>application_onImport</value>
+    </property>
+    <property name="onAction" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value></value>
+    </property>
+    <property name="poolable">
+      <value>true</value>
+    </property>
+    <property name="title">
+      <value>Anarchia Project</value>
+    </property>
+    <property name="type">
+      <readOnly>true</readOnly>
+      <value>com.dynamide.Session</value>
+    </property>
+  </properties>
+</application>

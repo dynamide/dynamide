@@ -1,0 +1,8 @@
+This dir, src/apps/org.tagonomy/, was cloned and pruned from CVS: doc.lar/projects/tagonomy/src/com.tagonomy.app and most files were removed, including build instructions on JsonPath, and MongoAutoSuggest.  
+
+Further, there are two git projects that are related, earlier attempts in various languages: 
+  https://github.com/tagland/tagland
+  https://github.com/tagland/anarchia
+
+This latest code, as of 2015-01-06, is forked from org.tagonomy in this same apps folder under dynamide.
+It is using anarchia, going to my REST wrapper for MongoDB.
