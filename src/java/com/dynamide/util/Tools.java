@@ -934,6 +934,29 @@ public class Tools {
     }
 
 
+    enum USER_INPUT_SAFETY_LEVEL {STRICT,QUOTES_OK,SQL}
+
+    public static void safe(String instring)
+    throws Exception {
+        safe(instring, USER_INPUT_SAFETY_LEVEL.STRICT);
+    }
+
+    public static void safe(String instring, USER_INPUT_SAFETY_LEVEL level)
+    throws Exception {
+        if (instring == null || instring.length()==0){
+            return;
+        }
+        if (instring.indexOf('\'')>=0){
+            throw new Exception("User input invalid.  Single quotes not allowed");
+        }
+        if (instring.indexOf('"')>=0){
+            throw new Exception("User input invalid.  Quotes not allowed");
+        }
+        if (instring.indexOf(';')>=0){
+            throw new Exception("User input invalid.  Semicolon not allowed");
+        }
+    }
+
 
 
 
