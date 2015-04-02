@@ -1,0 +1,78 @@
+<html>
+<head>
+    <script src="js/handlebars-v3.0.0.js"></script>
+    <script src="js/jquery-2.1.3.min.js"></script>
+    <link href="/tagonomy/js/jquery-ui/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+    <script src="/tagonomy/js/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+    <script src="/tagonomy/js/jquery-ui-touch-punch.js"></script>
+    <link href="/anarchia/css/anarchia.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+
+<div style="background-color: white;" id='nextidDiv'>nextid here</div>
+
+<div id='panelDiv'>panel here</div>
+
+<input type="file" id="file-input" /><br />
+<textarea id="file-content" style="background-color: white;" rows="20" cols="80"></textarea>
+<script src="js/readLocalFile.js"></script>
+<script>
+function displayContents(contents) {
+  var element = document.getElementById('file-content');
+  var obj = JSON.parse(contents);
+  obj.id = $('#nextidDiv').html();
+  var contents2 = JSON.stringify(obj, null, "    ");
+  console.log(contents2);
+  element.innerHTML = contents2;
+}
+document.getElementById('file-input').addEventListener('change', readLocalFile, false);
+</script>
+
+<button onclick="saveDoc()">POST</button>
+
+</body>
+<script>
+    function getNextID(){
+        // AJAX CALL HERE :
+       console.log('documentReady');
+       $.get('/anarchia?qtype=nextid&collection=images',
+          function(data) {
+            $('#nextidDiv').html(data.nextid);
+          }
+       );
+    }
+    
+    function saveDoc(){
+       var postdata = $('#file-content').html();
+       console.log('postdata:'+postdata);
+       $.ajax
+            ({
+              type: "POST",
+              url: "/anarchia/images",
+              dataType: 'json',
+              contentType: 'text/plain',    //if you set to json, it sends OPTIONS first.  If you don't set, it tries form encoded, which doesn't appear in event.getRequestBody().
+              async: false,
+              headers: {
+                "Authorization": "Basic " + btoa("laramie" + ":" + "ecotel33")
+              },
+              data: postdata,
+              success: function (data){
+                console.log('data:'+JSON.stringify(data));
+                alert('post complete');
+              },
+              error: function (data){
+                console.log('data:'+JSON.stringify(data));
+                alert('post failed');
+              }
+            });
+        getNextID();    
+    }
+    
+    function documentReady(){
+       getNextID();
+    }
+
+    $(document).ready(documentReady);
+</script>
+</html>
+

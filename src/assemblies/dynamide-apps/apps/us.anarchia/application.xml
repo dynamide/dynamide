@@ -9,41 +9,159 @@
     import com.dynamide.datatypes.*;
     import com.nebhale.jsonpath.JsonPath;
     import us.anarchia.db.UserRESTHelper;
+    import com.mongodb.util.JSON;
+    import org.json.*;
   ]]></event>
 
   <event language="beanshell" name="application_queryNextPage"><![CDATA[
-  	  //For now, skip login, while we debug other pages:
-  	  return;
+  	  return;   //For now, skip login, while we debug other pages.
   ]]></event>
 
   <event language="beanshell" name="application_onAction"><![CDATA[
-        String method = event.request.getMethod();
-        
-        if (method.equals("POST")){
+        //============== getBackend() ==========================
+        UserRESTHelper getBackend(){    
             UserRESTHelper backend = new UserRESTHelper();
             backend.setup("anarchia", "bob", "MangoDog");
+            return backend;
+        }
+        
+        //============== getNextID() ==========================
+        String getNextID(){
+            backend = getBackend();
+            String payload = backend.get("anarchia",
+                                         "idservice",
+                                         "{'collection':'images'}"); 
+            String nextID = "";
+            Object json = new JSONTokener(payload).nextValue();
+            if (json instanceof JSONObject) {
+                JSONObject jsonobject = new JSONObject(payload);
+                 nextID = ""+jsonobject.get("nextID");
+            } else if (json instanceof JSONArray) {
+                JSONArray jsonarray = new JSONArray(payload);
+                nextID = ""+jsonarray.get(0).get("nextID");
+            }
+            int iNextID = Integer.parseInt(nextID);
+            iNextID++;
+            nextID = ""+iNextID; 
+            idJson = JSON.parse(payload);
+            idJson.put("nextID", nextID);
             
+            backend.put("anarchia",
+                         "idservice",
+                         idJson.toString(), 
+                         false, 
+                         false);  
+
+            return nextID;
+        }
+        
+        String getIDBase(String collection){
+            return "http://anarchia.us/id/"+collection+"/";
+        }
+        
+        String method = event.request.getMethod();
+        
+        //============== getJSONArray() ==========================
+        getJSONArray(String payload){
+            Object json = new JSONTokener(payload).nextValue();
+            System.out.println("===========================\ngetJSONArray payload: "+payload);
+            System.out.println("===========================\ngetJSONArray json: "+json);
+            if (json instanceof JSONArray) {
+                JSONArray jsonarray = new JSONArray(payload);
+                return jsonarray;
+            }
+            return null;
+        }
+        getJSONObject(String payload){
+            Object json = new JSONTokener(payload).nextValue();
+            System.out.println("===========================\ngetJSONArray payload: "+payload);
+            System.out.println("===========================\ngetJSONArray json: "+json);
+            if (json instanceof JSONObject) {
+                JSONObject jsonobject = new JSONObject(payload);
+                return jsonobject;
+            }
+            return null;
+        }
+        //============== dispatch POSTs ==========================
+        
+        if (method.equals("POST")){
+            backend = getBackend();
             String reqbody = event.getRequestBody();
-            //event.returnSource("{\"msg\":\""+reqbody+"\"}", false, "application/json");
-            //return;
+            System.out.println("\n\n\n\n======================== POST \n"+reqbody);
+            String res = "";
+            String path = session.getRequestPath();
             
-            System.out.println("\n\n=================== attempting to POST "+reqbody);
-            String res = backend.post("anarchia",
+            if (path.equals("/anarchia/images")){
+            
+                res = backend.post("anarchia",
                          "images",
                           reqbody);
+            } else if (path.equals("/anarchia/idservice")){
+                res = backend.post("anarchia",
+                         "idservice",
+                          reqbody);
+            } else if (path.equals("/anarchia/stories")){
+                res = backend.post("anarchia",
+                         "stories",
+                          reqbody);
+            }
+            
             event.returnSource(res, false, "application/json");
             return;
         }
         
-        String mock = event.getQueryParam("test");
-	    if (mock!=null&&mock.length()>0){
-	        if (mock.equals("mongo")){
-	            UserRESTHelper backend = new UserRESTHelper();
-	            backend.setup("anarchia", "bob", "MangoDog");
+        //============== dispatch GETs ==========================
+        
+        String qtype = event.getQueryParam("qtype");
+	    if (qtype!=null&&qtype.length()>0){
+	            backend = getBackend();
 	            try {
-                    String query = "{ $query: {'author':'laramie'}, $orderby: { sequence : 1 } }";
-                    String json = backend.getAll("anarchia", "images", query, 0, 1000);
-                    System.out.println("GETALL("+query+"): "+json);
+	                String json = "";
+	                String query = "";
+	                String collection = event.getQueryParam("collection");
+	                Tools.safe(collection);
+                            
+	                if (qtype.equals("idservice")){
+	                    query = "{'collection':'"+collection+"'}";  
+                        json = backend.get("anarchia", "idservice", query);
+                    } else if (qtype.equals("nextid")){
+                       json = ("{'nextid':'"+getIDBase(collection)+getNextID()+"'}").replace('\'', '"');
+                    } else if (qtype.equals("nextidnumber")){
+                       json = ("{'nextid':'"+getNextID()+"'}").replace('\'', '"');
+                    } else if (qtype.equals("author")){
+	                    String author = event.getQueryParam("author");
+	                    Tools.safe(author);
+                        //query = "{ $query: {'author':'"+author+"'}, $orderby: { sequence : 1 } }";  if you use this, no docs without sequence are returned.
+                        query = "{ $query: {'author':'"+author+"'} }";
+                        json = backend.getAll("anarchia", "images", query, 0, 1000);
+                    } else if (qtype.equals("story")){
+	                    String storyid = event.getQueryParam("storyid");
+	                    Tools.safe(storyid);
+                        query = "{'id':'"+storyid+"'}";
+                        json = backend.get("anarchia", "stories", query);
+                    } else if (qtype.equals("bystory")){
+                        // THIS IS AN AGGREGATE FUNCTION: it does two queries.
+                        // FIRST is to get the story by id, which has in it a list of panels.
+	                    String storyid = event.getQueryParam("storyid");
+	                    Tools.safe(storyid);
+                        query = "{'id':'"+storyid+"'}";
+                        json = backend.get("anarchia", "stories", query);
+                        jsonobject = getJSONObject(json);
+                        if (jsonobject==null){
+                        event.returnSource("{\"error\":\"jsonobject was null\"}",
+	                               false, 
+                                   "application/json");
+                            return;
+                        }
+                        //NOW hit mongo again with all the ids to retrieve the panels:
+                        query = "{ id : { $in : "+jsonobject.get("panels").toString()+" } }";
+                        json = backend.getAll("anarchia", "images", query);
+                    } else if (qtype.equals("images")){
+                        query = "{ id : { $in : ['http://anarchia.us/id/images/53', 'http://anarchia.us/id/images/54'] } }";
+                        json = backend.getAll("anarchia", "images", query);
+                    }
+                    
+                    System.out.println("GET("+query+"): "+json);
                     event.returnSource(json,
 	                               false, 
                                    "application/json");
@@ -51,8 +169,6 @@
 	                backend.close();
 	            }
 	            return;
-	        }
-	        
 	    }
       	return;
   ]]></event>

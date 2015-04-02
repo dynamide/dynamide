@@ -6,11 +6,7 @@
     <bookmark url="file://$PROJECT_DIR$/src/java/com/dynamide/Persistent.java" line="399" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c4dc66d8-2cb8-4d1f-a717-762703684739" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/mongo-2.7.3.jar" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/com/dynamide/util/Tools.java" afterPath="$PROJECT_DIR$/src/java/com/dynamide/util/Tools.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="c4dc66d8-2cb8-4d1f-a717-762703684739" name="Default" comment="" />
     <ignored path="dynamide.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/out/" />

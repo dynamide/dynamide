@@ -3,53 +3,12 @@
     <script src="js/handlebars-v3.0.0.js"></script>
     <script src="js/jquery-2.1.3.min.js"></script>
     <link href="/tagonomy/js/jquery-ui/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-    <!--<script src="/tagonomy/js/jquery.min.js"></script>-->
     <script src="/tagonomy/js/jquery-ui/ui/minified/jquery-ui.min.js"></script>
     <script src="/tagonomy/js/jquery-ui-touch-punch.js"></script>
+    <link href="/anarchia/css/anarchia.css" rel="stylesheet" type="text/css"/>
+    
     <style type="">
-    body {
-        background-color: black;   
-    }
-    .author {
-        color: green;
-        font-weight: bold;
-        font-style: italic;
-    }
-    .caption {
-        text-align: center;  
-        font-style: italic;
-    }
-    .panel {
-        border: 1px solid green;
-        margin: 2px;
-        padding: 2px;
-        width: 420;
-        background-color: lightyellow;
-    }
-    .panel img {
-        border: 1px solid gray;
-        margin: 10px;
-    }
-    .panel-title {
-        font-size: 160%;
-        padding-left: 10px;
-        padding-top: 8px;
-    }
-    .panel-links {
-        font-size: 70%;
-        text-align: right;
-        width: 100%;
-    }
-    .menu-buttons a {
-        color: green;
-        display: inline-block;
-        border-radius: 3px;
-        border: 2px solid lightblue;
-        background-color: lightgreen;
-        margin: 4px;
-        padding: 10px;
-        
-    }
+   
     
 .entry-content pre, .comment-content pre {
   border: 1px solid #222;
@@ -89,18 +48,22 @@
     </table>
     <img src="{{img}}" width="400"/><br />
     <div class="caption">{{{text.caption}}}</div>
-    <div class="panel-links">{{sequence}} <a href="javascript:alert('ID: {{_id.$oid}}');">id</a> <a href="{{img}}">link</a></div>
+    <div class="panel-links">{{sequence}} <a href="javascript:alert('ID: {{id}}');">id</a> <a href="javascript:alert('ID: {{_id.$oid}}');">_id</a> <a href="{{img}}">link</a></div>
     </div>
 </script>
 
+<div style="background-color: white;" id='nextidDiv'>
+<a href='javascript:getByStory("http://anarchia.us/id/stories/1")'>getByStory('http://anarchia.us/id/stories/1')</a><br />
+<a href='javascript:getByStory("http://anarchia.us/id/stories/2")'>getByStory('http://anarchia.us/id/stories/2')</a><br />
+</div>
 
 <div class="entry-content">
-<pre>root@2daygeek [~]# <span style="color:#fff000">java -version</span>
-java version "1.7.0_72"
-Java(TM) SE Runtime Environment (build 1.7.0_72-b14)
-Java HotSpot(TM) 64-Bit Server VM (build 24.72-b04, mixed mode)
+<pre><span style="color:#fff000">laramie@localhost [~/example-apis]</span>
+curl -u laramie:cooper1631 -p  "http://localhost:18080/anarchia?qtype=nextidnumber"
+curl -u laramie:cooper1631 -p  "http://localhost:18080/anarchia?qtype=nextid&collection=images"
 </pre>
 </div>
+
 
 </body>
 <script>
@@ -161,9 +124,9 @@ Java HotSpot(TM) 64-Bit Server VM (build 24.72-b04, mixed mode)
         }
     }
     
-    function documentReady(){
-       // AJAX CALL HERE :
-       $.get('/anarchia?test=mongo',
+    function getByAuthor(author){
+        // AJAX CALL HERE :
+       $.get('/anarchia?qtype=author&author='+author,
           function(data) {
               gPanels = data;
               if (data.length && data.length >-1){
@@ -174,6 +137,26 @@ Java HotSpot(TM) 64-Bit Server VM (build 24.72-b04, mixed mode)
               }
           }
        );
+    }
+    
+    function getByStory(storyid){
+        // AJAX CALL HERE :
+       $.get('/anarchia?qtype=bystory&storyid='+storyid,
+          function(data) {
+              console.log('getByStory data: '+JSON.stringify(data));
+              gPanels = data;
+              if (gPanels.length && gPanels.length >-1){
+                  gPanelIndex = 0;
+                  renderTemplate(gPanels[0]);
+                  console.log('panels: '+JSON.stringify(gPanels));
+              }
+          }
+       );
+    }
+    
+    function documentReady(){
+        //getByAuthor('laramie');
+        getByStory('http://anarchia.us/id/stories/1');
     }
 
     $(document).ready(documentReady);
