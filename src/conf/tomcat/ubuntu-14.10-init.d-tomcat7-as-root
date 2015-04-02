@@ -1,0 +1,46 @@
+#!/bin/sh
+#
+# /etc/init.d/tomcat7 -- startup script for the Tomcat 7 servlet engine
+#
+### BEGIN INIT INFO
+# Provides:          tomcat7
+# Required-Start:    $local_fs $remote_fs $network
+# Required-Stop:     $local_fs $remote_fs $network
+# Should-Start:      $named
+# Should-Stop:       $named
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start Tomcat.
+# Description:       Start the Tomcat servlet engine.
+### END INIT INFO
+
+set -e
+
+RETVAL=$?
+
+JAVA_OPTS="-Djava.awt.headless=true -Xmx650M -Xms128M -Dfile.encoding=UTF-8"
+export DYNAMIDE_HOME=/home/dynamide/dynamide
+export DYNAMIDE_TOMCAT=/home/dynamide/tomcat7
+CATALINA_HOME=/home/dynamide/apache-tomcat-7.0.59
+CATALINA_BASE=/home/dynamide/apache-tomcat-7.0.59
+
+case "$1" in
+ start)
+        if [ -f $DYNAMIDE_TOMCAT ]; then
+	        echo $"Starting Tomcat"
+            /bin/su dynamide $DYNAMIDE_TOMCAT start
+        fi
+	;;
+ stop)
+        if [ -f $CATALINA_HOME/bin/shutdown.sh ]; then
+	        echo $"Stopping Tomcat"
+            /bin/su dynamide $DYNAMIDE_TOMCAT stop
+        fi
+ 	;;
+ *)
+ 	echo $"Usage: $0 {start|stop}"
+	exit 1
+	;;
+esac
+
+exit $RETVAL
