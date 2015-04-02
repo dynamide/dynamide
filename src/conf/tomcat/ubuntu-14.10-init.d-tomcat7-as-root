@@ -19,6 +19,7 @@ set -e
 RETVAL=$?
 
 JAVA_OPTS="-Djava.awt.headless=true -Xmx650M -Xms128M -Dfile.encoding=UTF-8"
+export DYNAMIDE_HOMEDIR=/home/dynamide
 export DYNAMIDE_HOME=/home/dynamide/dynamide
 export DYNAMIDE_TOMCAT=/home/dynamide/tomcat7
 CATALINA_HOME=/home/dynamide/apache-tomcat-7.0.59

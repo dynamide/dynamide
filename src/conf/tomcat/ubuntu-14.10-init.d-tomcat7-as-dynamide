@@ -26,8 +26,9 @@
 set -e
 
 JAVA_OPTS="-Djava.awt.headless=true -Xmx650M -Xms128M -Dfile.encoding=UTF-8"
+export DYNAMIDE_HOMEDIR=/home/dynamide
+export DYNAMIDE_PID_DIR="$DYNAMIDE_HOMEDIR/pids"
 export DYNAMIDE_HOME=/home/dynamide/dynamide
-export DYNAMIDE_PID_DIR="$DYNAMIDE_HOME/pids"
     
 PATH=/bin:/usr/bin:/sbin:/usr/sbin
 NAME=tomcat7
