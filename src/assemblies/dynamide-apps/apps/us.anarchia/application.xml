@@ -190,7 +190,7 @@
                         || path.equals("/anarchia/")){
                         event.sendRedirect("/anarchia/panels.html");
                     }
-                    String res = "[]";
+                    String res = "[{\"source\":\""+path+"\"}]";
                     if (path.equals("/anarchia/images")){
                         res = backend.getAll("anarchia",
                                  "images",

@@ -129,6 +129,11 @@
               console.log('getByStory data: '+JSON.stringify(data));
               gPanels = data;
               if (gPanels.length && gPanels.length >-1){
+                  var imgs = [];
+                  for (var i=0; i<gPanels.length; i++) {
+                    imgs.push(gPanels[i].img); 
+                  }
+                  preloadPictures(imgs);
                   gPanelIndex = 0;
                   renderTemplate(gPanels[0]);
                   console.log('panels: '+JSON.stringify(gPanels));
@@ -143,6 +148,41 @@
     }
 
     $(document).ready(documentReady);
+    
+    
+var preloadPictures = function(pictureUrls, callback) {
+    var i,
+        j,
+        loaded = 0;
+
+    for (i = 0, j = pictureUrls.length; i < j; i++) {
+        (function (img, src) {
+            img.onload = function () {                               
+                if (++loaded == pictureUrls.length && callback) {
+                    callback();
+                }
+            };
+
+            // Use the following callback methods to debug
+            // in case of an unexpected behavior.
+            img.onerror = function () {};
+            img.onabort = function () {};
+
+            img.src = src;
+        } (new Image(), pictureUrls[i]));
+    }
+};
+
+preloadPictures(['http://foo/picture.bar', 'http://foo/picture.bar', 'http://foo/picture.bar', 'http://foo/picture.bar'], function(){
+    console.log('a');
+});
+
+preloadPictures(['http://foo/picture.bar', 'http://foo/picture.bar', 'http://foo/picture.bar', 'http://foo/picture.bar'], function(){
+    console.log('b');
+});
+
+
+
 </script>
 </html>
 
