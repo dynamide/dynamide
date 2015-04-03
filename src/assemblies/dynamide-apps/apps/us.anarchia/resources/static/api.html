@@ -1,0 +1,100 @@
+<html>
+<head>
+    <script src="js/handlebars-v3.0.0.js"></script>
+    <script src="js/jquery-2.1.3.min.js"></script>
+    <link href="/tagonomy/js/jquery-ui/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+    <script src="/tagonomy/js/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+    <script src="/tagonomy/js/jquery-ui-touch-punch.js"></script>
+    <link href="/anarchia/css/anarchia.css" rel="stylesheet" type="text/css"/>
+    
+    <style type="">
+   body {
+        background-color: black;   
+        color: white;
+    }
+   
+    
+.entry-content pre, .comment-content pre {
+  border: 1px solid #222;
+  background: #444;
+  border-radius: 0px;
+  color: #fff;
+  font-family: Consolas, Monaco, Lucida Console, monospace;
+  font-size: 13px;
+  line-height: 1.514285714;
+  margin: 24px 0;
+  overflow: auto;
+  padding: 12px;
+}
+
+    </style>
+</head>
+<body>
+
+<div style="color:#fff000; font-size: 24pt;padding: 20px;">[~/example-apis]</div>
+
+<div class="entry-content">
+<pre><span style="color:#fff000">johndoe@localhost [~]</span>
+curl -u johndoe:password99 -p  "http://li257-17.members.linode.com/anarchia?qtype=nextidnumber"
+curl -u johndoe:password99 -p  "http://li257-17.members.linode.com/anarchia?qtype=nextid&collection=images"
+</pre>
+</div>
+<p>In fact, there is a script to do this for you, which you can check out.  Then you just run:</p>
+<div class="entry-content">
+<pre>cd $ANARCHIA_HOME/src/json
+<span style="color:#fff000">johndoe@localhost [~/anarchia/src/json]</span>
+./get.bash '/anarchia?qtype=author&author=laramie'
+./get.bash '/anarchia?qtype=story&amp;storyid=http://anarchia.us/id/stories/1'
+./get.bash '/anarchia/stories'
+./get.bash '/anarchia/images'
+
+</pre>
+
+<p>Here are the POST endpoints:</p>
+
+<pre>
+POST /anarchia/images   {cafe.json}
+POST /anarchia/stories  {story1.json}
+POST /anarchia/idservice {id-service.json}
+</pre>
+</div>
+
+<p>Here is an example javascript for embedding in a web page:</p>
+<textarea class="" cols="100" rows="30">
+<script>
+   
+    function getByAuthor(author){
+        // AJAX CALL HERE :
+       $.get('/anarchia?qtype=author&author='+author,
+          function(data) {
+              if (data.length && data.length >-1){
+                  console.log('getByAuthor data: '+JSON.stringify(gPanels));
+              }
+          }
+       );
+    }
+    
+    function getByStory(storyid){
+        // AJAX CALL HERE :
+       $.get('/anarchia?qtype=bystory&storyid='+storyid,
+          function(data) {
+              if (data.length && data.length >-1){
+                console.log('getByStory data: '+JSON.stringify(data)); 
+              }
+          }
+       );
+    }
+    
+    function documentReady(){
+        getByAuthor('laramie');
+        getByStory('http://anarchia.us/id/stories/1');
+    }
+
+    $(document).ready(documentReady);
+</script>
+</textarea>
+</body>
+</html>
+
+
+
