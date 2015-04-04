@@ -189,8 +189,9 @@
                     if (   path.equals("/anarchia")
                         || path.equals("/anarchia/")){
                         event.sendRedirect("/anarchia/panels.html");
+                        return;
                     }
-                    String res = "[{\"source\":\""+path+"\"}]";
+                    String res = null;
                     if (path.equals("/anarchia/images")){
                         res = backend.getAll("anarchia",
                                  "images",
@@ -199,6 +200,10 @@
                         res = backend.getAll("anarchia",
                                  "stories",
                                   "{}", 0, 1000);
+                    }
+                    if (res==null){
+                        event.jumpToPage("jsonEditor");
+                        return;
                     }
                     event.returnSource(res, false, "application/json");
                     return;
