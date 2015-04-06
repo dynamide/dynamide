@@ -218,7 +218,8 @@
   }
   function appendCharToCurrentCell(ch, event){
      if (gLogDebug) console.log('processKey appending:'+ch);
-          //2015: getCurrentCell().append(ch);
+          //2015: 
+          getCurrentCell().append(ch); //20150406
           setEditMode(true);
           if (ch === ' '){
             if (event){

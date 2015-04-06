@@ -148,7 +148,10 @@
     </div>
     
     <script>
-    populate('{name:"New Doc"}');
+    debugger;
+    gSkipPreKeyHook = true;
+        populate('{name:"New Doc", "child": {"anObject":{"a":1, "b":"to be or not to be"}, "anarray":[1, 2,3 ]}}');
+    gSkipPreKeyHook = false;
 </script>
 
 </body>
