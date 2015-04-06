@@ -146,12 +146,33 @@
          style="background-color: White; border: 3px solid orange;" 
          tab-index="1" >
     </div>
+    <div></div>
+    <textarea id="jsonSource" rows="10" cols="80">
+    {
+        "id": "http://anarchia.us/id/stories/3",
+        "panels":[
+            "http://anarchia.us/id/images/1",
+            "http://anarchia.us/id/images/2",
+            "http://anarchia.us/id/images/3",
+            "http://anarchia.us/id/images/4",
+            "http://anarchia.us/id/images/5",
+            "http://anarchia.us/id/images/6",
+            "http://anarchia.us/id/images/7",
+            "http://anarchia.us/id/images/8"
+        ]
+    }
+    </textarea>
+    <button onclick="loadDoc()">POST</button>
     
     <script>
-    debugger;
-    gSkipPreKeyHook = true;
-        populate('{name:"New Doc", "child": {"anObject":{"a":1, "b":"to be or not to be"}, "anarray":[1, 2,3 ]}}');
-    gSkipPreKeyHook = false;
+    function loadDoc(){
+        var src = $('#jsonSource').val();
+         gSkipPreKeyHook = true;
+            populate(src);
+         gSkipPreKeyHook = false;
+    }
+    loadDoc();
+    
 </script>
 
 </body>
