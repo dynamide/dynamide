@@ -1,5 +1,5 @@
 body, td {
-    font-size: 18pt;    
+    font-size: 8pt;    
 }
 button {
     fooborder: 1px solid green;
@@ -32,6 +32,8 @@ button {
       border: 1px dotted tan; 
       padding: 1px;
       margin: 1px;
+      color: #633;
+      font-size: 90%;
 }
 .valueTD {
       border: 1px dotted lightblue; 

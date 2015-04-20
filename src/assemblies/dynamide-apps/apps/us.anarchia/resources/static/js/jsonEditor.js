@@ -4,13 +4,23 @@
   var gRunTests = true;
   
   var gLogDebug = true;
-  var gLogDebugSaveToJson = false;
+  var gLogDebugSaveToJson = true;
   
   var gQuoteMode = false;
   
   var cOBJECT = 1,
       cARRAY  = 2;
+
+  var gJsonEditorListener = null;
+
+  var gFormEntryMode = false;
       
+  //========== LOGGING METHOD ==================================================
+  
+  function logAction(msg){
+      if (gJsonEditorListener) gJsonEditorListener.onaction(msg);
+  
+  }
   //========== KEYBOARD EVENTS =================================================
     
   function trapDefault(event){
@@ -24,6 +34,7 @@
         var shifted = event.shiftKey && event.shiftKey == true;
         var keycode = event.which;
         if (gLogDebug) console.log('keydown:'+keycode);
+        if (gJsonEditorListener) gJsonEditorListener.onkey(keycode, 1, shifted);
         switch ( keycode  ){
         case VK_BAK: 
             if (event){
@@ -46,15 +57,24 @@
         case VK_ENTER:
             if (gSlashMode){
                 gSlashMode = false;
-                if (event){
-                    event.preventDefault();
-                }
+                trapDefault(event);
                 clearTag();
                 $('#theInput').text('');
                 break;
             }
-            preKeyHook(VK_ENTER, event); //informational only on this call, we ignore "handled" return value.
-            addRow(); 
+            var handled = preKeyHook(VK_ENTER, event); //informational only on this call, we ignore "handled" return value.
+            if (!handled) {
+                console.log('handled: false');
+                addRow();
+            } else {
+                if (shifted){
+                    selectRowAbove();
+                } else {
+                    selectRowBelow();
+                }
+                trapDefault(event);
+                return;
+            }
             break;
         case VK_SPACE:
             return;  
@@ -98,8 +118,10 @@
         var shifted = event.shiftKey && event.shiftKey == true;
         var keycode = event.which;
         if (gLogDebug) console.log('keyup:'+keycode+' shifted:'+shifted);
+        if (gJsonEditorListener) gJsonEditorListener.onkey(keycode, 2, shifted);
         switch ( keycode  ){
             case VK_ENTER:
+                trapDefault(event);
                 break;
             default:
         }
@@ -110,6 +132,8 @@
   function documentKeypress(event){
        var key = event.which;
        if (gLogDebug) console.log('keypress:'+key);
+       if (gJsonEditorListener) gJsonEditorListener.onkey(key, 3);
+
        var ch = String.fromCharCode(key);
        processKey(ch, event);
   }
@@ -122,6 +146,7 @@
           return;
       }
       if (ch === CH_ENTER || ch === CH_LINEFEED){
+          trapDefault(event);
           return;  //don't append
       }
       var current = getCurrentCell();
@@ -153,6 +178,9 @@
               appendCharToCurrentCell(ch, event);
               return;
           }
+      } else if (ch ===' ') {
+        console.log('rejecting one space char, not in quote mode.');
+        return;
       }
       
       
@@ -189,6 +217,7 @@
           var theTD = newEl.find('td.arrayTD');
           var firstTD = theTD[0];
           setCurrentCell(firstTD);
+          $(firstTD).attr('contenteditable','true');
       } else if (ch === '{'){
           if (!canAdd("object")){
               return;
@@ -196,9 +225,16 @@
           //var newEl = $('<table class="objectTABLE"><tr class="itemTR"><td class="nameTD"></td><td class="valueTD text"></td></tr></table>');
           var newEl = $('<table class="objectTABLE"><tr class="itemTR"><td class="nameTD"></td><td class="valueTD"></td></tr></table>');
           newEl.appendTo(current);
+          logAction("add objectTABLE");
+
           var theTD = newEl.find('td.nameTD');
           var firstTD = theTD[0];
           setCurrentCell(firstTD);
+          var valTD = newEl.find('td.valueTD');
+          $(valTD).attr('contenteditable','true');
+
+          var nameTD = newEl.find('td.nameTD');
+          $(nameTD).attr('contenteditable','false');
       } else if (ch === '}'){
           if (gLogDebug) console.log("close }");
           var TD = getCellTable_Parent(current);
@@ -214,10 +250,15 @@
             addRow();   
           }
           appendCharToCurrentCell(ch, event);
+          if (event){
+             event.preventDefault();
+          }
       }
   }
   function appendCharToCurrentCell(ch, event){
      if (gLogDebug) console.log('processKey appending:'+ch);
+     if (gJsonEditorListener) gJsonEditorListener.onchar(''+ch, 4);
+
           //2015: 
           getCurrentCell().append(ch); //20150406
           setEditMode(true);
@@ -232,12 +273,18 @@
       //debugger;
       if (gLogDebug) console.log('preKeyHook:'+ch);
       if (gSkipPreKeyHook){
-          return;
+          logAction("skipping rest of preKeyHook. gSkipPreKeyHook: "+gSkipPreKeyHook);
+          return false;
       }
-      if ( ! $('#ckViMode').prop('checked')){
-          return false;   
-      } 
+      /*  2015: removing vi mode
+      var vimodechecked = $('#ckViMode').prop('checked');
+      //2015: if ( !vimodechecked ){
+      //2015:     logAction("exiting preKeyHook. vi mode: "+vimodechecked);
+      //2015:     return false;
+      //2015: }
+      */
       switch (ch) {
+      /*   2015: removing vi mode
       case 'e':
       case 'r':
         //if ($('#ckEditMode').prop('checked')){
@@ -259,11 +306,13 @@
         var div = $('#theInput').get(0);
 
         return true;  //true for handled/returnNow/eatKey. 
-      case VK_ENTER:  
+      */
+      case VK_ENTER:
         //$('#ckEditMode').prop('checked', false);
         setEditMode(true);
         $('#theInput').text("");
         event.preventDefault();
+        logAction("preKeyHook return true");
         return true;
       }
       return false;     //false for notHandled/keepProcessing/keepKey
@@ -297,6 +346,7 @@
   //================== Current Cell ============================================  
   
   var currentCell;
+  var previousCell;
 
   function getCurrentCell(){
        if (currentCell){
@@ -309,10 +359,21 @@
       if (element) {
           var aCell = (element instanceof $) ? element : $(element); 
           if (gLogDebug) console.log('setCurrentCell:'+aCell);
+          if (gJsonEditorListener) gJsonEditorListener.onactivecell("setCurrentCell");
           if (isJsonCell(aCell)){
+              previousCell = currentCell;
               currentCell = aCell;
-              $('.selected').removeClass('selected');
-              currentCell.addClass('selected');
+              $('.selected')
+                   .removeClass('selected')
+                   //.attr("contenteditable", "false")
+                   .off("keydown keyup keypress");
+              currentCell
+                   .addClass('selected')
+                   //.attr('contenteditable','true')
+                   .on("keydown", null, {}, documentKeydown)
+                   .on("keyup", null, {}, documentKeyup)
+                   .on("keypress", null, {}, documentKeypress);
+
               
               //this is where I'm working 2015-01-06:
               
@@ -349,6 +410,7 @@
   
   
   function addRow(){
+       logAction("addRow");
        var cell = getCurrentCell(); 
        if (cell && cell.get(0).nodeName === "TD"){
             var TABLE = $(cell.parents('TABLE')[0]);
@@ -361,6 +423,10 @@
             TR.appendTo(TABLE);
             setCurrentCell(TR.find('TD')[0]);
             //setCommandLine("");
+            var valTD = TR.find('td.valueTD');
+            if (valTD) {
+                $(valTD).attr('contenteditable','true');
+            }
             return;
        }
   }
@@ -381,6 +447,9 @@
           return true;
       }
       if (TD.hasClass('nameTD')){
+          if (gFormEntryMode){
+            return false;
+          }
           return true;
       }
       //console.log("TD was not a json cell...\r\n  "+dump(TD));
@@ -399,6 +468,10 @@
   }
   
   //================== Navigation ==============================================
+
+  function logNav(msg){
+      if (gJsonEditorListener) gJsonEditorListener.onnav(msg);
+  }
   
   function getCellTable(cell){
       return $(cell.parents('table')[0]);
@@ -409,6 +482,7 @@
   }
   
   function goTab(){
+     logNav("goTab");
      setEditMode(false);
      if (getCurrentCell().hasClass("nameTD")){
          var $cell = getCurrentCell().parent().children('td.valueTD');
@@ -429,6 +503,7 @@
   
   function goShiftTab(){
       //verbose, and early return, but works.
+     logNav("goShiftTab");
      setEditMode(false);
      if (getCurrentCell().hasClass("nameTD")){
          var $td = getCurrentCell().parent().parent().parent().parent();
@@ -453,6 +528,7 @@
   }
   
   function selectRowAbove(){
+      logNav("selectRowAbove");
       setEditMode(false);
       //current might be array or object
       var current = getCurrentCell();
@@ -491,6 +567,7 @@
   }
   
   function selectRowBelow(){
+      logNav("selectRowBelow");
       //todo: down arrow in a cell which contains an array should select first cell in array, not entire container. Similar with object, IMHO.
       setEditMode(false);
       //current might be array or object
@@ -574,10 +651,12 @@
   
   
   function setMessage(msg){
+    if (msg && gJsonEditorListener) gJsonEditorListener.onaction(msg);
     $('#message').text(msg);   
   }
   
   function populate(s){
+      logAction("populate: "+s);
       for ( var i = 0; i < s.length; i++ ){
         var c = s.charAt(i);  
         processKey(c);

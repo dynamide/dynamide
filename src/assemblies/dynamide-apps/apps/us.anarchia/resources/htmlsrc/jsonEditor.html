@@ -2,12 +2,12 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
     <META HTTP-EQUIV="Access-Control-Allow-Origin" CONTENT="http://localhost:18080" />
-    
+
     <link href="/anarchia/js/jquery-ui/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
     <script src="/anarchia/js/jquery.min.js"></script>
     <script src="/anarchia/js/jquery-ui/ui/minified/jquery-ui.min.js"></script>
     <script src="/anarchia/js/jquery-ui-touch-punch.js"></script>
-    
+
     <link href="/anarchia/css/jsonEditor.css" rel="stylesheet" type="text/css"/>
     <script src="/anarchia/js/stringUtils.js"></script>
     <script src="/anarchia/js/keycodes.js"></script>
@@ -18,161 +18,341 @@
     <!--<script src="/anarchia/js/testJsonEditor.js"></script-->
 
     <!--see notes in javascript-includes-notes.txt for notes on how to do require() from browser-->
-    
+
     <link href='http://fonts.googleapis.com/css?family=Cutive' rel='stylesheet' type='text/css' />
-    
+
     <style>
         body {
-             background-image: url('/tagonomy/img/dimpled-paper.jpg'); 
-             background-color: #cccccc;
-             background-size: 40% 40%;
-             FFbackground-repeat: no-repeat;
-             font-family: Arial;
-             font-size: 18pt;
+        background-image: url('/anarchia/img/dimpled-paper.jpg');
+        background-color: #cccccc;
+        background-size: 40% 40%;
+        FFbackground-repeat: no-repeat;
+        font-family: Arial;
+        font-size: 18pt;
         }
-        
+
         A        {text-decoration: none; }
         A:active {text-decoration: underline; }
         A:hover  {text-decoration: underline;}
-         A.tag        {text-decoration: none; }
-         A.tag:active {text-decoration: underline; }
-         A.tag:hover  {text-decoration: underline;}
+        A.tag        {text-decoration: none; }
+        A.tag:active {text-decoration: underline; }
+        A.tag:hover  {text-decoration: underline;}
 
-        
-       .menuPadding {
-            padding: 8px;
-            opacity: 1.0;
-            background-color: white;
+
+        .menuPadding {
+        padding: 8px;
+        opacity: 1.0;
+        background-color: white;
         }
-        
+
         .popupBG {
-           background-color: white; 
+        background-color: white;
         }
-        
+
         h6 {
-           /* make h6 for tiny sub-headings, so no margins top and bottom. */
-           margin: 0;
+        /* make h6 for tiny sub-headings, so no margins top and bottom. */
+        margin: 0;
         }
-        
+
         #popupChildren {
-          font-size: 12pt;   
+        font-size: 12pt;
         }
-        
+
         #popupParent {
-          font-size: 12pt; 
-          border: 0;
+        font-size: 12pt;
+        border: 0;
         }
         #popupTree {
-            width: 600px;  
-            font-family: 'Cutive', 'Arial';
-            font-size: 10pt;
+        width: 600px;
+        font-family: 'Cutive', 'Arial';
+        font-size: 10pt;
         }
         #divDocList {
-            font-family: 'Cutive', 'Arial';
-            font-size: 18pt;
-            line-height: 180%;
+        font-family: 'Cutive', 'Arial';
+        font-size: 18pt;
+        line-height: 180%;
         }
         .tagname {
-            font-weight: bold;
-            color: brown;
-            font-size: 120%;
-        }
-        
-        
-        .tag {
-          font-family: 'Cutive', 'Arial';
-          font-size: 18pt;
-          display: inline-block;
-          border: 1px solid green;
-          border-radius: 2px;
-          background-color: #FFC;
-          padding-bottom: 4px;
-          padding-top: 4px;
-          padding-left: 2px;
-          padding-right: 4px;
-          margin: 1px;
-        }
-        
-        .tagcurrent {
-            font-family: 'Cutive', 'Arial';
-          font-size: 9pt;
-          display: inline-block;
-          border: 1px solid green;
-          border-radius: 2px;
-          background-color: #CFC;
-          padding-bottom: 4px;
-          padding-top: 4px;
-          padding-left: 4px;
-          padding-right: 4px;
-          margin: 2px;
-            
-        }
-        
-        .menubutton {
-            position:relative; z-index:4; left: 0px; top: 0px;
-        }
-        
-        .verblink {
-            font-family: 'Cutive', 'Arial';
-            color: green;
-            font-weight: normal;
-            font-size: 18pt;
-        }
-        
-        .betweenbuttons {
-            height: 0.5em;   
-        }
-        .smallbtntext{
-            font-size: 18pt;   
-        }
-        
-        .todoformctrl {
-            margin: 8px;
+        font-weight: bold;
+        color: brown;
+        font-size: 120%;
         }
 
-        
+        .tag {
+        font-family: 'Cutive', 'Arial';
+        font-size: 18pt;
+        display: inline-block;
+        border: 1px solid green;
+        border-radius: 2px;
+        background-color: #FFC;
+        padding-bottom: 4px;
+        padding-top: 4px;
+        padding-left: 2px;
+        padding-right: 4px;
+        margin: 1px;
+        }
+
+        .tagcurrent {
+        font-family: 'Cutive', 'Arial';
+        font-size: 9pt;
+        display: inline-block;
+        border: 1px solid green;
+        border-radius: 2px;
+        background-color: #CFC;
+        padding-bottom: 4px;
+        padding-top: 4px;
+        padding-left: 4px;
+        padding-right: 4px;
+        margin: 2px;
+
+        }
+
+        .menubutton {
+        position:relative; z-index:4; left: 0px; top: 0px;
+        }
+
+        .verblink {
+        font-family: 'Cutive', 'Arial';
+        color: green;
+        font-weight: normal;
+        font-size: 18pt;
+        }
+
+        .betweenbuttons {
+        height: 0.5em;
+        }
+        .smallbtntext{
+        font-size: 18pt;
+        }
+
+        .todoformctrl {
+        margin: 8px;
+        }
+
+        .KEYSNOOP {
+            background-color: #cef;
+            text-align: right;
+            overflow: scroll;
+            border: 1px solid blue;
+            width: 500px;
+            height: 600px;
+            float: right;
+            position: absolute;
+        }
+        b.KEYUP {color: orange; font-size: 60%;}
+        b.KEYDOWN {color: red;font-size: 60%;}
+        b.KEYPRESS {color: blue;font-size: 60%;padding: 2px; border: 1px solid black; display: inline-block; border-radius: 15px;}
+        b.CHAR {color: green; padding: 4px; border: 1px solid black; display: inline-block;}
+        b.SHIFTED {text-decoration: underline;}
+        b.ACTION {color: blue; font-style: italic; font-weight: normal;font-size: 60%;}
+        .LISTENER_NAV {
+            font-size: 120%;
+            color: black;
+            font-weight: normal;
+            font-size: 60%;
+            width:40;
+            height:40;
+            border:1px solid gray;
+            border-radius:30px;
+            position: absolute;
+            padding: 4;
+            text-align:center;
+            vertical-align: center;
+        }
+
+
+        .spanblock {display:inline-block; display:-moz-inline-stack;}
+        .ajaxNotifier {margin: 6px; padding: 0px; border: 1px solid black;  font-size: 6pt;}
+        .suggestRow{font-size: 10pt;}
+        a {color: yellow;}
+
+
     </style>
-    
 </head>
 <body>
+
+     <div id="jsonEditorListener" class="KEYSNOOP" style="top:2; right: 22;">
+        <div >listener</div>
+        <b class="KEYUP">UP</b>
+        <b class="KEYDOWN">DOWN</b>
+        <b class="KEYPRESS">PRESS</b>
+        <b class="CHAR">CHAR</b>
+        <b class="ACTION">CHAR</b>
+        <br />
+     </div>
+
+     <div id="navListener" class="KEYSNOOP" style="position: relative; top:2px; right: 520px; height: 146px; width: 170px;">
+        <div id="nav_selectRowAbove" class="LISTENER_NAV" style="background-color:blue;       left:60;top:2;">u</div>
+        <div id="nav_goShiftTab" class="LISTENER_NAV"     style="background-color:lightgreen; left:22;top:20;">l</div>
+        <div id="nav_goTab"      class="LISTENER_NAV"     style="background-color:green;      left:100;top:20;">r</div>
+        <div id="nav_selectRowBelow" class="LISTENER_NAV" style="background-color:violet;     left:60;top:44;">d</div>
+        <div id="navMessage" class="LISTENER_NAV"         style="background-color: white; width:140;  left:10;top:100; height: 30;"></div>
+        <script>
+            function highLightNav(selector){
+                $(selector).stop(false, true).effect('highlight', {color: 'yellow'}, 1000);
+                $(selector).show();
+            }
+        </script>
+    </div>
+
+    <div id="ajaxListener" class="KEYSNOOP spanblock ajaxNotifier" style="position: relative; top:10px; right: 520px; height: 86px; width: 200px;">
+            <span class="spanblock ajaxNotifier" style="border: 1px solid black; border-radius:4;">
+              <span id="ajaxNotifier_loading" style="background-color: green;"> >>></span>&nbsp;&nbsp;ajax&nbsp;&nbsp;
+              <span id="ajaxNotifier_loadingDone" style="background-color: green;"> &lt;&lt;&lt;</span>
+            </span>
+        <script>
+        </script>
+    </div>
+
 
 
 <div id="message"></div>
 
 <!-- This is the main document editable tree area -->
-     <h4>Doc</h4>
-    <div id="SDiv" 
-         contenteditable="false" 
-         style="background-color: White; border: 3px solid orange;" 
-         tab-index="1" >
-    </div>
-    <div></div>
-    <textarea id="jsonSource" rows="10" cols="80">
-    {
-        "id": "http://anarchia.us/id/stories/3",
-        "panels":[
-            "http://anarchia.us/id/images/1",
-            "http://anarchia.us/id/images/2",
-            "http://anarchia.us/id/images/3",
-            "http://anarchia.us/id/images/4",
-            "http://anarchia.us/id/images/5",
-            "http://anarchia.us/id/images/6",
-            "http://anarchia.us/id/images/7",
-            "http://anarchia.us/id/images/8"
-        ]
+<h4>Doc</h4>
+<div id="SDiv"
+     contenteditable="false"
+     style="background-color: White; border: 3px solid orange;"
+     tab-index="1" >
+</div>
+
+<div>Import</div>
+<textarea id="jsonSource" rows="10" cols="80">
+{
+            "id": "http://anarchia.us/id/stories/9",
+            "panels":[
+                "http://anarchia.us/id/images/1",
+                "http://anarchia.us/id/images/3",
+                "http://anarchia.us/id/images/2",
+                "http://anarchia.us/id/images/7",
+                "http://anarchia.us/id/images/6",
+                "http://anarchia.us/id/images/8"
+            ]
+        }
+</textarea>
+
+<div>Export</div>
+
+<textarea id="jsonExport" rows="5" cols="80">
+</textarea>
+
+<br />
+<button onclick="loadDoc()">LOAD</button>
+<button onclick="exportDoc()">EXPORT</button>
+<button onclick="saveDoc()">POST</button>
+
+<script>
+<!--
+    function jsonEditorListener(){
+        this.onkey = function (msg, num, shifted){
+            var shiftedclass = '';
+            if (shifted) {
+                shiftedclass = ' SHIFTED';
+            }
+
+            var res = 'error';
+            switch (num) {
+            case 1:
+                res = '<b class="KEYDOWN'+shiftedclass+'"> '+msg+'</b>';
+                break;
+            case 2:
+                res = '<b class="KEYUP'+shiftedclass+'"> '+msg+'</b><br />';
+                break;
+            case 3:
+                res = '<b class="KEYPRESS'+shiftedclass+'"> '+msg+'</b>';
+                break;
+            default:
+                break;
+            }
+            $('#jsonEditorListener').append(res);
+            $("#jsonEditorListener > b:last").get(0).scrollIntoView();
+        }
+        this.onactivecell = function (msg){
+            //works, but no cell r,c, etc. data are sent, so just turning it off.   $('#jsonEditorListener').append(' '+msg);
+        }
+        this.onaction = function (msg){
+            $('#jsonEditorListener').append('<br /><b class="ACTION"> '+msg+'</b></br>');
+        }
+        this.onnav = function (msg){
+            $('#navListener').append('<b class="LISTENER_NAV"> '+msg+'</b>');
+            highLightNav("#nav_"+msg);
+            $('#navMessage').html(msg);
+        }
+        this.onchar = function(msg, num) {
+            var res = 'error';
+            switch (num) {
+            case 4:
+                res = '<b class="CHAR">'+msg+'</b>';
+                break;
+            }
+            $('#jsonEditorListener').append(res);
+        }
+        return this;
     }
-    </textarea>
-    <button onclick="loadDoc()">POST</button>
-    
-    <script>
+    gJsonEditorListener = new jsonEditorListener(); //global.  TODO: do this with a call or closure;
+    gFormEntryMode = false;
+
     function loadDoc(){
-        var src = $('#jsonSource').val();
+         var src = $('#jsonSource').val();
          gSkipPreKeyHook = true;
-            populate(src);
+         populate(src);
          gSkipPreKeyHook = false;
     }
     loadDoc();
-    
+
+    gFormEntryMode = true;
+
+    function exportDoc(){
+        var res = saveToJson();//global, because of #SDiv.
+        console.log('export: '+res);
+        $('#jsonExport').val(res);
+    }
+
+
+    function saveDoc(){
+       var postdata = $('#jsonExport').val();
+       console.log('postdata:'+postdata);
+       $.ajax
+            ({
+              type: "POST",
+              url: "/anarchia/stories",
+              dataType: 'json',
+              contentType: 'text/plain',    //if you set to json, it sends OPTIONS first.  If you don't set, it tries form encoded, which doesn't appear in event.getRequestBody().
+              async: true,
+              headers: {
+                "Authorization": "Basic " + btoa("laramie" + ":" + "ecotel33")
+              },
+              data: postdata,
+              success: function (data){
+                console.log('data:'+JSON.stringify(data));
+              },
+              error: function (data){
+                console.log('data:'+JSON.stringify(data));
+              }
+            });
+    }
+
+     function ajaxNotifierDocumentReady(){
+                // Create the Ajax event listeners for global pub/sub:
+                $("#ajaxNotifier_loading").bind("ajaxSend", function(){
+                        $(this).stop(false, true).effect('highlight', {color: 'yellow'}, 1000);
+                        $(this).show();
+                });
+                $("#ajaxNotifier_loadingDone").bind("ajaxComplete", function(){
+                        $(this).stop(false, true).effect('highlight', {color: '#8DD2F7'}, 1000);
+                });
+            }
+
+    $(document).ready(function() {
+        ajaxNotifierDocumentReady();
+        $.get('http://localhost:18080/anarchia/stories',
+                  function(data) {
+                      console.log("data: "+data);
+              });
+
+    });
+
+-->
 </script>
 
 </body>
