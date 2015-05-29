@@ -1,0 +1,43 @@
+ body {
+        background-color: black;   
+    }
+    .author {
+        color: green;
+        font-weight: bold;
+        font-style: italic;
+    }
+    .caption {
+        text-align: center;  
+        font-style: italic;
+    }
+    .panel {
+        border: 1px solid green;
+        margin: 2px;
+        padding: 2px;
+        width: 420;
+        background-color: lightyellow;
+    }
+    .panel img {
+        border: 1px solid gray;
+        margin: 10px;
+    }
+    .panel-title {
+        font-size: 160%;
+        padding-left: 10px;
+        padding-top: 8px;
+    }
+    .panel-links {
+        font-size: 70%;
+        text-align: right;
+        width: 100%;
+    }
+    .menu-buttons a {
+        color: green;
+        display: inline-block;
+        border-radius: 3px;
+        border: 2px solid lightblue;
+        background-color: lightgreen;
+        margin: 4px;
+        padding: 10px;
+        
+    }

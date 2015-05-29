@@ -19,10 +19,16 @@
 
   <event language="beanshell" name="application_onAction"><![CDATA[
         String path = session.getRequestPath();
+        System.out.println("\n\n\n\n\n\n****************************************************path: "+path);
         if (path==null || path.length()==0 || path.equals("/")){
             event.sendRedirect("/anarchia/panels.html");
             return;
         }
+        //if (path.equals("/anarchia/addPanel")){
+        //    event.jumpToPage("addPanel");
+        //    return;
+        //}
+        
         //============== getBackend() ==========================
         UserRESTHelper getBackend(){    
             UserRESTHelper backend = new UserRESTHelper();
@@ -101,6 +107,7 @@
                 //==============[ dispatch POSTs ]==============================
                 if (method.equals("POST")){
                     String reqbody = event.getRequestBody();
+                    System.out.println("\r\n\r\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+reqbody);
                     String res = "";
                     if (path.equals("/anarchia/images")){
                         res = backend.post("anarchia",
@@ -224,6 +231,7 @@
 
   <pages>
   	<page name="jsonEditor"></page>
+  	<page name="addPanel"></page>
   </pages>
   <properties>
     <property name="applicationID">

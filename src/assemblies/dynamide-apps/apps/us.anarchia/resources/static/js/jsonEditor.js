@@ -89,16 +89,22 @@
         case VK_LEFT: 
             //var editMode = $('#ckEditMode').is(":checked");
             if (inEditMode()){
+                logAction('doc kd left, inEditMode');
                 return;
             } else {
+                logAction('doc kd left, not inEditMode');
+                trapDefault(event);
                 goShiftTab();
                 return false;
             }
         case VK_RIGHT: 
             if (inEditMode()){
+                logAction('doc kd right, inEditMode');
                 return;
             } else {
+                logAction('doc kd right, not inEditMode');
                 goTab();
+                trapDefault(event);
                 return false;
             }
         case VK_UP: 
@@ -121,6 +127,7 @@
         if (gJsonEditorListener) gJsonEditorListener.onkey(keycode, 2, shifted);
         switch ( keycode  ){
             case VK_ENTER:
+                logAction('doc kU enter');
                 trapDefault(event);
                 break;
             default:
@@ -216,6 +223,7 @@
           newEl.appendTo(current);
           var theTD = newEl.find('td.arrayTD');
           var firstTD = theTD[0];
+          clearEditableCurrentCell();
           setCurrentCell(firstTD);
           $(firstTD).attr('contenteditable','true');
       } else if (ch === '{'){
@@ -232,6 +240,7 @@
           setCurrentCell(firstTD);
           var valTD = newEl.find('td.valueTD');
           $(valTD).attr('contenteditable','true');
+          logAction("contenteditable true to: "+$(valTD));
 
           var nameTD = newEl.find('td.nameTD');
           $(nameTD).attr('contenteditable','false');
@@ -245,6 +254,7 @@
           setCurrentCell(TD);
       } else if (ch === ',' && (!gQuoteMode) ){
           addRow(); 
+          currentCell.attr('contenteditable','true');
       } else {
           if (current.children("TABLE").length >0){
             addRow();   
@@ -273,7 +283,7 @@
       //debugger;
       if (gLogDebug) console.log('preKeyHook:'+ch);
       if (gSkipPreKeyHook){
-          logAction("skipping rest of preKeyHook. gSkipPreKeyHook: "+gSkipPreKeyHook);
+          //logAction("skipping rest of preKeyHook. gSkipPreKeyHook: "+gSkipPreKeyHook);
           return false;
       }
       /*  2015: removing vi mode
@@ -309,6 +319,8 @@
       */
       case VK_ENTER:
         //$('#ckEditMode').prop('checked', false);
+         logAction('preKeyHook VK_ENTER, begin edit mode.');
+               
         setEditMode(true);
         $('#theInput').text("");
         event.preventDefault();
@@ -355,12 +367,23 @@
        return $('#SDiv');
   }
   
+  function clearEditableCurrentCell() {
+      logAction("clearEditableCurrentCell");
+      if (currentCell){
+          logAction("clearEditableCurrentCell 2");
+           currentCell.off("keydown keyup keypress");
+           currentCell.attr('contenteditable','false');
+           logAction("contenteditable true to: "+$(currentCell));
+       }
+  }
+  
   function setCurrentCell(element){
       if (element) {
           var aCell = (element instanceof $) ? element : $(element); 
           if (gLogDebug) console.log('setCurrentCell:'+aCell);
           if (gJsonEditorListener) gJsonEditorListener.onactivecell("setCurrentCell");
           if (isJsonCell(aCell)){
+              unwire(currentCell);
               previousCell = currentCell;
               currentCell = aCell;
               $('.selected')
@@ -368,16 +391,17 @@
                    //.attr("contenteditable", "false")
                    .off("keydown keyup keypress");
               currentCell
-                   .addClass('selected')
+                   .addClass('selected');
+              wire(currentCell);     
                    //.attr('contenteditable','true')
-                   .on("keydown", null, {}, documentKeydown)
-                   .on("keyup", null, {}, documentKeyup)
-                   .on("keypress", null, {}, documentKeypress);
+                   //.on("keydown", null, {}, documentKeydown)
+                   //.on("keyup", null, {}, documentKeyup)
+                   //.on("keypress", null, {}, documentKeypress);
 
               
               //this is where I'm working 2015-01-06:
               
-              currentCell.attr('contenteditable','true');
+         //     currentCell.attr('contenteditable','true');
               ///  currentCell.keyup(documentKeyup);
               ///  currentCell.keydown(documentKeydown);
               ///  currentCell.keypress(documentKeypress);
@@ -696,17 +720,32 @@
    
   //================= JQUERY DOCUMENT READY ====================================
   
+  function wire(jsonEdDiv) {
+      if (jsonEdDiv){
+           var $el = $(jsonEdDiv);
+           $el.keyup(documentKeyup);
+           $el.keydown(documentKeydown);
+           $el.keypress(documentKeypress);
+      }
+  }
+  
+  function unwire(jsonEdDiv) {
+      if (jsonEdDiv){
+           var $el = $(jsonEdDiv);
+           $el.keyup(null);
+           $el.keydown(null);
+           $el.keypress(null);
+      }
+  }
+  
   function documentReady(){
       if (gRunTests) {
           //testJsonEditor();
           //clear();
       }
-      
+      wire(getCurrentCell());
       //var jsonEdDiv = $('#theInput'); 
-      var jsonEdDiv = getCurrentCell();
-      jsonEdDiv.keyup(documentKeyup);
-      jsonEdDiv.keydown(documentKeydown);
-      jsonEdDiv.keypress(documentKeypress);
+      
       
       console.log('Tagland loaded. http://tagland.org   [jQuery version: '+$.fn.jquery+']');
   }
