@@ -2,7 +2,6 @@
   <HEAD>
     <TITLE>Reorder Story</TITLE>
     <script src="/anarchia-admin/js/jquery-2.1.3.min.js"></script>
-    <script src="/anarchia-admin/js/reorderStory.js"></script>
     
     <script src="js/handlebars-v3.0.0.js"></script>
     <script src="js/jquery-2.1.3.min.js"></script>
@@ -27,48 +26,128 @@
   </HEAD>
   <BODY id="page1" bottomMargin="15" leftMargin="10" topMargin="15" rightMargin="10" name="addPanel">
     <P>Reorder Story</P>
-      <input type='button' id="showRowsBtn" value="Show Rows">
+      <div style="padding: 1em;">
+      <input type='button' id="saveStoryBtn" value="Save Story">
+      <span id="backendMsg"></span>
+      </div>
     
     <div id='panelDiv'>panel here</div>
     
     <script id="TemplateSource" type="text/x-handlebars-template">
-    <table id='storyOrderTable' border='1'>
-    {{#each panelsArray}}
-    
-    <tr>
-        <td>
-            <a href="#" class="up">&#x25B2;</a><br />
-            <a href="#" class="down">&#x25BC;</a>
-        </td>
-        <td>
-        <img src="{{img}}" class="thumbnail"/>
-        </td>
-        <td class='storyID'><a href="#{{id}}">id</a></td>
-        <td class='storyIndex'>{{@index}}</td>
-        
-    </tr>
-    {{/each}}
-    </table>
+        <table id='storyOrderTable' border='1'>
+        {{#each panelsArray}}
+            <tr>
+                <td>
+                    <a href="#" class="up">&#x25B2;</a><br />
+                    <a href="#" class="down">&#x25BC;</a>
+                </td>
+                <td>
+                    <img src="{{img}}" class="thumbnail"/>
+                </td>
+                <td class='storyID'>{{id}}</td>
+                <td class='storyIndex'>
+                    {{@index}}
+                </td>
+            </tr>
+        {{/each}}
+        </table>
     </script>
   </BODY>
+  
   <script>
-    var source = document.getElementById('TemplateSource').innerHTML
-    var templateFn = Handlebars.compile(source);
-    function renderTemplate(data){
-        if (data){
-            $('#panelDiv').html(templateFn({panelsArray: data}));
-        }
-        $(".up,.down").click(function(){
-            var row = $(this).parents("tr:first");
-            if ($(this).is(".up")) {
-                row.insertBefore(row.prev());
-            } else {
-                row.insertAfter(row.next());
+    //========================= scripts ===================================================
+    var gPanels = null;
+    var gStoryID = 'http://anarchia.us/id/stories/2';
+    var gByStoryID = null;
+    var templateFn = Handlebars.compile(document.getElementById('TemplateSource').innerHTML);
+    
+    $(document).ready(function(){
+    
+            function renderTemplate(data){
+                if (data){
+                    $('#panelDiv').html(templateFn({panelsArray: data}));
+                }
+                $(".up,.down").click(function(){
+                    var row = $(this).parents("tr:first");
+                    if ($(this).is(".up")) {
+                        row.insertBefore(row.prev());
+                    } else {
+                        row.insertAfter(row.next());
+                    }
+                    row.fadeOut(200).fadeIn(200);
+                });
+                
             }
-            row.fadeOut(200).fadeIn(200);
-        });
-        
-    }
+            
+            //altered duplicate from /Users/vcrocla/src/dynamide/build/resource_root/homes/dynamide/assemblies/com-dynamide-apps-1/apps/us.anarchia/resources/static/panels.html
+            function getByStory(storyid){
+                // AJAX CALL HERE :
+               $.get('/anarchia?qtype=bystory&storyid='+storyid,
+                  function(data) {
+                      console.log('getByStory data: '+JSON.stringify(data, null, 4));
+                      gByStoryID = data;
+                      
+                      var panelsDict = {};
+                      gByStoryID.panels.forEach(function(val, idx, arr){
+                           panelsDict[val.id] = val;
+                      });
+                      gPanels = [];
+                      gByStoryID.story.panels.forEach(function(val, idx, arr){
+                          gPanels.push(panelsDict[val]); 
+                      });
+                      renderTemplate(gPanels);
+                      console.log('panels: '+JSON.stringify(gPanels));
+                  
+                      return ;
+                      gPanels = gByStoryID.panels;
+                      if (gPanels.length && gPanels.length >-1){
+                          var imgs = [];
+                          for (var i=0; i<gPanels.length; i++) {
+                            imgs.push(gPanels[i].img); 
+                          }
+                          gPanelIndex = 0;
+                          renderTemplate(gPanels);
+                          console.log('panels: '+JSON.stringify(gPanels));
+                      }
+                  }
+               );
+            }
+            getByStory(gStoryID);
+            
+            $('#saveStoryBtn').click(function(){
+                var storyObj = {};
+                storyObj.id = gByStoryID.story.id;
+                storyObj._id = gByStoryID.story._id;
+                storyObj.panels = [];
+                $('#storyOrderTable tr').each(function (i, row) {
+                   var $row = $(row);
+                   var t = $row.find('.storyIndex').text();
+                   var storyID = $row.find('.storyID').text().trim();
+                   console.log('storyID: '+t+ ' panel: '+storyID);
+                   storyObj.panels.push(storyID);
+                });
+                
+                console.log("storyObj ready for PUT: ================== "+JSON.stringify(storyObj, null, 4)+"    ====================") ;
+                saveStory(JSON.stringify(storyObj), storyObj);
+            });
+            
+            function saveStory(storyJSON, storyObj){
+                $('#backendMsg').html("");
+                // AJAX CALL HERE :
+                console.log("storyJSON: "+storyJSON);
+                $.ajax({
+                    url: '/anarchia/stories?qtype=PUTstories',
+                    dataType: 'text',
+                    type: 'post',
+                    contentType: 'application/json',
+                    data: storyJSON,
+                    success: function( data, textStatus, jQxhr ){
+                        $('#backendMsg').html("Story saved").fadeIn(800).delay(5000).fadeOut(1000);
+                    }
+                });
+            }
+            
+    });
     
     
   </script>

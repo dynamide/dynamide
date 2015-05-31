@@ -106,8 +106,9 @@
             
                 //==============[ dispatch POSTs ]==============================
                 if (method.equals("POST")){
+                    String qtype = event.getQueryParam("qtype");
                     String reqbody = event.getRequestBody();
-                    System.out.println("\r\n\r\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+reqbody);
+                    System.out.println("@@@@@@@@@@@@@@"+qtype+"@@@@@@@@@@@@@@"+reqbody);
                     String res = "";
                     if (path.equals("/anarchia/images")){
                         res = backend.post("anarchia",
@@ -118,9 +119,36 @@
                                  "idservice",
                                   reqbody);
                     } else if (path.equals("/anarchia/stories")){
-                        res = backend.post("anarchia",
+                        if (qtype!=null&&qtype.equals("PUTstories")){
+                            res = backend.put("anarchia",
+                                              "stories",
+                                               reqbody,
+                                               false,
+                                               false);
+                            System.out.println("@@@@PUTstories doing a put. res: "+res);
+                        } else {
+                            res = backend.post("anarchia",
+                                               "stories",
+                                               reqbody);
+                        }
+                    }
+                    event.returnSource(res, false, "application/json");
+                    return;
+                }
+                
+                //==============[ dispatch PUTs ]==============================
+                if (method.equals("PUT")){
+                    String qtype = event.getQueryParam("qtype");
+                    String reqbody = event.getRequestBody();
+                    System.out.println("@@@@@@@@@@@@@@"+qtype+"@@@@@@@@@@@@@@"+reqbody);
+                
+                    String res = "";
+                    if (qtype!=null&&qtype.equals("stories")){
+                        res = backend.put("anarchia",
                                  "stories",
-                                  reqbody);
+                                  reqbody,
+                                  false,
+                                  false);
                     }
                     event.returnSource(res, false, "application/json");
                     return;
@@ -171,22 +199,29 @@
                         Tools.safe(storyid);
                         query = "{'id':'"+storyid+"'}";
                         json = backend.get("anarchia", "stories", query);
-                        jsonobject = getJSONObject(json);
-                        if (jsonobject==null){
-                        event.returnSource("{\"error\":\"jsonobject was null\"}",
+                        storiesObj = getJSONObject(json);
+                        if (storiesObj==null){
+                        event.returnSource("{\"error\":\"storiesObj was null\"}",
                                    false, 
                                    "application/json");
                             return;
                         }
                         //NOW hit mongo again with all the ids to retrieve the panels:
-                        query = "{ id : { $in : "+jsonobject.get("panels").toString()+" } }";
+                        query = "{ id : { $in : "+storiesObj.get("panels").toString()+" } }";
                         json = backend.getAll("anarchia", "images", query);
+                        System.out.println("\n\n images query: \n"+query);
+                        panelsArr = getJSONArray(json);
+                        JSONObject aggregateObj = new JSONObject();
+                        aggregateObj.put("panels", panelsArr);
+                        aggregateObj.put("story", storiesObj);
+                        json = aggregateObj.toString();
+                        
                     } else if (qtype.equals("images")){
                         query = "{ id : { $in : ['http://anarchia.us/id/images/53', 'http://anarchia.us/id/images/54'] } }";
                         json = backend.getAll("anarchia", "images", query);
                     }
                     
-                    System.out.println("GET("+query+"): "+json);
+                    System.out.println("GET("+query+"): \n=====> "+json);
                     event.returnSource(json,
                                    false, 
                                    "application/json");
