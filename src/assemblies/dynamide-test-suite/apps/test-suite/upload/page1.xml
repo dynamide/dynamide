@@ -26,7 +26,36 @@
   </properties>
 
     <event language="beanshell" name="page1_onAction"><![CDATA[
-        System.out.println("====================== page1_onAction 3");
+        System.out.println("====================== page1_onAction 3.1");
+
+        System.out.println("FileItems: ~~~~ "+session.getUploadFileItems());
+
+        List items = session.getUploadFileItems();
+        if (items!=null){
+            Iterator iter = items.iterator();
+
+            while (iter.hasNext()) {
+                FileItem item = iter.next();
+
+                if (!item.isFormField() && item.fieldName.equals("file")) {   //"file" is the name of the form field.
+                    String fieldName = item.getFieldName();
+                    String fileName = item.getName();
+                    String contentType = item.getContentType();
+                    boolean isInMemory = item.isInMemory();
+                    long sizeInBytes = item.getSize();
+                    System.out.println("File upload info: fieldName:"+fieldName+", fileName:"+fileName+", contentType:"+contentType+", sizeInBytes:"+sizeInBytes);
+                    File uploadedFile = new File(System.getProperty("java.io.tmpdir")+'/'+fileName);
+                    item.write(uploadedFile);
+                    System.out.println("new file written: "+uploadedFile.getCanonicalPath());
+                }
+            }
+        }
+
+
+       //TODO: the rest of this is obviated, and should be used to finish the new flow above.
+
+
+
         String filename = session.getQueryParam("file.filename");
         String file = session.getQueryParam("file.file");
         if ( Tools.isBlank(filename) || Tools.isBlank(file) ) {

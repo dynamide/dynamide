@@ -20,6 +20,7 @@
         import com.dynamide.datatypes.*;
         import com.dynamide.resource.*;
         import org.jdom.*;
+        import org.apache.commons.fileupload.*;
   ]]></event>
 
   <event language="beanshell" name="application_onStart">
