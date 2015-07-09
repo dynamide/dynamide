@@ -199,6 +199,7 @@
                         Tools.safe(storyid);
                         query = "{'id':'"+storyid+"'}";
                         json = backend.get("anarchia", "stories", query);
+                        System.out.println("bystory order: ========== "+json+"\r\n==============");
                         storiesObj = getJSONObject(json);
                         if (storiesObj==null){
                         event.returnSource("{\"error\":\"storiesObj was null\"}",
@@ -215,6 +216,8 @@
                         aggregateObj.put("panels", panelsArr);
                         aggregateObj.put("story", storiesObj);
                         json = aggregateObj.toString();
+                        System.out.println("bystory order RESULT: ========== "+json+"\r\n==============");
+                        
                         
                     } else if (qtype.equals("images")){
                         query = "{ id : { $in : ['http://anarchia.us/id/images/53', 'http://anarchia.us/id/images/54'] } }";

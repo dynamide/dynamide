@@ -127,7 +127,16 @@
        $.get('/anarchia?qtype=bystory&storyid='+storyid,
           function(data) {
               console.log('getByStory data: '+JSON.stringify(data));
-              gPanels = data;
+              
+              var panelsDict = {};
+              data.panels.forEach(function(val, idx, arr){
+                   panelsDict[val.id] = val;
+              });
+              gPanels = [];
+              data.story.panels.forEach(function(val, idx, arr){
+                  gPanels.push(panelsDict[val]); 
+              });
+              
               if (gPanels.length && gPanels.length >-1){
                   var imgs = [];
                   for (var i=0; i<gPanels.length; i++) {

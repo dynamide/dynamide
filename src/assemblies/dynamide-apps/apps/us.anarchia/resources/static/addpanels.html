@@ -2,6 +2,7 @@
 <head>
     <script src="js/handlebars-v3.0.0.js"></script>
     <script src="js/jquery-2.1.3.min.js"></script>
+    <script src="/anarchia/js/anarchia.js"></script>
     <link href="/tagonomy/js/jquery-ui/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
     <script src="/tagonomy/js/jquery-ui/ui/minified/jquery-ui.min.js"></script>
     <script src="/tagonomy/js/jquery-ui-touch-punch.js"></script>
@@ -32,21 +33,10 @@ document.getElementById('file-input').addEventListener('change', readLocalFile, 
 
 </body>
 <script>
-    function getNextID(){
-        // AJAX CALL HERE :
-       console.log('documentReady');
-       $.get('/anarchia?qtype=nextid&collection=images',
-          function(data) {
-            $('#nextidDiv').html(data.nextid);
-          }
-       );
-    }
-    
     function saveDoc(){
        var postdata = $('#file-content').html();
        console.log('postdata:'+postdata);
-       $.ajax
-            ({
+       $.ajax ({
               type: "POST",
               url: "/anarchia/images",
               dataType: 'json',
@@ -64,12 +54,12 @@ document.getElementById('file-input').addEventListener('change', readLocalFile, 
                 console.log('data:'+JSON.stringify(data));
                 alert('post failed');
               }
-            });
-        getNextID();    
+        });
+        getNextID_intoSelector('images', '#nextidDiv');
     }
     
     function documentReady(){
-       getNextID();
+       getNextID_intoSelector('images', '#nextidDiv');
     }
 
     $(document).ready(documentReady);
