@@ -1813,11 +1813,11 @@ System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
     }
 
     public String dumpRequestInfo(){
-        return ServletTools.dumpRequestInfo(getRequest());
+        return ServletTools.dumpRequestInfo(getRequest(), true, "#FFAD00", m_requestUploadFileItems);
     }
 
     public String dumpRequestParams(){
-        return ServletTools.dumpRequestParams(getRequest());
+        return ServletTools.dumpRequestParams(getRequest(), "#FFAD00", m_requestUploadFileItems);
     }
 
     //================= The main handler entry point =====================================
@@ -1881,10 +1881,47 @@ System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
     }
     public List<FileItem> getUploadFileItems(){
         List<FileItem> result = new ArrayList<FileItem>();
-        for (FileItem item: m_requestUploadFileItems){
-             if (item.isFormField()==false){
-                 result.add(item);
-             }
+        if (m_requestUploadFileItems!=null) {
+            for (FileItem item : m_requestUploadFileItems) {
+                if (item.isFormField() == false) {
+                    result.add(item);
+                }
+            }
+        }
+        return result;
+    }
+
+    public File getUploadedFile(String fileInputID)
+    throws Exception {
+        return getUploadedFile(fileInputID, "");
+    }
+
+    public File getUploadedFile(String fileInputID, String optionalDirectory)
+    throws Exception {
+        File result = null;
+        List items = getUploadFileItems();
+        if (items != null) {
+            Iterator<FileItem> iter = items.iterator();
+            while (iter.hasNext()) {
+                FileItem item = iter.next();
+
+                if (!item.isFormField() && item.getFieldName().equals(fileInputID)) {   //fileInputID is the name of the form field.
+                    String contentType = item.getContentType();
+                    String fileName = item.getName();
+                    String newFilename = fileName.replace(' ', '_');
+                    newFilename = newFilename.replace('\'', '_');
+                    newFilename = newFilename.replace('\"', '_');
+                    if (!FileTools.isWebSafeFileName(newFilename)) {
+                        throw new DynamideException("ERROR: invalid filename: " + fileName + ", even when substituted: " + newFilename);
+                    }
+                    if (Tools.isBlank(optionalDirectory)){
+                        optionalDirectory = System.getProperty("java.io.tmpdir");
+                    }
+                    result = new File(optionalDirectory, newFilename);
+                    item.write(result);
+                    //System.out.println("new file written: " + result.getCanonicalPath());
+                }
+            }
         }
         return result;
     }
@@ -1909,10 +1946,19 @@ System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
             //    if (true) return handlerResult;
             //===================
 
+            HttpServletRequest request = m_handler.getRequest();
+
+            // 2012-02-15 Laramie adding Apache Commons Fileupload tool, since query params are in
+            //                   form values when using POST, and they are not pulled in automatically.
+            // 2015-07-08 Moved this before logHandlerProcRequest so upload files and multipart form fields will get logged.
+
+            if (ServletFileUpload.isMultipartContent(request)){
+                m_requestHasUpload = true;
+                m_requestUploadFileItems =   getUploadFileItems(request);
+            }
+
             logHandlerProcRequest();
 
-            HttpServletRequest request = m_handler.getRequest();
-            
             m_lastRequestPath = get("requestPath").toString();
 
             String pathInfo = getPathInfo();
@@ -1921,14 +1967,6 @@ System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
             if ( checkForSecureRedirect(handler, handlerResult) ) {
                 setActivePage("");
                 return handlerResult;
-            }
-
-            // 2012-02-15 Laramie adding Apache Commons Fileupload tool, since query params are in
-            //                   form values when using POST, and they are not pulled in automatically.
-
-            if (ServletFileUpload.isMultipartContent(request)){
-                m_requestHasUpload = true;
-                m_requestUploadFileItems =   getUploadFileItems(request);
             }
 
             nextPageID = getQueryParam(Constants.nextPageID);
@@ -5221,9 +5259,9 @@ System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
         }
         String dump = "";
         if ( LOG_HANDLER_PROC_REQUEST_HEADERS ) {
-            dump = ServletTools.dumpRequestInfo(request, true, "lightgrey");
+            dump = ServletTools.dumpRequestInfo(request, true, "#FFAD00", m_requestUploadFileItems);
         } else {
-            dump = ServletTools.dumpRequestParams(request, "lightgrey");
+            dump = ServletTools.dumpRequestParams(request, "#FFAD00", m_requestUploadFileItems);
         }
         return "<b>"+request.getMethod()+" "+request.getRequestURI()
                            +"</b> <br />"

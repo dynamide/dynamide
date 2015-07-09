@@ -2,12 +2,15 @@ package com.dynamide.util;
 
 import java.net.URLEncoder;
 import java.util.Enumeration;
+import java.util.List;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.dynamide.DynamideObject;
+
+import org.apache.commons.fileupload.FileItem;
 
 public class ServletTools extends DynamideObject {
     public ServletTools(){
@@ -131,19 +134,19 @@ public class ServletTools extends DynamideObject {
     }
 
     public static String dumpRequestInfo(HttpServletRequest request){
-        return dumpRequestInfo(request, true, "#FFAD00");
+        return dumpRequestInfo(request, true, "#FFAD00", null);
     }
 
-    public static String dumpRequestInfo(HttpServletRequest request, boolean html, String headerColor){
+    public static String dumpRequestInfo(HttpServletRequest request, boolean html, String headerColor, List<FileItem> fileItemsList){
         if (request==null){
             return "NULL REQUEST";
         }
         String result = dumpRequestHeaders(request, html);
         if ( html ) {
-           result = result + dumpRequestParams(request, headerColor);
+           result = result + dumpRequestParams(request, headerColor, fileItemsList);
         } else {
             result = result + "%% TODO: make non-html output";
-            result = result + dumpRequestParams(request, headerColor);
+            result = result + dumpRequestParams(request, headerColor, fileItemsList);
         }
         return result;
     }
@@ -156,35 +159,40 @@ public class ServletTools extends DynamideObject {
         String nl = html ? "\r\n<br />" : "\r\n";
         for(Enumeration headernames = request.getHeaderNames(); headernames.hasMoreElements();){
             String headername =  (String)headernames.nextElement();
-            headers += nl + headername+": "+request.getHeader(headername);
+            String headervalue = request.getHeader(headername);
+            if (html) {
+                headers += "<tr><td style='border: 1px solid blue;'>"+headername+"</td><td>"+headervalue+"</td></tr>";
+            } else {
+                headers += nl + headername+": "+headervalue;
+            }
         }
         String result;
         if ( html ) {
-            result = "<pre>";
+            result = "<table border='1' cellpadding='2' cellspacing='0'><tr BGCOLOR='#FFAD00'><th colspan='2'>Headers</th></tr>";
         } else {
-            result = "";
+            result = "Headers: \r\n";
         }
-        result = result + "\r\nHeaders: "+ headers
-          +"\r\nmethod: " + request.getMethod()
-          +"\r\nProtocol: " + getProto(request)
-          +"\r\nURL: " +  getFullURL(request);
+        result = result +  headers;
+          //+"\r\nmethod: " + request.getMethod()
+          //+"\r\nProtocol: " + getProto(request)
+          //+"\r\nURL: " +  getFullURL(request);
           //+"\r\nQuery String: " +  getQueryString()
           //+"\r\nContent: " + getContent();
           if ( html ) {
-            result = result + "</pre>";
+            result = result + "</table><br />";
           }
         return result;
     }
 
     public static String dumpRequestParams(HttpServletRequest request){
-        return dumpRequestParams(request, "#FFAD00");
+        return dumpRequestParams(request, "#FFAD00", null);
     }
-    public static String dumpRequestParams(HttpServletRequest request, String headerColor){
+    public static String dumpRequestParams(HttpServletRequest request, String headerColor, List<FileItem> fileItemsList){
         if (request==null){
             return "NULL REQUEST";
         }
         StringBuffer result = new StringBuffer();
-        result.append( "<TABLE BORDER='1' cellpadding='0' cellspacing='0'>\n" +
+        result.append( "<TABLE BORDER='1' cellpadding='2' cellspacing='0'>\n" +
                 "<TR BGCOLOR='"+headerColor+"'>\n" +
                 "<TH>Parameter Name</TH><TH>Parameter Value(s)</TH></TR>");
         Enumeration paramNames = request.getParameterNames();
@@ -207,8 +215,26 @@ public class ServletTools extends DynamideObject {
             }
             result.append("</TD>\r\n</TR>");
         }
+        dumpFileItems(result, fileItemsList);
         result.append("</TABLE>");
         return result.toString();
+    }
+
+    public static void dumpFileItems(StringBuffer result, List<FileItem> fileItemsList){
+        if (fileItemsList!=null) {
+            for (FileItem item : fileItemsList) {
+                if (item.isFormField()) {
+                    result.append("\r\n<TR><TD>" + item.getFieldName() + "</TD><TD>")
+                          .append(item.getString())
+                          .append("</TD>\r\n</TR>");
+                } else {
+                     result.append("\r\n<TR><TD>FILE</TD><TD>")
+                          .append(item.getName()+" <b>mime:</b> <i>"+item.getContentType()+"</i>")
+                          .append("</TD>\r\n</TR>");
+
+                }
+            }
+        }
     }
 
 

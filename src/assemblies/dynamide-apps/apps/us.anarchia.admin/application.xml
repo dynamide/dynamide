@@ -11,6 +11,7 @@
     import us.anarchia.db.UserRESTHelper;
     import com.mongodb.util.JSON;
     import org.json.*;
+    import org.apache.commons.fileupload.*; 
     
     //============== getBackend() ==========================
     UserRESTHelper getBackend(){    
@@ -26,16 +27,13 @@
   ]]></event>
 
   <event language="beanshell" name="application_onAction"><![CDATA[
-        String path = session.getRequestPath();
-        System.out.println("\n\n\n\n\n\n****************************************************anarchia-admin path: "+path);
-        
-    return;
   ]]></event>
 
 
 
   <pages>
   	<page name="addPanel"></page>
+  	<page name="addImage"></page>
   	<page name="reorderStory"></page>
   </pages>
   <properties>
