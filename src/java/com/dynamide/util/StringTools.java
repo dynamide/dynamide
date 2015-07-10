@@ -519,9 +519,9 @@ public class StringTools {
         }
         return makeLineNumbers(source, -1, -1, true);
     }
-    
+
     public static boolean isEmpty(String in){
-    	if (in == null) 
+    	if (in == null)
     		return true;
     	if (in.length()==0)
     		return true;

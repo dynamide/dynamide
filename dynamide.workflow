@@ -1,3 +1,22 @@
+webapps:
+    The directory bin/tomcat7.dm/webapps is empty.
+    Tomcat is configured to run dynamide as the ROOT app via: 
+         /Users/vcrocla/bin/tomcat7.dm/conf/Catalina/localhost/ROOT.xml
+    This turns around and points to: 
+         /Users/vcrocla/src/dynamide/build/tomcat/webapps/ROOT/WEB-INF/web.xml
+         
+security:
+    In Chrome, to clear auth, just put user@ in front of host and it will make you log in: 
+          http://cooper@localhost:18080.....
+    All of /* is public user dynamide-user (this includes /anarchia and /anarchia-admin
+    All of /dynamide/admin is dynamide-admin
+    These are controlled here: 
+        /Users/vcrocla/src/dynamide/build/tomcat/webapps/ROOT/WEB-INF/web.xml
+        
+    Mongo configured here for anarchia: 
+        /Users/vcrocla/src/anarchia/doc/mongodb/admin-notes.txt
+
+
 build:
     cd ~/src/dynamide
     ant
