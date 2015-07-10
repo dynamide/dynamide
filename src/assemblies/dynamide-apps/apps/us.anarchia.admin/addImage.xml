@@ -2,8 +2,8 @@
 <!DOCTYPE dynamideForm>
 <dynamideForm>
     <event language="beanshell" name="addImage_onAction"><![CDATA[
-        //http://localhost:18080/anarchia-admin?page=addImage&action=getimage&reloadPage=true&filename=fe6f79c5-5dff-4e5a-b168-cc2895bc7146.jpg'
         if (event.getDMAction().equals("getimage")){
+            //http://localhost:18080/anarchia-admin?page=addImage&action=getimage&reloadPage=true&filename=fe6f79c5-5dff-4e5a-b168-cc2895bc7146.jpg
             String fn = event.getQueryParam("filename");
             UserRESTHelper backend = getBackend();
             GridFS gridfs = backend.getGridFS();
@@ -13,12 +13,56 @@
                 query.put("filename", fn);
             }
             GridFSDBFile dbfile = gridfs.findOne(query);
-            String mimeType = dbfile.get("metadata.mimeType");
+            String mimeType = dbfile.get("metadata").get("mimeType");
             event.setMimeType(mimeType);
             stream = dbfile.getInputStream();
             event.returnStream(stream);
             return;
+        } else if (event.getDMAction().equals("deleteImage")){
+            //http://localhost:18080/anarchia-admin?page=addImage&action=deleteImage&reloadPage=true&filename=799a7f28-f2f4-40be-b6a4-2c5e3f5cf657.pdf
+            
+            String fn = event.getQueryParam("filename");
+            if (StringTools.isEmpty(fn)){
+                event.returnSource("{'msg':'ERROR: filename was empty'}".replace('\'','"'));
+                return;
+            }
+            UserRESTHelper backend = getBackend();
+            GridFS gridfs = backend.getGridFS();
+            DBObject query = new BasicDBObject();
+            query.put("filename", fn);
+            GridFSDBFile dbfile = gridfs.findOne(query);
+            if (dbfile==null){
+                 event.returnSource(("{'msg':'ERROR: filename not found: "+fn+"'}").replace('\'','"'));
+                return;
+            }
+            gridfs.remove(dbfile);
+            event.returnSource(("{'msg':'SUCCESS: filename deleted', 'dbfile':"+dbfile.toString()+"}").replace('\'','"'));
+            return;
+        
+        } else if (event.getDMAction().equals("getimages")){
+            //http://localhost:18080/anarchia-admin?page=addImage&action=getimages&reloadPage=true
+            UserRESTHelper backend = getBackend();
+            GridFS gridfs = backend.getGridFS();
+            DBObject query = new BasicDBObject();
+            query.put("metadata.author", event.getQueryParam("author"));
+            List dbfileList = gridfs.find(query);
+            String files = "";
+            it = dbfileList.iterator();
+            int loop = 0;
+            while (it.hasNext()){
+                dbfile = it.next();
+                String mimeType = dbfile.toString();
+                String fn = dbfile.getFilename();
+                if (loop>0){
+                    files+=",";
+                }
+                loop++;
+                files += mimeType;
+            }
+            event.returnSource("{\"msg\":\"SUCCESS\", \"files\":["+files+"]}", false, "application/json");
+            return;
         }
+        //ELSE default is PUT:
         try {
             //http://localhost:18080/anarchia-admin?next=addImage
             Session.UploadedFile uf = session.getUploadedFile("file", "", false);

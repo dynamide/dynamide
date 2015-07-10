@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<dynamideForm>
+    <event language="beanshell" name="showImages_onAction"><![CDATA[
+        //http://localhost:18080/anarchia-admin?page=showImages&action=getimages&author=Cooper&reloadPage=true
+        if (event.getDMAction().equals("getimages")){
+            //http://localhost:18080/anarchia-admin?page=showImages&action=getimages&reloadPage=true
+            UserRESTHelper backend = getBackend();
+            GridFS gridfs = backend.getGridFS();
+            DBObject query = new BasicDBObject();
+            query.put("metadata.author", event.getQueryParam("author"));
+            List dbfileList = gridfs.find(query);
+            String files = "";
+            it = dbfileList.iterator();
+            int loop = 0;
+            while (it.hasNext()){
+                dbfile = it.next();
+                String mimeType = dbfile.toString();
+                String fn = dbfile.getFilename();
+                if (loop>0){
+                    files+=",";
+                }
+                loop++;
+                files += mimeType;
+            }
+            event.returnSource("{\"msg\":\"SUCCESS\", \"files\":["+files+"]}", false, "application/json");
+            return;
+        }
+        event.returnSource("{\"msg\":\"ERROR\", \"detail\":\"action not handled\"}", false, "application/json");
+    ]]>
+    </event>
+    
+  <widgets>
+    <widget id="session1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.session</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="hiddenPageID">
+      <properties>
+        <property name="field">
+          <value>page</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.hidden</value>
+        </property>
+        <property name="value">
+          <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+          <value>$pageID</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="author">
+      <properties>
+        <property name="caption">
+          <value>Author</value>
+        </property>
+        <property name="captionClass">
+          <value>caption</value>
+        </property>
+        <property name="captionWidth">
+          <value>180</value>
+        </property>
+        <property name="name">
+          <value>author</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+        </property>
+        <property name="textSize">
+          <value>50</value>
+        </property>
+        <property name="cellpadding">
+          <value>5</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="submit1">
+      <properties>
+        <property name="action">
+          <value>doSubmitThing</value>
+        </property>
+        <property name="caption">
+          <value>Submit</value>
+        </property>
+        <property name="captionWidth">
+          <value>180</value>
+        </property>
+        <property name="cellpadding">
+          <value>5</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
+  </widgets>
+  <htmlsrc browser="*"><![CDATA[
+<HTML>
+  <HEAD>
+    <TITLE>$page.title</TITLE>
+    <script src="/anarchia/js/jquery-2.1.3.min.js"></script>
+    <script src="/anarchia-admin/js/anarchia.js"></script>
+  </HEAD>
+  <BODY id="page1" bottomMargin="15" leftMargin="10" topMargin="15" rightMargin="10" name="showImages">
+    <P>Add Image</P>
+    <FORM name="form$pageID" method="POST" action="$session.applicationURI" enctype="multipart/form-data">
+      <span class="caption" style='margin-left: 120px;'>Image file: </span><span><input TYPE="file" NAME="file"/></span>
+      <br />
+      <SPAN class="widget" id="hiddenPageID"/>
+      <SPAN class="widget" id="author"/>
+      <SPAN class="widget" id="submit1"/>
+    </FORM>
+  </BODY>
+</HTML>
+]]></htmlsrc>
+  <properties>
+    <property name="formAction">
+      <value>mojoAction</value>
+    </property>
+    <property name="formName">
+      <value></value>
+    </property>
+    <property name="name">
+      <readOnly>true</readOnly>
+      <value>showImages</value>
+    </property>
+    <property name="title">
+      <value>Add Image</value>
+    </property>
+    <property name="type">
+      <readOnly>true</readOnly>
+      <value>pagetypes/com.dynamide.page</value>
+    </property>
+  </properties>
+</dynamideForm>
