@@ -437,7 +437,7 @@ public class DynamideHandler extends DynamideObject implements Runnable {
             buffer.append("REQUEST: [");
             buffer.append(Tools.nowLocale());
             buffer.append("]\r\n------------------------------------");
-            buffer.append(ServletTools.dumpRequestInfo(m_request, false, "#FFAD00"));
+            buffer.append(ServletTools.dumpRequestInfo(m_request, false, "#FFAD00", null));
             buffer.append("\r\n------------------------------------");
             buffer.append(result);
             buffer.append("\r\n------------------------------------\r\n");

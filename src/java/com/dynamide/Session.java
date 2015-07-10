@@ -1,11 +1,7 @@
 /* Copyright (c) 2001, 2002 DYNAMIDE.COM */
 package com.dynamide;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.StringReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -1891,14 +1887,23 @@ System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
         return result;
     }
 
-    public File getUploadedFile(String fileInputID)
-    throws Exception {
-        return getUploadedFile(fileInputID, "");
+    public static class UploadedFile{
+        public File file = null;
+        public String filename = "";
+        public String mimeType = "";
+        public InputStream stream = null;
     }
 
-    public File getUploadedFile(String fileInputID, String optionalDirectory)
+    public UploadedFile getUploadedFile(String fileInputID, boolean saveFile)
     throws Exception {
-        File result = null;
+        return getUploadedFile(fileInputID, "", saveFile);
+    }
+
+    /** returns the first uploaded file found that matches the fileIputID, which is the ID of the HTML form field.
+     *  If you upload multiple, @see getUploadFileItems().  If saveFile is false, the stream pointer is saved in the UploadFile object.*/
+    public UploadedFile getUploadedFile(String fileInputID, String optionalDirectory, boolean saveFile)
+    throws Exception {
+        UploadedFile result = new UploadedFile();
         List items = getUploadFileItems();
         if (items != null) {
             Iterator<FileItem> iter = items.iterator();
@@ -1906,7 +1911,6 @@ System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
                 FileItem item = iter.next();
 
                 if (!item.isFormField() && item.getFieldName().equals(fileInputID)) {   //fileInputID is the name of the form field.
-                    String contentType = item.getContentType();
                     String fileName = item.getName();
                     String newFilename = fileName.replace(' ', '_');
                     newFilename = newFilename.replace('\'', '_');
@@ -1917,9 +1921,16 @@ System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
                     if (Tools.isBlank(optionalDirectory)){
                         optionalDirectory = System.getProperty("java.io.tmpdir");
                     }
-                    result = new File(optionalDirectory, newFilename);
-                    item.write(result);
-                    //System.out.println("new file written: " + result.getCanonicalPath());
+                    result.mimeType = item.getContentType();
+                    result.filename = newFilename;
+                    if (saveFile) {
+                        result.file = new File(optionalDirectory, newFilename);
+                        item.write(result.file);
+                        //System.out.println("new file written: " + result.getCanonicalPath());
+                    } else {
+                        result.stream = item.getInputStream();
+                    }
+                    break;
                 }
             }
         }
@@ -2168,7 +2179,13 @@ System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
                     } else {
                         logHandlerProc("INFO", "Page validated: "+pageID);
                     }
-                    if ((event.resultAction == ScriptEvent.RA_RETURN_SOURCE) && (event.resultSrc.length()>0)){
+                    if ((event.resultAction == ScriptEvent.RA_RETURN_STREAM)) {
+                        handlerResult.setBinaryStream(event.getBinaryResultStream());
+                        handlerResult.mimeType = event.mimeType;
+                        handlerResult.setPrettyPrint(false);
+                        handlerResult.setResponseCode(event.getResponseCode());
+                        setActivePage("");
+                    } else if ((event.resultAction == ScriptEvent.RA_RETURN_SOURCE) && (event.resultSrc.length()>0)){
                         logHandlerProc("INFO", "returning event.resultSrc");
                         handlerResult.result = event.resultSrc;
                         handlerResult.mimeType = event.mimeType;

@@ -12,6 +12,7 @@ import com.dynamide.util.StringTools;
 import com.dynamide.util.Tools;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 
 /** In order to make this class as easy to use as possible from multiple scripting languages
  *  supported by events, the important fields are available as public fields and as bean properties
@@ -78,6 +79,9 @@ public class ScriptEvent extends DynamideObject implements java.io.Serializable 
      * the client does a refresh in the browser (e.g. Ctrl-R).
      */
     public static final int RA_SEND_REDIRECT = 5;
+
+    /**Use this to send binary results such as images found or createe from page events.*/
+    public static final int RA_RETURN_STREAM = 6;
 
     public int resultAction = RA_DEFAULT;
     public int getResultAction(){return resultAction;}
@@ -287,6 +291,15 @@ public class ScriptEvent extends DynamideObject implements java.io.Serializable 
     public String resultSrc = "";
     public String  getResultSrc(){return resultSrc;}
     public void setResultSrc(String  new_value){resultSrc = new_value;}
+
+    public InputStream binaryResultStream = null;
+    public InputStream getBinaryResultStream(){
+        return binaryResultStream;
+    }
+    public void returnStream(InputStream stream){
+        this.resultAction = RA_RETURN_STREAM;
+        this.binaryResultStream = stream;
+    }
 
     public String mimeType = "";
     public String getMimeType(){

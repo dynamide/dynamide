@@ -12,6 +12,8 @@
     import com.mongodb.util.JSON;
     import org.json.*;
     import org.apache.commons.fileupload.*; 
+    import com.mongodb.*;
+    import com.mongodb.gridfs.*;
     
     //============== getBackend() ==========================
     UserRESTHelper getBackend(){    

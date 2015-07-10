@@ -1,6 +1,8 @@
 package com.dynamide;
 
 
+import java.io.InputStream;
+
 public class HandlerResult {
     public HandlerResult(String result){
         this.result = result;
@@ -50,6 +52,11 @@ public class HandlerResult {
     public boolean binary = false;
     public boolean getBinary(){return binary;}
     public void setBinary(boolean new_value){binary = new_value;}
+
+    public InputStream binaryStream = null;
+    public InputStream getBinaryStream(){return binaryStream;}
+    public boolean isBinaryStream(){return binaryStream != null;}
+    public void setBinaryStream(InputStream new_value){binaryStream = new_value;}
 
     public String mimeType = "text/html";
     public String  getMimeType(){return mimeType;}

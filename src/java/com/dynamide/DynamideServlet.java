@@ -1,9 +1,6 @@
 package com.dynamide;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.Date;
 import java.util.Enumeration;
 
@@ -257,7 +254,7 @@ public class DynamideServlet extends HttpServlet {
                     printResult(response, "text/html", "OK: see std-out");
                     return;
                 } else if (servletAction.equals("dumpRequestInfo")) {
-                    printResult(response, "text/html", com.dynamide.util.ServletTools.dumpRequestInfo(request, true, "#FFAD00"));
+                    printResult(response, "text/html", com.dynamide.util.ServletTools.dumpRequestInfo(request, true, "#FFAD00", null));
                     return;
                 } else if (servletAction.equals("shutdown")) {
                     String ALLOW_SHUTDOWN = getInitParameter("ALLOW_SHUTDOWN");
@@ -361,6 +358,10 @@ public class DynamideServlet extends HttpServlet {
                     String url = result.redirectURL;
                     Log.debug(DynamideServlet.class, "Sending redirect: " + url);
                     response.sendRedirect(url);
+                } else if (result.isBinaryStream()){
+                    if (com.dynamide.Constants.PROFILE) profiler.enter("servlet.writeResult: " + fullURI);
+                    writeResult(response, result.mimeType, result.getBinaryStream());
+                    if (com.dynamide.Constants.PROFILE) profiler.leave("servlet.writeResult: " + fullURI);
                 } else if (result.binary) {
                     if (com.dynamide.Constants.PROFILE) profiler.enter("servlet.writeResult: " + fullURI);
                     writeResult(response, result.mimeType, result.binaryResult);
@@ -440,6 +441,23 @@ public class DynamideServlet extends HttpServlet {
             out.close();
         }
     }
+
+    /** closes both streams when exiting */
+    private void writeResult(HttpServletResponse response, String contentType, InputStream resultInputStream) throws IOException {
+        response.setContentType(contentType);
+        ServletOutputStream out = response.getOutputStream();
+        try {
+            byte[] buffer = new byte[16384];
+            int len;
+            while ((len = resultInputStream.read(buffer)) != -1) {
+                out.write(buffer, 0, len);
+            }
+        } finally {
+            out.close();
+            resultInputStream.close();
+        }
+    }
+
 
     private void writeResult(HttpServletResponse response, String contentType, byte[] result) throws IOException {
         response.setContentType(contentType);

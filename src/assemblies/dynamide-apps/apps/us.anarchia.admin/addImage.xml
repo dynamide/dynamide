@@ -2,11 +2,61 @@
 <!DOCTYPE dynamideForm>
 <dynamideForm>
     <event language="beanshell" name="addImage_onAction"><![CDATA[
+        //http://localhost:18080/anarchia-admin?page=addImage&action=getimage&reloadPage=true&filename=fe6f79c5-5dff-4e5a-b168-cc2895bc7146.jpg'
+        if (event.getDMAction().equals("getimage")){
+            String fn = event.getQueryParam("filename");
+            UserRESTHelper backend = getBackend();
+            GridFS gridfs = backend.getGridFS();
+            DBObject query = new BasicDBObject();
+            query.put("metadata.author", "LaramieAuthor");
+            if (StringTools.notEmpty(fn)){
+                query.put("filename", fn);
+            }
+            GridFSDBFile dbfile = gridfs.findOne(query);
+            String mimeType = dbfile.get("metadata.mimeType");
+            event.setMimeType(mimeType);
+            stream = dbfile.getInputStream();
+            event.returnStream(stream);
+            return;
+        }
         try {
-            String IMAGES_DIR = "/Users/vcrocla/tmp/anarchia/imagerepo";
-
-            File f = session.getUploadedFile("file", IMAGES_DIR);
+            //http://localhost:18080/anarchia-admin?next=addImage
+            Session.UploadedFile uf = session.getUploadedFile("file", "", false);
+            try {
+                UserRESTHelper backend = getBackend();
+                try {
+                    GridFS gridfs = backend.getGridFS();   
+                    GridFSInputFile fsfile = gridfs.createFile(uf.stream);
                     
+                    String clientFilename = uf.filename;
+                    String ext = clientFilename.substring(clientFilename.lastIndexOf('.'));
+                    String nextid = event.getQueryParam("addImage_nextid");
+                    fsfile.setFilename(nextid+ext);
+                    
+                    DBObject meta = new BasicDBObject();
+                    meta.put("mimeType", uf.mimeType);
+                    meta.put("clientFilename", clientFilename);
+                    meta.put("author", event.getQueryParam("addImage_author"));
+                    meta.put("caption", event.getQueryParam("addImage_caption"));
+                    meta.put("title", event.getQueryParam("addImage_title"));
+                    meta.put("id", nextid);
+                    fsfile.put("metadata", meta);
+                    
+                    fsfile.save();
+                    
+                    event.returnSource("{\"msg\":\"SUCCESS\", \"filename\":\""+fsfile.getFilename()+"\"}", false, "application/json");
+                    return;
+                } finally {
+                    backend.close();
+                }
+                return;
+            } catch (Throwable t){
+                event.returnSource(  "{\"error\":\""+t.toString()+"\"}",
+                                           false, 
+                                           "application/json");
+            }
+            
+            
             event.returnSource("<html><body>uploaded: "+f+"</body></html>");
             return;
         } catch (Exception e){
@@ -15,6 +65,64 @@
         }
     ]]>
     </event>
+    
+    <event language="beanshell" name="addImage_onAction______OLD"><![CDATA[
+    //event.returnStream(uf.stream...)
+        if (event.getDMAction().equals("getimage")){
+            event.returnSource("{\"msg\":\"SUCCESS-getimage\"}", false, "application/json");
+            return;
+        }
+        try {
+            String IMAGES_DIR = "/Users/vcrocla/tmp/anarchia/imagerepo";
+            Session.UploadedFile uf = session.getUploadedFile("file", "", false);
+            //File f = uf.file;
+                    
+            
+            try {
+                UserRESTHelper backend = getBackend();
+                try {
+                    GridFS gridfs = backend.getGridFS();   
+                    GridFSInputFile fsfile = gridfs.createFile(f);
+                    
+                    
+                    String clientFilename = fsfile.getFilename();
+                    String ext = clientFilename.substring(clientFilename.lastIndexOf('.'));
+                    String nextid = event.getQueryParam("addImage_nextid");
+                    fsfile.setFilename(nextid+ext);
+                    
+                    DBObject meta = new BasicDBObject();
+                    meta.put("mimeType", uf.mimeType);
+                    meta.put("clientFilename", clientFilename);
+                    meta.put("author", event.getQueryParam("addImage_author"));
+                    meta.put("caption", event.getQueryParam("addImage_caption"));
+                    meta.put("title", event.getQueryParam("addImage_title"));
+                    meta.put("id", nextid);
+                    fsfile.put("metadata", meta);
+                    
+                    fsfile.save();
+                    
+                    event.returnSource("{\"msg\":\"SUCCESS\", \"filename\":\""+fsfile.getFilename()+"\"}", false, "application/json");
+                    return;
+                } finally {
+                    backend.close();
+                }
+                return;
+            } catch (Throwable t){
+                event.returnSource(  "{\"error\":\""+t.toString()+"\"}",
+                                           false, 
+                                           "application/json");
+            }
+            
+            
+            event.returnSource("<html><body>uploaded: "+f+"</body></html>");
+            return;
+        } catch (Exception e){
+            event.returnSource("ERROR calling getUploadedFile: "+e+" stack trace: "+Tools.getStackTrace(e));
+            return;
+        }
+    ]]>
+    </event>
+    
   <widgets>
     <widget id="session1">
       <properties>
@@ -188,14 +296,13 @@
   <HEAD>
     <TITLE>$page.title</TITLE>
     <script src="/anarchia/js/jquery-2.1.3.min.js"></script>
-    <script src="/anarchia/js/anarchia.js"></script>
+    <script src="/anarchia-admin/js/anarchia.js"></script>
   </HEAD>
   <BODY id="page1" bottomMargin="15" leftMargin="10" topMargin="15" rightMargin="10" name="addPanel">
-    <P>Add Panel v2</P>
+    <P>Add Image</P>
     <FORM name="form$pageID" method="POST" action="$session.applicationURI" enctype="multipart/form-data">
-      File 1: <input TYPE="file" NAME="file"/>
+      <span class="caption" style='margin-left: 120px;'>Image file: </span><span><input TYPE="file" NAME="file"/></span>
       <br />
-      <input TYPE="submit" NAME="Submit" VALUE="Submit Form"/>
       <SPAN class="widget" id="hiddenPageID"/>
       <SPAN class="widget" id="author"/>
       <SPAN class="widget" id="img"/>
@@ -208,10 +315,11 @@
   <script>
     function onNextID(id)\{
         console.log("onNextID: "+id);
-        \$('\#addPanel_nextid').val(id);
+        \$('\#addImage_nextid').val(id);
     \}
     \$(document).ready(function()\{
-       getNextID('panels', onNextID);
+       //getNextID('panels', onNextID);
+       onNextID(GUID());
     \});
     </script>
 </HTML>
@@ -228,7 +336,7 @@
       <value>addPanel</value>
     </property>
     <property name="title">
-      <value>Add Panel</value>
+      <value>Add Image</value>
     </property>
     <property name="type">
       <readOnly>true</readOnly>
