@@ -18,7 +18,10 @@
 </head>
 <body>
 
-<div id='filesDiv'>panel here</div>
+
+<input type="text" id="editAuthor" value="LaramieAuthor"/><button id="btnGetByAuthor">Get by Author</button>
+
+<div id='filesDiv'></div>
 
 <script id="TemplateSource" type="text/x-handlebars-template">
     <table border='1' cellpadding='2' cellspacing='0' width="100%">
@@ -66,7 +69,9 @@
     }
     
     function documentReady(){
-        getByAuthor('LaramieAuthor');
+        $( "#btnGetByAuthor" ).click(function() {
+            getByAuthor($( "#editAuthor" ).val());
+        });
     }
 
     $(document).ready(documentReady);

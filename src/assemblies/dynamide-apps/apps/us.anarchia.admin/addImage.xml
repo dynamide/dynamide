@@ -5,10 +5,12 @@
         if (event.getDMAction().equals("getimage")){
             //http://localhost:18080/anarchia-admin?page=addImage&action=getimage&reloadPage=true&filename=fe6f79c5-5dff-4e5a-b168-cc2895bc7146.jpg
             String fn = event.getQueryParam("filename");
+            if (StringTools.isEmpty(fn)){
+                returnSource(("{'msg':'ERROR: filename was empty'}").replace('\'','"'));
+            }
             UserRESTHelper backend = getBackend();
             GridFS gridfs = backend.getGridFS();
             DBObject query = new BasicDBObject();
-            query.put("metadata.author", "LaramieAuthor");
             if (StringTools.notEmpty(fn)){
                 query.put("filename", fn);
             }
