@@ -199,3 +199,7 @@ pg73jdbc3.jar
 2015-01-06
    Upgraded to mongo-java-driver-2.13.0-rc1.jar, and hid previous in _HIDE
 
+2015-07-10
+	 Added mongo-realm-1.0-SNAPSHOT.jar from https://github.com/tobrien/mongo-realm, and updated /Users/vcrocla/src/anarchia/doc/mongodb/admin-notes.txt with notes on how to configure.
+
+
