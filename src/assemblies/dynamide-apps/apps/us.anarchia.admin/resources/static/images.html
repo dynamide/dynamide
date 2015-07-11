@@ -7,6 +7,7 @@
     <link  href="js/jquery-ui/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
     <script src="js/jquery-ui/ui/minified/jquery-ui.min.js"></script>
     <script src="js/jquery-ui-touch-punch.js"></script>
+    <script src="/anarchia/js/anarchia.js"></script>
     <link  href="css/anarchia.css" rel="stylesheet" type="text/css"/>
     
     <style type="">
@@ -19,39 +20,71 @@
 <body>
 
 
-<input type="text" id="editAuthor" value="LaramieAuthor"/><button id="btnGetByAuthor">Get by Author</button>
+<input type="text" id="editAuthor" value="laramie"/><button id="btnGetByAuthor">Get by Author</button>
+
+<div id='storiesDiv'></div>
+
+<input type="text" id="editNewStory" value="story1"/><button id="btnCreateStory">Create Story ==></button>
+    
 
 <div id='filesDiv'></div>
+
 
 <script id="TemplateSource" type="text/x-handlebars-template">
     <table border='1' cellpadding='2' cellspacing='0' width="100%">
         <tr style='background-color: lightgray;'><th><input type='checkbox' name='' id='' /></th><th>img</th><th>filename</th><th>Author</th><th>title</th><th>caption</th></tr>
         {{#each filesArray}}
             <tr>
-                <th>
-                    <input type='checkbox' name='' id='' />
-                </th>
-                <th>
-                    <a href='/anarchia-admin?page=addImage&action=getimage&filename={{filename}}' target='_blank' ><img width='100px' src='/anarchia-admin?page=addImage&action=getimage&filename={{filename}}' /></a>
-                </th>
-                <th>{{filename}}</th>
-                <th class=''>{{metadata.author}}</th>
-                <th class=''>{{metadata.title}}</th>
-                <th class=''>{{metadata.caption}}</th>
+                <td>
+                    <input class="filesCheckbox" type='checkbox' name='cb{{@index}}' value='{{filename}}' />
+                </td>
+                <td>
+                    <a href='/anarchia/images/{{filename}}' target='_blank' ><img width='100px' src='/anarchia/images/{{filename}}' /></a>
+                </td>
+                <td>{{filename}}</td>
+                <td class=''>{{metadata.author}}</td>
+                <td class=''>{{metadata.title}}</td>
+                <td class=''>{{metadata.caption}}</td>
             </tr>
         {{/each}}
     </table>
 </script>
 
+<script id="TemplateSourceStories" type="text/x-handlebars-template">
+    <button id="btnAddToStory">Add to Story ==></button>
+    <select id="selectStory">
+      <option id="default" value="default">default</option>
+      {{#each storiesArray}}
+          <option value="{{id}}">{{title}} [{{panels.length}} panels]</option>
+       {{/each}}
+    </select>
+</script>
+
+
+
 </body>
 <script>
     var gFiles = null;
+    var gStories = null;
+    
     var source = document.getElementById('TemplateSource').innerHTML
     var templateFn = Handlebars.compile(source);
+    
+    var sourceStories = document.getElementById('TemplateSourceStories').innerHTML
+    var templateFnStories = Handlebars.compile(sourceStories);
         
     function renderTemplate(data){
         if (data){
             $('#filesDiv').html(templateFn({filesArray: data}));
+        }
+    }
+    function renderStoriesTemplate(data){
+        if (data){
+            $('#storiesDiv').html(templateFnStories({storiesArray: data}));
+            $( "#btnAddToStory" ).click(function() {
+                var id = $('#selectStory').children(":selected").attr("value");
+                alert ("id: "+id);
+            });
         }
     }
     
@@ -68,10 +101,88 @@
        );
     }
     
+    function getStoriesByAuthor(author){
+        // AJAX CALL HERE :
+       $.get('/anarchia/stories?author='+author,
+          function(data) {
+              if (data && data.length){
+                  gStories = data;
+                  console.log('stories: '+JSON.stringify(gStories));
+                  renderStoriesTemplate(gStories);
+              }
+          }
+       );
+    }
+    
+    function createStory(filesArray){
+        var panels = [];
+        filesArray.forEach(function(filename, idx){
+            var panel = {};
+            panel.img = "/anarchia/images/"+filename;
+            panel.author = "laramie";
+            panel._type = "Image";
+            panel.text = {};
+            panel.text.caption = "";
+            panel.text.title = "";
+            panel.id = GUID();
+            panels.push(panel);
+        });
+        console.log("panels: "+JSON.stringify(panels));
+        
+        
+        
+        //This post fails, it seems to be still sending UUEncoded...
+        
+        // AJAX CALL HERE :
+        /////////// BY THE WAY: don't do this: 
+        //               dataType: 'json',
+        // It somehow means send URL encoded.
+        $.ajax ({
+              type: "POST",
+              url: "/anarchia/images",
+              contentType: 'application/json',    //if you set to json, it sends OPTIONS first.  If you don't set, it tries form encoded, which doesn't appear in event.getRequestBody().
+              async: false,
+              headers: {
+                "Authorization": "Basic " + btoa("laramie" + ":" + "ecotel33")
+              },
+              data: JSON.stringify(panels[0]),
+              success: function (data){
+                console.log('data:'+JSON.stringify(data));
+                alert('post complete');
+              },
+              error: function (data){
+                console.log('data:'+JSON.stringify(data));
+                alert('post failed');
+              }
+        });
+        
+       $.post('/anarchia/stories',
+          function(data) {
+              console.log('result from POST /anarchia/stories:'+data);
+          }
+       );
+    }
+    
     function documentReady(){
         $( "#btnGetByAuthor" ).click(function() {
-            getByAuthor($( "#editAuthor" ).val());
+            var author = $( "#editAuthor" ).val();
+            getByAuthor(author);
+            getStoriesByAuthor(author)
         });
+        
+        $( "#btnCreateStory" ).click(function() {
+            var storyID = $( "#editNewStory" ).val();
+            var arr = [];
+            $('#filesDiv input:checked').each(function (){
+                if (this.checked){
+                    arr.push($(this).attr('value'));    
+                }
+            });
+            console.log(arr);
+            createStory(arr);
+        });
+        
+        
     }
 
     $(document).ready(documentReady);

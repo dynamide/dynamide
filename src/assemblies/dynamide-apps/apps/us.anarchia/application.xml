@@ -10,6 +10,8 @@
     import com.nebhale.jsonpath.JsonPath;
     import us.anarchia.db.UserRESTHelper;
     import com.mongodb.util.JSON;
+    import com.mongodb.*;
+    import com.mongodb.gridfs.*;
     import org.json.*;
   ]]></event>
 
@@ -19,7 +21,7 @@
 
   <event language="beanshell" name="application_onAction"><![CDATA[
         String path = session.getRequestPath();
-        System.out.println("\n\n\n\n\n\n****************************************************path: "+path);
+        System.out.println("\n\n\n\n\n\n**************************************************anarchia**path: "+path);
         if (path==null || path.length()==0 || path.equals("/")){
             event.sendRedirect("/anarchia/panels.html");
             return;
@@ -95,6 +97,31 @@
             return null;
         }
         
+        //=============== getImage() ===============================
+        
+        void getImage(String path){
+            fn = path.substring("/anarchia/images/".length());
+            qu = fn.indexOf('?');
+            if (qu>-1){
+                fn = fn.substring(0, qu);  //throwing away all query params.
+            }
+            if (StringTools.isEmpty(fn)){
+                returnSource(("{'msg':'ERROR: filename was empty'}").replace('\'','"'));
+            }
+            UserRESTHelper backend = getBackend();
+            GridFS gridfs = backend.getGridFS();
+            DBObject query = new BasicDBObject();
+            if (StringTools.notEmpty(fn)){
+                query.put("filename", fn);
+            }
+            GridFSDBFile dbfile = gridfs.findOne(query);
+            String mimeType = dbfile.get("metadata").get("mimeType");
+            event.setMimeType(mimeType);
+            stream = dbfile.getInputStream();
+            event.returnStream(stream);
+            return;
+        }
+        
         
         //==============[   MAIN   ]============================================
         
@@ -108,7 +135,7 @@
                 if (method.equals("POST")){
                     String qtype = event.getQueryParam("qtype");
                     String reqbody = event.getRequestBody();
-                    System.out.println("@@@@@@@@@@@@@@"+qtype+"@@@@@@@@@@@@@@"+reqbody);
+                    System.out.println("@@@@@@@@@@@@@@qtype:"+qtype+";@@@@@@@@@@@@@@"+reqbody);
                     String res = "";
                     if (path.equals("/anarchia/images")){
                         res = backend.post("anarchia",
@@ -237,14 +264,24 @@
                         return;
                     }
                     String res = null;
-                    if (path.equals("/anarchia/images")){
+                    
+                    if (path.startsWith("/anarchia/images/") && path.length()>"/anarchia/images/".length()){
+                        getImage(path);
+                        return;
+                    } else if (path.equals("/anarchia/images")){
                         res = backend.getAll("anarchia",
                                  "images",
                                   "{}", 0, 1000);
                     } else if (path.equals("/anarchia/stories")){
-                        res = backend.getAll("anarchia",
-                                 "stories",
-                                  "{}", 0, 1000);
+                        System.out.println("in case /anarchia/stories");
+                        String author = event.getQueryParam("author");
+                        if (StringTools.notEmpty(author)){
+                            Tools.safe(author);
+                            query = "{'author':'"+author+"'}";
+                            res = backend.getAll("anarchia", "stories", query, 0, 1000);
+                        } else {
+                            res = backend.getAll("anarchia", "stories", "{}", 0, 1000);
+                        }
                     }
                     if (res==null){
                         event.jumpToPage("jsonEditor");

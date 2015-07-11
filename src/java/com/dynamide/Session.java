@@ -2107,6 +2107,13 @@ System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
                         handlerResult.setResponseCode(event.getResponseCode());
                         setActivePage("");
                         return handlerResult;
+                    } else if (event.resultAction == ScriptEvent.RA_RETURN_STREAM){
+                        handlerResult.setBinaryStream(event.getBinaryResultStream());
+                        handlerResult.mimeType = event.mimeType;
+                        handlerResult.setPrettyPrint(false);
+                        handlerResult.setResponseCode(event.getResponseCode());
+                        setActivePage("");
+                        return handlerResult;
                     }
                 }
             }
