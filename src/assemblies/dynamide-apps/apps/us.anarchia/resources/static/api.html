@@ -41,7 +41,7 @@
 <div class="entry-content">
 <pre><span style="color:#fff000">johndoe@localhost [~]</span>
 curl -u johndoe:password99 -p  "http://li257-17.members.linode.com/anarchia?qtype=nextidnumber"
-curl -u johndoe:password99 -p  "http://li257-17.members.linode.com/anarchia?qtype=nextid&collection=images"
+curl -u johndoe:password99 -p  "http://li257-17.members.linode.com/anarchia?qtype=nextid&collection=panels"
 </pre>
 </div>
 <p>In fact, there is a script to do this for you, which you can check out.  Then you just run:</p>
@@ -51,14 +51,14 @@ curl -u johndoe:password99 -p  "http://li257-17.members.linode.com/anarchia?qtyp
 ./get.bash '/anarchia?qtype=author&author=laramie'
 ./get.bash '/anarchia?qtype=story&amp;storyid=http://anarchia.us/id/stories/1'
 ./get.bash '/anarchia/stories'
-./get.bash '/anarchia/images'
+./get.bash '/anarchia/panels'
 
 </pre>
 
 <p>Here are the POST endpoints:</p>
 
 <pre>
-POST /anarchia/images   {cafe.json}
+POST /anarchia/panels   {cafe.json}
 POST /anarchia/stories  {story1.json}
 POST /anarchia/idservice {id-service.json}
 </pre>

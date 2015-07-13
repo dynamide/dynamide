@@ -39,7 +39,7 @@
                     <input class="filesCheckbox" type='checkbox' name='cb{{@index}}' value='{{filename}}' />
                 </td>
                 <td>
-                    <a href='/anarchia/images/{{filename}}' target='_blank' ><img width='100px' src='/anarchia/images/{{filename}}' /></a>
+                    <a href='/anarchia/files/{{filename}}' target='_blank' ><img width='100px' src='/anarchia/files/{{filename}}' /></a>
                 </td>
                 <td>{{filename}}</td>
                 <td class=''>{{metadata.author}}</td>
@@ -90,7 +90,7 @@
     
     function getByAuthor(author){
         // AJAX CALL HERE :
-       $.get('/anarchia-admin?page=addImage&action=getimages&author='+author,
+       $.get('/anarchia-admin?page=addFile&action=getFiles&author='+author,
           function(data) {
               if (data.files){
                   gFiles = data.files;
@@ -118,7 +118,7 @@
         var panels = [];
         filesArray.forEach(function(filename, idx){
             var panel = {};
-            panel.img = "/anarchia/images/"+filename;
+            panel.img = "/anarchia/files/"+filename;
             panel.author = "laramie";
             panel._type = "Image";
             panel.text = {};
@@ -139,7 +139,7 @@
         // It somehow means send URL encoded.
         $.ajax ({
               type: "POST",
-              url: "/anarchia/images",
+              url: "/anarchia/panels",
               contentType: 'application/json',    //if you set to json, it sends OPTIONS first.  If you don't set, it tries form encoded, which doesn't appear in event.getRequestBody().
               async: false,
               headers: {

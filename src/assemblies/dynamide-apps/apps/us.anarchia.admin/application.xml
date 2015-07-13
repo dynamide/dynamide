@@ -35,7 +35,7 @@
 
   <pages>
   	<page name="addPanel"></page>
-  	<page name="addImage"></page>
+  	<page name="addFile"></page>
   	<page name="showImages"></page>
   	<page name="reorderStory"></page>
   </pages>

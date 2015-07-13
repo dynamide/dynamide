@@ -6,7 +6,7 @@ function getNextID(collection, resultSelector){
       }
    );
 }
-getNextID('images', '#nextidDiv');
+getNextID('panels', '#nextidDiv');
 
 function GUID(){
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {

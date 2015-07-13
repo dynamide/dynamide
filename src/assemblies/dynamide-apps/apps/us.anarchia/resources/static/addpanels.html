@@ -38,7 +38,7 @@ document.getElementById('file-input').addEventListener('change', readLocalFile, 
        console.log('postdata:'+postdata);
        $.ajax ({
               type: "POST",
-              url: "/anarchia/images",
+              url: "/anarchia/panels",
               dataType: 'json',
               contentType: 'text/plain',    //if you set to json, it sends OPTIONS first.  If you don't set, it tries form encoded, which doesn't appear in event.getRequestBody().
               async: false,
@@ -55,11 +55,11 @@ document.getElementById('file-input').addEventListener('change', readLocalFile, 
                 alert('post failed');
               }
         });
-        getNextID_intoSelector('images', '#nextidDiv');
+        getNextID_intoSelector('panels', '#nextidDiv');
     }
     
     function documentReady(){
-       getNextID_intoSelector('images', '#nextidDiv');
+       getNextID_intoSelector('panels', '#nextidDiv');
     }
 
     $(document).ready(documentReady);

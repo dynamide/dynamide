@@ -17,7 +17,7 @@
                            );
                                
                     String res = backend.post("anarchia",
-                                              "images",
+                                              "panels",
                                               jo.toString());
                     event.returnSource(res, false, "application/json");
                     return;

@@ -43,7 +43,7 @@
             backend = getBackend();
             String payload = backend.get("anarchia",
                                          "idservice",
-                                         "{'collection':'images'}"); 
+                                         "{'collection':'panels'}"); 
             String nextID = "";
             Object json = new JSONTokener(payload).nextValue();
             if (json instanceof JSONObject) {
@@ -100,7 +100,7 @@
         //=============== getImage() ===============================
         
         void getImage(String path){
-            fn = path.substring("/anarchia/images/".length());
+            fn = path.substring("/anarchia/files/".length());
             qu = fn.indexOf('?');
             if (qu>-1){
                 fn = fn.substring(0, qu);  //throwing away all query params.
@@ -115,6 +115,12 @@
                 query.put("filename", fn);
             }
             GridFSDBFile dbfile = gridfs.findOne(query);
+            if (dbfile==null){
+                event.returnSource(("{'ERROR':'File not found: "+fn+"'}").replace('\'', '"'));
+                event.setMimeType("application/json");
+                event.setResponseCode(404);
+                return;
+            }
             String mimeType = dbfile.get("metadata").get("mimeType");
             event.setMimeType(mimeType);
             stream = dbfile.getInputStream();
@@ -137,9 +143,9 @@
                     String reqbody = event.getRequestBody();
                     System.out.println("@@@@@@@@@@@@@@qtype:"+qtype+";@@@@@@@@@@@@@@"+reqbody);
                     String res = "";
-                    if (path.equals("/anarchia/images")){
+                    if (path.equals("/anarchia/panels")){
                         res = backend.post("anarchia",
-                                 "images",
+                                 "panels",
                                   reqbody);
                     } else if (path.equals("/anarchia/idservice")){
                         res = backend.post("anarchia",
@@ -211,7 +217,7 @@
                         Tools.safe(author);
                         //query = "{ $query: {'author':'"+author+"'}, $orderby: { sequence : 1 } }";  if you use this, no docs without sequence are returned.
                         query = "{ $query: {'author':'"+author+"'} }";
-                        json = backend.getAll("anarchia", "images", query, 0, 1000);
+                        json = backend.getAll("anarchia", "panels", query, 0, 1000);
                     
                     } else if (qtype.equals("story")){
                         String storyid = event.getQueryParam("storyid");
@@ -236,8 +242,8 @@
                         }
                         //NOW hit mongo again with all the ids to retrieve the panels:
                         query = "{ id : { $in : "+storiesObj.get("panels").toString()+" } }";
-                        json = backend.getAll("anarchia", "images", query);
-                        System.out.println("\n\n images query: \n"+query);
+                        json = backend.getAll("anarchia", "panels", query);
+                        System.out.println("\n\n panels query: \n"+query);
                         panelsArr = getJSONArray(json);
                         JSONObject aggregateObj = new JSONObject();
                         aggregateObj.put("panels", panelsArr);
@@ -246,9 +252,9 @@
                         System.out.println("bystory order RESULT: ========== "+json+"\r\n==============");
                         
                         
-                    } else if (qtype.equals("images")){
-                        query = "{ id : { $in : ['http://anarchia.us/id/images/53', 'http://anarchia.us/id/images/54'] } }";
-                        json = backend.getAll("anarchia", "images", query);
+                    } else if (qtype.equals("panels")){
+                        query = "{ id : { $in : ['http://anarchia.us/id/panels/53', 'http://anarchia.us/id/panels/54'] } }";
+                        json = backend.getAll("anarchia", "panels", query);
                     }
                     
                     System.out.println("GET("+query+"): \n=====> "+json);
@@ -265,12 +271,12 @@
                     }
                     String res = null;
                     
-                    if (path.startsWith("/anarchia/images/") && path.length()>"/anarchia/images/".length()){
+                    if (path.startsWith("/anarchia/files/") && path.length()>"/anarchia/files/".length()){
                         getImage(path);
                         return;
-                    } else if (path.equals("/anarchia/images")){
+                    } else if (path.equals("/anarchia/panels")){
                         res = backend.getAll("anarchia",
-                                 "images",
+                                 "panels",
                                   "{}", 0, 1000);
                     } else if (path.equals("/anarchia/stories")){
                         System.out.println("in case /anarchia/stories");

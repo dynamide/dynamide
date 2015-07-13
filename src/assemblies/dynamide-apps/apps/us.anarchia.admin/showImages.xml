@@ -2,9 +2,9 @@
 <!DOCTYPE dynamideForm>
 <dynamideForm>
     <event language="beanshell" name="showImages_onAction"><![CDATA[
-        //http://localhost:18080/anarchia-admin?page=showImages&action=getimages&author=Cooper&reloadPage=true
-        if (event.getDMAction().equals("getimages")){
-            //http://localhost:18080/anarchia-admin?page=showImages&action=getimages&reloadPage=true
+        //http://localhost:18080/anarchia-admin?page=showImages&action=getpanels&author=Cooper&reloadPage=true
+        if (event.getDMAction().equals("getpanels")){
+            //http://localhost:18080/anarchia-admin?page=showImages&action=getpanels&reloadPage=true
             UserRESTHelper backend = getBackend();
             GridFS gridfs = backend.getGridFS();
             DBObject query = new BasicDBObject();
