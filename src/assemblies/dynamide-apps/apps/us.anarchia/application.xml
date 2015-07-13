@@ -38,58 +38,28 @@
             return backend;
         }
         
-        //============== getNextID() ==========================
-        String getNextID(){
-            backend = getBackend();
-            String payload = backend.get("anarchia",
-                                         "idservice",
-                                         "{'collection':'panels'}"); 
-            String nextID = "";
-            Object json = new JSONTokener(payload).nextValue();
-            if (json instanceof JSONObject) {
-                JSONObject jsonobject = new JSONObject(payload);
-                 nextID = ""+jsonobject.get("nextID");
-            } else if (json instanceof JSONArray) {
-                JSONArray jsonarray = new JSONArray(payload);
-                nextID = ""+jsonarray.get(0).get("nextID");
-            }
-            int iNextID = Integer.parseInt(nextID);
-            iNextID++;
-            nextID = ""+iNextID; 
-            idJson = JSON.parse(payload);
-            idJson.put("nextID", nextID);
-            
-            backend.put("anarchia",
-                         "idservice",
-                         idJson.toString(), 
-                         false, 
-                         false);  
-
-            return nextID;
-        }
-        
-        //============== getIDBase() ==========================
-        String getIDBase(String collection){
-            return "http://anarchia.us/id/"+collection+"/";
-        }
-        
         //============== getJSONArray() ==========================
+        //Turns out, get nextID is a terrible idea.  But this documents how to use JSONTokener, with the now ficticious example nextID.
+        //Call these two functions like so: 
+        //  Object json = new JSONTokener(payload).nextValue();
+        //    if (json instanceof JSONObject) {
+        //        JSONObject jsonobject = new JSONObject(payload);
+        //         nextID = ""+jsonobject.get("nextID");
+        //    } else if (json instanceof JSONArray) {
+        //        JSONArray jsonarray = new JSONArray(payload);
+        //        nextID = ""+jsonarray.get(0).get("nextID");
+        //    }
         JSONArray getJSONArray(String payload){
             Object json = new JSONTokener(payload).nextValue();
-            System.out.println("===========================\ngetJSONArray payload: "+payload);
-            System.out.println("===========================\ngetJSONArray json: "+json);
             if (json instanceof JSONArray) {
                 JSONArray jsonarray = new JSONArray(payload);
                 return jsonarray;
             }
             return null;
         }
-        
         //============== getJSONObject() ==========================
         JSONObject getJSONObject(String payload){
             Object json = new JSONTokener(payload).nextValue();
-            System.out.println("===========================\ngetJSONArray payload: "+payload);
-            System.out.println("===========================\ngetJSONArray json: "+json);
             if (json instanceof JSONObject) {
                 JSONObject jsonobject = new JSONObject(payload);
                 return jsonobject;
@@ -206,12 +176,6 @@
                         query = "{'collection':'"+collection+"'}";  
                         json = backend.get("anarchia", "idservice", query);
                         
-                    } else if (qtype.equals("nextid")){
-                       json = ("{'nextid':'"+getIDBase(collection)+getNextID()+"'}").replace('\'', '"');
-                       
-                    } else if (qtype.equals("nextidnumber")){
-                       json = ("{'nextid':'"+getNextID()+"'}").replace('\'', '"');
-                       
                     } else if (qtype.equals("author")){
                         String author = event.getQueryParam("author");
                         Tools.safe(author);

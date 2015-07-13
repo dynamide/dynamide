@@ -10,8 +10,6 @@
 </head>
 <body>
 
-<div style="background-color: white;" id='nextidDiv'>nextid here</div>
-
 <div id='panelDiv'>panel here</div>
 
 <input type="file" id="file-input" /><br />
@@ -21,7 +19,7 @@
 function displayContents(contents) {
   var element = document.getElementById('file-content');
   var obj = JSON.parse(contents);
-  obj.id = $('#nextidDiv').html();
+  obj.id = GUID();
   var contents2 = JSON.stringify(obj, null, "    ");
   console.log(contents2);
   element.innerHTML = contents2;
@@ -55,11 +53,9 @@ document.getElementById('file-input').addEventListener('change', readLocalFile, 
                 alert('post failed');
               }
         });
-        getNextID_intoSelector('panels', '#nextidDiv');
     }
     
     function documentReady(){
-       getNextID_intoSelector('panels', '#nextidDiv');
     }
 
     $(document).ready(documentReady);

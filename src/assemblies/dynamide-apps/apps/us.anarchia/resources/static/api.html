@@ -40,11 +40,15 @@
 
 <div class="entry-content">
 <pre><span style="color:#fff000">johndoe@localhost [~]</span>
-curl -u johndoe:password99 -p  "http://li257-17.members.linode.com/anarchia?qtype=nextidnumber"
-curl -u johndoe:password99 -p  "http://li257-17.members.linode.com/anarchia?qtype=nextid&collection=panels"
+#get all files for an author:
+curl -u johndoe:password99 -p  "http://localhost:18080/anarchia-admin?page=addFile&action=getFiles&author=laramie"
+#get one file by ID:
+curl -u johndoe:password99 -p  "http://localhost:18080/anarchia/files/77a3d8b7-6cab-4ef2-872f-48fd1fc9e7c6.jpeg"
+#delete a file by ID (you need to be that author):
+curl -u laramie:password99 -p  "http://localhost:18080/anarchia-admin?page=addImage&action=deleteFile&filename=77a3d8b7-6cab-4ef2-872f-48fd1fc9e7c6.jpeg"
 </pre>
 </div>
-<p>In fact, there is a script to do this for you, which you can check out.  Then you just run:</p>
+<p>In fact, there is a script to do some APIs for you, which you can check out.  Then you just run:</p>
 <div class="entry-content">
 <pre>cd $ANARCHIA_HOME/src/json
 <span style="color:#fff000">johndoe@localhost [~/anarchia/src/json]</span>
@@ -60,7 +64,6 @@ curl -u johndoe:password99 -p  "http://li257-17.members.linode.com/anarchia?qtyp
 <pre>
 POST /anarchia/panels   {cafe.json}
 POST /anarchia/stories  {story1.json}
-POST /anarchia/idservice {id-service.json}
 </pre>
 </div>
 

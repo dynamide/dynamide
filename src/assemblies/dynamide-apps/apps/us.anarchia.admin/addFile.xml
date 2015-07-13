@@ -112,63 +112,6 @@
     ]]>
     </event>
     
-    <event language="beanshell" name="addFile_onAction______OLD"><![CDATA[
-    //event.returnStream(uf.stream...)
-        if (event.getDMAction().equals("getpanels")){
-            event.returnSource("{\"msg\":\"SUCCESS-getpanels\"}", false, "application/json");
-            return;
-        }
-        try {
-            String IMAGES_DIR = "/Users/vcrocla/tmp/anarchia/imagerepo";
-            Session.UploadedFile uf = session.getUploadedFile("file", "", false);
-            //File f = uf.file;
-                    
-            
-            try {
-                UserRESTHelper backend = getBackend();
-                try {
-                    GridFS gridfs = backend.getGridFS();   
-                    GridFSInputFile fsfile = gridfs.createFile(f);
-                    
-                    
-                    String clientFilename = fsfile.getFilename();
-                    String ext = clientFilename.substring(clientFilename.lastIndexOf('.'));
-                    String nextid = event.getQueryParam("addFile_nextid");
-                    fsfile.setFilename(nextid+ext);
-                    
-                    DBObject meta = new BasicDBObject();
-                    meta.put("mimeType", uf.mimeType);
-                    meta.put("clientFilename", clientFilename);
-                    meta.put("author", event.getQueryParam("addFile_author"));
-                    meta.put("caption", event.getQueryParam("addFile_caption"));
-                    meta.put("title", event.getQueryParam("addFile_title"));
-                    meta.put("id", nextid);
-                    fsfile.put("metadata", meta);
-                    
-                    fsfile.save();
-                    
-                    event.returnSource("{\"msg\":\"SUCCESS\", \"filename\":\""+fsfile.getFilename()+"\"}", false, "application/json");
-                    return;
-                } finally {
-                    backend.close();
-                }
-                return;
-            } catch (Throwable t){
-                event.returnSource(  "{\"error\":\""+t.toString()+"\"}",
-                                           false, 
-                                           "application/json");
-            }
-            
-            
-            event.returnSource("<html><body>uploaded: "+f+"</body></html>");
-            return;
-        } catch (Exception e){
-            event.returnSource("ERROR calling getUploadedFile: "+e+" stack trace: "+Tools.getStackTrace(e));
-            return;
-        }
-    ]]>
-    </event>
-    
   <widgets>
     <widget id="session1">
       <properties>
