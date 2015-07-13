@@ -5,6 +5,7 @@
     <link  href="js/jquery-ui/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
     <script src="js/jquery-ui/ui/minified/jquery-ui.min.js"></script>
     <script src="js/jquery-ui-touch-punch.js"></script>
+    <script src="/anarchia/js/anarchia.js"></script>
     <link  href="css/anarchia.css" rel="stylesheet" type="text/css"/>
     
     <style type="">
@@ -45,16 +46,24 @@
 <a class="anarchiaButton" href='javascript:getByStory("http://anarchia.us/id/stories/1")'>Story 1</a>
 <a class="anarchiaButton" href='javascript:getByStory("http://anarchia.us/id/stories/2")'>Story 2</a>
 <a class="anarchiaButton" href='javascript:getByStory("http://anarchia.us/id/stories/3")'>Story 3</a>
+<a class="anarchiaButton" href='javascript:getUserStory()'>userStoryID</a>
 <a class="anarchiaButton" href='/anarchia/api.html'>API</a>
 </span>
 
 </body>
 <script>
+    var queryParams = getQueryParams();  //anarchia.js
+    var userStoryID = queryParams['storyID'];
+    
     var gPanels = null;
     var gPanelIndex = -1;
     var source = document.getElementById('TemplateSource').innerHTML
     var templateFn = Handlebars.compile(source);
         
+    function getUserStory(){
+        getByStory(userStoryID);
+    }
+    
     function nextPanel(){
         if (gPanels){
             if (gPanels[gPanelIndex+1]){
@@ -153,7 +162,11 @@
     
     function documentReady(){
         //getByAuthor('laramie');
-        getByStory('http://anarchia.us/id/stories/1');
+        if (userStoryID && userStoryID != ''){
+            getByStory(userStoryID);
+         } else {
+            getByStory('http://anarchia.us/id/stories/1');
+         }
     }
 
     $(document).ready(documentReady);

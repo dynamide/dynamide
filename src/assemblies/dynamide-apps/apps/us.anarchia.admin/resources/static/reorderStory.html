@@ -9,6 +9,8 @@
     <script src="js/jquery-ui/ui/minified/jquery-ui.min.js"></script>
     <script src="js/jquery-ui-touch-punch.js"></script>
     
+    <script src="/anarchia/js/anarchia.js"></script>
+    
     <style>
     .up {
         text-decoration: none;   
@@ -25,10 +27,12 @@
     
   </HEAD>
   <BODY id="page1" bottomMargin="15" leftMargin="10" topMargin="15" rightMargin="10" name="addPanel">
+  <small>Hit this page with a URL like http://localhost:18080/anarchia-admin/reorderStory.html?storyID=08a48132-919b-4a2d-ad9d-c95ac44982b3</small>
     <P>Reorder Story</P>
       <div style="padding: 1em;">
       <input type='button' id="saveStoryBtn" value="Save Story">
       <span id="backendMsg"></span>
+      <span id="viewStoryLink"></span>
       </div>
     
     <div id='panelDiv'>panel here</div>
@@ -56,8 +60,12 @@
   
   <script>
     //========================= scripts ===================================================
+    
+    var queryParams = getQueryParams();  //anarchia.js
+    
     var gPanels = null;
-    var gStoryID = 'http://anarchia.us/id/stories/2';
+    //var gStoryID = 'http://anarchia.us/id/stories/2';
+    var gStoryID = queryParams['storyID'];
     var gByStoryID = null;
     var templateFn = Handlebars.compile(document.getElementById('TemplateSource').innerHTML);
     
@@ -112,8 +120,11 @@
                   }
                );
             }
-            getByStory(gStoryID);
-            
+            if (gStoryID == ''){
+                alert("No storyID.  Use a URL like http://localhost:18080/anarchia-admin/reorderStory.html?storyID=08a48132-919b-4a2d-ad9d-c95ac44982b3");
+            } else {
+                getByStory(gStoryID);
+            }
             $('#saveStoryBtn').click(function(){
                 var storyObj = {};
                 storyObj.id = gByStoryID.story.id;
@@ -143,6 +154,7 @@
                     data: storyJSON,
                     success: function( data, textStatus, jQxhr ){
                         $('#backendMsg').html("Story saved").fadeIn(800).delay(5000).fadeOut(1000);
+                        $('#viewStoryLink').html("<a href='/anarchia/panels.html?storyID="+gByStoryID.story.id+"'>View Story</a>");
                     }
                 });
             }

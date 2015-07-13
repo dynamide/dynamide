@@ -21,7 +21,7 @@
             event.returnStream(stream);
             return;
         } else if (event.getDMAction().equals("deleteFile")){
-            //http://localhost:18080/anarchia-admin?page=addFile&action=deleteImage&reloadPage=true&filename=799a7f28-f2f4-40be-b6a4-2c5e3f5cf657.pdf
+            //http://localhost:18080/anarchia-admin?page=addFile&action=deleteFile&reloadPage=true&filename=799a7f28-f2f4-40be-b6a4-2c5e3f5cf657.pdf
             
             String fn = event.getQueryParam("filename");
             if (StringTools.isEmpty(fn)){
@@ -219,7 +219,7 @@
           <value>doSubmitThing</value>
         </property>
         <property name="caption">
-          <value>Submit</value>
+          <value>Upload File</value>
         </property>
         <property name="captionWidth">
           <value>180</value>
@@ -241,9 +241,9 @@
     <script src="/anarchia-admin/js/anarchia.js"></script>
   </HEAD>
   <BODY id="page1" bottomMargin="15" leftMargin="10" topMargin="15" rightMargin="10" name="addPanel">
-    <P>Add Image</P>
+    <P>Add File/Image</P>
     <FORM name="form$pageID" method="POST" action="$session.applicationURI" enctype="multipart/form-data">
-      <span class="caption" style='margin-left: 120px;'>Image file: </span><span><input TYPE="file" NAME="file"/></span>
+      <span class="caption" style='margin-left: 160px;'>File: </span><span><input TYPE="file" NAME="file"/></span>
       <br />
       <SPAN class="widget" id="hiddenPageID"/>
       <SPAN class="widget" id="author"/>
@@ -276,7 +276,7 @@
       <value>addPanel</value>
     </property>
     <property name="title">
-      <value>Add Image</value>
+      <value>Add File/Image</value>
     </property>
     <property name="type">
       <readOnly>true</readOnly>
