@@ -1892,6 +1892,9 @@ System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
         public String filename = "";
         public String mimeType = "";
         public InputStream stream = null;
+        public String toString(){
+            return "filename:"+filename+",mimeType:"+mimeType+",isFile:"+(file!=null)+",isStream:"+(stream!=null);
+        }
     }
 
     public UploadedFile getUploadedFile(String fileInputID, boolean saveFile)

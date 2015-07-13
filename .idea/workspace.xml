@@ -2,13 +2,15 @@
 <project version="4">
   <component name="BookmarkManager">
     <bookmark url="file://$PROJECT_DIR$/build/resource_root/homes/dynamide/assemblies/com-dynamide-apps-1/apps/us.anarchia/resources/static/js/jsonEditor.js" line="372" />
-    <bookmark url="file://$PROJECT_DIR$/src/java/com/dynamide/Session.java" line="5287" mnemonic="1" />
+    <bookmark url="file://$PROJECT_DIR$/src/java/com/dynamide/Session.java" line="5290" mnemonic="1" />
     <bookmark url="file://$PROJECT_DIR$/src/java/com/dynamide/Session.java" line="1877" mnemonic="2" />
-    <bookmark url="file://$PROJECT_DIR$/src/java/com/dynamide/Session.java" line="2188" mnemonic="3" />
+    <bookmark url="file://$PROJECT_DIR$/src/java/com/dynamide/Session.java" line="2191" mnemonic="3" />
     <bookmark url="file://$PROJECT_DIR$/src/java/com/dynamide/DynamideServlet.java" line="366" mnemonic="4" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c4dc66d8-2cb8-4d1f-a717-762703684739" name="Default" comment="" />
+    <list default="true" id="c4dc66d8-2cb8-4d1f-a717-762703684739" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/com/dynamide/Session.java" afterPath="$PROJECT_DIR$/src/java/com/dynamide/Session.java" />
+    </list>
     <ignored path="dynamide.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/out/" />
@@ -56,8 +58,8 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
-    <breakpoint_rules converted="true" />
     <ui_properties converted="true" />
+    <breakpoint_rules converted="true" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
@@ -68,42 +70,35 @@
       <file leaf-file-name="Session.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/Session.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.18569463">
-              <caret line="2193" column="42" selection-start-line="2189" selection-start-column="23" selection-end-line="2193" selection-end-column="42" />
+            <state vertical-scroll-proportion="0.51586205">
+              <caret line="1896" column="9" selection-start-line="1896" selection-start-column="9" selection-end-line="1896" selection-end-column="9" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#5425#5604#0" expanded="true" />
-                <element signature="e#81286#81287#0" expanded="true" />
-                <element signature="e#81333#81334#0" expanded="true" />
                 <element signature="e#81428#81438#0" expanded="true" />
-                <element signature="class#UploadedFile#0;class#Session#0" expanded="true" />
                 <element signature="docComment;method#getUploadedFile#1;class#Session#0" expanded="true" />
-                <element signature="e#84420#84441#0" expanded="true" />
-                <element signature="e#84813#84899#0" expanded="true" />
-                <element signature="e#86257#86318#0" expanded="true" />
-                <element signature="e#89834#89855#0" expanded="true" />
-                <element signature="e#93205#93242#0" expanded="true" />
-                <element signature="e#95210#95231#0" expanded="true" />
-                <element signature="e#95963#96034#0" expanded="true" />
-                <element signature="e#98668#98689#0" expanded="true" />
-                <element signature="e#99866#99954#0" expanded="true" />
-                <element signature="e#100905#100984#0" expanded="true" />
-                <element signature="e#101706#101776#0" expanded="true" />
-                <element signature="e#104425#104446#0" expanded="true" />
-                <element signature="e#104987#105008#0" expanded="true" />
-                <element signature="e#109367#109418#0" expanded="true" />
-                <element signature="e#110376#110425#0" expanded="true" />
-                <element signature="e#111137#111187#0" expanded="true" />
-                <element signature="e#112524#112561#0" expanded="true" />
+                <element signature="e#84579#84600#0" expanded="true" />
+                <element signature="e#84972#85058#0" expanded="true" />
+                <element signature="e#86416#86477#0" expanded="true" />
+                <element signature="e#89993#90014#0" expanded="true" />
+                <element signature="e#93364#93401#0" expanded="true" />
+                <element signature="e#95369#95390#0" expanded="true" />
+                <element signature="e#96122#96193#0" expanded="true" />
+                <element signature="e#98827#98848#0" expanded="true" />
+                <element signature="e#100025#100113#0" expanded="true" />
+                <element signature="e#101064#101143#0" expanded="true" />
+                <element signature="e#101865#101935#0" expanded="true" />
+                <element signature="e#104584#104605#0" expanded="true" />
+                <element signature="e#105146#105167#0" expanded="true" />
+                <element signature="e#109526#109577#0" expanded="true" />
+                <element signature="e#110535#110584#0" expanded="true" />
+                <element signature="e#111296#111346#0" expanded="true" />
+                <element signature="e#112683#112720#0" expanded="true" />
                 <element signature="method#getHits#0;class#Session#0" expanded="true" />
-                <element signature="e#114043#114044#0" expanded="true" />
-                <element signature="e#114120#114121#0" expanded="true" />
-                <element signature="e#114408#114530#0" expanded="true" />
-                <element signature="e#116416#116417#0" expanded="true" />
-                <element signature="e#116472#116473#0" expanded="true" />
+                <element signature="e#114567#114689#0" expanded="true" />
                 <element signature="docComment;method#getSubsession#0;class#Session#0" expanded="true" />
                 <element signature="docComment;method#hasQueryParam#0;class#Session#0" expanded="true" />
-                <element signature="e#229478#229608#0" expanded="true" />
+                <element signature="e#229637#229767#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -132,7 +127,7 @@
       <file leaf-file-name="DynamideServlet.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/DynamideServlet.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-2.6666667">
+            <state vertical-scroll-proportion="0.0">
               <caret line="365" column="66" selection-start-line="365" selection-start-column="66" selection-end-line="365" selection-end-column="66" />
               <folding>
                 <element signature="docComment;method#writeResult#0;class#DynamideServlet#0" expanded="true" />
@@ -146,7 +141,7 @@
       <file leaf-file-name="HandlerResult.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/HandlerResult.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-3.3333333">
+            <state vertical-scroll-proportion="0.0">
               <caret line="49" column="75" selection-start-line="49" selection-start-column="75" selection-end-line="49" selection-end-column="75" />
               <folding>
                 <element signature="e#1030#1031#0" expanded="true" />
@@ -212,7 +207,7 @@
       <file leaf-file-name="DynamideHandler.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/DynamideHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-2.6296296">
+            <state vertical-scroll-proportion="0.0">
               <caret line="257" column="9" selection-start-line="257" selection-start-column="9" selection-end-line="257" selection-end-column="9" />
               <folding />
             </state>
@@ -222,7 +217,7 @@
       <file leaf-file-name="page1.xml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/build/resource_root/homes/dynamide/assemblies/com-dynamide-test-suite-1/apps/test-suite/upload/page1.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-14.25">
+            <state vertical-scroll-proportion="0.0">
               <caret line="28" column="12" selection-start-line="28" selection-start-column="12" selection-end-line="28" selection-end-column="12" />
               <folding />
             </state>
@@ -232,7 +227,7 @@
       <file leaf-file-name="application.xml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/build/resource_root/homes/dynamide/assemblies/com-dynamide-test-suite-1/apps/test-suite/upload/application.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-14.928572">
+            <state vertical-scroll-proportion="0.0">
               <caret line="22" column="47" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="47" />
               <folding />
             </state>
@@ -1442,10 +1437,10 @@
     </configuration>
     <list size="5">
       <item index="0" class="java.lang.String" itemvalue="Application.RichardLCrockerScanner" />
-      <item index="1" class="java.lang.String" itemvalue="Application.WebMacroTools" />
-      <item index="2" class="java.lang.String" itemvalue="Application.JavaScriptRhinoTest" />
-      <item index="3" class="java.lang.String" itemvalue="Application.RhinoInterpreter" />
-      <item index="4" class="java.lang.String" itemvalue="Remote.dynamide" />
+      <item index="1" class="java.lang.String" itemvalue="Remote.dynamide" />
+      <item index="2" class="java.lang.String" itemvalue="Application.WebMacroTools" />
+      <item index="3" class="java.lang.String" itemvalue="Application.JavaScriptRhinoTest" />
+      <item index="4" class="java.lang.String" itemvalue="Application.RhinoInterpreter" />
     </list>
     <recent_temporary>
       <list size="3">
@@ -1477,16 +1472,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="22" width="1440" height="874" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.54092073" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.41943735" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34406295" sideWeight="0.5051151" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
@@ -1495,11 +1488,13 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34406295" sideWeight="0.4948849" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.51383877" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.51383877" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.54092073" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.41943735" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Script Monkey" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3271605" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -1507,8 +1502,8 @@
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
-      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="true" content_ui="tabs" />
@@ -1516,8 +1511,8 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2553648" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.51383877" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
@@ -1557,13 +1552,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/java/com/dynamide/Session.java</url>
-          <line>3244</line>
+          <line>3247</line>
           <properties />
           <option name="timeStamp" value="15" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/java/com/dynamide/Session.java</url>
-          <line>3253</line>
+          <line>3256</line>
           <properties />
           <option name="timeStamp" value="16" />
         </line-breakpoint>
@@ -1817,7 +1812,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0521262">
           <caret line="5" column="37" selection-start-line="5" selection-start-column="8" selection-end-line="5" selection-end-column="37" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1825,7 +1819,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.28708792">
           <caret line="28" column="70" selection-start-line="28" selection-start-column="70" selection-end-line="28" selection-end-column="70" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1833,7 +1826,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="304" column="25" selection-start-line="304" selection-start-column="25" selection-end-line="304" selection-end-column="25" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1841,13 +1833,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-8.821428">
           <caret line="34" column="24" selection-start-line="34" selection-start-column="24" selection-end-line="34" selection-end-column="24" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/build/resource_root/homes/dynamide/assemblies/com-dynamide-test-suite-1/apps/test-suite/upload/application.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-14.928572">
+        <state vertical-scroll-proportion="0.0">
           <caret line="22" column="47" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="47" />
           <folding />
         </state>
@@ -1873,7 +1864,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.10079575">
           <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1893,9 +1883,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.2352132">
           <caret line="18" column="18" selection-start-line="18" selection-start-column="12" selection-end-line="18" selection-end-column="18" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1909,7 +1896,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/build/resource_root/homes/dynamide/assemblies/com-dynamide-test-suite-1/apps/test-suite/upload/page1.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-14.25">
+        <state vertical-scroll-proportion="0.0">
           <caret line="28" column="12" selection-start-line="28" selection-start-column="12" selection-end-line="28" selection-end-column="12" />
           <folding />
         </state>
@@ -1927,7 +1914,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-4.9259257">
           <caret line="35" column="25" selection-start-line="35" selection-start-column="25" selection-end-line="35" selection-end-column="25" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1935,7 +1921,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-5.259259">
           <caret line="19" column="18" selection-start-line="19" selection-start-column="18" selection-end-line="19" selection-end-column="18" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1943,7 +1928,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-4.9259257">
           <caret line="28" column="18" selection-start-line="28" selection-start-column="18" selection-end-line="28" selection-end-column="18" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1951,7 +1935,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-4.9259257">
           <caret line="88" column="18" selection-start-line="88" selection-start-column="18" selection-end-line="88" selection-end-column="18" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1959,7 +1942,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-4.9259257">
           <caret line="389" column="18" selection-start-line="389" selection-start-column="18" selection-end-line="389" selection-end-column="18" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1967,7 +1949,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-4.9259257">
           <caret line="34" column="18" selection-start-line="34" selection-start-column="18" selection-end-line="34" selection-end-column="18" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1975,7 +1956,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-4.9259257">
           <caret line="21" column="18" selection-start-line="21" selection-start-column="18" selection-end-line="21" selection-end-column="18" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1983,7 +1963,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-5.259259">
           <caret line="22" column="18" selection-start-line="22" selection-start-column="18" selection-end-line="22" selection-end-column="18" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2007,7 +1986,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-4.9259257">
           <caret line="463" column="18" selection-start-line="463" selection-start-column="18" selection-end-line="463" selection-end-column="18" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2032,7 +2010,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/HandlerResult.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.3333333">
+        <state vertical-scroll-proportion="0.0">
           <caret line="49" column="75" selection-start-line="49" selection-start-column="75" selection-end-line="49" selection-end-column="75" />
           <folding>
             <element signature="e#1030#1031#0" expanded="true" />
@@ -2047,7 +2025,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/DynamideHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.6296296">
+        <state vertical-scroll-proportion="0.0">
           <caret line="257" column="9" selection-start-line="257" selection-start-column="9" selection-end-line="257" selection-end-column="9" />
           <folding />
         </state>
@@ -2079,7 +2057,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/DynamideServlet.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.6666667">
+        <state vertical-scroll-proportion="0.0">
           <caret line="365" column="66" selection-start-line="365" selection-start-column="66" selection-end-line="365" selection-end-column="66" />
           <folding>
             <element signature="docComment;method#writeResult#0;class#DynamideServlet#0" expanded="true" />
@@ -2091,42 +2069,35 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/Session.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.18569463">
-          <caret line="2193" column="42" selection-start-line="2189" selection-start-column="23" selection-end-line="2193" selection-end-column="42" />
+        <state vertical-scroll-proportion="0.51586205">
+          <caret line="1896" column="9" selection-start-line="1896" selection-start-column="9" selection-end-line="1896" selection-end-column="9" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#5425#5604#0" expanded="true" />
-            <element signature="e#81286#81287#0" expanded="true" />
-            <element signature="e#81333#81334#0" expanded="true" />
             <element signature="e#81428#81438#0" expanded="true" />
-            <element signature="class#UploadedFile#0;class#Session#0" expanded="true" />
             <element signature="docComment;method#getUploadedFile#1;class#Session#0" expanded="true" />
-            <element signature="e#84420#84441#0" expanded="true" />
-            <element signature="e#84813#84899#0" expanded="true" />
-            <element signature="e#86257#86318#0" expanded="true" />
-            <element signature="e#89834#89855#0" expanded="true" />
-            <element signature="e#93205#93242#0" expanded="true" />
-            <element signature="e#95210#95231#0" expanded="true" />
-            <element signature="e#95963#96034#0" expanded="true" />
-            <element signature="e#98668#98689#0" expanded="true" />
-            <element signature="e#99866#99954#0" expanded="true" />
-            <element signature="e#100905#100984#0" expanded="true" />
-            <element signature="e#101706#101776#0" expanded="true" />
-            <element signature="e#104425#104446#0" expanded="true" />
-            <element signature="e#104987#105008#0" expanded="true" />
-            <element signature="e#109367#109418#0" expanded="true" />
-            <element signature="e#110376#110425#0" expanded="true" />
-            <element signature="e#111137#111187#0" expanded="true" />
-            <element signature="e#112524#112561#0" expanded="true" />
+            <element signature="e#84579#84600#0" expanded="true" />
+            <element signature="e#84972#85058#0" expanded="true" />
+            <element signature="e#86416#86477#0" expanded="true" />
+            <element signature="e#89993#90014#0" expanded="true" />
+            <element signature="e#93364#93401#0" expanded="true" />
+            <element signature="e#95369#95390#0" expanded="true" />
+            <element signature="e#96122#96193#0" expanded="true" />
+            <element signature="e#98827#98848#0" expanded="true" />
+            <element signature="e#100025#100113#0" expanded="true" />
+            <element signature="e#101064#101143#0" expanded="true" />
+            <element signature="e#101865#101935#0" expanded="true" />
+            <element signature="e#104584#104605#0" expanded="true" />
+            <element signature="e#105146#105167#0" expanded="true" />
+            <element signature="e#109526#109577#0" expanded="true" />
+            <element signature="e#110535#110584#0" expanded="true" />
+            <element signature="e#111296#111346#0" expanded="true" />
+            <element signature="e#112683#112720#0" expanded="true" />
             <element signature="method#getHits#0;class#Session#0" expanded="true" />
-            <element signature="e#114043#114044#0" expanded="true" />
-            <element signature="e#114120#114121#0" expanded="true" />
-            <element signature="e#114408#114530#0" expanded="true" />
-            <element signature="e#116416#116417#0" expanded="true" />
-            <element signature="e#116472#116473#0" expanded="true" />
+            <element signature="e#114567#114689#0" expanded="true" />
             <element signature="docComment;method#getSubsession#0;class#Session#0" expanded="true" />
             <element signature="docComment;method#hasQueryParam#0;class#Session#0" expanded="true" />
-            <element signature="e#229478#229608#0" expanded="true" />
+            <element signature="e#229637#229767#0" expanded="true" />
           </folding>
         </state>
       </provider>

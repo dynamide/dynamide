@@ -32,7 +32,7 @@
 
 <script id="TemplateSource" type="text/x-handlebars-template">
     <table border='1' cellpadding='2' cellspacing='0' width="100%">
-        <tr style='background-color: lightgray;'><th><input type='checkbox' name='' id='' /></th><th>img</th><th>filename</th><th>Author</th><th>title</th><th>caption</th></tr>
+        <tr style='background-color: lightgray;'><th><input type='checkbox' name='' id='' /></th><th>img</th><th>filename</th><th>author</th><th>description</th></tr>
         {{#each filesArray}}
             <tr>
                 <td>
@@ -43,8 +43,7 @@
                 </td>
                 <td>{{filename}}</td>
                 <td class=''>{{metadata.author}}</td>
-                <td class=''>{{metadata.title}}</td>
-                <td class=''>{{metadata.caption}}</td>
+                <td class=''>{{metadata.description}}</td>
             </tr>
         {{/each}}
     </table>
