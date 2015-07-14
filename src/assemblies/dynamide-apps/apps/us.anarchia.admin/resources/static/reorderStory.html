@@ -154,7 +154,7 @@
                     data: storyJSON,
                     success: function( data, textStatus, jQxhr ){
                         $('#backendMsg').html("Story saved").fadeIn(800).delay(5000).fadeOut(1000);
-                        $('#viewStoryLink').html("<a href='/anarchia/panels.html?storyID="+gByStoryID.story.id+"'>View Story</a>");
+                        $('#viewStoryLink').html("<a target='_blank' href='/anarchia/panels.html?storyID="+gByStoryID.story.id+"'>View Story</a>");
                     }
                 });
             }
