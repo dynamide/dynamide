@@ -1,0 +1,309 @@
+<html>
+<head>
+  <meta name="generator" content="HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 15.12), see www.w3.org">
+
+  <title>Edit Panel</title>
+  <script src="/anarchia/js/handlebars-v3.0.0.js"></script>
+  <script src="/anarchia/js/jquery-2.1.3.min.js" type="text/javascript"></script>
+  <script src="/anarchia/js/anarchia.js" type="text/javascript"></script>
+  <style>
+#backendMsg {
+    color: green;
+    margin-left: 20px;
+}
+  </style>
+</head>
+
+<body bottommargin="15" leftmargin="10" topmargin="15" rightmargin="10" id="editPanel" name="editPanel" contenteditable="false">
+  <p>Edit Panel</p>
+  <div id='panelDiv'></div>
+
+  <script id="TemplateSource" type="text/x-handlebars-template">
+  <form name="formeditPanel" accept-charset="UNKNOWN" action="" method="post" enctype="application/x-www-form-urlencoded">
+    <span class="widget" id="hiddenPageID"><input type="hidden" id="page" name="page" value="editPanel"></span> 
+    
+    <table border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td>
+          <table border="0" class="" cellpadding="5" cellspacing="0">
+            <tr>
+              <td width="180" align="right" valign="center">
+                <div class="caption">
+                  <nobr>(mongo _id)</nobr>
+                </div>
+              </td>
+
+              <td><input type="text" class="" size="90" id="editPanel__id" name="editPanel__id" value="{{_id.$oid}}" readonly='true'></td>
+            </tr>
+          </table>
+        </td>
+
+        <td width="20">&nbsp;</td>
+      </tr>
+    </table>
+       </table><span class="widget" id="id"></span>
+
+    <table border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td>
+          <table border="0" class="" cellpadding="5" cellspacing="0">
+            <tr>
+              <td width="180" align="right" valign="center">
+                <div class="caption">
+                  <nobr>(id)</nobr>
+                </div>
+              </td>
+
+              <td><input type="text" class="" size="90" id="editPanel_id" name="editPanel_id" value="{{id}}"  readonly='true'></td>
+            </tr>
+          </table>
+        </td>
+
+        <td width="20">&nbsp;</td>
+      </tr>
+    </table>
+    
+    
+    <span class="widget" id="imgPreview"></span>
+    <table border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td>
+          <table border="0" class="" cellpadding="5" cellspacing="0">
+            <tr>
+              <td width="180" align="right" valign="center">
+                <div class="caption">
+                  <nobr>(Image Preview)</nobr>
+                </div>
+              </td>
+
+              <td><a href="{{img}}" target="_blank" ><img src="{{img}}" style="border: 1px solid green; padding: 2px;" width="200"/></a>
+              </td>
+            </tr>
+          </table>
+        </td>
+
+        <td width="20">&nbsp;</td>
+      </tr>
+    </table>
+    
+    <span class="widget" id="img"></span>
+    <table border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td>
+          <table border="0" class="" cellpadding="5" cellspacing="0">
+            <tr>
+              <td width="180" align="right" valign="center">
+                <div class="caption">
+                  <nobr>Image URL</nobr>
+                </div>
+              </td>
+
+              <td><input type="text" class="" size="90" id="editPanel_img" name="editPanel_img" value="{{img}}">
+              </td>
+            </tr>
+          </table>
+        </td>
+
+        <td width="20">&nbsp;</td>
+      </tr>
+    </table>
+    
+    </table>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <span class="widget" id="author"></span>
+
+    <table border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td>
+          <table border="0" class="" cellpadding="5" cellspacing="0">
+            <tr>
+              <td width="180" align="right" valign="center">
+                <div class="caption">
+                  <nobr>Author</nobr>
+                </div>
+              </td>
+
+              <td><input type="text" class="" size="90" id="editPanel_author" name="editPanel_author" value="{{author}}"></td>
+            </tr>
+          </table>
+        </td>
+
+        <td width="20">&nbsp;</td>
+      </tr>
+    <span class="widget" id="caption"></span>
+
+    <table border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td>
+          <table border="0" class="" cellpadding="5" cellspacing="0">
+            <tr>
+              <td width="180" align="right" valign="center">
+                <div class="caption">
+                  <nobr>Caption</nobr>
+                </div>
+              </td>
+
+              <td><textarea id="editPanel_caption" name="editPanel_caption" rows="4" cols="60">{{text.caption}}</textarea></td>
+            </tr>
+          </table>
+        </td>
+
+        <td width="20">&nbsp;</td>
+      </tr>
+    </table><span class="widget" id="title"></span>
+
+    <table border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td>
+          <table border="0" class="" cellpadding="5" cellspacing="0">
+            <tr>
+              <td width="180" align="right" valign="center">
+                <div class="caption">
+                  <nobr>Title</nobr>
+                </div>
+              </td>
+
+              <td><input type="text" class="" size="90" id="editPanel_title" name="editPanel_title" value="{{text.title}}"></td>
+            </tr>
+          </table>
+        </td>
+
+        <td width="20">&nbsp;</td>
+      </tr>
+ 
+    
+    <span class="widget" id="_type"></span>
+    <table border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td>
+          <table border="0" class="" cellpadding="5" cellspacing="0">
+            <tr>
+              <td width="180" align="right" valign="center">
+                <div class="caption">
+                  <nobr>_type</nobr>
+                </div>
+              </td>
+
+              <td><input type="text" class="" size="90" id="editPanel__type" name="editPanel__type" value="{{_type}}"></td>
+            </tr>
+          </table>
+        </td>
+
+        <td width="20">&nbsp;</td>
+      </tr>
+    </table>
+    
+    
+    
+    </table>
+    
+    
+    <span class="widget" id="submit1"></span>
+
+    <table border="0" cellpadding="5" cellspacing="0">
+      <tr>
+        <td width="180">&nbsp;</td>
+
+        <td><input class="dmbutton" type="button" id="editPanel_submit1" value="Submit" accesskey="" /><span id="backendMsg"></span>
+        <br />
+        <a href="javascript:backToStory();">Back to Story</a>
+        
+        </td>
+      </tr>
+    </table>
+    
+  </form>
+  </script>
+  
+  <script type="text/javascript">
+  var queryParams = getQueryParams();  //anarchia.js
+  var panelID = queryParams['panelID'];
+  var storyID = queryParams['storyID'];
+      
+  
+  var gPanel = {};
+  
+  var source = document.getElementById('TemplateSource').innerHTML
+  var templateFn = Handlebars.compile(source);
+  
+  function backToStory(){
+    document.location="/anarchia/panels.html?storyID="+storyID;
+  }
+  
+  function getPanel(panelID){
+       $.get('/anarchia/panels/'+panelID,
+          function(data) {
+              if (data){
+                  gPanel = data;
+                  console.log('panel: '+JSON.stringify(gPanel));
+                  renderTemplate(gPanel);
+              }
+          }
+       );
+    }
+    
+  function renderTemplate(data){
+        if (data){
+            $('#panelDiv').html(templateFn(data));
+            $('#editPanel_submit1').click(function(){
+                ajaxPutPanel();
+            });
+        }
+  }
+  
+  function ajaxPutPanel(){
+        var panel = {};
+        
+        var _idval = $('#editPanel__id').val();
+        panel._id = {};
+        panel._id["$oid"] = _idval;
+        
+        panel.id = $('#editPanel_id').val();
+        panel.author = $('#editPanel_author').val();
+        var text = {};
+        text.caption = $('#editPanel_caption').val();
+        text.title = $('#editPanel_title').val();
+        panel.text = text;
+        panel.img = $('#editPanel_img').val();
+        panel._type = $('#editPanel__type').val();
+        
+        // AJAX CALL HERE :
+        $.ajax ({
+              type: "POST",
+              url: "/anarchia/panels?qtype=PUT",
+              contentType: 'application/json',    
+              async: false,
+              headers: {
+                "Authorization": "Basic " + btoa("laramie" + ":" + "ecotel33")
+              },
+              data: JSON.stringify(panel),
+              success: function (data){
+                console.log('panels data:'+JSON.stringify(data));
+                $('#backendMsg').html("Panel saved").fadeIn(800).delay(5000).fadeOut(1000);
+              },
+              error: function (data){
+                console.log('panels data:'+JSON.stringify(data));
+                $('#backendMsg').html("Panel edits not saved: "+JSON.stringify(data)).fadeIn(800).delay(20000).fadeOut(1000);
+              }
+        });
+    }
+        
+        
+      $(document).ready(function(){
+        if (panelID==null || panelID == ''){
+                alert("No panelID.  Use a URL like http://localhost:18080/anarchia-admin/editPanel.html?panelID=08a48132-919b-4a2d-ad9d-c95ac44982b3");
+        } else {
+            getPanel(panelID);
+        }
+      });
+  </script>
+</body>
+</html>

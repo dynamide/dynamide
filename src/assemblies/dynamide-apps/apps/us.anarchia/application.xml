@@ -114,9 +114,17 @@
                     System.out.println("@@@@@@@@@@@@@@qtype:"+qtype+";@@@@@@@@@@@@@@"+reqbody);
                     String res = "";
                     if (path.equals("/anarchia/panels")){
-                        res = backend.post("anarchia",
-                                 "panels",
-                                  reqbody);
+                        if (qtype.equals("PUT")){
+                            res = backend.put("anarchia",
+                                     "panels",
+                                      reqbody,
+                                      false,
+                                      false);
+                        } else {
+                            res = backend.post("anarchia",
+                                     "panels",
+                                      reqbody);
+                        }
                     } else if (path.equals("/anarchia/idservice")){
                         res = backend.post("anarchia",
                                  "idservice",
@@ -238,10 +246,6 @@
                     if (path.startsWith("/anarchia/files/") && path.length()>"/anarchia/files/".length()){
                         getImage(path);
                         return;
-                    } else if (path.equals("/anarchia/panels")){
-                        res = backend.getAll("anarchia",
-                                 "panels",
-                                  "{}", 0, 1000);
                     } else if (path.equals("/anarchia/stories")){
                         System.out.println("in case /anarchia/stories");
                         String author = event.getQueryParam("author");
@@ -252,6 +256,26 @@
                         } else {
                             res = backend.getAll("anarchia", "stories", "{}", 0, 1000);
                         }
+                    } else if (path.startsWith("/anarchia/panels/") && path.length()>"/anarchia/panels/".length()){
+                        panelID = path.substring("/anarchia/panels/".length());
+                        qu = panelID.indexOf('?');
+                        if (qu>-1){
+                            panelID = fn.substring(0, qu);  //throwing away all query params.
+                        }
+                        if (StringTools.isEmpty(panelID)){
+                            event.returnSource(("{'msg':'ERROR: panel id was empty'}").replace('\'','"'));
+                            return;
+                        }
+                        query = "{ id : \""+panelID+"\" }";
+                        res = backend.get("anarchia", "panels", query);
+                        if (StringTools.isEmpty(res)){
+                            event.returnSource(("{'msg':'ERROR: panel not found from panel id:"+panelID+"'}").replace('\'','"'));
+                            return;
+                        }
+                    } else if (path.equals("/anarchia/panels")){
+                        res = backend.getAll("anarchia",
+                                 "panels",
+                                  "{}", 0, 1000);
                     }
                     if (res==null){
                         event.jumpToPage("jsonEditor");

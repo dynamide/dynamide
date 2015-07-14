@@ -34,7 +34,8 @@
       <span id="backendMsg"></span>
       <span id="viewStoryLink"></span>
       </div>
-    
+    <span class="caption" style="display: inline-block; width: 5em; margin: 4px;">Author:</span> <input type="text" class="" size="60" id="editAuthor" value=""><br />
+    <span class="caption" style="display: inline-block; width: 5em; margin: 4px;" >Title:</span> <input type="text" class="" size="60" id="editTitle" value="">
     <div id='panelDiv'>panel here</div>
     
     <script id="TemplateSource" type="text/x-handlebars-template">
@@ -94,6 +95,8 @@
                   function(data) {
                       console.log('getByStory data: '+JSON.stringify(data, null, 4));
                       gByStoryID = data;
+                      $('#editAuthor').val(gByStoryID.story.author);
+                      $('#editTitle').val(gByStoryID.story.title);
                       
                       var panelsDict = {};
                       gByStoryID.panels.forEach(function(val, idx, arr){
@@ -129,6 +132,8 @@
                 var storyObj = {};
                 storyObj.id = gByStoryID.story.id;
                 storyObj._id = gByStoryID.story._id;
+                storyObj.author = $('#editAuthor').val();
+                storyObj.title =  $('#editTitle').val();
                 storyObj.panels = [];
                 $('#storyOrderTable tr').each(function (i, row) {
                    var $row = $(row);
@@ -145,7 +150,7 @@
             function saveStory(storyJSON, storyObj){
                 $('#backendMsg').html("");
                 // AJAX CALL HERE :
-                console.log("storyJSON: "+storyJSON);
+                console.log("saveStory JSON: "+storyJSON);
                 $.ajax({
                     url: '/anarchia/stories?qtype=PUTstories',
                     dataType: 'text',

@@ -13,10 +13,31 @@
         background-color: black;   
         color: black;
     }
+    .storyTitle{
+        padding: 2px;
+        background-color: white;
+        font-weight: bold;
+        font-size: 130%;
+    }
+    .storyAuthor{
+        padding: 2px;
+        background-color: white;
+        font-weight: bold;
+        font-size: 110%;
+    }
+    .storyHeader{
+        background-color: white;
+        padding: 4px;
+        color: black;
+    }
+    
     </style>
 </head>
 <body>
 
+<div class='storyHeader'>
+<span class="storyTitle" id='storyTitle'></span> by <span class="storyAuthor" id='storyAuthor'></span>
+</div>
 <span class='menu-buttons'>
 <a id="prev" class="anarchiaButton" href="javascript:previousPanel();">Previous</a>
 <a id="panelIndex"></id>
@@ -38,15 +59,17 @@
     </table>
     <img src="{{img}}" width="400"/><br />
     <div class="caption">{{{text.caption}}}</div>
-    <div class="panel-links">{{sequence}} <a href="javascript:alert('ID: {{id}}');">id</a> <a href="javascript:alert('ID: {{_id.$oid}}');">_id</a> <a href="{{img}}">link</a></div>
+    <div class="panel-links">{{sequence}} 
+        <a href="{{img}}">file</a>
+        <a href="javascript:navToEditPanel('{{id}}')">edit panel</a>
+        <a href="javascript:navToReorderStory('{{id}}')">reorder story</a>
+    </div>
     </div>
 </script>
 
 <span class='menu-buttons'>
-<a class="anarchiaButton" href='javascript:getByStory("http://anarchia.us/id/stories/1")'>Story 1</a>
-<a class="anarchiaButton" href='javascript:getByStory("http://anarchia.us/id/stories/2")'>Story 2</a>
-<a class="anarchiaButton" href='javascript:getByStory("http://anarchia.us/id/stories/3")'>Story 3</a>
-<a class="anarchiaButton" href='javascript:getUserStory()'>userStoryID</a>
+<a class="anarchiaButton" href='/anarchia/stories.html'>Stories</a>
+<a class="anarchiaButton" href='/anarchia-admin/files.html'>Files</a>
 <a class="anarchiaButton" href='/anarchia/api.html'>API</a>
 </span>
 
@@ -63,6 +86,16 @@
     function getUserStory(){
         getByStory(userStoryID);
     }
+    
+    function navToEditPanel(panelID){
+        document.location="/anarchia-admin/editPanel.html?panelID="+panelID+"&storyID="+userStoryID;
+    }
+    
+    function navToReorderStory(storyID){
+        document.location="/anarchia-admin/reorderStory.html?storyID="+userStoryID;
+    }
+    
+    http://localhost:18080/anarchia-admin/reorderStory.html?storyID=e82eb822-99e7-40d1-8cbd-188b30720592#
     
     function nextPanel(){
         if (gPanels){
@@ -116,21 +149,6 @@
         }
     }
     
-    function getByAuthor(author){
-        // AJAX CALL HERE :
-       $.get('/anarchia?qtype=author&author='+author,
-          function(data) {
-              gPanels = data;
-              if (data.length && data.length >-1){
-                  gPanelIndex = 0;
-                  console.log('data: '+JSON.stringify(gPanels));
-                  renderTemplate(gPanels[0]);
-                  //$('#panelDiv').html(JSON.stringify(gPanels[0]));
-              }
-          }
-       );
-    }
-    
     function getByStory(storyid){
         // AJAX CALL HERE :
        $.get('/anarchia?qtype=bystory&storyid='+storyid,
@@ -154,6 +172,8 @@
                   preloadPictures(imgs);
                   gPanelIndex = 0;
                   renderTemplate(gPanels[0]);
+                  $('#storyTitle').html(data.story.title);
+                  $('#storyAuthor').html(data.story.author);
                   console.log('panels: '+JSON.stringify(gPanels));
               }
           }
@@ -161,11 +181,10 @@
     }
     
     function documentReady(){
-        //getByAuthor('laramie');
         if (userStoryID && userStoryID != ''){
             getByStory(userStoryID);
          } else {
-            getByStory('http://anarchia.us/id/stories/1');
+            getByStory('http://anarchia.us/id/stories/1');  //this will be the default story, whatever that is.
          }
     }
 
