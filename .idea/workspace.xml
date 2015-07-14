@@ -8,12 +8,7 @@
     <bookmark url="file://$PROJECT_DIR$/src/java/com/dynamide/DynamideServlet.java" line="364" mnemonic="4" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c4dc66d8-2cb8-4d1f-a717-762703684739" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/com/dynamide/DynamideServlet.java" afterPath="$PROJECT_DIR$/src/java/com/dynamide/DynamideServlet.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/com/dynamide/HandlerResult.java" afterPath="$PROJECT_DIR$/src/java/com/dynamide/HandlerResult.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/com/dynamide/event/ScriptEvent.java" afterPath="$PROJECT_DIR$/src/java/com/dynamide/event/ScriptEvent.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/com/dynamide/Session.java" afterPath="$PROJECT_DIR$/src/java/com/dynamide/Session.java" />
-    </list>
+    <list default="true" id="c4dc66d8-2cb8-4d1f-a717-762703684739" name="Default" comment="" />
     <ignored path="dynamide.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/out/" />
