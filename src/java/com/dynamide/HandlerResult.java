@@ -53,10 +53,9 @@ public class HandlerResult {
     public boolean getBinary(){return binary;}
     public void setBinary(boolean new_value){binary = new_value;}
 
-    public InputStream binaryStream = null;
-    public InputStream getBinaryStream(){return binaryStream;}
-    public boolean isBinaryStream(){return binaryStream != null;}
-    public void setBinaryStream(InputStream new_value){binaryStream = new_value;}
+    private boolean binaryStreamWritten = false;
+    public boolean wasBinaryStreamWritten(){return binaryStreamWritten;}
+    public void setBinaryStreamWritten(boolean new_value){binaryStreamWritten = new_value;}
 
     public String mimeType = "text/html";
     public String  getMimeType(){return mimeType;}

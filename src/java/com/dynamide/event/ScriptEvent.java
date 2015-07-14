@@ -3,15 +3,13 @@ package com.dynamide.event;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.dynamide.DynamideObject;
-import com.dynamide.HandlerResult;
-import com.dynamide.Page;
-import com.dynamide.Session;
+import com.dynamide.*;
 import com.dynamide.util.ServletTools;
 import com.dynamide.util.StringTools;
 import com.dynamide.util.Tools;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 
 /** In order to make this class as easy to use as possible from multiple scripting languages
@@ -292,13 +290,11 @@ public class ScriptEvent extends DynamideObject implements java.io.Serializable 
     public String  getResultSrc(){return resultSrc;}
     public void setResultSrc(String  new_value){resultSrc = new_value;}
 
-    public InputStream binaryResultStream = null;
-    public InputStream getBinaryResultStream(){
-        return binaryResultStream;
-    }
-    public void returnStream(InputStream stream){
+    public void returnStream(InputStream stream, String mimeType)
+    throws IOException {
         this.resultAction = RA_RETURN_STREAM;
-        this.binaryResultStream = stream;
+        this.mimeType = mimeType;
+        DynamideServlet.writeResult(this.response, mimeType, stream);
     }
 
     public String mimeType = "";

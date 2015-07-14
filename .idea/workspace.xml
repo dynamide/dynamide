@@ -2,13 +2,18 @@
 <project version="4">
   <component name="BookmarkManager">
     <bookmark url="file://$PROJECT_DIR$/build/resource_root/homes/dynamide/assemblies/com-dynamide-apps-1/apps/us.anarchia/resources/static/js/jsonEditor.js" line="372" />
-    <bookmark url="file://$PROJECT_DIR$/src/java/com/dynamide/Session.java" line="5290" mnemonic="1" />
+    <bookmark url="file://$PROJECT_DIR$/src/java/com/dynamide/Session.java" line="5292" mnemonic="1" />
     <bookmark url="file://$PROJECT_DIR$/src/java/com/dynamide/Session.java" line="1877" mnemonic="2" />
-    <bookmark url="file://$PROJECT_DIR$/src/java/com/dynamide/Session.java" line="2191" mnemonic="3" />
-    <bookmark url="file://$PROJECT_DIR$/src/java/com/dynamide/DynamideServlet.java" line="366" mnemonic="4" />
+    <bookmark url="file://$PROJECT_DIR$/src/java/com/dynamide/Session.java" line="2193" mnemonic="3" />
+    <bookmark url="file://$PROJECT_DIR$/src/java/com/dynamide/DynamideServlet.java" line="364" mnemonic="4" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c4dc66d8-2cb8-4d1f-a717-762703684739" name="Default" comment="" />
+    <list default="true" id="c4dc66d8-2cb8-4d1f-a717-762703684739" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/com/dynamide/DynamideServlet.java" afterPath="$PROJECT_DIR$/src/java/com/dynamide/DynamideServlet.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/com/dynamide/HandlerResult.java" afterPath="$PROJECT_DIR$/src/java/com/dynamide/HandlerResult.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/com/dynamide/event/ScriptEvent.java" afterPath="$PROJECT_DIR$/src/java/com/dynamide/event/ScriptEvent.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/com/dynamide/Session.java" afterPath="$PROJECT_DIR$/src/java/com/dynamide/Session.java" />
+    </list>
     <ignored path="dynamide.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/out/" />
@@ -68,61 +73,35 @@
       <file leaf-file-name="Session.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/Session.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5172891">
-              <caret line="1896" column="9" selection-start-line="1896" selection-start-column="9" selection-end-line="1896" selection-end-column="9" />
+            <state vertical-scroll-proportion="0.44429162">
+              <caret line="1897" column="78" selection-start-line="1897" selection-start-column="78" selection-end-line="1897" selection-end-column="78" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#5425#5604#0" expanded="true" />
                 <element signature="e#81428#81438#0" expanded="true" />
                 <element signature="docComment;method#getUploadedFile#1;class#Session#0" expanded="true" />
-                <element signature="e#84579#84600#0" expanded="true" />
-                <element signature="e#84972#85058#0" expanded="true" />
-                <element signature="e#86416#86477#0" expanded="true" />
-                <element signature="e#89993#90014#0" expanded="true" />
-                <element signature="e#93364#93401#0" expanded="true" />
-                <element signature="e#95369#95390#0" expanded="true" />
-                <element signature="e#96122#96193#0" expanded="true" />
-                <element signature="e#98827#98848#0" expanded="true" />
-                <element signature="e#100025#100113#0" expanded="true" />
-                <element signature="e#101064#101143#0" expanded="true" />
-                <element signature="e#101865#101935#0" expanded="true" />
-                <element signature="e#104584#104605#0" expanded="true" />
-                <element signature="e#105146#105167#0" expanded="true" />
-                <element signature="e#109526#109577#0" expanded="true" />
-                <element signature="e#110535#110584#0" expanded="true" />
-                <element signature="e#111296#111346#0" expanded="true" />
-                <element signature="e#112683#112720#0" expanded="true" />
+                <element signature="e#84675#84696#0" expanded="true" />
+                <element signature="e#85068#85154#0" expanded="true" />
+                <element signature="e#86512#86573#0" expanded="true" />
+                <element signature="e#90089#90110#0" expanded="true" />
+                <element signature="e#93442#93479#0" expanded="true" />
+                <element signature="e#95447#95468#0" expanded="true" />
+                <element signature="e#96200#96271#0" expanded="true" />
+                <element signature="e#98887#98908#0" expanded="true" />
+                <element signature="e#100085#100173#0" expanded="true" />
+                <element signature="e#101124#101203#0" expanded="true" />
+                <element signature="e#101925#101995#0" expanded="true" />
+                <element signature="e#104644#104665#0" expanded="true" />
+                <element signature="e#105206#105227#0" expanded="true" />
+                <element signature="e#109586#109637#0" expanded="true" />
+                <element signature="e#110595#110644#0" expanded="true" />
+                <element signature="e#111356#111406#0" expanded="true" />
+                <element signature="e#112743#112780#0" expanded="true" />
                 <element signature="method#getHits#0;class#Session#0" expanded="true" />
-                <element signature="e#114567#114689#0" expanded="true" />
+                <element signature="e#114627#114749#0" expanded="true" />
                 <element signature="docComment;method#getSubsession#0;class#Session#0" expanded="true" />
                 <element signature="docComment;method#hasQueryParam#0;class#Session#0" expanded="true" />
-                <element signature="e#229637#229767#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Page.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/Page.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="1437" column="0" selection-start-line="1437" selection-start-column="0" selection-end-line="1437" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Constants.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/Constants.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="34" column="31" selection-start-line="34" selection-start-column="31" selection-end-line="34" selection-end-column="31" />
-              <folding>
-                <element signature="docComment;class#Constants#0" expanded="false" />
-                <element signature="docComment;field#DEFAULT_EXPIRES#0;class#Constants#0" expanded="false" />
-                <element signature="docComment;field#internationalizationRelDir#0;class#Constants#0" expanded="false" />
-                <element signature="docComment;field#widgetsRelDir#0;class#Constants#0" expanded="false" />
-                <element signature="docComment;field#DEBUG_OBJECT_LIFECYCLE#0;class#Constants#0" expanded="false" />
+                <element signature="e#229697#229827#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -131,15 +110,12 @@
       <file leaf-file-name="DynamideServlet.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/DynamideServlet.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="365" column="66" selection-start-line="365" selection-start-column="66" selection-end-line="365" selection-end-column="66" />
+            <state vertical-scroll-proportion="-0.9259259">
+              <caret line="443" column="23" selection-start-line="443" selection-start-column="23" selection-end-line="443" selection-end-column="23" />
               <folding>
-                <element signature="imports" expanded="false" />
-                <element signature="docComment;field#serialVersionUID#0;class#DynamideServlet#0" expanded="false" />
-                <element signature="e#4795#4857#0" expanded="false" />
-                <element signature="e#5675#5724#0" expanded="false" />
-                <element signature="e#16450#16516#0" expanded="false" />
-                <element signature="e#21472#21536#0" expanded="false" />
+                <element signature="docComment;method#writeResult#0;class#DynamideServlet#0" expanded="true" />
+                <element signature="e#24470#24519#0" expanded="true" />
+                <element signature="e#27922#27980#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -149,24 +125,13 @@
         <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/HandlerResult.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="49" column="75" selection-start-line="49" selection-start-column="75" selection-end-line="49" selection-end-column="75" />
+              <caret line="57" column="38" selection-start-line="57" selection-start-column="16" selection-end-line="57" selection-end-column="38" />
               <folding>
-                <element signature="method#getPrettyPrint#0;class#HandlerResult#0" expanded="false" />
-                <element signature="method#setPrettyPrint#0;class#HandlerResult#0" expanded="false" />
-                <element signature="method#getBinary#0;class#HandlerResult#0" expanded="false" />
-                <element signature="method#setBinary#0;class#HandlerResult#0" expanded="false" />
-                <element signature="method#getMimeType#0;class#HandlerResult#0" expanded="false" />
-                <element signature="method#setMimeType#0;class#HandlerResult#0" expanded="false" />
-                <element signature="method#getNotModified#0;class#HandlerResult#0" expanded="false" />
-                <element signature="method#setNotModified#0;class#HandlerResult#0" expanded="false" />
-                <element signature="method#getRedirectURL#0;class#HandlerResult#0" expanded="false" />
-                <element signature="method#setRedirectURL#0;class#HandlerResult#0" expanded="false" />
-                <element signature="method#getDone#0;class#HandlerResult#0" expanded="false" />
-                <element signature="method#setDone#0;class#HandlerResult#0" expanded="false" />
-                <element signature="method#getResponseCode#0;class#HandlerResult#0" expanded="false" />
-                <element signature="method#setResponseCode#0;class#HandlerResult#0" expanded="false" />
-                <element signature="method#getErrorMessage#0;class#HandlerResult#0" expanded="false" />
-                <element signature="method#setErrorMessage#0;class#HandlerResult#0" expanded="false" />
+                <element signature="e#1030#1031#0" expanded="true" />
+                <element signature="e#1059#1060#0" expanded="true" />
+                <element signature="method#getPrettyPrint#0;class#HandlerResult#0" expanded="true" />
+                <element signature="method#setBinary#0;class#HandlerResult#0" expanded="true" />
+                <element signature="method#setBinaryStreamWritten#0;class#HandlerResult#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -175,123 +140,31 @@
       <file leaf-file-name="ScriptEvent.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/event/ScriptEvent.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="300" column="31" selection-start-line="300" selection-start-column="13" selection-end-line="300" selection-end-column="31" />
+            <state vertical-scroll-proportion="-11.074074">
+              <caret line="299" column="32" selection-start-line="299" selection-start-column="32" selection-end-line="299" selection-end-column="32" />
               <folding>
                 <element signature="docComment;field#RA_SEND_REDIRECT#0;class#ScriptEvent#0" expanded="true" />
                 <element signature="docComment;field#RA_RETURN_STREAM#0;class#ScriptEvent#0" expanded="true" />
                 <element signature="method#getResultAction#0;class#ScriptEvent#0" expanded="true" />
                 <element signature="method#setResultAction#0;class#ScriptEvent#0" expanded="true" />
-                <element signature="e#4003#4004#0" expanded="true" />
-                <element signature="e#4038#4039#0" expanded="true" />
-                <element signature="e#4081#4082#0" expanded="true" />
-                <element signature="e#4116#4117#0" expanded="true" />
                 <element signature="docComment;method#sendRedirect#0;class#ScriptEvent#0" expanded="true" />
-                <element signature="e#5308#5309#0" expanded="true" />
-                <element signature="e#5365#5366#0" expanded="true" />
+                <element signature="docComment;method#jumpToPage#0;class#ScriptEvent#0" expanded="true" />
+                <element signature="method#returnSource#0;class#ScriptEvent#0" expanded="false" />
+                <element signature="method#returnSource#1;class#ScriptEvent#0" expanded="false" />
+                <element signature="method#returnSource#2;class#ScriptEvent#0" expanded="false" />
                 <element signature="docComment;method#returnError#0;class#ScriptEvent#0" expanded="true" />
-                <element signature="method#getDMAction#0;class#ScriptEvent#0" expanded="true" />
-                <element signature="e#11612#11613#0" expanded="true" />
-                <element signature="e#11653#11654#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Tools.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/util/Tools.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="942" column="0" selection-start-line="942" selection-start-column="0" selection-end-line="942" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="false" />
-                <element signature="docComment;method#intToString#0;class#Tools#0" expanded="false" />
-                <element signature="e#644#645#0" expanded="false" />
-                <element signature="e#671#672#0" expanded="false" />
-                <element signature="docComment;method#stringToInt#0;class#Tools#0" expanded="false" />
-                <element signature="docComment;method#stringToIntSafe#1;class#Tools#0" expanded="false" />
-                <element signature="docComment;method#listToVector#0;class#Tools#0" expanded="false" />
-                <element signature="e#3061#3062#0" expanded="false" />
-                <element signature="e#3118#3119#0" expanded="false" />
-                <element signature="docComment;method#vectorToString#2;class#Tools#0" expanded="false" />
-                <element signature="docComment;method#listToString#0;class#Tools#0" expanded="false" />
-                <element signature="e#4521#4522#0" expanded="false" />
-                <element signature="e#4576#4577#0" expanded="false" />
-                <element signature="docComment;method#listToString#1;class#Tools#0" expanded="false" />
-                <element signature="e#4694#4695#0" expanded="false" />
-                <element signature="e#4748#4749#0" expanded="false" />
-                <element signature="docComment;method#collectionToString#0;class#Tools#0" expanded="false" />
-                <element signature="e#4864#4865#0" expanded="false" />
-                <element signature="e#4919#4920#0" expanded="false" />
-                <element signature="docComment;method#collectionToString#1;class#Tools#0" expanded="false" />
-                <element signature="docComment;method#setToString#0;class#Tools#0" expanded="false" />
-                <element signature="e#5732#5733#0" expanded="false" />
-                <element signature="e#5780#5781#0" expanded="false" />
-                <element signature="docComment;method#setToString#1;class#Tools#0" expanded="false" />
-                <element signature="docComment;method#createSortedCaseInsensitiveMap#0;class#Tools#0" expanded="false" />
-                <element signature="docComment;method#isTrue#0;class#Tools#0" expanded="false" />
-                <element signature="docComment;method#formatCheckedValue#0;class#Tools#0" expanded="false" />
-                <element signature="docComment;method#isBlank#0;class#Tools#0" expanded="false" />
-                <element signature="e#9408#9409#0" expanded="false" />
-                <element signature="e#9449#9450#0" expanded="false" />
-                <element signature="docComment;method#now#0;class#Tools#0" expanded="false" />
-                <element signature="e#9701#9702#0" expanded="false" />
-                <element signature="e#9766#9767#0" expanded="false" />
-                <element signature="e#9814#9815#0" expanded="false" />
-                <element signature="e#9893#9894#0" expanded="false" />
-                <element signature="docComment;method#showControlChars#0;class#Tools#0" expanded="false" />
-                <element signature="e#12941#12942#0" expanded="false" />
-                <element signature="e#12997#12998#0" expanded="false" />
-                <element signature="docComment;method#showControlChars#1;class#Tools#0" expanded="false" />
-                <element signature="docComment;method#enableIf#0;class#Tools#0" expanded="false" />
-                <element signature="docComment;method#reverseEnabledIf#0;class#Tools#0" expanded="false" />
-                <element signature="docComment;method#makeVisibleIf#0;class#Tools#0" expanded="false" />
-                <element signature="docComment;method#reverseVisibleIf#0;class#Tools#0" expanded="false" />
-                <element signature="e#16089#16090#0" expanded="false" />
-                <element signature="e#16122#16123#0" expanded="false" />
-                <element signature="docComment;method#readln#2;class#Tools#0" expanded="false" />
-                <element signature="docComment;method#readln#3;class#Tools#0" expanded="false" />
-                <element signature="docComment;method#copyFile#0;class#Tools#0" expanded="false" />
-                <element signature="e#18852#18853#0" expanded="false" />
-                <element signature="e#18907#18908#0" expanded="false" />
-                <element signature="e#18960#18961#0" expanded="false" />
-                <element signature="e#19015#19016#0" expanded="false" />
-                <element signature="e#19079#19080#0" expanded="false" />
-                <element signature="e#19134#19135#0" expanded="false" />
-                <element signature="docComment;method#readFileToVector#0;class#Tools#0" expanded="false" />
-                <element signature="docComment;method#saveVectorToFile#0;class#Tools#0" expanded="false" />
-                <element signature="e#21147#21148#0" expanded="false" />
-                <element signature="e#21200#21201#0" expanded="false" />
-                <element signature="e#21256#21257#0" expanded="false" />
-                <element signature="e#21309#21310#0" expanded="false" />
-                <element signature="docComment;method#getIniValue#2;class#Tools#0" expanded="false" />
-                <element signature="e#23573#23610#0" expanded="false" />
-                <element signature="e#24216#24267#0" expanded="false" />
-                <element signature="e#26182#26183#0" expanded="false" />
-                <element signature="e#26233#26234#0" expanded="false" />
-                <element signature="docComment;method#errorToString#0;class#Tools#0" expanded="false" />
-                <element signature="e#29686#29687#0" expanded="false" />
-                <element signature="e#29775#29776#0" expanded="false" />
-                <element signature="e#29813#29814#0" expanded="false" />
-                <element signature="e#29902#29903#0" expanded="false" />
-                <element signature="e#29952#29953#0" expanded="false" />
-                <element signature="e#30000#30001#0" expanded="false" />
-                <element signature="e#31276#31277#0" expanded="false" />
-                <element signature="e#31344#31345#0" expanded="false" />
-                <element signature="class#USER_INPUT_SAFETY_LEVEL#0;class#Tools#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="StringTools.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/util/StringTools.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="522" column="33" selection-start-line="522" selection-start-column="26" selection-end-line="522" selection-end-column="33" />
-              <folding>
-                <element signature="e#19335#19336#0" expanded="true" />
-                <element signature="e#19367#19368#0" expanded="true" />
+                <element signature="method#returnError#0;class#ScriptEvent#0" expanded="false" />
+                <element signature="method#setResultsFrom#0;class#ScriptEvent#0" expanded="false" />
+                <element signature="method#setSession#0;class#ScriptEvent#0" expanded="true" />
+                <element signature="method#getResponse#0;class#ScriptEvent#0" expanded="true" />
+                <element signature="method#getHandlerResult#0;class#ScriptEvent#0" expanded="false" />
+                <element signature="method#getSender#0;class#ScriptEvent#0" expanded="true" />
+                <element signature="method#getNextPageID#0;class#ScriptEvent#0" expanded="true" />
+                <element signature="method#setNextPageID#0;class#ScriptEvent#0" expanded="true" />
+                <element signature="method#getResultSrc#0;class#ScriptEvent#0" expanded="true" />
+                <element signature="method#setResultSrc#0;class#ScriptEvent#0" expanded="true" />
+                <element signature="e#11753#11754#0" expanded="true" />
+                <element signature="e#11784#11785#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -301,48 +174,7 @@
         <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/DynamideHandler.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="257" column="9" selection-start-line="257" selection-start-column="9" selection-end-line="257" selection-end-column="9" />
-              <folding>
-                <element signature="imports" expanded="false" />
-                <element signature="e#693#694#0" expanded="false" />
-                <element signature="e#719#720#0" expanded="false" />
-                <element signature="e#770#771#0" expanded="false" />
-                <element signature="e#798#799#0" expanded="false" />
-                <element signature="e#1018#1059#0" expanded="false" />
-                <element signature="method#getRequest#0;class#DynamideHandler#0" expanded="false" />
-                <element signature="method#getResponse#0;class#DynamideHandler#0" expanded="false" />
-                <element signature="method#getServlet#0;class#DynamideHandler#0" expanded="false" />
-                <element signature="method#getDebugURI#0;class#DynamideHandler#0" expanded="false" />
-                <element signature="method#setDebugURL#0;class#DynamideHandler#0" expanded="false" />
-                <element signature="e#2134#2159#0" expanded="false" />
-                <element signature="docComment;method#handleHttpRequest#0;class#DynamideHandler#0" expanded="false" />
-                <element signature="e#4145#4218#0" expanded="false" />
-                <element signature="e#4294#4314#0" expanded="false" />
-                <element signature="e#5731#5746#0" expanded="false" />
-                <element signature="docComment;method#handleHttpRequest_Internal#0;class#DynamideHandler#0" expanded="false" />
-                <element signature="e#12844#12916#0" expanded="false" />
-                <element signature="e#13879#13900#0" expanded="false" />
-                <element signature="e#24281#24313#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="page1.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/build/resource_root/homes/dynamide/assemblies/com-dynamide-test-suite-1/apps/test-suite/upload/page1.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="28" column="12" selection-start-line="28" selection-start-column="12" selection-end-line="28" selection-end-column="12" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="application.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/build/resource_root/homes/dynamide/assemblies/com-dynamide-test-suite-1/apps/test-suite/upload/application.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="22" column="47" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="47" />
+              <caret line="270" column="35" selection-start-line="270" selection-start-column="35" selection-end-line="270" selection-end-column="35" />
               <folding />
             </state>
           </provider>
@@ -379,11 +211,11 @@
         <option value="$PROJECT_DIR$/build/resource_root/homes/dynamide/assemblies/com-dynamide-apps-1/apps/us.anarchia.admin/application.xml" />
         <option value="$PROJECT_DIR$/build/resource_root/homes/dynamide/assemblies/com-dynamide-test-suite-1/apps/test-suite/upload/page1.xml" />
         <option value="$PROJECT_DIR$/src/java/com/dynamide/util/ServletTools.java" />
+        <option value="$PROJECT_DIR$/src/java/com/dynamide/DynamideHandler.java" />
+        <option value="$PROJECT_DIR$/src/java/com/dynamide/util/StringTools.java" />
         <option value="$PROJECT_DIR$/src/java/com/dynamide/HandlerResult.java" />
         <option value="$PROJECT_DIR$/src/java/com/dynamide/DynamideServlet.java" />
-        <option value="$PROJECT_DIR$/src/java/com/dynamide/DynamideHandler.java" />
         <option value="$PROJECT_DIR$/src/java/com/dynamide/event/ScriptEvent.java" />
-        <option value="$PROJECT_DIR$/src/java/com/dynamide/util/StringTools.java" />
         <option value="$PROJECT_DIR$/src/java/com/dynamide/Session.java" />
       </list>
     </option>
@@ -395,6 +227,17 @@
     <option name="y" value="22" />
     <option name="width" value="1440" />
     <option name="height" value="874" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <selected-state>
+          <State>
+            <id>Android</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -1307,7 +1150,7 @@
     <property name="LayoutCode.rearrangeEntriesXML" value="false" />
     <property name="OverrideImplement.combined" value="true" />
     <property name="OverrideImplement.overriding.sorted" value="false" />
-    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="settings.editor.selected.configurable" value="Errors" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
   </component>
   <component name="RecentsManager">
@@ -1593,12 +1436,13 @@
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.54092073" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34406295" sideWeight="0.5051151" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.35407725" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.35407725" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34406295" sideWeight="0.4948849" order="0" side_tool="false" content_ui="combo" />
@@ -1607,7 +1451,6 @@
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.54092073" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.41943735" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Script Monkey" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3271605" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
@@ -1666,13 +1509,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/java/com/dynamide/Session.java</url>
-          <line>3247</line>
+          <line>3249</line>
           <properties />
           <option name="timeStamp" value="15" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/java/com/dynamide/Session.java</url>
-          <line>3256</line>
+          <line>3258</line>
           <properties />
           <option name="timeStamp" value="16" />
         </line-breakpoint>
@@ -1687,12 +1530,6 @@
           <line>127</line>
           <properties />
           <option name="timeStamp" value="19" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/java/com/dynamide/event/ScriptEvent.java</url>
-          <line>300</line>
-          <properties />
-          <option name="timeStamp" value="20" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/java/com/dynamide/interpreters/BshInterpreter.java</url>
@@ -2193,99 +2030,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/HandlerResult.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="49" column="75" selection-start-line="49" selection-start-column="75" selection-end-line="49" selection-end-column="75" />
-          <folding>
-            <element signature="method#getPrettyPrint#0;class#HandlerResult#0" expanded="false" />
-            <element signature="method#setPrettyPrint#0;class#HandlerResult#0" expanded="false" />
-            <element signature="method#getBinary#0;class#HandlerResult#0" expanded="false" />
-            <element signature="method#setBinary#0;class#HandlerResult#0" expanded="false" />
-            <element signature="method#getMimeType#0;class#HandlerResult#0" expanded="false" />
-            <element signature="method#setMimeType#0;class#HandlerResult#0" expanded="false" />
-            <element signature="method#getNotModified#0;class#HandlerResult#0" expanded="false" />
-            <element signature="method#setNotModified#0;class#HandlerResult#0" expanded="false" />
-            <element signature="method#getRedirectURL#0;class#HandlerResult#0" expanded="false" />
-            <element signature="method#setRedirectURL#0;class#HandlerResult#0" expanded="false" />
-            <element signature="method#getDone#0;class#HandlerResult#0" expanded="false" />
-            <element signature="method#setDone#0;class#HandlerResult#0" expanded="false" />
-            <element signature="method#getResponseCode#0;class#HandlerResult#0" expanded="false" />
-            <element signature="method#setResponseCode#0;class#HandlerResult#0" expanded="false" />
-            <element signature="method#getErrorMessage#0;class#HandlerResult#0" expanded="false" />
-            <element signature="method#setErrorMessage#0;class#HandlerResult#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/DynamideHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="257" column="9" selection-start-line="257" selection-start-column="9" selection-end-line="257" selection-end-column="9" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#693#694#0" expanded="false" />
-            <element signature="e#719#720#0" expanded="false" />
-            <element signature="e#770#771#0" expanded="false" />
-            <element signature="e#798#799#0" expanded="false" />
-            <element signature="e#1018#1059#0" expanded="false" />
-            <element signature="method#getRequest#0;class#DynamideHandler#0" expanded="false" />
-            <element signature="method#getResponse#0;class#DynamideHandler#0" expanded="false" />
-            <element signature="method#getServlet#0;class#DynamideHandler#0" expanded="false" />
-            <element signature="method#getDebugURI#0;class#DynamideHandler#0" expanded="false" />
-            <element signature="method#setDebugURL#0;class#DynamideHandler#0" expanded="false" />
-            <element signature="e#2134#2159#0" expanded="false" />
-            <element signature="docComment;method#handleHttpRequest#0;class#DynamideHandler#0" expanded="false" />
-            <element signature="e#4145#4218#0" expanded="false" />
-            <element signature="e#4294#4314#0" expanded="false" />
-            <element signature="e#5731#5746#0" expanded="false" />
-            <element signature="docComment;method#handleHttpRequest_Internal#0;class#DynamideHandler#0" expanded="false" />
-            <element signature="e#12844#12916#0" expanded="false" />
-            <element signature="e#13879#13900#0" expanded="false" />
-            <element signature="e#24281#24313#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/event/ScriptEvent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="300" column="31" selection-start-line="300" selection-start-column="13" selection-end-line="300" selection-end-column="31" />
-          <folding>
-            <element signature="docComment;field#RA_SEND_REDIRECT#0;class#ScriptEvent#0" expanded="true" />
-            <element signature="docComment;field#RA_RETURN_STREAM#0;class#ScriptEvent#0" expanded="true" />
-            <element signature="method#getResultAction#0;class#ScriptEvent#0" expanded="true" />
-            <element signature="method#setResultAction#0;class#ScriptEvent#0" expanded="true" />
-            <element signature="e#4003#4004#0" expanded="true" />
-            <element signature="e#4038#4039#0" expanded="true" />
-            <element signature="e#4081#4082#0" expanded="true" />
-            <element signature="e#4116#4117#0" expanded="true" />
-            <element signature="docComment;method#sendRedirect#0;class#ScriptEvent#0" expanded="true" />
-            <element signature="e#5308#5309#0" expanded="true" />
-            <element signature="e#5365#5366#0" expanded="true" />
-            <element signature="docComment;method#returnError#0;class#ScriptEvent#0" expanded="true" />
-            <element signature="method#getDMAction#0;class#ScriptEvent#0" expanded="true" />
-            <element signature="e#11612#11613#0" expanded="true" />
-            <element signature="e#11653#11654#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/DynamideServlet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="365" column="66" selection-start-line="365" selection-start-column="66" selection-end-line="365" selection-end-column="66" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="docComment;field#serialVersionUID#0;class#DynamideServlet#0" expanded="false" />
-            <element signature="e#4795#4857#0" expanded="false" />
-            <element signature="e#5675#5724#0" expanded="false" />
-            <element signature="e#16450#16516#0" expanded="false" />
-            <element signature="e#21472#21536#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/util/StringTools.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -2297,37 +2041,102 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/DynamideHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="270" column="35" selection-start-line="270" selection-start-column="35" selection-end-line="270" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/HandlerResult.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="57" column="38" selection-start-line="57" selection-start-column="16" selection-end-line="57" selection-end-column="38" />
+          <folding>
+            <element signature="e#1030#1031#0" expanded="true" />
+            <element signature="e#1059#1060#0" expanded="true" />
+            <element signature="method#getPrettyPrint#0;class#HandlerResult#0" expanded="true" />
+            <element signature="method#setBinary#0;class#HandlerResult#0" expanded="true" />
+            <element signature="method#setBinaryStreamWritten#0;class#HandlerResult#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/DynamideServlet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.9259259">
+          <caret line="443" column="23" selection-start-line="443" selection-start-column="23" selection-end-line="443" selection-end-column="23" />
+          <folding>
+            <element signature="docComment;method#writeResult#0;class#DynamideServlet#0" expanded="true" />
+            <element signature="e#24470#24519#0" expanded="true" />
+            <element signature="e#27922#27980#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/event/ScriptEvent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-11.074074">
+          <caret line="299" column="32" selection-start-line="299" selection-start-column="32" selection-end-line="299" selection-end-column="32" />
+          <folding>
+            <element signature="docComment;field#RA_SEND_REDIRECT#0;class#ScriptEvent#0" expanded="true" />
+            <element signature="docComment;field#RA_RETURN_STREAM#0;class#ScriptEvent#0" expanded="true" />
+            <element signature="method#getResultAction#0;class#ScriptEvent#0" expanded="true" />
+            <element signature="method#setResultAction#0;class#ScriptEvent#0" expanded="true" />
+            <element signature="docComment;method#sendRedirect#0;class#ScriptEvent#0" expanded="true" />
+            <element signature="docComment;method#jumpToPage#0;class#ScriptEvent#0" expanded="true" />
+            <element signature="method#returnSource#0;class#ScriptEvent#0" expanded="false" />
+            <element signature="method#returnSource#1;class#ScriptEvent#0" expanded="false" />
+            <element signature="method#returnSource#2;class#ScriptEvent#0" expanded="false" />
+            <element signature="docComment;method#returnError#0;class#ScriptEvent#0" expanded="true" />
+            <element signature="method#returnError#0;class#ScriptEvent#0" expanded="false" />
+            <element signature="method#setResultsFrom#0;class#ScriptEvent#0" expanded="false" />
+            <element signature="method#setSession#0;class#ScriptEvent#0" expanded="true" />
+            <element signature="method#getResponse#0;class#ScriptEvent#0" expanded="true" />
+            <element signature="method#getHandlerResult#0;class#ScriptEvent#0" expanded="false" />
+            <element signature="method#getSender#0;class#ScriptEvent#0" expanded="true" />
+            <element signature="method#getNextPageID#0;class#ScriptEvent#0" expanded="true" />
+            <element signature="method#setNextPageID#0;class#ScriptEvent#0" expanded="true" />
+            <element signature="method#getResultSrc#0;class#ScriptEvent#0" expanded="true" />
+            <element signature="method#setResultSrc#0;class#ScriptEvent#0" expanded="true" />
+            <element signature="e#11753#11754#0" expanded="true" />
+            <element signature="e#11784#11785#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/Session.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5172891">
-          <caret line="1896" column="9" selection-start-line="1896" selection-start-column="9" selection-end-line="1896" selection-end-column="9" />
+        <state vertical-scroll-proportion="0.44429162">
+          <caret line="1897" column="78" selection-start-line="1897" selection-start-column="78" selection-end-line="1897" selection-end-column="78" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#5425#5604#0" expanded="true" />
             <element signature="e#81428#81438#0" expanded="true" />
             <element signature="docComment;method#getUploadedFile#1;class#Session#0" expanded="true" />
-            <element signature="e#84579#84600#0" expanded="true" />
-            <element signature="e#84972#85058#0" expanded="true" />
-            <element signature="e#86416#86477#0" expanded="true" />
-            <element signature="e#89993#90014#0" expanded="true" />
-            <element signature="e#93364#93401#0" expanded="true" />
-            <element signature="e#95369#95390#0" expanded="true" />
-            <element signature="e#96122#96193#0" expanded="true" />
-            <element signature="e#98827#98848#0" expanded="true" />
-            <element signature="e#100025#100113#0" expanded="true" />
-            <element signature="e#101064#101143#0" expanded="true" />
-            <element signature="e#101865#101935#0" expanded="true" />
-            <element signature="e#104584#104605#0" expanded="true" />
-            <element signature="e#105146#105167#0" expanded="true" />
-            <element signature="e#109526#109577#0" expanded="true" />
-            <element signature="e#110535#110584#0" expanded="true" />
-            <element signature="e#111296#111346#0" expanded="true" />
-            <element signature="e#112683#112720#0" expanded="true" />
+            <element signature="e#84675#84696#0" expanded="true" />
+            <element signature="e#85068#85154#0" expanded="true" />
+            <element signature="e#86512#86573#0" expanded="true" />
+            <element signature="e#90089#90110#0" expanded="true" />
+            <element signature="e#93442#93479#0" expanded="true" />
+            <element signature="e#95447#95468#0" expanded="true" />
+            <element signature="e#96200#96271#0" expanded="true" />
+            <element signature="e#98887#98908#0" expanded="true" />
+            <element signature="e#100085#100173#0" expanded="true" />
+            <element signature="e#101124#101203#0" expanded="true" />
+            <element signature="e#101925#101995#0" expanded="true" />
+            <element signature="e#104644#104665#0" expanded="true" />
+            <element signature="e#105206#105227#0" expanded="true" />
+            <element signature="e#109586#109637#0" expanded="true" />
+            <element signature="e#110595#110644#0" expanded="true" />
+            <element signature="e#111356#111406#0" expanded="true" />
+            <element signature="e#112743#112780#0" expanded="true" />
             <element signature="method#getHits#0;class#Session#0" expanded="true" />
-            <element signature="e#114567#114689#0" expanded="true" />
+            <element signature="e#114627#114749#0" expanded="true" />
             <element signature="docComment;method#getSubsession#0;class#Session#0" expanded="true" />
             <element signature="docComment;method#hasQueryParam#0;class#Session#0" expanded="true" />
-            <element signature="e#229637#229767#0" expanded="true" />
+            <element signature="e#229697#229827#0" expanded="true" />
           </folding>
         </state>
       </provider>

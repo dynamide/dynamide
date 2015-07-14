@@ -1892,8 +1892,10 @@ System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
         public String filename = "";
         public String mimeType = "";
         public InputStream stream = null;
+        public boolean streamClosed = false;
         public String toString(){
-            return "filename:"+filename+",mimeType:"+mimeType+",isFile:"+(file!=null)+",isStream:"+(stream!=null);
+            return "filename:"+filename+",mimeType:"+mimeType+",isFile:"+(file!=null)
+                    +",isStream:"+(stream!=null)+",streamClosed:"+streamClosed;
         }
     }
 
@@ -2111,7 +2113,7 @@ System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
                         setActivePage("");
                         return handlerResult;
                     } else if (event.resultAction == ScriptEvent.RA_RETURN_STREAM){
-                        handlerResult.setBinaryStream(event.getBinaryResultStream());
+                        handlerResult.setBinaryStreamWritten(true);
                         handlerResult.mimeType = event.mimeType;
                         handlerResult.setPrettyPrint(false);
                         handlerResult.setResponseCode(event.getResponseCode());
@@ -2190,7 +2192,7 @@ System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
                         logHandlerProc("INFO", "Page validated: "+pageID);
                     }
                     if ((event.resultAction == ScriptEvent.RA_RETURN_STREAM)) {
-                        handlerResult.setBinaryStream(event.getBinaryResultStream());
+                        handlerResult.setBinaryStreamWritten(true);
                         handlerResult.mimeType = event.mimeType;
                         handlerResult.setPrettyPrint(false);
                         handlerResult.setResponseCode(event.getResponseCode());

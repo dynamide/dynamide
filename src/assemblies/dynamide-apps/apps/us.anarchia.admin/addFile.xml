@@ -9,16 +9,20 @@
                 returnSource(("{'msg':'ERROR: filename was empty'}").replace('\'','"'));
             }
             UserRESTHelper backend = getBackend();
-            GridFS gridfs = backend.getGridFS();
-            DBObject query = new BasicDBObject();
-            if (StringTools.notEmpty(fn)){
-                query.put("filename", fn);
+            try {
+                GridFS gridfs = backend.getGridFS();
+                DBObject query = new BasicDBObject();
+                if (StringTools.notEmpty(fn)){
+                    query.put("filename", fn);
+                }
+                GridFSDBFile dbfile = gridfs.findOne(query);
+                String mimeType = dbfile.get("metadata").get("mimeType");
+                stream = dbfile.getInputStream();
+                System.out.println("\n\n\n\n\n^^^^^^^^^^^^^ mimeType: "+mimeType);
+                event.returnStream(stream, mimeType);  //reads and closes stream now.
+            } finally {
+                backend.close();
             }
-            GridFSDBFile dbfile = gridfs.findOne(query);
-            String mimeType = dbfile.get("metadata").get("mimeType");
-            event.setMimeType(mimeType);
-            stream = dbfile.getInputStream();
-            event.returnStream(stream);
             return;
         } else if (event.getDMAction().equals("deleteFile")){
             //http://localhost:18080/anarchia-admin?page=addFile&action=deleteFile&reloadPage=true&filename=799a7f28-f2f4-40be-b6a4-2c5e3f5cf657.pdf
@@ -28,42 +32,56 @@
                 event.returnSource("{'msg':'ERROR: filename was empty'}".replace('\'','"'));
                 return;
             }
+            String fileDeleteStr = "";
             UserRESTHelper backend = getBackend();
-            GridFS gridfs = backend.getGridFS();
-            DBObject query = new BasicDBObject();
-            query.put("filename", fn);
-            GridFSDBFile dbfile = gridfs.findOne(query);
-            if (dbfile==null){
-                 event.returnSource(("{'msg':'ERROR: filename not found: "+fn+"'}").replace('\'','"'));
-                return;
+            try {
+                GridFS gridfs = backend.getGridFS();
+                DBObject query = new BasicDBObject();
+                query.put("filename", fn);
+                GridFSDBFile dbfile = gridfs.findOne(query);
+                if (dbfile==null){
+                     event.returnSource(("{'msg':'ERROR: filename not found: "+fn+"'}").replace('\'','"'));
+                    return;
+                }
+                gridfs.remove(dbfile);
+                fileDeleteStr= ("{'msg':'SUCCESS: filename deleted', 'dbfile':"+dbfile.toString()+"}").replace('\'','"');
+            } finally {
+                backend.close();
             }
-            gridfs.remove(dbfile);
-            event.returnSource(("{'msg':'SUCCESS: filename deleted', 'dbfile':"+dbfile.toString()+"}").replace('\'','"'));
+            event.returnSource(fileDeleteStr);
             return;
-        
         } else if (event.getDMAction().equals("getFiles")){
             //http://localhost:18080/anarchia-admin?page=addFile&action=getFiles&reloadPage=true
-            UserRESTHelper backend = getBackend();
-            GridFS gridfs = backend.getGridFS();
-            DBObject query = new BasicDBObject();
-            query.put("metadata.author", event.getQueryParam("author"));
-            List dbfileList = gridfs.find(query);
             String files = "";
-            it = dbfileList.iterator();
-            int loop = 0;
-            while (it.hasNext()){
-                dbfile = it.next();
-                String mimeType = dbfile.toString();
-                String fn = dbfile.getFilename();
-                if (loop>0){
-                    files+=",";
+            UserRESTHelper backend = getBackend();
+            try {
+                GridFS gridfs = backend.getGridFS();
+                DBObject query = new BasicDBObject();
+                query.put("metadata.author", event.getQueryParam("author"));
+                
+                List dbfileList = gridfs.find(query);
+                files = "";
+                it = dbfileList.iterator();
+                int loop = 0;
+                while (it.hasNext()){
+                    dbfile = it.next();
+                    String mimeType = dbfile.toString();
+                    String fn = dbfile.getFilename();
+                    if (loop>0){
+                        files+=",";
+                    }
+                    loop++;
+                    files += mimeType;
                 }
-                loop++;
-                files += mimeType;
+            } finally {
+                backend.close();
             }
             event.returnSource("{\"msg\":\"SUCCESS\", \"files\":["+files+"]}", false, "application/json");
             return;
         }
+        
+        System.out.println("\n\n\n\n\n^^^^^^^^^^^^^ didn't return 5");
+        
         //ELSE default is POST:
         try {
             //http://localhost:18080/anarchia-admin?next=addFile
@@ -71,10 +89,12 @@
             Session.UploadedFile uf = session.getUploadedFile("file", "", false);
             System.out.println("~~~~~~~~~~~~~~~~~~~~~~ in POST file: "+uf);
             try {
+                String fileResultStr = "";
                 UserRESTHelper backend = getBackend();
                 try {
-                    GridFS gridfs = backend.getGridFS();   
-                    GridFSInputFile fsfile = gridfs.createFile(uf.stream);
+                    GridFS gridfs = backend.getGridFS(); 
+                    GridFSInputFile fsfile = gridfs.createFile(uf.stream, true);//true means closeStreamOnPersist, so it closes the stream for us.
+                    uf.streamClosed = true;
                     
                     String clientFilename = uf.filename;
                     String ext = clientFilename.substring(clientFilename.lastIndexOf('.'));
@@ -89,14 +109,12 @@
                     meta.put("id", nextid);
                     fsfile.put("metadata", meta);
                     fsfile.put("contentType", uf.mimeType);
-                    
                     fsfile.save();
-                    
-                    event.returnSource("{\"msg\":\"SUCCESS\", \"filename\":\""+fsfile.getFilename()+"\"}", false, "application/json");
-                    return;
+                    fileResultStr = "{\"msg\":\"SUCCESS\", \"filename\":\""+fsfile.getFilename()+"\"}";
                 } finally {
                     backend.close();
                 }
+                event.returnSource(fileResultStr, false, "application/json");
                 return;
             } catch (Throwable t){
                 event.returnSource(  "{\"error\":\""+Tools.getStackTrace(t)+"::"+t.toString()+"\"}",
@@ -238,7 +256,7 @@
   <HEAD>
     <TITLE>$page.title</TITLE>
     <script src="/anarchia/js/jquery-2.1.3.min.js"></script>
-    <script src="/anarchia-admin/js/anarchia.js"></script>
+    <script src="/anarchia/js/anarchia.js"></script>
   </HEAD>
   <BODY id="page1" bottomMargin="15" leftMargin="10" topMargin="15" rightMargin="10" name="addPanel">
     <P>Add File/Image</P>

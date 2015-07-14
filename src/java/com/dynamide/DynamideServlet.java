@@ -358,10 +358,8 @@ public class DynamideServlet extends HttpServlet {
                     String url = result.redirectURL;
                     Log.debug(DynamideServlet.class, "Sending redirect: " + url);
                     response.sendRedirect(url);
-                } else if (result.isBinaryStream()){
-                    if (com.dynamide.Constants.PROFILE) profiler.enter("servlet.writeResult: " + fullURI);
-                    writeResult(response, result.mimeType, result.getBinaryStream());
-                    if (com.dynamide.Constants.PROFILE) profiler.leave("servlet.writeResult: " + fullURI);
+                } else if (result.wasBinaryStreamWritten()){
+                    System.out.println("Binary stream already written.  DynamideServlet writing nothing.");
                 } else if (result.binary) {
                     if (com.dynamide.Constants.PROFILE) profiler.enter("servlet.writeResult: " + fullURI);
                     writeResult(response, result.mimeType, result.binaryResult);
@@ -443,7 +441,7 @@ public class DynamideServlet extends HttpServlet {
     }
 
     /** closes both streams when exiting */
-    private void writeResult(HttpServletResponse response, String contentType, InputStream resultInputStream) throws IOException {
+    public static void writeResult(HttpServletResponse response, String contentType, InputStream resultInputStream) throws IOException {
         response.setContentType(contentType);
         ServletOutputStream out = response.getOutputStream();
         try {
@@ -459,7 +457,7 @@ public class DynamideServlet extends HttpServlet {
     }
 
 
-    private void writeResult(HttpServletResponse response, String contentType, byte[] result) throws IOException {
+    private static void writeResult(HttpServletResponse response, String contentType, byte[] result) throws IOException {
         response.setContentType(contentType);
         ServletOutputStream out = response.getOutputStream();
         try {

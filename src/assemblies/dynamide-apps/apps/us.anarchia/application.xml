@@ -79,22 +79,25 @@
                 returnSource(("{'msg':'ERROR: filename was empty'}").replace('\'','"'));
             }
             UserRESTHelper backend = getBackend();
-            GridFS gridfs = backend.getGridFS();
-            DBObject query = new BasicDBObject();
-            if (StringTools.notEmpty(fn)){
-                query.put("filename", fn);
+            try {
+                GridFS gridfs = backend.getGridFS();
+                DBObject query = new BasicDBObject();
+                if (StringTools.notEmpty(fn)){
+                    query.put("filename", fn);
+                }
+                GridFSDBFile dbfile = gridfs.findOne(query);
+                if (dbfile==null){
+                    event.returnSource(("{'ERROR':'File not found: "+fn+"'}").replace('\'', '"'));
+                    event.setMimeType("application/json");
+                    event.setResponseCode(404);
+                    return;
+                }
+                String mimeType = dbfile.get("metadata").get("mimeType");
+                stream = dbfile.getInputStream();
+                event.returnStream(stream, mimeType);
+            } finally {
+                backend.close();
             }
-            GridFSDBFile dbfile = gridfs.findOne(query);
-            if (dbfile==null){
-                event.returnSource(("{'ERROR':'File not found: "+fn+"'}").replace('\'', '"'));
-                event.setMimeType("application/json");
-                event.setResponseCode(404);
-                return;
-            }
-            String mimeType = dbfile.get("metadata").get("mimeType");
-            event.setMimeType(mimeType);
-            stream = dbfile.getInputStream();
-            event.returnStream(stream);
             return;
         }
         

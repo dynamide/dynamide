@@ -6,24 +6,28 @@
         if (event.getDMAction().equals("getpanels")){
             //http://localhost:18080/anarchia-admin?page=showImages&action=getpanels&reloadPage=true
             UserRESTHelper backend = getBackend();
-            GridFS gridfs = backend.getGridFS();
-            DBObject query = new BasicDBObject();
-            query.put("metadata.author", event.getQueryParam("author"));
-            List dbfileList = gridfs.find(query);
-            String files = "";
-            it = dbfileList.iterator();
-            int loop = 0;
-            while (it.hasNext()){
-                dbfile = it.next();
-                String mimeType = dbfile.toString();
-                String fn = dbfile.getFilename();
-                if (loop>0){
-                    files+=",";
+            try {
+                GridFS gridfs = backend.getGridFS();
+                DBObject query = new BasicDBObject();
+                query.put("metadata.author", event.getQueryParam("author"));
+                List dbfileList = gridfs.find(query);
+                String files = "";
+                it = dbfileList.iterator();
+                int loop = 0;
+                while (it.hasNext()){
+                    dbfile = it.next();
+                    String mimeType = dbfile.toString();
+                    String fn = dbfile.getFilename();
+                    if (loop>0){
+                        files+=",";
+                    }
+                    loop++;
+                    files += mimeType;
                 }
-                loop++;
-                files += mimeType;
+                event.returnSource("{\"msg\":\"SUCCESS\", \"files\":["+files+"]}", false, "application/json");
+            } finally {
+                backend.close();
             }
-            event.returnSource("{\"msg\":\"SUCCESS\", \"files\":["+files+"]}", false, "application/json");
             return;
         }
         event.returnSource("{\"msg\":\"ERROR\", \"detail\":\"action not handled\"}", false, "application/json");
@@ -102,7 +106,7 @@
   <HEAD>
     <TITLE>$page.title</TITLE>
     <script src="/anarchia/js/jquery-2.1.3.min.js"></script>
-    <script src="/anarchia-admin/js/anarchia.js"></script>
+    <script src="/anarchia/js/anarchia.js"></script>
   </HEAD>
   <BODY id="page1" bottomMargin="15" leftMargin="10" topMargin="15" rightMargin="10" name="showImages">
     <P>Add Image</P>
