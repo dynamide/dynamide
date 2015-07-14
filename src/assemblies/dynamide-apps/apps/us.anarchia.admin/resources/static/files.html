@@ -21,17 +21,24 @@
 
 
 <input type="text" id="editAuthor" value="laramie"/> <button id="btnGetByAuthor">Get by Author</button>
-<br />
-<input type="text" id="editNewStory" value="story1"/> <button id="btnCreateStory">Create Story</button>
-    
+<div id="newStoryLinks">
+    <br />
+    <input type="text" id="editNewStory" value="story1"/> <button id="btnCreateStory">Create story from checked</button>
+    <div id='reorderStoryLink'></div>
+    <div id='viewStoryLink'></div>
+</div>
+
 <div id='storiesDiv'></div>
-<div id='reorderStoryLink'></div>
-<div id='viewStoryLink'></div>
 
 <div id='filesDiv'></div>
 
+<br />
+<small>You can also <a href="/anarchia-admin?next=addFile">Upload a File/Image</a>.</small>
+
 
 <script id="TemplateSource" type="text/x-handlebars-template">
+    <br />
+    
     <table border='1' cellpadding='2' cellspacing='0' width="100%">
         <tr style='background-color: lightgray;'><th><input type='checkbox' id='cbCheckAll' /></th><th>img</th><th>filename</th><th>contentType</th><th>Uploaded</th><th>author</th><th>description</th></tr>
         {{#each filesArray}}
@@ -53,14 +60,16 @@
 </script>
 
 <script id="TemplateSourceStories" type="text/x-handlebars-template">
-    
+   <!-- 
     <select id="selectStory">
       <option id="default" value="default">default</option>
       {{#each storiesArray}}
           <option value="{{id}}">{{title}} [{{panels.length}} panels]</option>
        {{/each}}
     </select> 
+    
     <button id="btnAddToStory">Add to Story (not implemented)</button>
+    -->
 </script>
 
 
@@ -105,7 +114,7 @@
         // AJAX CALL HERE :
        $.get('/anarchia-admin?page=addFile&action=getFiles&author='+author,
           function(data) {
-              if (data.files){
+              if (data && data.files){
                   gFiles = data.files;
                   console.log('files: '+JSON.stringify(gFiles));
                   renderTemplate(gFiles);
@@ -122,6 +131,21 @@
                   gStories = data;
                   console.log('stories: '+JSON.stringify(gStories));
                   renderStoriesTemplate(gStories);
+                  
+                  $("#btnCreateStory").fadeIn(200);
+                  $("#newStoryLinks").fadeIn(200);
+                  $("#btnCreateStory").click(function() {
+                        var storyID = $( "#editNewStory" ).val();
+                        var arr = [];
+                        $('#filesDiv input.filesCheckbox:checked').each(function (){
+                            if (this.checked){
+                                arr.push($(this).attr('value'));    
+                            }
+                        });
+                        console.log(arr);
+                        $('#newStoryLinks').fadeOut(0);
+                        createStory(arr);
+                  });
               }
           }
        );
@@ -170,10 +194,12 @@
                   data: JSON.stringify(story),
                   success: function (data){
                     console.log('stories '+story.id+' data:'+JSON.stringify(data));
-                    var link = "Reorder Story: <a target='_blank' href='http://localhost:18080/anarchia-admin/reorderStory.html?storyID="+story.id+"'>"+story.id+"</a>";
+                    var link = "Reorder story: <a target='_blank' href='http://localhost:18080/anarchia-admin/reorderStory.html?storyID="+story.id+"'>"+story.title+"</a>";
                     $("#reorderStoryLink").html(link);
                     
-                    $('#viewStoryLink').html("<a target='_blank' href='/anarchia/panels.html?storyID="+story.id+"'>View Story</a>");
+                    $('#viewStoryLink').html("View story: <a target='_blank' href='/anarchia/panels.html?storyID="+story.id+"'>"+story.title+"</a>");
+                    $('#newStoryLinks').fadeIn(800);
+          
                      
                   },
                   error: function (data){
@@ -208,25 +234,13 @@
     }
     
     function documentReady(){
+        //$( "#divBtnCreateStory" ).fadeOut(0);
+        $('#newStoryLinks').fadeOut(0);
         $( "#btnGetByAuthor" ).click(function() {
             var author = $( "#editAuthor" ).val();
             getByAuthor(author);
             getStoriesByAuthor(author)
         });
-        
-        $( "#btnCreateStory" ).click(function() {
-            var storyID = $( "#editNewStory" ).val();
-            var arr = [];
-            $('#filesDiv input.filesCheckbox:checked').each(function (){
-                if (this.checked){
-                    arr.push($(this).attr('value'));    
-                }
-            });
-            console.log(arr);
-            createStory(arr);
-        });
-        
-        
     }
 
     $(document).ready(documentReady);
