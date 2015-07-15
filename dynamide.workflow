@@ -4,6 +4,10 @@ webapps:
          /Users/vcrocla/bin/tomcat7.dm/conf/Catalina/localhost/ROOT.xml
     This turns around and points to: 
          /Users/vcrocla/src/dynamide/build/tomcat/webapps/ROOT/WEB-INF/web.xml
+    2015-07-15: 
+        For safety, I have copied pertinent files to 
+            /Users/vcrocla/src/dynamide/src/conf/tomcat/full-sample/
+            These are not in the build process yet, but are complete for running dynamide and anarchia.
          
 security:
     In Chrome, to clear auth, just put user@ in front of host and it will make you log in: 

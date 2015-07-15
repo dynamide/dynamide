@@ -330,7 +330,7 @@ implements ISession, ISessionItem, ISessionTableItem, IDatasource, IContext {
         if ( entry == null ) {
             throw new ApplicationNotFoundException(fullURI, "");
         }
-System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
+        //helpful but noisy: System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
         /* %TODO%
          *  Figure out the account, and get the session pool for that account,
          *  rather than sharing the session database globally.
@@ -363,7 +363,6 @@ System.out.println("========== uriToApp("+fullURI+") ==> "+entry);
             }
         }
 
-        System.out.println("Session ~1~~~~~~~~~~~~ "+USER+" "+Thread.currentThread().getName());
         if ( !Tools.isBlank(USER) ){
             IContext sessions = (IContext)rootResourceManager.find(userSessionContextName);
             if ( sessions != null ) {

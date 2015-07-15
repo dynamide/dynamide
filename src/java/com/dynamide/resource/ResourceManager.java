@@ -1128,8 +1128,8 @@ public final class ResourceManager extends Pool {
     }
 
     public Assembly findAssemblyInAccount(String account, String basename, String interfaceNumber, String build){
-        System.out.println("in findAssemblyInAccount. account:"+account+" basename:"+basename
-                            +" interfaceNumber: "+interfaceNumber+" build: "+build);
+        //helpful but noisy: System.out.println("in findAssemblyInAccount. account:"+account+" basename:"+basename
+        //                    +" interfaceNumber: "+interfaceNumber+" build: "+build);
                             
                             
     //TODO: %%%%% when some of these params are empty, you will get a null pointer exeption.
@@ -1423,13 +1423,13 @@ public final class ResourceManager extends Pool {
     public IContext findStaticResource(String fullURI) throws ResourceException, ApplicationNotFoundException {
         WebAppEntry entry = uriToApp(fullURI);
         if (entry != null) {
-            System.out.println("========== findStaticResource ==> uriToApp(" + fullURI + ") ==> " + entry);
+            //helpful but noisy: System.out.println("========== findStaticResource ==> uriToApp(" + fullURI + ") ==> " + entry);
             Assembly assembly = findAssembly(entry.getHome(), entry.getAssembly(), entry.getInterface(), entry.getBuild());
             if (assembly != null && fullURI.startsWith(entry.getURI()))  {
                     String relName = fullURI.substring(entry.getURI().length());
                     IContext applicationFileNode = assembly.getApplicationResource(entry.getAppname(), FileTools.join("resources/static",relName));
                     if (applicationFileNode != null) {
-                        System.out.println("========== findStaticResource ==> found ==>"+applicationFileNode);
+                        //helpful but noisy: System.out.println("========== findStaticResource ==> found ==>"+applicationFileNode);
                         //These were helpful to find mime type errors, for example.
                         // System.out.println("========== findStaticResource ==> dump attr ==>"+applicationFileNode.dumpAttributes(false));
                         //System.out.println("========== findStaticResource ==> dump  ctx ==>"+applicationFileNode.dumpContext(false));

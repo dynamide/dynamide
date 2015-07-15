@@ -21,7 +21,7 @@
 
   <event language="beanshell" name="application_onAction"><![CDATA[
         String path = session.getRequestPath();
-        System.out.println("\n\n\n\n\n\n**************************************************anarchia**path: "+path);
+        //System.out.println("\n\n\n\n\n\n**************************************************anarchia**path: "+path);
         if (path==null || path.length()==0 || path.equals("/")){
             event.sendRedirect("/anarchia/panels.html");
             return;

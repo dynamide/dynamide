@@ -18,7 +18,7 @@
       <!-- Be sure to turn off org.apache.catalina.realm.UserDatabaseRealm and any other
            Realms, so that MongoRealm wins. -->
       <Realm className="org.apache.catalina.realm.LockOutRealm">
-          <Realm className="com.tomitribe.security.MongoRealm" digest="SHA-256"/>
+          <Realm className="com.tomitribe.security.MongoRealm" digest="SHA-256" logDebug="false" logSystemlog="true"/>
       </Realm>
 
       <Host name="localhost"  appBase="webapps"
