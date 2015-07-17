@@ -75,10 +75,21 @@
 		</user-data-constraint>
 	</security-constraint>
 
+	<!--
+	This works for Basic Auth.
 	<login-config>
-		<auth-method>BASIC</auth-method>
+	    <auth-method>BASIC</auth-method>
 		<realm-name>Dynamide</realm-name>
 	</login-config>
+	-->	
+	<login-config>
+	    <auth-method>FORM</auth-method>
+		<form-login-config>
+			<form-login-page>/login/login.html</form-login-page>
+			<form-error-page>/login/login-failed.html</form-error-page>
+		</form-login-config>
+	</login-config>
+   
 	
     <security-role>
         <description>

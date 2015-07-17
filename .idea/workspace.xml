@@ -10,11 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c4dc66d8-2cb8-4d1f-a717-762703684739" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/com/dynamide/resource/Assembly.java" afterPath="$PROJECT_DIR$/src/java/com/dynamide/resource/Assembly.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/com/dynamide/DynamideHandler.java" afterPath="$PROJECT_DIR$/src/java/com/dynamide/DynamideHandler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/com/dynamide/Page.java" afterPath="$PROJECT_DIR$/src/java/com/dynamide/Page.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/com/dynamide/Session.java" afterPath="$PROJECT_DIR$/src/java/com/dynamide/Session.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/com/dynamide/util/Tools.java" afterPath="$PROJECT_DIR$/src/java/com/dynamide/util/Tools.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/conf/tomcat/full-sample/build-tomcat-webapps-ROOT/web-inf/web.xml" afterPath="$PROJECT_DIR$/src/conf/tomcat/full-sample/build-tomcat-webapps-ROOT/web-inf/web.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="dynamide.iws" />
@@ -73,10 +69,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Session.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Session.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/Session.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
+            <state vertical-scroll-proportion="0.33333334">
               <caret line="433" column="0" selection-start-line="433" selection-start-column="0" selection-end-line="433" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -147,10 +143,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DynamideServlet.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="DynamideServlet.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/DynamideServlet.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.3317757">
+            <state vertical-scroll-proportion="0.0">
               <caret line="354" column="0" selection-start-line="354" selection-start-column="0" selection-end-line="354" selection-end-column="0" />
               <folding>
                 <element signature="docComment;method#writeResult#0;class#DynamideServlet#0" expanded="true" />
@@ -1587,7 +1583,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="22" width="1440" height="874" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1596,7 +1592,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5408163" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.41836736" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.41943735" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34406295" sideWeight="0.5051151" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
@@ -2327,9 +2323,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/Session.java">
+    <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/DynamideServlet.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
+          <caret line="354" column="0" selection-start-line="354" selection-start-column="0" selection-end-line="354" selection-end-column="0" />
+          <folding>
+            <element signature="docComment;method#writeResult#0;class#DynamideServlet#0" expanded="true" />
+            <element signature="e#24470#24519#0" expanded="true" />
+            <element signature="e#27922#27980#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/Session.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33333334">
           <caret line="433" column="0" selection-start-line="433" selection-start-column="0" selection-end-line="433" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -2395,18 +2403,6 @@
             <element signature="e#228110#228240#0" expanded="true" />
             <element signature="method#getCurrentLanguageCode#0;class#Session#0" expanded="true" />
             <element signature="method#setCurrentLanguageCode#0;class#Session#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/com/dynamide/DynamideServlet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3317757">
-          <caret line="354" column="0" selection-start-line="354" selection-start-column="0" selection-end-line="354" selection-end-column="0" />
-          <folding>
-            <element signature="docComment;method#writeResult#0;class#DynamideServlet#0" expanded="true" />
-            <element signature="e#24470#24519#0" expanded="true" />
-            <element signature="e#27922#27980#0" expanded="true" />
           </folding>
         </state>
       </provider>
