@@ -273,17 +273,31 @@ public class Tools {
     }
 
 
-    /**  Use this static method to determine if a string represents a blank
-      * value. A string such as " " will be
-      * determined to be blank on the front end.
-      * @return boolean "true" if value is null or only whitespace.
-      */
-    public static boolean isBlank(String value){
-        if (value == null)
-            return true;
-        if (value.trim().length()==0)
-            return true;
-        return false;
+    /** Handles null strings as empty.  */
+    public static boolean isEmpty(String str){
+        return !notEmpty(str);
+    }
+
+    /** nulls, empty strings, and empty after trim() are considered blank.
+     *  @return boolean "true" if value is null or only whitespace.
+     */
+    public static boolean isBlank(String str){
+        return !notBlank(str);
+    }
+
+    /** Handles null strings as empty.  */
+    public static boolean notEmpty(String str){
+        if (str==null) return false;
+        if (str.length()==0) return false;
+        return true;
+    }
+    public static boolean notBlank(String str){
+        if (str==null) return false;
+        if (str.length()==0) return false;
+        if (str.trim().length()==0){
+            return false;
+        }
+        return true;
     }
 
     public static void sleep(Integer millis){

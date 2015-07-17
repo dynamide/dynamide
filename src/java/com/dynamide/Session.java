@@ -1388,6 +1388,27 @@ implements ISession, ISessionItem, ISessionTableItem, IDatasource, IContext {
 
     //================= URL and Link management ==============================================
 
+    private String m_servicePathInfo = "";
+    /** For a pathInfo like "/myapplication/mypage/item/subitem", getServicePathInfo() returns "/item/subitem"
+     * whilst getServicePathInfoItem() returns "item".
+     */
+    public String getServicePathInfo(){
+        return m_servicePathInfo;
+    }
+    /** For a pathInfo like "/myapplication/mypage/item/subitem", getServicePathInfo() returns "/item/subitem"
+     * whilst getServicePathInfoItem() returns "item".
+     */
+    public String getServicePathInfoItem(){
+        String res = m_servicePathInfo;
+        if (m_servicePathInfo.startsWith("/")){
+            res = m_servicePathInfo.substring(1);
+        }
+        if (res.indexOf('/')>-1){
+            res = res.substring(0, res.indexOf('/'));
+        }
+        return res;
+    }
+
     private String  m_lastPathInfo = "";
 
     /** When the request is complete, get("pathInfo") will return an empty string -- use this
@@ -1943,30 +1964,15 @@ implements ISession, ISessionItem, ISessionTableItem, IDatasource, IContext {
 
     private synchronized HandlerResult handleAction_inner(DynamideHandler handler, String action, HandlerResult handlerResult)
     throws Exception {
-
         incrHits();
         setHandler(handler);
         setHandlerResult(handlerResult);
-
         enterHandlerProc("Session.handleAction", "<b>["+action+"]</b>");
         try {
-
-
-            //===================
-        //MEMORY_LEAKS:
-            //1/7/2005
-            //    minimal leak:
-            //    38,280K --> 38,760K
-            //    handlerResult.result = "<html><body>TEST SHORT-CIRCUIT 2</body></html>";
-            //    if (true) return handlerResult;
-            //===================
-
             HttpServletRequest request = m_handler.getRequest();
-
             // 2012-02-15 Laramie adding Apache Commons Fileupload tool, since query params are in
             //                   form values when using POST, and they are not pulled in automatically.
             // 2015-07-08 Moved this before logHandlerProcRequest so upload files and multipart form fields will get logged.
-
             if (ServletFileUpload.isMultipartContent(request)){
                 m_requestHasUpload = true;
                 m_requestUploadFileItems =   getUploadFileItems(request);
@@ -1975,6 +1981,7 @@ implements ISession, ISessionItem, ISessionTableItem, IDatasource, IContext {
             logHandlerProcRequest();
 
             m_lastRequestPath = get("requestPath").toString();
+            m_servicePathInfo = "";
 
             String pathInfo = getPathInfo();
             m_lastPathInfo = pathInfo;
@@ -1987,6 +1994,25 @@ implements ISession, ISessionItem, ISessionTableItem, IDatasource, IContext {
             nextPageID = getQueryParam(Constants.nextPageID);
             String pageID = getQueryParam(Constants.pageID);
             boolean reloadPageRequested = Tools.isTrue(getQueryParam(Constants.reloadPage));
+
+
+            if (StringTools.isEmpty(pageID) && pathInfo.length()>1){
+                // m_lastRequestPath = /anarchia-admin/mojo/nixon
+                // m_applicationPath = /anarchia-admin
+                // pathInfo          = /mojo/nixon
+                // servicePathInfo   = /nixon
+                pageID = pathInfo.substring(1);
+                m_servicePathInfo = "";
+                int iSlash = pageID.indexOf('/', 1);
+                if (iSlash>-1){
+                    m_servicePathInfo = pageID.substring(iSlash);
+                    pageID = pageID.substring(0, iSlash);
+                }
+                if (m_pageNames.indexOf(pageID) == -1){
+                    pageID = "";
+                    m_servicePathInfo = "";
+                }
+            }
 
             //before going anywhere else (except secureredirect), fire the page_onLeavePage event
             String prevPage = getActivePage();
@@ -2062,13 +2088,6 @@ implements ISession, ISessionItem, ISessionTableItem, IDatasource, IContext {
                     return handlerResult;
             }
 
-            //===================
-            //MEMORY_LEAKS:
-            //1/7/2005      36,900-->38,236
-            //    handlerResult.result = "<html><body>TEST SHORT-CIRCUIT 3</body></html>";
-            //    if (true) return handlerResult;
-            //===================
-
             ScriptEvent event = null;
 
             boolean handledByRegisteredEvent = false;
@@ -2087,23 +2106,18 @@ implements ISession, ISessionItem, ISessionTableItem, IDatasource, IContext {
                 handledByRegisteredEvent = true;
             }
 
-            // System.out.println("session 351");
 
             if ( ! handledByRegisteredEvent ) {
                 ScriptEventSource appActionSource = getEventSource("application_onAction");
-                //log("appActionSource: "+appActionSource);
                 event = fireEvent(this, "application_onAction", pageID, nextPageID, action, appActionSource, "", false);
                 handlerResult.prettyPrint = event.prettyPrint;
-            // System.out.println("session 352");
 
                 if ( event.resultCode == ScriptEvent.RC_ERROR ) {
                     logError("[handleAction_inner.2]"+event.evalErrorMsg);
                     handlerResult.result = hookException(event.evalErrorMsg, (Throwable)null, event, ErrorHandlerInfo.EC_SESSION, true);
                     setActivePage("error-page");
-            // System.out.println("session 353");
                     return handlerResult;
                 } else if ( event.resultCode != ScriptEvent.RC_NO_EVENT_SOURCE ) {
-                    //log("OK: "+event.resultSrc);
                     if ((event.resultAction == ScriptEvent.RA_RETURN_SOURCE) && (event.resultSrc.length()>0)){
                         logHandlerProc("INFO", "returning event.resultSrc");
                         handlerResult.result = event.resultSrc;
@@ -2121,16 +2135,6 @@ implements ISession, ISessionItem, ISessionTableItem, IDatasource, IContext {
                     }
                 }
             }
-            // System.out.println("session 356");
-
-            //===================
-        //MEMORY_LEAKS:
-            //1/7/2005     38,056 -->
-            //    handlerResult.result = "<html><body>TEST SHORT-CIRCUIT 4</body></html>";
-            //    if (true) return handlerResult;
-            //===================
-
-
 
             //*********************************************************************************************************
             //by now, event is not null, either because it was fired from registered event or from application_onAction.
@@ -2158,14 +2162,6 @@ implements ISession, ISessionItem, ISessionTableItem, IDatasource, IContext {
                     }
 
                     event = page.handleAction(action); // request is already in the context so events can get at query fields.
-                    //===================
-                    //MEMORY_LEAKS:
-                    //12/6/05 -->  per request: no persistent leaks.  It builds, but drops again.
-                    //test with http://apps.dynamide.com:8080/dynamide/admin?USER=laramie&page=sessionsPage&action=OK
-                    //    handlerResult.prettyPrint = false;
-                    //    handlerResult.result = "<html><body>TEST SHORT-CIRCUIT 3.532</body></html>";
-                    //    if (true) return handlerResult;
-                    //===================
                     handlerResult.prettyPrint = event.prettyPrint;
 
                     if ( event.resultCode != ScriptEvent.RC_OK
@@ -2191,34 +2187,20 @@ implements ISession, ISessionItem, ISessionTableItem, IDatasource, IContext {
                         logHandlerProc("INFO", "Page validated: "+pageID);
                     }
                     if ((event.resultAction == ScriptEvent.RA_RETURN_STREAM)) {
+                        logHandlerProc("INFO", "returning stream");
                         handlerResult.setBinaryStreamWritten(true);
                         handlerResult.mimeType = event.mimeType;
                         handlerResult.setPrettyPrint(false);
                         handlerResult.setResponseCode(event.getResponseCode());
                         setActivePage("");
+                        return handlerResult;
                     } else if ((event.resultAction == ScriptEvent.RA_RETURN_SOURCE) && (event.resultSrc.length()>0)){
                         logHandlerProc("INFO", "returning event.resultSrc");
                         handlerResult.result = event.resultSrc;
                         handlerResult.mimeType = event.mimeType;
-                        handlerResult.prettyPrint = event.prettyPrint;
+                        handlerResult.prettyPrint = event.prettyPrint;//MEMORY_LEAKS: stops leaks if this is uncommented: handlerResult.prettyPrint = false;
                         handlerResult.setResponseCode(event.getResponseCode());
                         setActivePage("");
-                        
-                        
-                        //===================
-                        //MEMORY_LEAKS:
-                        //12/6/05 -->  admin app: per request: 35,653 35,708 35,880, 35,992
-                        //12/7/05 -->  memory-leaks app: per request: not significant
-                        //test with http://apps.dynamide.com:8080/dynamide/admin?USER=laramie&page=sessionsPage&action=OK
-                        //    handlerResult.prettyPrint = false;
-                        //    handlerResult.result = "<html><body>TEST SHORT-CIRCUIT 3.52</body></html>";
-                        //    if (true) return handlerResult;
-                        //===================
-                        //without this there are leaks.
-                        //System.out.println("returning handlerResult 3.52"+Tools.getStackTrace());
-                        //MEMORY_LEAKS: 
-                        //stops leaks if this is uncommented: handlerResult.prettyPrint = false;
-                        
                         return handlerResult;
                     }
                 }
@@ -2281,7 +2263,6 @@ implements ISession, ISessionItem, ISessionTableItem, IDatasource, IContext {
 
             }
 
-
             if (LOG_EVENTS_TO_HANDLERLOG) logHandlerProc("DEBUG", "Result of application_queryNextPage: "+ event.dumpHTML());
             if ( event == null
                 || event.resultCode == ScriptEvent.RC_NO_EVENT_SOURCE
@@ -2306,29 +2287,7 @@ implements ISession, ISessionItem, ISessionTableItem, IDatasource, IContext {
                 }
             }
 
-            //===================
-        //MEMORY_LEAKS:
-            //1/7/2005  single request-thread: 100 requests: 25,000--> 28,464
-            // 10 threads, 10 requests: 28,464 --> 41,548
-            // 10x10, again: 41,548 --> 46,196
-            //1/20/2005
-            //I was returning from this point, but now I removed it.
-            //    handlerResult.result = "<html><body>TEST SHORT-CIRCUIT 6</body></html>";
-            //    if (true) return handlerResult;
-            //===================
-
-
             if ( nextPageID.length() > 0 ) {
-
-
-                //===================
-        //MEMORY_LEAKS:
-                //1/7/2005
-                //handlerResult.result = "<html><body>TEST SHORT-CIRCUIT</body></html>";
-                //if (true) return handlerResult;
-                //===================
-
-
                 page = loadPage(nextPageID, reloadPageRequested, null);
                 if ( page == null ) {
                     logError("ERROR: [30] nextPageID not in project: "+nextPageID);
@@ -2988,6 +2947,8 @@ implements ISession, ISessionItem, ISessionTableItem, IDatasource, IContext {
 "requestPath",
 "applicationPath",
 "pathInfo",
+"servicePathInfo",
+"servicePathInfoItem",
 "account",
 "RESOURCE_ROOT",
 "lastAccessTime",
@@ -3019,6 +2980,10 @@ implements ISession, ISessionItem, ISessionTableItem, IDatasource, IContext {
             return getApplicationPath();
         } else if ( what.equalsIgnoreCase("pathInfo") ) {
             return getPathInfo();
+        } else if ( what.equalsIgnoreCase("servicePathInfo") ) {
+            return getServicePathInfo();
+        } else if ( what.equalsIgnoreCase("servicePathInfoItem") ) {
+            return getServicePathInfoItem();
         } else if ( what.equalsIgnoreCase("account") ) {
             return getAccount();
         } else if ( what.equalsIgnoreCase("RESOURCE_ROOT") ) {

@@ -232,7 +232,7 @@
                         json = backend.getAll("anarchia", "panels", query);
                     }
                     
-                    System.out.println("GET("+query+"): \n=====> "+json);
+                    //System.out.println("GET("+query+"): \n=====> "+json);
                     event.returnSource(json,
                                    false, 
                                    "application/json");

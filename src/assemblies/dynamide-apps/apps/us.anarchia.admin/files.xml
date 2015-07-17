@@ -1,107 +1,111 @@
 <?xml version="1.0"?>
 <!DOCTYPE dynamideForm>
 <dynamideForm>
-    <event language="beanshell" name="addFile_onAction"><![CDATA[
-    
-    r = event.request;
-    System.out.println("====================>>>>> "+r.getUserPrincipal());
-    System.out.println("====================>>>>> "+r.getUserPrincipal().getName());
-    System.out.println("====================>>>>> "+r.isUserInRole("anarchia-author"));
-
-
-
-
-        if (event.getDMAction().equals("getFile")){
-            //http://localhost:18080/anarchia-admin?page=addFile&action=getfile&reloadPage=true&filename=fe6f79c5-5dff-4e5a-b168-cc2895bc7146.jpg
-            String fn = event.getQueryParam("filename");
-            if (StringTools.isEmpty(fn)){
-                returnSource(("{'msg':'ERROR: filename was empty'}").replace('\'','"'));
-            }
-            UserRESTHelper backend = getBackend();
-            try {
-                GridFS gridfs = backend.getGridFS();
-                DBObject query = new BasicDBObject();
-                if (StringTools.notEmpty(fn)){
-                    query.put("filename", fn);
-                }
-                GridFSDBFile dbfile = gridfs.findOne(query);
-                String mimeType = dbfile.get("metadata").get("mimeType");
-                stream = dbfile.getInputStream();
-                System.out.println("\n\n\n\n\n^^^^^^^^^^^^^ mimeType: "+mimeType);
-                event.returnStream(stream, mimeType);  //reads and closes stream now.
-            } finally {
-                backend.close();
-            }
-            return;
-        } else if (event.getDMAction().equals("deleteFile")){
-            //http://localhost:18080/anarchia-admin?page=addFile&action=deleteFile&reloadPage=true&filename=799a7f28-f2f4-40be-b6a4-2c5e3f5cf657.pdf
+    <event language="beanshell" name="LIST" ><![CDATA[
+        r = event.request;
+        System.out.println("====================>>>>> "+r.getUserPrincipal());
+        System.out.println("====================>>>>> "+r.getUserPrincipal().getName());
+        System.out.println("====================>>>>> "+r.isUserInRole("anarchia-author"));
+        System.out.println("@@@@@@@@::: session.servicePathInfo ::"+session.servicePathInfo); 
+        System.out.println("@@@@@@@@::: session.servicePathInfoItem ::"+session.servicePathInfoItem); 
+        System.out.println("@@@@@@@@::: session.pathInfo ::"+session.pathInfo); 
+        
+        String files = "";
+        UserRESTHelper backend = getBackend();
+        try {
+            GridFS gridfs = backend.getGridFS();
+            DBObject query = new BasicDBObject();
+            query.put("metadata.author", event.getQueryParam("author"));
             
-            String fn = event.getQueryParam("filename");
-            if (StringTools.isEmpty(fn)){
-                event.returnSource("{'msg':'ERROR: filename was empty'}".replace('\'','"'));
-                return;
+            List dbfileList = gridfs.find(query);
+            files = "";
+            it = dbfileList.iterator();
+            int loop = 0;
+            while (it.hasNext()){
+                dbfile = it.next();
+                String mimeType = dbfile.toString();
+                String fn = dbfile.getFilename();
+                if (loop>0){
+                    files+=",";
+                }
+                loop++;
+                files += mimeType;
             }
-            String fileDeleteStr = "";
-            UserRESTHelper backend = getBackend();
-            try {
-                GridFS gridfs = backend.getGridFS();
-                DBObject query = new BasicDBObject();
+        } finally {
+            backend.close();
+        }
+        event.returnSource("{\"msg\":\"SUCCESS\", \"files\":["+files+"]}", false, "application/json");
+        return;
+  ]]></event>
+  
+  <event language="beanshell" name="GET" ><![CDATA[
+        //http://localhost:18080/anarchia-admin/files/fe6f79c5-5dff-4e5a-b168-cc2895bc7146.jpg
+        String fn = session.servicePathInfoItem;
+        if (StringTools.isEmpty(fn)){
+            returnSource(("{'msg':'ERROR: filename was empty'}").replace('\'','"'));
+        }
+        UserRESTHelper backend = getBackend();
+        try {
+            GridFS gridfs = backend.getGridFS();
+            DBObject query = new BasicDBObject();
+            if (StringTools.notEmpty(fn)){
                 query.put("filename", fn);
-                GridFSDBFile dbfile = gridfs.findOne(query);
-                if (dbfile==null){
-                     event.returnSource(("{'msg':'ERROR: filename not found: "+fn+"'}").replace('\'','"'));
-                    return;
-                }
-                gridfs.remove(dbfile);
-                fileDeleteStr= ("{'msg':'SUCCESS: filename deleted', 'dbfile':"+dbfile.toString()+"}").replace('\'','"');
-            } finally {
-                backend.close();
             }
-            event.returnSource(fileDeleteStr);
-            return;
-        } else if (event.getDMAction().equals("getFiles")){
-            //http://localhost:18080/anarchia-admin?page=addFile&action=getFiles&reloadPage=true
-            String files = "";
-            UserRESTHelper backend = getBackend();
-            try {
-                GridFS gridfs = backend.getGridFS();
-                DBObject query = new BasicDBObject();
-                query.put("metadata.author", event.getQueryParam("author"));
-                
-                List dbfileList = gridfs.find(query);
-                files = "";
-                it = dbfileList.iterator();
-                int loop = 0;
-                while (it.hasNext()){
-                    dbfile = it.next();
-                    String mimeType = dbfile.toString();
-                    String fn = dbfile.getFilename();
-                    if (loop>0){
-                        files+=",";
-                    }
-                    loop++;
-                    files += mimeType;
-                }
-            } finally {
-                backend.close();
-            }
-            event.returnSource("{\"msg\":\"SUCCESS\", \"files\":["+files+"]}", false, "application/json");
+            GridFSDBFile dbfile = gridfs.findOne(query);
+            String mimeType = dbfile.get("metadata").get("mimeType");
+            stream = dbfile.getInputStream();
+            System.out.println("\n\n\n\n\n^^^^^^^^^^^^^ mimeType: "+mimeType);
+            event.returnStream(stream, mimeType);  //reads and closes stream now.
+        } finally {
+            backend.close();
+        }
+        return;
+  ]]></event>
+  
+  <event language="beanshell" name="PUT" ><![CDATA[
+  ]]></event>
+  
+  <event language="beanshell" name="DELETE" ><![CDATA[
+       //http://localhost:18080/anarchia-admin/files/799a7f28-f2f4-40be-b6a4-2c5e3f5cf657.pdf
+       
+        String fn = session.servicePathInfoItem;
+        if (StringTools.isEmpty(fn)){
+            event.returnSource("{'msg':'ERROR: filename was empty'}".replace('\'','"'));
             return;
         }
-        
-        System.out.println("\n\n\n\n\n^^^^^^^^^^^^^ didn't return 5");
-        
-        //ELSE default is POST:
+        String fileDeleteStr = "";
+        UserRESTHelper backend = getBackend();
         try {
-            //http://localhost:18080/anarchia-admin?next=addFile
+            GridFS gridfs = backend.getGridFS();
+            DBObject query = new BasicDBObject();
+            query.put("filename", fn);
+            GridFSDBFile dbfile = gridfs.findOne(query);
+            if (dbfile==null){
+                 event.returnSource(("{'msg':'ERROR: filename not found: "+fn+"'}").replace('\'','"'));
+                return;
+            }
+            gridfs.remove(dbfile);
+            fileDeleteStr= ("{'msg':'SUCCESS: filename deleted', 'dbfile':"+dbfile.toString()+"}").replace('\'','"');
+        } finally {
+            backend.close();
+        }
+        event.returnSource(fileDeleteStr);
+        return;
+  ]]></event>
+  
+  <event language="beanshell" name="files_onAction"><![CDATA[
+        try {
+            //http://localhost:18080/anarchia-admin?next=files
             System.out.println("~~~~~~~~~~~~~~~~~~~~~~ in POST anarchia admin");
             Session.UploadedFile uf = session.getUploadedFile("file", "", false);
             if (uf.stream == null){
-                event.returnSource(  "{\"error\":\"upload stream failed\"}",
+                event.returnSource("{\"error\":\"POST received, but there was no uploaded file.\"}",
                                            false, 
-                                           "application/json");  
+                                           "application/json");
                 return;
             }
+            //event.returnSource("{\"msg\":\"uf.filename="+uf.filename+" idx:"+uf.filename.lastIndexOf('.')+"\"}", false, "application/json");
+            //return;
             System.out.println("~~~~~~~~~~~~~~~~~~~~~~ in POST file: "+uf);
             try {
                 String fileResultStr = "";
@@ -113,14 +117,14 @@
                     
                     String clientFilename = uf.filename;
                     String ext = clientFilename.substring(clientFilename.lastIndexOf('.'));
-                    String nextid = event.getQueryParam("addFile_nextid");
+                    String nextid = event.getQueryParam("files_nextid");
                     fsfile.setFilename(nextid+ext);
                     
                     DBObject meta = new BasicDBObject();
                     meta.put("mimeType", uf.mimeType);
                     meta.put("clientFilename", clientFilename);
-                    meta.put("author", event.getQueryParam("addFile_author"));
-                    meta.put("description", event.getQueryParam("addFile_description"));
+                    meta.put("author", event.getQueryParam("files_author"));
+                    meta.put("description", event.getQueryParam("files_description"));
                     meta.put("id", nextid);
                     fsfile.put("metadata", meta);
                     fsfile.put("contentType", uf.mimeType);
@@ -147,7 +151,8 @@
         }
     ]]>
     </event>
-    
+  
+     
   <widgets>
     <widget id="session1">
       <properties>
@@ -273,7 +278,7 @@
     <script src="/anarchia/js/jquery-2.1.3.min.js"></script>
     <script src="/anarchia/js/anarchia.js"></script>
   </HEAD>
-  <BODY id="page1" bottomMargin="15" leftMargin="10" topMargin="15" rightMargin="10" name="addPanel">
+  <BODY id="page1" bottomMargin="15" leftMargin="10" topMargin="15" rightMargin="10" name="files">
     <P>Add File/Image</P>
     <FORM name="form$pageID" method="POST" action="$session.applicationURI" enctype="multipart/form-data">
       <span class="caption" style='margin-left: 160px;'>File: </span><span><input TYPE="file" NAME="file"/></span>
@@ -288,7 +293,7 @@
   <script>
     function onNextID(id)\{
         console.log("onNextID: "+id);
-        \$('\#addFile_nextid').val(id);
+        \$('\#files_nextid').val(id);
     \}
     \$(document).ready(function()\{
        //getNextID('panels', onNextID);
@@ -297,19 +302,14 @@
     </script>
 </HTML>
 ]]></htmlsrc>
+
   <properties>
     <property name="formAction">
       <value>mojoAction</value>
     </property>
-    <property name="formName">
-      <value></value>
-    </property>
     <property name="name">
       <readOnly>true</readOnly>
-      <value>addPanel</value>
-    </property>
-    <property name="title">
-      <value>Add File/Image</value>
+      <value>files</value>
     </property>
     <property name="type">
       <readOnly>true</readOnly>

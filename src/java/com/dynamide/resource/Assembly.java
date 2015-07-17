@@ -348,7 +348,7 @@ public class Assembly extends Pool implements IFileDiverListener, IContext {
             mimeMap.put(".CSS", "text/css");
             mimeMap.put(".HTML", "text/html");
             mimeMap.put(".ICO", "image/x-icon");
-            mimeMap.put(".JS", "application/x-javascript");
+            mimeMap.put(".JS", "application/javascript");
             mimeMap.put(".MP3", "audio/mpeg");
             mimeMap.put(".TXT", "text/plain");
             mimeMap.put(".PNG", "image/png");

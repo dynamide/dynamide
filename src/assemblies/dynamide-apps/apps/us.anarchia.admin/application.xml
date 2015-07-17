@@ -29,13 +29,29 @@
   ]]></event>
 
   <event language="beanshell" name="application_onAction"><![CDATA[
+    System.out.println("===::  anarchia-author application.xml :: "+session.getPathInfo());
   ]]></event>
+  
+  <event language="beanshell" name="GET" ><![CDATA[
+  ]]></event>
+  <event language="beanshell" name="POST" ><![CDATA[
+  ]]></event>
+  <event language="beanshell" name="PUT" ><![CDATA[
+  ]]></event>
+  <event language="beanshell" name="DELETE" ><![CDATA[
+  ]]></event>
+  <event language="beanshell" name="LIST" ><![CDATA[
+  ]]></event>
+
+
+
 
 
 
   <pages>
   	<page name="addPanel"></page>
   	<page name="addFile"></page>
+  	<page name="files"></page>
   	<page name="showImages"></page>
   	<page name="reorderStory"></page>
   </pages>

@@ -1501,7 +1501,24 @@ public class Page extends Widget implements IChangeListener {
         if ( action == null ) {
             action = "";
         }
-        ScriptEventSource eventSource = this.getEventSource("onAction");
+
+        ScriptEventSource eventSource = null;
+        //If the page is a service, and has events named "GET", "DELETE", "POST", "PUT", we will just fire them in preferrence to onAction.
+        if ( getSession() != null ) {
+            HttpServletRequest request = getSession().getRequest();
+            String method = request.getMethod();
+            if (method.equals("GET") && Tools.isBlank(getSession().getServicePathInfoItem())){
+                eventSource = this.getEventSource("LIST");
+                if (Tools.isEmpty(eventSource.name)){
+                    eventSource = this.getEventSource(method);
+                }
+            } else {
+                eventSource = this.getEventSource(method);
+            }
+        }
+        if (eventSource==null || Tools.isEmpty(eventSource.name)){
+            eventSource = this.getEventSource("onAction");
+        }
         ScriptEvent event = getSession().fireEvent(this, eventSource.name, "", "", action, eventSource, getFilename(), false);
         return event;
     }

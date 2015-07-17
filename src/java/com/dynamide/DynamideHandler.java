@@ -169,7 +169,7 @@ public class DynamideHandler extends DynamideObject implements Runnable {
             logError("UNHANDLED ERROR IN Dynamide MAIN LOOP. See result page.");//, e);
             //return new HandlerResult(formatErrorPage(e, "NN1"), false);
             String more = "";
-            String header = "<h3>Request</h3> "+StringTools.escape(ServletTools.dumpRequestInfo(m_request))
+            String header = "<h3>Request</h3> "+ServletTools.dumpRequestInfo(m_request)
                             +"<br/><hr/>";
             String msg = "<h3>Message</h3>"+StringTools.escape(e.getMessage());
             if (e instanceof DynamideUncaughtException){

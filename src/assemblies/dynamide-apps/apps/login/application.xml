@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE application >
+<application>
+
+    <properties>
+        <property name="poolable">
+          <value>true</value>
+        </property>
+        <property name="applicationID">
+          <value>com.dynamide.login</value>
+        </property>
+    </properties>
+
+    <event language="beanshell" name="application_queryNextPage">
+    <![CDATA[
+         event.nextPageID = "page1";
+    ]]>
+    </event>
+    
+    <pages>
+    </pages>
+
+</application>
