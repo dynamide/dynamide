@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE dynamideForm>
 <dynamideForm>
-    <event language="beanshell" name="LIST" ><![CDATA[
+     <event language="beanshell" name="JUST_AN_EXAMPLE" ><![CDATA[
         r = event.request;
         System.out.println("====================>>>>> "+r.getUserPrincipal());
         System.out.println("====================>>>>> "+r.getUserPrincipal().getName());
@@ -9,7 +9,10 @@
         System.out.println("@@@@@@@@::: session.servicePathInfo ::"+session.servicePathInfo); 
         System.out.println("@@@@@@@@::: session.servicePathInfoItem ::"+session.servicePathInfoItem); 
         System.out.println("@@@@@@@@::: session.pathInfo ::"+session.pathInfo); 
+    ]]></event>
         
+    <event language="beanshell" name="LIST" ><![CDATA[
+        r = event.request;
         String files = "";
         UserRESTHelper backend = getBackend();
         try {
@@ -17,7 +20,7 @@
             DBObject query = new BasicDBObject();
             query.put("metadata.author", event.getQueryParam("author"));
             
-            List dbfileList = gridfs.find(query);
+            List dbfileList = gridfs.find(query);  //you can't do a LIMIT on this, but you can do a regular query against db.fs.files.
             files = "";
             it = dbfileList.iterator();
             int loop = 0;
