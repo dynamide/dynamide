@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<dynamideForm>
+
+ <event language="beanshell" name="afterOutput"><![CDATA[
+    System.out.println("in afterOutput **************@@@");
+    event.response.setStatus(203);
+  ]]></event>
+  
+  <widgets>
+  </widgets>
+  <htmlsrc browser="*"><![CDATA[
+<html>
+<body bgcolor="#A4BFDD"><center>Login Failed</center><br />
+<form method="POST" action="j_security_check">
+<center><table>
+	<tr><td>Name:</td><td><input tabindex='1' type="text" name="j_username" autofocus='1' /></td></tr>
+	<tr><td>Password:</td><td><input tabindex='2' type="password" name="j_password" /></td></tr>
+	<tr><td></td><td><input type="submit" value="Sign In" /></td></tr>
+</table></center>
+</form>
+</body>
+</html>
+
+
+
+]]></htmlsrc>
+  <properties>
+    <property name="name">
+      <value>loginfailed</value>
+      <readOnly>true</readOnly>
+    </property>
+    <property name="type">
+      <value>pagetypes/com.dynamide.form</value>
+      <readOnly>true</readOnly>
+    </property>
+  </properties>
+</dynamideForm>
