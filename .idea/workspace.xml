@@ -9,9 +9,7 @@
     <bookmark url="file://$PROJECT_DIR$/src/java/com/dynamide/Session.java" line="2007" mnemonic="6" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c4dc66d8-2cb8-4d1f-a717-762703684739" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="c4dc66d8-2cb8-4d1f-a717-762703684739" name="Default" comment="" />
     <ignored path="dynamide.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/out/" />

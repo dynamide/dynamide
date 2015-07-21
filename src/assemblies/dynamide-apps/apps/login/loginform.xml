@@ -5,6 +5,8 @@
  <event language="beanshell" name="afterOutput"><![CDATA[
     System.out.println("in afterOutput **************@@@");
     event.response.setStatus(203);
+    event.response.setHeader("X-FORM-LOGIN-MESSAGE", "FORM login required. Server container is intercepting your request and presenting a challenge FORM login.");
+    //event.response.sendError(204, "FORM login required");
   ]]></event>
   
   <widgets>
