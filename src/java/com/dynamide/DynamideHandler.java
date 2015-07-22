@@ -173,7 +173,7 @@ public class DynamideHandler extends DynamideObject implements Runnable {
                             +"<br/><hr/>";
             String msg = "<h3>Message</h3>"+StringTools.escape(e.getMessage());
             if (e instanceof DynamideUncaughtException){
-                msg += "\r\n<h3>Extra Message</h3><pre>"+StringTools.escape(((DynamideUncaughtException)e).getExtra())+"</pre>";
+                msg += "\r\n<h3>Extra Message</h3>"+((DynamideUncaughtException)e).getExtra();  //extra message is html.  Before I was escaping it.
             }
             Throwable t = null;
             if (Tools.isJVM13()){
@@ -194,9 +194,13 @@ public class DynamideHandler extends DynamideObject implements Runnable {
             String page = header+msg+more;
             String errorID = ResourceManager.writeErrorLog(null, "unhandled-exception", "", page, Tools.getStackTrace(e), e.getClass().getName());
             //return new HandlerResult("<html><body><h2>Dynamide :: Unhandled Exception</h2><hr/>"+header+msg+more+"</body></html>", false);
-            return new HandlerResult("<html><body><h2>Dynamide :: Unhandled Exception</h2><hr/>"
+            HandlerResult result = new HandlerResult("<html><body><h2>Dynamide :: Unhandled Exception</h2><hr/>"
                                      +"<a href='"+ResourceManager.errorIDToHref(errorID)+"'>"+errorID+"</a>"
                                      +"</body></html>", false);
+            result.setResponseCode(500);
+            //TODO: setErrorMessage doesn't seem to go through to client: result.setErrorMessage("<a href='"+ResourceManager.errorIDToHref(errorID)+"'>"+errorID+"</a>");
+            result.setMimeType("text/html");
+            return result;
         }
     }
 

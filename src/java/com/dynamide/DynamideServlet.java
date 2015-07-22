@@ -367,6 +367,7 @@ public class DynamideServlet extends HttpServlet {
                 } else if (result.getResponseCode() > 0) {
                     //response.sendError(result.getResponseCode(), result.getErrorMessage());
                     response.setStatus(result.getResponseCode());
+                    response.setContentType(result.getMimeType());
                     response.getWriter().print(result.result);
                 } else {
                     if (com.dynamide.Constants.PROFILE) profiler.enter("servlet.printResult: " + fullURI);

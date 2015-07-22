@@ -15,5 +15,16 @@
          <page name="loginform" default="true"></page>
          <page name="loginfailed"></page>
     </pages>
+    
+    <event language="beanshell" name="application_queryNextPage"><![CDATA[
+       event.nextPageID = "loginform";
+  	  return;   
+  	]]></event>
+    
+
+    <event language="beanshell" name="application_onAction"><![CDATA[
+        //event.returnSource("yo");
+        return;
+    ]]></event>
 
 </application>

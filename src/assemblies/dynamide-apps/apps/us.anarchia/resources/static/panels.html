@@ -69,7 +69,7 @@
 
 <span class='menu-buttons'>
 <a class="anarchiaButton" href='/anarchia/stories.html'>Stories</a>
-<a class="anarchiaButton" href='/anarchia-admin/files.html'>Files</a>
+<a class="anarchiaButton" href='/anarchia-author/files.html'>Files</a>
 <a class="anarchiaButton" href='/anarchia/api.html'>API</a>
 </span>
 
@@ -88,14 +88,14 @@
     }
     
     function navToEditPanel(panelID){
-        document.location="/anarchia-admin/editPanel.html?panelID="+panelID+"&storyID="+userStoryID;
+        document.location="/anarchia-author/editPanel.html?panelID="+panelID+"&storyID="+userStoryID;
     }
     
     function navToReorderStory(storyID){
-        document.location="/anarchia-admin/reorderStory.html?storyID="+userStoryID;
+        document.location="/anarchia-author/reorderStory.html?storyID="+userStoryID;
     }
     
-    http://localhost:18080/anarchia-admin/reorderStory.html?storyID=e82eb822-99e7-40d1-8cbd-188b30720592#
+    http://localhost:18080/anarchia-author/reorderStory.html?storyID=e82eb822-99e7-40d1-8cbd-188b30720592#
     
     function nextPanel(){
         if (gPanels){

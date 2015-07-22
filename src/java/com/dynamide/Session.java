@@ -2067,7 +2067,10 @@ implements ISession, ISessionItem, ISessionTableItem, IDatasource, IContext {
             }
 
             // 4/10/2004 must loadPage before putAllFieldsIntoSession
-            Page page = loadPage(pageID, reloadPageRequested, null);
+            Page page = null;
+            if ( m_pageNames.indexOf(pageID) > -1){
+                loadPage(pageID, reloadPageRequested, null);
+            }
 
             //5/18/2003 7:26AM moved this here:
             action = putAllFieldsIntoSession(request, action);
@@ -2255,6 +2258,7 @@ implements ISession, ISessionItem, ISessionTableItem, IDatasource, IContext {
                 if ((event.resultAction == ScriptEvent.RA_RETURN_SOURCE) && (event.resultSrc.length()>0)){
                     logHandlerProc("INFO", "returning event.resultSrc from application_queryNextPage");
                     handlerResult.result = event.resultSrc;
+                    handlerResult.mimeType = event.mimeType;
                     handlerResult.prettyPrint = event.prettyPrint;
                     handlerResult.setResponseCode(event.getResponseCode());
                     setActivePage("");

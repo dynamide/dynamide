@@ -16,15 +16,15 @@
       <servlet-class>com.dynamide.DynamideServlet</servlet-class>
        <init-param>
             <param-name>DYNAMIDE_RESOURCE_ROOT</param-name>
-            <param-value>${DYNAMIDE_RESOURCE_ROOT}</param-value>
+            <param-value>/Users/vcrocla/src/dynamide/build/resource_root</param-value>
       </init-param>
       <init-param>
             <param-name>DYNAMIDE_STATIC_ROOT</param-name>
-            <param-value>${DYNAMIDE_STATIC_ROOT}</param-value>
+            <param-value>/Users/vcrocla/src/dynamide/build/resource_root/static</param-value>
       </init-param>
       <init-param>
             <param-name>DYNAMIDE_CONTEXT_CONF</param-name>
-            <param-value>${DYNAMIDE_CONTEXT_CONF}</param-value>
+            <param-value>/Users/vcrocla/src/dynamide/build/resource_root/conf/context.xml</param-value>
       </init-param>
     </servlet>
 
@@ -56,6 +56,27 @@
 	
 	<security-constraint>
 		<web-resource-collection>
+			<web-resource-name>Anarchia Author</web-resource-name>
+			<url-pattern>/anarchia-author/*</url-pattern>
+			<http-method>GET</http-method>
+			<http-method>POST</http-method>
+			<http-method>PUT</http-method>
+			<http-method>DELETE</http-method>
+			<http-method>OPTIONS</http-method>
+			<http-method>HEAD</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>anarchia-author</role-name>
+		</auth-constraint>
+
+		<user-data-constraint>
+			<!-- transport-guarantee can be CONFIDENTIAL, INTEGRAL, or NONE -->
+			<transport-guarantee>NONE</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint>
+
+	<security-constraint>
+		<web-resource-collection>
 			<web-resource-name>Dynamide Public</web-resource-name>
 			<url-pattern>/*</url-pattern>
 			<http-method>GET</http-method>
@@ -65,20 +86,17 @@
 			<http-method>OPTIONS</http-method>
 			<http-method>HEAD</http-method>
 		</web-resource-collection>
-		<auth-constraint>
-			<role-name>dynamide-user</role-name>
-		</auth-constraint>
-
-		<user-data-constraint>
-			<!-- transport-guarantee can be CONFIDENTIAL, INTEGRAL, or NONE -->
-			<transport-guarantee>NONE</transport-guarantee>
-		</user-data-constraint>
 	</security-constraint>
 
 	<login-config>
-		<auth-method>BASIC</auth-method>
-		<realm-name>Dynamide</realm-name>
+	    <auth-method>FORM</auth-method>
+		<form-login-config>
+			<!--form-login-page>/login/login.jsp</form-login-page-->
+			<form-login-page>/login</form-login-page>
+			<form-error-page>/login/loginfailed</form-error-page>
+		</form-login-config>
 	</login-config>
+   
 	
     <security-role>
         <description>
@@ -92,5 +110,28 @@
         </description>
         <role-name>dynamide-user</role-name>
     </security-role>
+    <security-role>
+        <description>
+          Anarchia author.
+        </description>
+        <role-name>anarchia-author</role-name>
+    </security-role>
+    
+    <!-- Laramie adding CORS filter locally, because it is already working on tomcat6 on dev.tagland.org -->
+    <!-- This was in tomcat7.dm/conf/web.xml 
+         TODO: test this.
+    -->
+    <filter>
+      <filter-name>CorsFilter</filter-name>
+      <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
+      <init-param>
+        <param-name>cors.allowed.origins</param-name>
+        <param-value>*</param-value>
+      </init-param>
+    </filter>
+    <filter-mapping>
+      <filter-name>CorsFilter</filter-name>
+      <url-pattern>/*</url-pattern>
+    </filter-mapping>
 
 </web-app>

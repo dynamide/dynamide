@@ -202,10 +202,10 @@
          <copy verbose="yes" overwrite="yes" file="${dynamidejar}" todir="${ROOT.libdir}"/>
          <copy verbose="yes" overwrite="yes" file="${src}/conf/webapps/ROOT/WEB-INF/web.xml" todir="${ROOT.dir}/WEB-INF"/>
         <antcall target="replaceMacros">
-             <param name="replaceMacros.src" value="${buildDirTomcat}/webapps/ROOT/WEB-INF/web.xml"/>
-             <param name="replaceMacros.dest" value="${buildDirTomcat}/webapps/ROOT/WEB-INF/web.xml"/>
+             <param name="replaceMacros.src" value="${ROOT.dir}/WEB-INF/web.xml"/>
+             <param name="replaceMacros.dest" value="${ROOT.dir}/WEB-INF/web.xml"/>
         </antcall>
-        <echo>Wrote web.xml file: ${buildDirTomcat}/webapps/ROOT/WEB-INF/web.xml</echo>
+        <echo>Wrote web.xml file: ${ROOT.dir}/WEB-INF/web.xml</echo>
     </target>
 
 

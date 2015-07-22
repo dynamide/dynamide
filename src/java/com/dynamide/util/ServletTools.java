@@ -141,12 +141,23 @@ public class ServletTools extends DynamideObject {
         if (request==null){
             return "NULL REQUEST";
         }
-        String result = dumpRequestHeaders(request, html);
+        String result = "";
+        String qs = request.getQueryString();
+        if (Tools.notBlank(qs)){
+            qs = "?"+qs;
+        }
+        String uri = request.getPathInfo()+qs;
+        String method = request.getMethod();
+
         if ( html ) {
-           result = result + dumpRequestParams(request, headerColor, fileItemsList);
+            result = "<span style='border:2px solid green;border-radius:3px;padding:2px;'><b>"+method+"</b></span> " + uri + "<br /><br />"
+                     + dumpRequestHeaders(request, html)
+                     + dumpRequestParams(request, headerColor, fileItemsList);
         } else {
-            result = result + "%% TODO: make non-html output";
-            result = result + dumpRequestParams(request, headerColor, fileItemsList);
+           //+ "%% TODO: make non-html output";
+            result = method + " " + uri
+                     + dumpRequestHeaders(request, html)
+                     + dumpRequestParams(request, headerColor, fileItemsList);
         }
         return result;
     }
