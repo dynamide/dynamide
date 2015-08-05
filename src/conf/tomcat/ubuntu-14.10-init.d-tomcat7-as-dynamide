@@ -91,10 +91,10 @@ done
 export JAVA_HOME
 
 # Directory where the Tomcat 7 binary distribution resides
-CATALINA_HOME=/home/dynamide/apache-tomcat-7.0.59
+CATALINA_HOME=/home/dynamide/tomcat7
 
 # Directory for per-instance configuration files and webapps
-CATALINA_BASE=/home/dynamide/apache-tomcat-7.0.59
+CATALINA_BASE=/home/dynamide/tomcat7
 
 # Use the Java security manager? (yes/no)
 TOMCAT7_SECURITY=no
