@@ -22,7 +22,7 @@
                   digest="SHA-256" 
                   logDebug="false" 
                   logSystemlog="true"
-                  mongoURI=""/>
+                  mongoClientURI=""/>
       </Realm>
 
       <Host name="localhost"  appBase="webapps"
