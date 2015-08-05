@@ -7,6 +7,9 @@
     <script src="js/jquery-ui-touch-punch.js"></script>
     <script src="/anarchia/js/anarchia.js"></script>
     <link  href="css/anarchia.css" rel="stylesheet" type="text/css"/>
+    <link  href="/anarchia/css/nav.css" rel="stylesheet" type="text/css"/>
+    
+   
     
     <style type="">
     body {
@@ -30,6 +33,15 @@
         padding: 4px;
         color: black;
     }
+    .panelIdOfCount {
+        color: green;
+        display: inline-block;
+        border-radius: 3px;
+        border: 2px solid lightblue;
+        background-color: lightgreen;
+        margin: 4px;
+        padding: 10px;
+    }
     
     </style>
 </head>
@@ -38,11 +50,33 @@
 <div class='storyHeader'>
 <span class="storyTitle" id='storyTitle'></span> by <span class="storyAuthor" id='storyAuthor'></span>
 </div>
-<span class='menu-buttons'>
-<a id="prev" class="anarchiaButton" href="javascript:previousPanel();">Previous</a>
-<a id="panelIndex"></id>
-<a id="next" class="anarchiaButton" href="javascript:nextPanel();">Next</a>
-</span>
+<!--
+<div class="nav">
+    <span style="float:left;">
+        <div style="float:left; height:150px;"><button id="btnMenu" class="floatingButton" style="height: 150px;"><span style="font-size: 78pt;">&#x2261;</font></button></div><br />
+        <button id="btnPrev" style="height: 300px;"><span style="font-size: 150pt;"><</font></button>
+    </span>
+    <span style="float:right;">
+        <div style="float:right; height:150px; border: 1px solid black;"></div><br />
+        <button id="btnNext" style="height: 300px;"><span style="font-size: 148pt;">></font></button>
+    </span>
+</div>
+-->
+<div class="nav" id="mainNav" style="float:right; top: 0px; height:150px;">
+    <div class="nav"  style="float:right; top: 0px; height:150px;">
+            <span style="float:left; left: 0; top: 0px;     height:150px;"><button id="navMenu" class="navButton" onclick="javascript:showMenu();">&#x2261;</button></span>
+    </div>
+    <div class="nav"  style="float:right; top: 150px; height:150px;">
+            <span style="float:left; left: 10; top: 150px; height:150px;"><button id="navMenu" class="navButton" onclick="javascript:previousPanel();">&lt;</button></span><br />
+            <div style="float:right; top: 150px; height:150px;"><button id="navMenu" class="navButton" onclick="javascript:nextPanel();">&gt;</button></div><br />
+    </div>
+</div>
+<div class="menu" id="menu" >
+     <div style="float:right;"><a href="javascript:hideMenu();">X</a></div>
+     <a href="/anarchia/stories.html">Stories</a><br />
+     <a href="/anarchia-author/files.html">Files</a><br />
+     <a href="/anarchia/api.html">API</a><br />
+</div>
 
 <div id='panelDiv'>panel here</div>
 
@@ -60,18 +94,13 @@
     <img src="{{img}}" width="400"/><br />
     <div class="caption">{{{text.caption}}}</div>
     <div class="panel-links">{{sequence}} 
+        <span class="panelIdOfCount" id="panelIndex"></span>
         <a href="{{img}}">file</a>
         <a href="javascript:navToEditPanel('{{id}}')">edit panel</a>
         <a href="javascript:navToReorderStory('{{id}}')">reorder story</a>
     </div>
     </div>
 </script>
-
-<span class='menu-buttons'>
-<a class="anarchiaButton" href='/anarchia/stories.html'>Stories</a>
-<a class="anarchiaButton" href='/anarchia-author/files.html'>Files</a>
-<a class="anarchiaButton" href='/anarchia/api.html'>API</a>
-</span>
 
 </body>
 <script>
@@ -180,12 +209,44 @@
        );
     }
     
+    var gNavShowing = false;
+    function fnMouseMoveTimeout(){
+       if (Date.now() - gLastMovedAt > 1000){
+           $('#mainNav').hide();
+           gNavShowing = false;
+       } else {
+           setTimeout(fnMouseMoveTimeout,1000);
+       }
+    }
+    
+    function fnMouseMove(){
+        console.log("moved");
+        if (gNavShowing){
+            gLastMovedAt = Date.now();
+            return;
+        }
+        gNavShowing = true;
+        $('#mainNav').show();
+        setTimeout(fnMouseMoveTimeout,1000);
+    }
+    
+    function showMenu(){
+        $('#menu').show();
+    }
+    function hideMenu(){
+        $('#menu').hide();
+    }
+    
+    
+    
     function documentReady(){
+        $('#menu').hide();
         if (userStoryID && userStoryID != ''){
             getByStory(userStoryID);
          } else {
             getByStory('http://anarchia.us/id/stories/1');  //this will be the default story, whatever that is.
          }
+         $('body').bind("mousemove", fnMouseMove);
     }
 
     $(document).ready(documentReady);
