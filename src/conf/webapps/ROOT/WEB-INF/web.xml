@@ -16,15 +16,15 @@
       <servlet-class>com.dynamide.DynamideServlet</servlet-class>
        <init-param>
             <param-name>DYNAMIDE_RESOURCE_ROOT</param-name>
-            <param-value>/Users/vcrocla/src/dynamide/build/resource_root</param-value>
+            <param-value>${DYNAMIDE_HOME}/build/resource_root</param-value>
       </init-param>
       <init-param>
             <param-name>DYNAMIDE_STATIC_ROOT</param-name>
-            <param-value>/Users/vcrocla/src/dynamide/build/resource_root/static</param-value>
+            <param-value>${DYNAMIDE_HOME}/build/resource_root/static</param-value>
       </init-param>
       <init-param>
             <param-name>DYNAMIDE_CONTEXT_CONF</param-name>
-            <param-value>/Users/vcrocla/src/dynamide/build/resource_root/conf/context.xml</param-value>
+            <param-value>${DYNAMIDE_HOME}/build/resource_root/conf/context.xml</param-value>
       </init-param>
     </servlet>
 

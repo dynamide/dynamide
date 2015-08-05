@@ -1,0 +1,10 @@
+    .nav {
+        display: none;
+        position: absolute;
+        top:0px;
+        left:0px;
+        padding: 3px;
+        z-index: 2000;
+       /* If you exclude background-color, then the element is transparent, except for images within.*/
+        opacity: 0.5;
+    }
