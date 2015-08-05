@@ -7,18 +7,22 @@
   <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
 
   <Service name="Catalina">
-    <Connector port="18080" protocol="HTTP/1.1"
+    <Connector port="8080" protocol="HTTP/1.1"
                connectionTimeout="20000"
-               redirectPort="18443" />
+               redirectPort="8443" />
                
-    <Connector port="18009" protocol="AJP/1.3" redirectPort="8443" />
+    <Connector port="8009" protocol="AJP/1.3" redirectPort="8443" />
 
     <Engine name="Catalina" defaultHost="localhost">
 
       <!-- Be sure to turn off org.apache.catalina.realm.UserDatabaseRealm and any other
            Realms, so that MongoRealm wins. -->
       <Realm className="org.apache.catalina.realm.LockOutRealm">
-          <Realm className="com.tomitribe.security.MongoRealm" digest="SHA-256"/>
+          <Realm  className="com.tomitribe.security.MongoRealm" 
+                  digest="SHA-256" 
+                  logDebug="false" 
+                  logSystemlog="true"
+                  mongoURI=""/>
       </Realm>
 
       <Host name="localhost"  appBase="webapps"
