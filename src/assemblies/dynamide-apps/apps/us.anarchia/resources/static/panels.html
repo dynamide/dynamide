@@ -78,27 +78,28 @@
      <a href="/anarchia/api.html">API</a><br />
 </div>
 
-<div id='panelDiv'>panel here</div>
-
+<center>
+<div id='panelDiv' style="text-align:center; width:400px;">panel here</div>
+</center>
 <script id="TemplateSource" type="text/x-handlebars-template">
     <div class="panel">
-    <table width="100%">
-    <tr>
-    <td colspan="2" class="panel-title">{{text.title}}</td>
-    </tr>
-    <tr>
-    <td></td>
-    <td style="text-align: right"><b class='author'>{{author}}</b></td>
-    </tr>
-    </table>
-    <img src="{{img}}" width="400"/><br />
-    <div class="caption">{{{text.caption}}}</div>
-    <div class="panel-links">{{sequence}} 
-        <span class="panelIdOfCount" id="panelIndex"></span>
-        <a href="{{img}}">file</a>
-        <a href="javascript:navToEditPanel('{{id}}')">edit panel</a>
-        <a href="javascript:navToReorderStory('{{id}}')">reorder story</a>
-    </div>
+            <table width="100%">
+            <tr>
+            <td colspan="2" class="panel-title">{{text.title}}</td>
+            </tr>
+            <tr>
+            <td></td>
+            <td style="text-align: right"><b class='author'>{{author}}</b></td>
+            </tr>
+            </table>
+            <img src="{{img}}" width="400"/><br />
+            <div class="caption">{{{text.caption}}}</div>
+            <div class="panel-links">{{sequence}} 
+                <span class="panelIdOfCount" id="panelIndex"></span>
+                <a href="{{img}}">file</a>
+                <a href="javascript:navToEditPanel('{{id}}')">edit panel</a>
+                <a href="javascript:navToReorderStory('{{id}}')">reorder story</a>
+            </div>
     </div>
 </script>
 
@@ -210,22 +211,36 @@
     }
     
     var gNavShowing = false;
+    var gLastMovedAt = 0;
+    var gLastClosedAt = 0;
     function fnMouseMoveTimeout(){
        if (Date.now() - gLastMovedAt > 1000){
            $('#mainNav').hide();
-           gNavShowing = false;
+           gLastClosedAt = Date.now();
+           
+           setTimeout(function(){gNavShowing = false;},100);
+           console.log('timeout');
        } else {
+           console.log('resetting timeout');
            setTimeout(fnMouseMoveTimeout,1000);
        }
     }
     
     function fnMouseMove(){
-        console.log("moved");
+        if (Date.now() - gLastMovedAt < 1000){
+            console.log('exit');
+            return;
+        }
+        gLastMovedAt = Date.now();
+        
         if (gNavShowing){
-            gLastMovedAt = Date.now();
+            return;
+        }
+        if (gNavShowing && (Date.now() - gLastClosedAt <50)){
             return;
         }
         gNavShowing = true;
+        console.log("showing");
         $('#mainNav').show();
         setTimeout(fnMouseMoveTimeout,1000);
     }
