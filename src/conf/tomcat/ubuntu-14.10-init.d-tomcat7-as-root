@@ -21,9 +21,9 @@ RETVAL=$?
 JAVA_OPTS="-Djava.awt.headless=true -Xmx650M -Xms128M -Dfile.encoding=UTF-8"
 export DYNAMIDE_HOMEDIR=/home/dynamide
 export DYNAMIDE_HOME=/home/dynamide/dynamide
-export DYNAMIDE_TOMCAT=/home/dynamide/tomcat7
-CATALINA_HOME=$DYNAMIDE_TOMCAT
-CATALINA_BASE=$DYNAMIDE_TOMCAT
+export DYNAMIDE_TOMCAT=/home/dynamide/tomcat7.sh
+CATALINA_HOME=/home/dynamide/tomcat7
+CATALINA_BASE=/home/dynamide/tomcat7
 
 case "$1" in
  start)
