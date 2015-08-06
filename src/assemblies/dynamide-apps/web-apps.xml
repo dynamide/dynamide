@@ -1,11 +1,15 @@
 <web-apps>
     <app>
-    <URI>/dynamide/demo</URI>
-    <APPNAME>demo</APPNAME>
+        <URI>/login</URI>
+        <APPNAME>login</APPNAME>
     </app>
     <app>
-    <URI>/dynamide/admin</URI>
-    <APPNAME>admin</APPNAME>
+        <URI>/dynamide/demo</URI>
+        <APPNAME>demo</APPNAME>
+    </app>
+    <app>
+        <URI>/dynamide/admin</URI>
+        <APPNAME>admin</APPNAME>
     </app>
     <app>
     <APPNAME>doco</APPNAME>
