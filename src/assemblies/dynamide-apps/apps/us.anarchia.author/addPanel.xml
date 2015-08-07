@@ -1,0 +1,252 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<dynamideForm>
+  <event language="beanshell" name="addPanel_onAction"><![CDATA[//no escapes
+        if (event.request.getMethod().equals("POST")){
+            try {
+                UserRESTHelper backend = getBackend();
+                try {
+                    JSONObject jo = new JSONObject();
+                    jo.put("img",    event.getQueryParam("addPanel_img"))
+                      .put("id", event.getQueryParam("addPanel_nextid"))
+                      .put("author", event.getQueryParam("addPanel_author"))
+                      .put("_type",  "Image")
+                      .put("text", 
+                                (new JSONObject()).put("title",   event.getQueryParam("addPanel_title"))
+                                                  .put("caption", event.getQueryParam("addPanel_caption"))
+                           );
+                               
+                    String res = backend.post("anarchia",
+                                              "panels",
+                                              jo.toString());
+                    event.returnSource(res, false, "application/json");
+                } finally {
+                    backend.close();
+                }
+                return;
+            } catch (Throwable t){
+                event.returnSource(  "{\"error\":\""+t.toString()+"\"}",
+                                           false, 
+                                           "application/json");
+            }
+        }
+      	return;
+  ]]></event>
+  <widgets>
+    <widget id="session1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.session</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="hiddenPageID">
+      <properties>
+        <property name="field">
+          <value>page</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.hidden</value>
+        </property>
+        <property name="value">
+          <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+          <value>$pageID</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="img">
+      <properties>
+        <property name="caption">
+          <value>Image URL</value>
+        </property>
+        <property name="captionClass">
+          <value>caption</value>
+        </property>
+        <property name="captionWidth">
+          <value>180</value>
+        </property>
+        <property name="name">
+          <value>img</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+        </property>
+        <property name="textSize">
+          <value>50</value>
+        </property>
+        <property name="cellpadding">
+          <value>5</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="caption">
+      <properties>
+        <property name="caption">
+          <value>Caption</value>
+        </property>
+        <property name="captionClass">
+          <value>caption</value>
+        </property>
+        <property name="captionWidth">
+          <value>180</value>
+        </property>
+        <property name="name">
+          <value>panelCaption</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+        </property>
+        <property name="textSize">
+          <value>50</value>
+        </property>
+        <property name="cellpadding">
+          <value>5</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="title">
+      <properties>
+        <property name="caption">
+          <value>Title</value>
+        </property>
+        <property name="captionClass">
+          <value>caption</value>
+        </property>
+        <property name="captionWidth">
+          <value>180</value>
+        </property>
+        <property name="name">
+          <value>title</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+        </property>
+        <property name="textSize">
+          <value>50</value>
+        </property>
+        <property name="cellpadding">
+          <value>5</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="author">
+      <properties>
+        <property name="caption">
+          <value>Author</value>
+        </property>
+        <property name="captionClass">
+          <value>caption</value>
+        </property>
+        <property name="captionWidth">
+          <value>180</value>
+        </property>
+        <property name="name">
+          <value>author</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+        </property>
+        <property name="textSize">
+          <value>50</value>
+        </property>
+        <property name="cellpadding">
+          <value>5</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="nextid">
+      <properties>
+        <property name="caption">
+          <value>NextID</value>
+        </property>
+        <property name="captionClass">
+          <value>caption</value>
+        </property>
+        <property name="captionWidth">
+          <value>180</value>
+        </property>
+        <property name="name">
+          <value>nextid</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+        </property>
+        <property name="textSize">
+          <value>50</value>
+        </property>
+        <property name="cellpadding">
+          <value>5</value>
+        </property>
+      </properties>
+    </widget>
+    
+    <widget id="submit1">
+      <properties>
+        <property name="action">
+          <value>doSubmitThing</value>
+        </property>
+        <property name="caption">
+          <value>Submit</value>
+        </property>
+        <property name="captionWidth">
+          <value>180</value>
+        </property>
+        <property name="cellpadding">
+          <value>5</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
+  </widgets>
+  <htmlsrc browser="*"><![CDATA[
+<HTML>
+  <HEAD>
+    <TITLE>$page.title</TITLE>
+    <script src="/anarchia/js/jquery-2.1.3.min.js"></script>
+    <script src="/anarchia/js/anarchia.js"></script>
+  </HEAD>
+  <BODY id="page1" bottomMargin="15" leftMargin="10" topMargin="15" rightMargin="10" name="addPanel">
+    <P>Add Panel v2</P>
+    <FORM name="form$pageID" accept-charset="UNKNOWN" action="$session.applicationURI" method="POST" encType="application/x-www-form-urlencoded">
+      <SPAN class="widget" id="hiddenPageID"/>
+      <SPAN class="widget" id="author"/>
+      <SPAN class="widget" id="img"/>
+      <SPAN class="widget" id="caption"/>
+      <SPAN class="widget" id="title"/>
+      <SPAN class="widget" id="nextid"/>
+      <SPAN class="widget" id="submit1"/>
+    </FORM>
+  </BODY>
+  <script>
+    function onNextID(id)\{
+        console.log("onNextID: "+id);
+        \$('\#addPanel_nextid').val(id);
+    \}
+    \$(document).ready(function()\{
+       getNextID('panels', onNextID);
+    \});
+    </script>
+</HTML>
+]]></htmlsrc>
+  <properties>
+    <property name="formAction">
+      <value>mojoAction</value>
+    </property>
+    <property name="formName">
+      <value></value>
+    </property>
+    <property name="name">
+      <readOnly>true</readOnly>
+      <value>addPanel</value>
+    </property>
+    <property name="title">
+      <value>Add Panel</value>
+    </property>
+    <property name="type">
+      <readOnly>true</readOnly>
+      <value>pagetypes/com.dynamide.page</value>
+    </property>
+  </properties>
+</dynamideForm>

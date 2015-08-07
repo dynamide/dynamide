@@ -1,0 +1,72 @@
+<HTML>
+  <HEAD>
+    <TITLE>Search by Author</TITLE>
+    <script src="/anarchia/js/jquery-2.1.3.min.js"></script>
+    
+    <script src="/anarchia/js/handlebars-v3.0.0.js"></script>
+    <script src="/anarchia/js/jquery-2.1.3.min.js"></script>
+    <link  href="/anarchia/js/jquery-ui/ui/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+    <script src="/anarchia/js/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+    <script src="/anarchia/js/jquery-ui-touch-punch.js"></script>
+    
+    <style>
+    .thumbnail {
+        height: 100px;
+        width: 100px; 
+    }
+    </style>
+  </HEAD>
+  <BODY id="page1" bottomMargin="15" leftMargin="10" topMargin="15" rightMargin="10" name="addPanel">
+    <P>Search by Author</P>
+      <div style="padding: 1em;">
+      <input type='button' id="saveStoryBtn" value="Save Story">
+      <span id="backendMsg"></span>
+      </div>
+    
+    <div id='panelDiv'>panel here</div>
+    
+    <script id="TemplateSource" type="text/x-handlebars-template">
+        <table id='storyOrderTable' border='1'>
+        {{#each authorsArray}}
+            <tr>
+                <td>
+                    <img src="{{img}}" class="thumbnail"/>
+                </td>
+                <td class='author'>{{author}}</td>
+                <td class='imgID'>{{id}}</td>
+                <td class='imgIndex'>
+                    {{@index}}
+                </td>
+            </tr>
+        {{/each}}
+        </table>
+    </script>
+  </BODY>
+  
+  <script>
+    //========================= scripts ===================================================
+    var gByAuthor = null;
+    var gAuthor = 'laramie';
+    var templateFn = Handlebars.compile(document.getElementById('TemplateSource').innerHTML);
+    $(document).ready(function(){
+            function renderTemplate(data){
+                if (data){
+                    $('#panelDiv').html(templateFn({authorsArray: data}));
+                }
+            }
+            function getByAuthor(author){
+                // AJAX CALL HERE :
+               $.get('/anarchia?qtype=author&author='+author,
+                  function(data) {
+                      console.log('getByAuthor data: '+JSON.stringify(data, null, 4));
+                      gByAuthor = data;
+                      renderTemplate(gByAuthor);
+                      console.log('gByAuthor: '+JSON.stringify(gByAuthor));
+                  }
+               );
+            }
+            getByAuthor(gAuthor);
+            
+    });
+  </script>
+</HTML>

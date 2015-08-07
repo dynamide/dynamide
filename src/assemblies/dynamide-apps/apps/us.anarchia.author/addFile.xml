@@ -1,0 +1,319 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<dynamideForm>
+    <event language="beanshell" name="addFile_onAction"><![CDATA[
+    
+    r = event.request;
+    System.out.println("====================>>>>> "+r.getUserPrincipal());
+    System.out.println("====================>>>>> "+r.getUserPrincipal().getName());
+    System.out.println("====================>>>>> "+r.isUserInRole("anarchia-author"));
+
+
+
+
+        if (event.getDMAction().equals("getFile")){
+            //http://localhost:18080/anarchia-author?page=addFile&action=getfile&reloadPage=true&filename=fe6f79c5-5dff-4e5a-b168-cc2895bc7146.jpg
+            String fn = event.getQueryParam("filename");
+            if (StringTools.isEmpty(fn)){
+                returnSource(("{'msg':'ERROR: filename was empty'}").replace('\'','"'));
+            }
+            UserRESTHelper backend = getBackend();
+            try {
+                GridFS gridfs = backend.getGridFS();
+                DBObject query = new BasicDBObject();
+                if (StringTools.notEmpty(fn)){
+                    query.put("filename", fn);
+                }
+                GridFSDBFile dbfile = gridfs.findOne(query);
+                String mimeType = dbfile.get("metadata").get("mimeType");
+                stream = dbfile.getInputStream();
+                System.out.println("\n\n\n\n\n^^^^^^^^^^^^^ mimeType: "+mimeType);
+                event.returnStream(stream, mimeType);  //reads and closes stream now.
+            } finally {
+                backend.close();
+            }
+            return;
+        } else if (event.getDMAction().equals("deleteFile")){
+            //http://localhost:18080/anarchia-author?page=addFile&action=deleteFile&reloadPage=true&filename=799a7f28-f2f4-40be-b6a4-2c5e3f5cf657.pdf
+            
+            String fn = event.getQueryParam("filename");
+            if (StringTools.isEmpty(fn)){
+                event.returnSource("{'msg':'ERROR: filename was empty'}".replace('\'','"'));
+                return;
+            }
+            String fileDeleteStr = "";
+            UserRESTHelper backend = getBackend();
+            try {
+                GridFS gridfs = backend.getGridFS();
+                DBObject query = new BasicDBObject();
+                query.put("filename", fn);
+                GridFSDBFile dbfile = gridfs.findOne(query);
+                if (dbfile==null){
+                     event.returnSource(("{'msg':'ERROR: filename not found: "+fn+"'}").replace('\'','"'));
+                    return;
+                }
+                gridfs.remove(dbfile);
+                fileDeleteStr= ("{'msg':'SUCCESS: filename deleted', 'dbfile':"+dbfile.toString()+"}").replace('\'','"');
+            } finally {
+                backend.close();
+            }
+            event.returnSource(fileDeleteStr);
+            return;
+        } else if (event.getDMAction().equals("getFiles")){
+            //http://localhost:18080/anarchia-author?page=addFile&action=getFiles&reloadPage=true
+            String files = "";
+            UserRESTHelper backend = getBackend();
+            try {
+                GridFS gridfs = backend.getGridFS();
+                DBObject query = new BasicDBObject();
+                query.put("metadata.author", event.getQueryParam("author"));
+                
+                List dbfileList = gridfs.find(query);
+                files = "";
+                it = dbfileList.iterator();
+                int loop = 0;
+                while (it.hasNext()){
+                    dbfile = it.next();
+                    String mimeType = dbfile.toString();
+                    String fn = dbfile.getFilename();
+                    if (loop>0){
+                        files+=",";
+                    }
+                    loop++;
+                    files += mimeType;
+                }
+            } finally {
+                backend.close();
+            }
+            event.returnSource("{\"msg\":\"SUCCESS\", \"files\":["+files+"]}", false, "application/json");
+            return;
+        }
+        
+        System.out.println("\n\n\n\n\n^^^^^^^^^^^^^ didn't return 5");
+        
+        //ELSE default is POST:
+        try {
+            //http://localhost:18080/anarchia-author?next=addFile
+            System.out.println("~~~~~~~~~~~~~~~~~~~~~~ in POST anarchia author");
+            Session.UploadedFile uf = session.getUploadedFile("file", "", false);
+            if (uf.stream == null){
+                event.returnSource(  "{\"error\":\"upload stream failed\"}",
+                                           false, 
+                                           "application/json");  
+                return;
+            }
+            System.out.println("~~~~~~~~~~~~~~~~~~~~~~ in POST file: "+uf);
+            try {
+                String fileResultStr = "";
+                UserRESTHelper backend = getBackend();
+                try {
+                    GridFS gridfs = backend.getGridFS(); 
+                    GridFSInputFile fsfile = gridfs.createFile(uf.stream, true);//true means closeStreamOnPersist, so it closes the stream for us.
+                    uf.streamClosed = true;
+                    
+                    String clientFilename = uf.filename;
+                    String ext = clientFilename.substring(clientFilename.lastIndexOf('.'));
+                    String nextid = event.getQueryParam("addFile_nextid");
+                    fsfile.setFilename(nextid+ext);
+                    
+                    DBObject meta = new BasicDBObject();
+                    meta.put("mimeType", uf.mimeType);
+                    meta.put("clientFilename", clientFilename);
+                    meta.put("author", event.getQueryParam("addFile_author"));
+                    meta.put("description", event.getQueryParam("addFile_description"));
+                    meta.put("id", nextid);
+                    fsfile.put("metadata", meta);
+                    fsfile.put("contentType", uf.mimeType);
+                    fsfile.save();
+                    fileResultStr = "{\"msg\":\"SUCCESS\", \"filename\":\""+fsfile.getFilename()+"\"}";
+                } finally {
+                    backend.close();
+                }
+                event.returnSource(fileResultStr, false, "application/json");
+                return;
+            } catch (Throwable t){
+                event.returnSource(  "{\"error\":\""+Tools.getStackTrace(t)+"::"+t.toString()+"\"}",
+                                           false, 
+                                           "application/json");
+                return;                           
+            }
+            
+            
+            event.returnSource("<html><body>uploaded: "+f+"</body></html>");
+            return;
+        } catch (Exception e){
+            event.returnSource("ERROR calling getUploadedFile: "+e+" stack trace: "+Tools.getStackTrace(e));
+            return;
+        }
+    ]]>
+    </event>
+    
+  <widgets>
+    <widget id="session1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.session</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="hiddenPageID">
+      <properties>
+        <property name="field">
+          <value>page</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.hidden</value>
+        </property>
+        <property name="value">
+          <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+          <value>$pageID</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="description">
+      <properties>
+        <property name="caption">
+          <value>Description</value>
+        </property>
+        <property name="captionClass">
+          <value>caption</value>
+        </property>
+        <property name="captionWidth">
+          <value>180</value>
+        </property>
+        <property name="name">
+          <value>fileDescription</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+        </property>
+        <property name="textSize">
+          <value>50</value>
+        </property>
+        <property name="cellpadding">
+          <value>5</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="author">
+      <properties>
+        <property name="caption">
+          <value>Author</value>
+        </property>
+        <property name="captionClass">
+          <value>caption</value>
+        </property>
+        <property name="captionWidth">
+          <value>180</value>
+        </property>
+        <property name="name">
+          <value>author</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+        </property>
+        <property name="textSize">
+          <value>50</value>
+        </property>
+        <property name="cellpadding">
+          <value>5</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="nextid">
+      <properties>
+        <property name="caption">
+          <value>NextID</value>
+        </property>
+        <property name="captionClass">
+          <value>caption</value>
+        </property>
+        <property name="captionWidth">
+          <value>180</value>
+        </property>
+        <property name="name">
+          <value>nextid</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.edit</value>
+        </property>
+        <property name="textSize">
+          <value>50</value>
+        </property>
+        <property name="cellpadding">
+          <value>5</value>
+        </property>
+      </properties>
+    </widget>
+    
+    <widget id="submit1">
+      <properties>
+        <property name="action">
+          <value>doSubmitThing</value>
+        </property>
+        <property name="caption">
+          <value>Upload File</value>
+        </property>
+        <property name="captionWidth">
+          <value>180</value>
+        </property>
+        <property name="cellpadding">
+          <value>5</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.submit</value>
+        </property>
+      </properties>
+    </widget>
+  </widgets>
+  <htmlsrc browser="*"><![CDATA[
+<HTML>
+  <HEAD>
+    <TITLE>$page.title</TITLE>
+    <script src="/anarchia/js/jquery-2.1.3.min.js"></script>
+    <script src="/anarchia/js/anarchia.js"></script>
+  </HEAD>
+  <BODY id="page1" bottomMargin="15" leftMargin="10" topMargin="15" rightMargin="10" name="addPanel">
+    <P>Add File/Image</P>
+    <FORM name="form$pageID" method="POST" action="$session.applicationURI" enctype="multipart/form-data">
+      <span class="caption" style='margin-left: 160px;'>File: </span><span><input TYPE="file" NAME="file"/></span>
+      <br />
+      <SPAN class="widget" id="hiddenPageID"/>
+      <SPAN class="widget" id="author"/>
+      <SPAN class="widget" id="description"/>
+      <SPAN class="widget" id="nextid"/>
+      <SPAN class="widget" id="submit1"/>
+    </FORM>
+  </BODY>
+  <script>
+    function onNextID(id)\{
+        console.log("onNextID: "+id);
+        \$('\#addFile_nextid').val(id);
+    \}
+    \$(document).ready(function()\{
+       //getNextID('panels', onNextID);
+       onNextID(GUID());
+    \});
+    </script>
+</HTML>
+]]></htmlsrc>
+  <properties>
+    <property name="formAction">
+      <value>mojoAction</value>
+    </property>
+    <property name="formName">
+      <value></value>
+    </property>
+    <property name="name">
+      <readOnly>true</readOnly>
+      <value>addPanel</value>
+    </property>
+    <property name="title">
+      <value>Add File/Image</value>
+    </property>
+    <property name="type">
+      <readOnly>true</readOnly>
+      <value>pagetypes/com.dynamide.page</value>
+    </property>
+  </properties>
+</dynamideForm>

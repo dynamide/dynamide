@@ -1,0 +1,250 @@
+<html>
+<!-- SEE EXAMPLE TEMPLATES HERE: /Users/vcrocla/src/dynamide/build/resource_root/homes/dynamide/assemblies/com-dynamide-apps-1/apps/us.anarchia.author/resources/static/reorderStory.html
+-->
+<head>
+    <script src="js/handlebars-v3.0.0.js"></script>
+    <script src="js/jquery-2.1.3.min.js"></script>
+    <link  href="js/jquery-ui/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+    <script src="js/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+    <script src="js/jquery-ui-touch-punch.js"></script>
+    <script src="/anarchia/js/anarchia.js"></script>
+    <link  href="css/anarchia.css" rel="stylesheet" type="text/css"/>
+    
+    <style type="">
+    body {
+        background-color: white;
+        color: green;
+    }
+    </style>
+</head>
+<body>
+
+
+<input type="text" id="editAuthor" value="laramie"/> <button id="btnGetByAuthor">Get by Author</button>
+<div id="newStoryLinks">
+    <br />
+    <input type="text" id="editNewStory" value="story1"/> <button id="btnCreateStory">Create story from checked</button>
+    <div id='reorderStoryLink'></div>
+    <div id='viewStoryLink'></div>
+</div>
+
+<div id='storiesDiv'></div>
+
+<div id='filesDiv'></div>
+
+<br />
+<small>You can also <a href="/anarchia-author?next=addFile">Upload a File/Image</a>.</small>
+
+
+<script id="TemplateSource" type="text/x-handlebars-template">
+    <br />
+    
+    <table border='1' cellpadding='2' cellspacing='0' width="100%">
+        <tr style='background-color: lightgray;'><th><input type='checkbox' id='cbCheckAll' /></th><th>img</th><th>filename</th><th>contentType</th><th>Uploaded</th><th>author</th><th>description</th></tr>
+        {{#each filesArray}}
+            <tr>
+                <td>
+                    <input class="filesCheckbox" type='checkbox' name='cb{{@index}}' value='{{filename}}' />
+                </td>
+                <td>
+                    <a href='/anarchia/files/{{filename}}' target='_blank' ><img width='100px' src='/anarchia/files/{{filename}}' /></a>
+                </td>
+                <td>{{filename}}</td>
+                <td>{{contentType}}</td>
+                <td>{{uploadDate.$date}}</td>
+                <td class=''>{{metadata.author}}</td>
+                <td class=''>{{metadata.description}}</td>
+            </tr>
+        {{/each}}
+    </table>
+</script>
+
+<script id="TemplateSourceStories" type="text/x-handlebars-template">
+   <!-- 
+    <select id="selectStory">
+      <option id="default" value="default">default</option>
+      {{#each storiesArray}}
+          <option value="{{id}}">{{title}} [{{panels.length}} panels]</option>
+       {{/each}}
+    </select> 
+    
+    <button id="btnAddToStory">Add to Story (not implemented)</button>
+    -->
+</script>
+
+
+
+</body>
+<script>
+    var queryParams = getQueryParams();  //anarchia.js
+    var gFiles = null;
+    var gStories = null;
+    var source = document.getElementById('TemplateSource').innerHTML
+    var templateFn = Handlebars.compile(source);
+    var sourceStories = document.getElementById('TemplateSourceStories').innerHTML
+    var templateFnStories = Handlebars.compile(sourceStories);
+        
+    function renderTemplate(data){
+        if (data){
+            $('#filesDiv').html(templateFn({filesArray: data}));
+            $('#cbCheckAll').click(function(event) {
+                if(this.checked) { 
+                    $('.filesCheckbox').each(function() {
+                        this.checked = true;          
+                    });
+                }else{
+                    $('.filesCheckbox').each(function() {
+                        this.checked = false;               
+                    });         
+                }
+            });
+        }
+    }
+    function renderStoriesTemplate(data){
+        if (data){
+            $('#storiesDiv').html(templateFnStories({storiesArray: data}));
+            $( "#btnAddToStory" ).click(function() {
+                var id = $('#selectStory').children(":selected").attr("value");
+                alert ("id: "+id);
+            });
+        }
+    }
+    
+    function getByAuthor(author){
+        // AJAX CALL HERE :
+       $.get('/anarchia-author?page=addFile&action=getFiles&author='+author,
+          function(data) {
+              if (data && data.files){
+                  gFiles = data.files;
+                  console.log('files: '+JSON.stringify(gFiles));
+                  renderTemplate(gFiles);
+              }
+          }
+       );
+    }
+    
+    function getStoriesByAuthor(author){
+        // AJAX CALL HERE :
+       $.get('/anarchia/stories?author='+author,
+          function(data) {
+              if (data && data.length){
+                  gStories = data;
+                  console.log('stories: '+JSON.stringify(gStories));
+                  renderStoriesTemplate(gStories);
+                  
+                  $("#btnCreateStory").fadeIn(200);
+                  $("#newStoryLinks").fadeIn(200);
+                  $("#btnCreateStory").click(function() {
+                        var storyID = $( "#editNewStory" ).val();
+                        var arr = [];
+                        $('#filesDiv input.filesCheckbox:checked').each(function (){
+                            if (this.checked){
+                                arr.push($(this).attr('value'));    
+                            }
+                        });
+                        console.log(arr);
+                        $('#newStoryLinks').fadeOut(0);
+                        createStory(arr);
+                  });
+              }
+          }
+       );
+    }
+    
+    function createStory(filesArray){
+        function ajaxPostPanels(panel, idx, guid){
+            // AJAX CALL HERE :
+            /////////// BY THE WAY: don't do this: 
+            //               dataType: 'json',
+            // It somehow means send URL encoded.
+            $.ajax ({
+                  type: "POST",
+                  url: "/anarchia/panels",
+                  contentType: 'application/json',    
+                  async: false,
+                  headers: {
+                    "Authorization": "Basic " + btoa("laramie" + ":" + "ecotel33")
+                  },
+                  data: JSON.stringify(panel),
+                  success: function (data){
+                    console.log('post complete: '+idx+', guid: '+guid+'data:'+JSON.stringify(data));
+                  },
+                  error: function (data){
+                    console.log('post failed'+idx+', guid: '+guid+'panels data:'+JSON.stringify(data));
+                  }
+            });
+        }
+        
+        function ajaxPostStory(panelsArray, author, title){
+            var story = {};
+            story.author = author;
+            story.title = title;
+            story.panels = panelsArray;
+            story.id = GUID();
+            
+            // AJAX CALL HERE :
+            $.ajax ({
+                  type: "POST",
+                  url: "/anarchia/stories",
+                  contentType: 'application/json',    
+                  async: false,
+                  headers: {
+                    "Authorization": "Basic " + btoa("laramie" + ":" + "ecotel33")
+                  },
+                  data: JSON.stringify(story),
+                  success: function (data){
+                    console.log('stories '+story.id+' data:'+JSON.stringify(data));
+                    var link = "Reorder story: <a target='_blank' href='http://localhost:18080/anarchia-author/reorderStory.html?storyID="+story.id+"'>"+story.title+"</a>";
+                    $("#reorderStoryLink").html(link);
+                    
+                    $('#viewStoryLink').html("View story: <a target='_blank' href='/anarchia/panels.html?storyID="+story.id+"'>"+story.title+"</a>");
+                    $('#newStoryLinks').fadeIn(800);
+          
+                     
+                  },
+                  error: function (data){
+                    console.log('stories '+story.id+' data:'+JSON.stringify(data));
+                    alert('stories post failed');
+                  }
+            });
+        }
+        
+        var panels = [];
+        var panelIDs = [];
+        var author = $('#editAuthor').val();
+        var newStoryID = $('#editNewStory').val();
+        
+        filesArray.forEach(function(filename, idx){
+            var panel = {};
+            panel.img = "/anarchia/files/"+filename;
+            panel.author = author;
+            panel._type = "Image";
+            panel.text = {};
+            panel.text.caption = "";
+            panel.text.title = "";
+            var guid = GUID();
+            panel.id = guid;
+            panelIDs.push(panel.id);
+            panels.push(panel);
+            ajaxPostPanels(panel, idx, guid);
+            
+        });
+        console.log("panels: "+JSON.stringify(panels));
+        ajaxPostStory(panelIDs, author, newStoryID);
+    }
+    
+    function documentReady(){
+        //$( "#divBtnCreateStory" ).fadeOut(0);
+        $('#newStoryLinks').fadeOut(0);
+        $( "#btnGetByAuthor" ).click(function() {
+            var author = $( "#editAuthor" ).val();
+            getByAuthor(author);
+            getStoriesByAuthor(author)
+        });
+    }
+
+    $(document).ready(documentReady);
+    
+</script>
+</html>
+

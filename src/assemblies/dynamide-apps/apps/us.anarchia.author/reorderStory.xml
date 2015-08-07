@@ -1,0 +1,184 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<dynamideForm>
+  <event language="beanshell" name="reorderStory_onAction"><![CDATA[//no escapes
+        if (event.request.getMethod().equals("POST")){
+            try {
+                UserRESTHelper backend = getBackend();
+                try {
+                    event.returnSource("{\"msg\":\"not implemented\"}", false, "application/json");
+                } finally {
+                    backend.close();
+                }
+                return;
+            } catch (Throwable t){
+                event.returnSource(  "{\"error\":\""+t.toString()+"\"}",
+                                           false, 
+                                           "application/json");
+            }
+        }
+      	return;
+  ]]></event>
+  <widgets>
+    <widget id="session1">
+      <properties>
+        <property name="type">
+          <value>com.dynamide.session</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="hiddenPageID">
+      <properties>
+        <property name="field">
+          <value>page</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.hidden</value>
+        </property>
+        <property name="value">
+          <datatype>com.dynamide.datatypes.WebmacroDatatype</datatype>
+          <value>$pageID</value>
+        </property>
+      </properties>
+    </widget>
+    <widget id="showRowsBtn">
+      <properties>
+        <property name="action">
+          <value>doSubmitThing</value>
+        </property>
+        <property name="caption">
+          <value>showRows</value>
+        </property>
+        <property name="captionWidth">
+          <value>180</value>
+        </property>
+        <property name="cellpadding">
+          <value>5</value>
+        </property>
+        <property name="type">
+          <value>com.dynamide.button</value>
+        </property>
+      </properties>
+    </widget>
+  </widgets>
+  <htmlsrc browser="*"><![CDATA[
+<HTML>
+  <HEAD>
+    <TITLE>$page.title</TITLE>
+    <script src="/anarchia/js/jquery-2.1.3.min.js"></script>
+    <script src="/anarchia-author/js/reorderStory.js"></script>
+    
+    <script src="/anarchia/js/handlebars-v3.0.0.js"></script>
+    <link href="/tagonomy/js/jquery-ui/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+    <script src="/tagonomy/js/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+    <script src="/tagonomy/js/jquery-ui-touch-punch.js"></script>
+    
+  </HEAD>
+  <BODY id="page1" bottomMargin="15" leftMargin="10" topMargin="15" rightMargin="10" name="addPanel">
+    <P>Reorder Story</P>
+    <FORM name="form$pageID" accept-charset="UNKNOWN" action="$session.applicationURI" method="POST" encType="application/x-www-form-urlencoded">
+      <SPAN class="widget" id="hiddenPageID"/>
+      <SPAN class="widget" id="showRowsBtn"/>
+    </FORM>
+    
+    <div id='panelDiv'>panel here</div>
+    
+    <script id="TemplateSource" type="text/x-handlebars-template">
+        <div class="panel">
+        <table width="100%">
+        <tr>
+        <td colspan="2" class="panel-title">{{text.title}}</td>
+        </tr>
+        <tr>
+        <td></td>
+        <td style="text-align: right"><b class='author'>{{author}}</b></td>
+        </tr>
+        </table>
+        <img src="{{img}}" width="400"/><br />
+        <div class="caption">{{{text.caption}}}</div>
+        <div class="panel-links">{{sequence}} <a href="javascript:alert('ID: {{id}}');">id</a> <a href="javascript:alert('ID: {{_id.$oid}}');">_id</a> <a href="{{img}}">link</a></div>
+        </div>
+    </script>
+    
+    <table id='storyOrderTable' border='1'>
+    <tr>
+        <td class='storyID'>0</td>
+        <td>
+            <a href="#" class="up">Up</a>
+            <a href="#" class="down">Down</a>
+        </td>
+    </tr>
+    <tr>
+        <td class='storyID'>1</td>
+        <td>
+            <a href="#" class="up">Up</a>
+            <a href="#" class="down">Down</a>
+        </td>
+    </tr>
+    <tr>
+        <td class='storyID'>2</td>
+        <td>
+            <a href="#" class="up">Up</a>
+            <a href="#" class="down">Down</a>
+        </td>
+    </tr>
+    <tr>
+        <td class='storyID'>3</td>
+        <td>
+            <a href="#" class="up">Up</a>
+            <a href="#" class="down">Down</a>
+        </td>
+    </tr>
+</table>
+  </BODY>
+  <script>
+    var source = document.getElementById('TemplateSource').innerHTML
+    var templateFn = Handlebars.compile(source);
+    function renderTemplate(data){
+        if (data){
+            $('#panelDiv').html(templateFn(data));
+            var a = gPanelIndex+1, 
+                b = gPanels.length;
+            $('#panelIndex').html(""+(a)+" of "+b);
+            if (a==1){
+                if (a==b){
+                    disableLink($('#prev'));
+                    disableLink($('#next'));
+                } else {
+                    disableLink($('#prev'));
+                    enableLink($('#next'));
+                }
+            } else if (a==b) {
+                enableLink($('#prev'));
+                disableLink($('#next'));
+            } else {
+                enableLink($('#prev'));
+                enableLink($('#next'));
+            }
+        }
+    }
+    
+    
+  </script>
+</HTML>
+]]></htmlsrc>
+  <properties>
+    <property name="formAction">
+      <value>mojoAction</value>
+    </property>
+    <property name="formName">
+      <value></value>
+    </property>
+    <property name="name">
+      <readOnly>true</readOnly>
+      <value>reorderStory</value>
+    </property>
+    <property name="title">
+      <value>Reorder Story</value>
+    </property>
+    <property name="type">
+      <readOnly>true</readOnly>
+      <value>pagetypes/com.dynamide.page</value>
+    </property>
+  </properties>
+</dynamideForm>
