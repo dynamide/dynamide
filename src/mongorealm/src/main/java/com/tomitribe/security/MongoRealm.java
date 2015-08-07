@@ -2,6 +2,7 @@ package com.tomitribe.security;
 
 
 import com.mongodb.*;
+import com.mongodb.DBCursor;
 import org.apache.catalina.realm.GenericPrincipal;
 import org.apache.catalina.realm.RealmBase;
 
@@ -224,8 +225,12 @@ public class MongoRealm extends RealmBase {
             systemlog("MongoRealm starting up, connecting to mongodb");
             mongoClient = new MongoClient(new MongoClientURI(getMongoClientURI()));
         }
-        debug("mongo opened");
-        return mongoClient.getDB(getDatabase());
+        debug("mongo opened for mongoClientURI: "+getMongoClientURI());
+        String theDB = getDatabase();
+        debug("mongo db: "+theDB);
+        DB result = mongoClient.getDB(theDB);
+        debug("mongo DB handle: "+result);
+        return result;
     }
 
 
@@ -240,7 +245,21 @@ public class MongoRealm extends RealmBase {
             DB db = openMongoDB();
             DBCollection userCol = db.getCollection(userCollection);
             BasicDBObject query = new BasicDBObject(usernameField, username);
-            DBObject obj = userCol.findOne(query);
+            debug("userCol.findOne("+query+") userCol: "+userCol);
+            DBObject obj = null;
+            try {
+                obj = userCol.findOne(query);
+            } catch (Exception e){
+                systemlog("Exception trying to findOne("+query+") EX: "+e.getMessage());
+
+                DBCursor cursor = userCol.find();
+                while(cursor.hasNext()) {
+                   DBObject objall = cursor.next();
+                    systemlog("Find all: "+objall.toString());
+                }
+
+                return null;
+            }
             debug("getPassword: "+(obj!=null?obj.toString():"user not found in db: "+username));
 
 
@@ -276,6 +295,7 @@ public class MongoRealm extends RealmBase {
      * Return the roles associated with the gven user name.
      */
     protected ArrayList<String> getRoles(String username) {
+        debug("getRoles");
 
         if (allRolesMode != AllRolesMode.STRICT_MODE && !isRoleStoreDefined()) {
             // Using an authentication only configuration and no role store has

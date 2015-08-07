@@ -31,4 +31,8 @@
         <URI>/anarchia</URI>
         <APPNAME>us.anarchia</APPNAME>
     </app>
+    <app>
+        <URI>/anarchia-author</URI>
+        <APPNAME>us.anarchia.author</APPNAME>
+    </app>
 </web-apps>
