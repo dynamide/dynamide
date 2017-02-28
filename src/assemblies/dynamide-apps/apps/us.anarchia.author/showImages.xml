@@ -5,7 +5,7 @@
         //http://localhost:18080/anarchia-author?page=showImages&action=getpanels&author=Cooper&reloadPage=true
         if (event.getDMAction().equals("getpanels")){
             //http://localhost:18080/anarchia-author?page=showImages&action=getpanels&reloadPage=true
-            UserRESTHelper backend = getBackend();
+            MongoREST backend = getBackend();
             try {
                 GridFS gridfs = backend.getGridFS();
                 DBObject query = new BasicDBObject();

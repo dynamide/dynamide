@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<dynamideForm>
+
+  <event language="beanshell" name="POST" ><![CDATA[
+      MongoREST getLoginBackend(){
+          MongoREST backend = new MongoREST();
+          backend.setup("security_realm", "mongoSecurityRealmUser", "Laramie33");
+          return backend;
+      }
+
+      MongoREST loginBackend = getLoginBackend();
+      try {
+          String newAvatarID = event.getQueryParam("newAvatarID");
+          String newPassword = event.getQueryParam("newPassword");
+          if (Tools.isBlank(newAvatarID)){
+            event.returnSource("{\"error\":\"newAvatarID was blank\"}", false, "application/json");
+            return;
+          }
+          if (Tools.isBlank(newPassword)){
+            event.returnSource("{\"error\":\"newPassword was blank\"}", false, "application/json");
+            return;
+          }
+
+          String query = "{'username':'"+newAvatarID+"'}";
+          res = loginBackend.getAll("security_realm", "user", query, 0, 2);
+          cursor = loginBackend.getCursor("security_realm", "user", query, 0, 2);
+
+          System.out.println("-------'"+newAvatarID+"'---------->>> query returned:"+cursor.count());
+          if (cursor.count()>0){
+               res = "{\"error\":\"avatarID '"+newAvatarID+"' already exists in system.\"}";
+               event.setResponseCode(400);
+               event.setErrorMessage(res);
+               //event.returnSource(res, false, "application/json");
+               return;
+          }
+
+          String credentials = calcSHA(newPassword);
+          String body = "{\"username\" : \""+newAvatarID+"\", \"credentials\" : \""+credentials+"\", \"roles\" : [ { \"name\" : \"votey-avatar\" } ] }";
+          System.out.println("@@@@@ in POST registerAvatar. body:"+body);
+
+          String res = loginBackend.post("security_realm",
+                                         "user",
+                                          body);
+          if (Tools.isBlank(res)){
+            res = "{\"message\":\"no data back from POST\"}";
+          }
+          event.returnSource(res, false, "application/json");
+          return;
+      } catch (Throwable t) {
+          returnErrorJSON(t, event);
+      } finally {
+          loginBackend.close();
+      }
+  ]]></event>
+
+
+
+  <widgets>
+  </widgets>
+  <htmlsrc browser="*"><![CDATA[
+<HTML>
+  <HEAD>
+    <TITLE>registerAvatar service</TITLE>
+  </HEAD>
+  <BODY id="registerAvatar" name="registerAvatar">
+    Something went wrong accessing the web service for /registerAvatar which should have returned JSON data.
+  </BODY>
+</HTML>
+]]></htmlsrc>
+  <properties>
+    <property name="name">
+      <readOnly>true</readOnly>
+      <value>registerAvatar</value>
+    </property>
+    <property name="type">
+      <readOnly>true</readOnly>
+      <value>pagetypes/com.dynamide.page</value>
+    </property>
+  </properties>
+</dynamideForm>

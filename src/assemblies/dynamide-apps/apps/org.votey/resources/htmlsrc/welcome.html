@@ -1,0 +1,65 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<META HTTP-EQUIV="Access-Control-Allow-Origin" CONTENT="http://localhost:18080" />
+      <link href="/tagonomy/css/stylesheet.css" rel="stylesheet" type="text/css"/>
+      <link href="/tagonomy/js/jquery-ui/themes/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+      <script src="/tagonomy/js/jquery.min.js"></script>
+      <script src="/tagonomy/js/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+      <script src="/tagonomy/js/tagosuggest.js"></script>
+    <style>
+    .http {
+        font-size: 8pt;
+        font-family: 'courier new';
+        font-weight: bold;
+        display: inline-block;
+        border-radius: 2px;
+        margin: 0px;
+        padding: 1px;
+        background-color: white;
+    }
+    .get {
+        border: 1px solid #0f6ab4;
+        color: #0f6ab4;
+    }
+    .post{
+        border: 1px solid #10a54a;
+        color: #10a54a;
+    }
+    .put {
+        border: 1px solid #c5862b;
+        color: #c5862b;
+    }
+    .dele {
+        border: 1px solid #a41e22;
+        color: #a41e22;
+    }
+    </style>
+</head>
+<body >
+<h2>Welcome to votey.org</h2>
+<p><b>Register here first:</b></p>
+<table border="1" cellspacing="0" cellpadding="6">
+    <tr>
+        <td><b class="http post">POST</b> &nbsp;</td><td>/votey-registrar</td>
+    </tr>
+</table>
+<br />
+<p><b>Once logged in, you may hit our API endpoints here:</b></p>
+<table border="1" cellspacing="0" cellpadding="6">
+    <tr>
+        <td><b class="http get">GET</b> <b class="http post">POST</b> <b class="http put">PUT</b> &nbsp;</td><td>/votey/votes</td>
+    </tr><tr>
+        <td><b class="http get">GET</b> <b class="http post">POST</b> <b class="http put">PUT</b> &nbsp;</td><td>/votey/elections</td>
+    </tr><tr>
+        <td><b class="http get">GET</b> <b class="http post">POST</b> <b class="http put">PUT</b> &nbsp;</td><td>/votey/community</td>
+    </tr><tr>
+        <td><b class="http get">GET</b> <b class="http post">POST</b> <b class="http put">PUT</b> &nbsp;</td><td>/votey/voterToken</td>
+    </tr>
+
+</table>
+
+
+
+</body>
+</html>

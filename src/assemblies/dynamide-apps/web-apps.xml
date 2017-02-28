@@ -35,4 +35,12 @@
         <URI>/anarchia-author</URI>
         <APPNAME>us.anarchia.author</APPNAME>
     </app>
+    <app>
+        <URI>/votey</URI>
+        <APPNAME>org.votey</APPNAME>
+    </app>
+    <app>
+        <URI>/votey-registrar</URI>
+        <APPNAME>org.votey.registrar</APPNAME>
+    </app>
 </web-apps>

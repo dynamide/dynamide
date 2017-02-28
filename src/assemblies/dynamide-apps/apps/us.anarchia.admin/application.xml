@@ -8,7 +8,7 @@
     import com.dynamide.Widget;
     import com.dynamide.datatypes.*;
     import com.nebhale.jsonpath.JsonPath;
-    import us.anarchia.db.UserRESTHelper;
+    import com.dynamide.db.MongoREST;
     import com.mongodb.util.JSON;
     import org.json.*;
     import org.apache.commons.fileupload.*; 
@@ -16,8 +16,8 @@
     import com.mongodb.gridfs.*;
     
     //============== getBackend() ==========================
-    UserRESTHelper getBackend(){    
-        UserRESTHelper backend = new UserRESTHelper();
+    MongoREST getBackend(){
+        MongoREST backend = new MongoREST();
         backend.setup("anarchia", "bob", "MangoDog");
         return backend;
     }

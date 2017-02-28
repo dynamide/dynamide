@@ -14,7 +14,7 @@
     <event language="beanshell" name="LIST" ><![CDATA[
         r = event.request;
         String files = "";
-        UserRESTHelper backend = getBackend();
+        MongoREST backend = getBackend();
         try {
             GridFS gridfs = backend.getGridFS();
             DBObject query = new BasicDBObject();
@@ -47,7 +47,7 @@
         if (StringTools.isEmpty(fn)){
             returnSource(("{'msg':'ERROR: filename was empty'}").replace('\'','"'));
         }
-        UserRESTHelper backend = getBackend();
+        MongoREST backend = getBackend();
         try {
             GridFS gridfs = backend.getGridFS();
             DBObject query = new BasicDBObject();
@@ -77,7 +77,7 @@
             return;
         }
         String fileDeleteStr = "";
-        UserRESTHelper backend = getBackend();
+        MongoREST backend = getBackend();
         try {
             GridFS gridfs = backend.getGridFS();
             DBObject query = new BasicDBObject();
@@ -112,7 +112,7 @@
             System.out.println("~~~~~~~~~~~~~~~~~~~~~~ in POST file: "+uf);
             try {
                 String fileResultStr = "";
-                UserRESTHelper backend = getBackend();
+                MongoREST backend = getBackend();
                 try {
                     GridFS gridfs = backend.getGridFS(); 
                     GridFSInputFile fsfile = gridfs.createFile(uf.stream, true);//true means closeStreamOnPersist, so it closes the stream for us.

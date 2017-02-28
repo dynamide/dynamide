@@ -4,7 +4,7 @@
   <event language="beanshell" name="reorderStory_onAction"><![CDATA[//no escapes
         if (event.request.getMethod().equals("POST")){
             try {
-                UserRESTHelper backend = getBackend();
+                MongoREST backend = getBackend();
                 try {
                     event.returnSource("{\"msg\":\"not implemented\"}", false, "application/json");
                 } finally {

@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<application>
+  <fields href="fielddefs.xml"/>
+  <event language="beanshell" name="application_onImport"><![CDATA[
+    import com.dynamide.*;
+    import com.dynamide.event.*;
+    import com.dynamide.util.*;
+    import com.dynamide.Widget;
+    import com.dynamide.datatypes.*;
+    import com.nebhale.jsonpath.JsonPath;
+    import com.dynamide.db.MongoREST;
+    import com.mongodb.util.JSON;
+    import com.mongodb.*;
+    import com.mongodb.gridfs.*;
+    import org.json.*;
+
+    //=========================================================
+    //===     BeanShell app scope METHODS                   ===
+    //=========================================================
+
+    MongoREST getBackend(){
+        MongoREST backend = new MongoREST();
+        backend.setup("votey", "bob", "MangoDog");
+        return backend;
+    }
+
+    JSONArray getJSONArray(String payload){
+        Object json = new JSONTokener(payload).nextValue();
+        if (json instanceof JSONArray) {
+            JSONArray jsonarray = new JSONArray(payload);
+            return jsonarray;
+        }
+        return null;
+    }
+
+    JSONObject getJSONObject(String payload){
+        Object json = new JSONTokener(payload).nextValue();
+        if (json instanceof JSONObject) {
+            JSONObject jsonobject = new JSONObject(payload);
+            return jsonobject;
+        }
+        return null;
+    }
+
+    String returnErrorJSON(Throwable t, ScriptEvent event){
+      if (t instanceof MongoException){
+          event.returnSource("{\"error\": "  +t.getMessage()  +"}",     false, "application/json");
+      } else {
+          event.returnSource("{\"error\":\""  +t.getMessage().replaceAll("\"", "\\\\\"")+  "\"}", false, "application/json");
+      }
+      return "";
+    }
+
+  ]]></event>
+
+  <event language="beanshell" name="application_queryNextPage"><![CDATA[
+  	  return;   //For now, skip login, while we debug other pages.
+  ]]></event>
+
+
+  <pages>
+  	<page name="welcome" default="true"></page>
+  	<page name="votes"></page>
+  	<page name="elections"></page>
+  	<page name="community"></page>
+  	<page name="voterToken"></page>
+  </pages>
+  <properties>
+    <property name="applicationID">
+      <value>org.votey</value>
+    </property>
+    <property name="defaultLanguage">
+      <value>en-us</value>
+    </property>
+    <property name="onImport" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value>application_onImport</value>
+    </property>
+    <property name="onAction" isEvent="true">
+      <datatype>com.dynamide.datatypes.ServerSideEvent</datatype>
+      <value></value>
+    </property>
+    <property name="poolable">
+      <value>true</value>
+    </property>
+    <property name="title">
+      <value>Votey.org Project</value>
+    </property>
+    <property name="type">
+      <readOnly>true</readOnly>
+      <value>com.dynamide.Session</value>
+    </property>
+  </properties>
+</application>

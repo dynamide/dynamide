@@ -8,7 +8,7 @@
     import com.dynamide.Widget;
     import com.dynamide.datatypes.*;
     import com.nebhale.jsonpath.JsonPath;
-    import us.anarchia.db.UserRESTHelper;
+    import com.dynamide.db.MongoREST;
     import com.mongodb.util.JSON;
     import com.mongodb.*;
     import com.mongodb.gridfs.*;
@@ -32,8 +32,8 @@
         //}
         
         //============== getBackend() ==========================
-        UserRESTHelper getBackend(){    
-            UserRESTHelper backend = new UserRESTHelper();
+        MongoREST getBackend(){
+            MongoREST backend = new MongoREST();
             backend.setup("anarchia", "bob", "MangoDog");
             return backend;
         }
@@ -78,7 +78,7 @@
             if (StringTools.isEmpty(fn)){
                 returnSource(("{'msg':'ERROR: filename was empty'}").replace('\'','"'));
             }
-            UserRESTHelper backend = getBackend();
+            MongoREST backend = getBackend();
             try {
                 GridFS gridfs = backend.getGridFS();
                 DBObject query = new BasicDBObject();
@@ -107,7 +107,7 @@
         try {
             String path = session.getRequestPath();
             String method = event.request.getMethod();
-            UserRESTHelper backend = getBackend();
+            MongoREST backend = getBackend();
             try {
             
                 //==============[ dispatch POSTs ]==============================

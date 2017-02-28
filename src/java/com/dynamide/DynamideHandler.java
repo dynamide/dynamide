@@ -121,7 +121,7 @@ public class DynamideHandler extends DynamideObject implements Runnable {
             if (fullUri.equals("/favicon.ico")){
                 HandlerResult hr = new HandlerResult("");
                 hr.setResponseCode(HttpServletResponse.SC_NOT_FOUND);
-                hr.setErrorMessage("No favicon.ico<br/>");
+                hr.setErrorMessage("No favicon.ico");
                 return hr;
             }
             //this.lastViewedPageName = "";
@@ -198,7 +198,9 @@ public class DynamideHandler extends DynamideObject implements Runnable {
                                      +"<a href='"+ResourceManager.errorIDToHref(errorID)+"'>"+errorID+"</a>"
                                      +"</body></html>", false);
             result.setResponseCode(500);
+            result.setErrorMessage("Server Error: "+errorID);
             //TODO: setErrorMessage doesn't seem to go through to client: result.setErrorMessage("<a href='"+ResourceManager.errorIDToHref(errorID)+"'>"+errorID+"</a>");
+            //TODO: 20160729  That's because you need to set it in here and pass it through in DynamideServlet:368
             result.setMimeType("text/html");
             return result;
         }

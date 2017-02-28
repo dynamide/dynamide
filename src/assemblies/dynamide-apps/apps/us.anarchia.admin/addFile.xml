@@ -17,7 +17,7 @@
             if (StringTools.isEmpty(fn)){
                 returnSource(("{'msg':'ERROR: filename was empty'}").replace('\'','"'));
             }
-            UserRESTHelper backend = getBackend();
+            MongoREST backend = getBackend();
             try {
                 GridFS gridfs = backend.getGridFS();
                 DBObject query = new BasicDBObject();
@@ -42,7 +42,7 @@
                 return;
             }
             String fileDeleteStr = "";
-            UserRESTHelper backend = getBackend();
+            MongoREST backend = getBackend();
             try {
                 GridFS gridfs = backend.getGridFS();
                 DBObject query = new BasicDBObject();
@@ -62,7 +62,7 @@
         } else if (event.getDMAction().equals("getFiles")){
             //http://localhost:18080/anarchia-admin?page=addFile&action=getFiles&reloadPage=true
             String files = "";
-            UserRESTHelper backend = getBackend();
+            MongoREST backend = getBackend();
             try {
                 GridFS gridfs = backend.getGridFS();
                 DBObject query = new BasicDBObject();
@@ -105,7 +105,7 @@
             System.out.println("~~~~~~~~~~~~~~~~~~~~~~ in POST file: "+uf);
             try {
                 String fileResultStr = "";
-                UserRESTHelper backend = getBackend();
+                MongoREST backend = getBackend();
                 try {
                     GridFS gridfs = backend.getGridFS(); 
                     GridFSInputFile fsfile = gridfs.createFile(uf.stream, true);//true means closeStreamOnPersist, so it closes the stream for us.

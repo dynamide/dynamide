@@ -105,6 +105,15 @@ public class ScriptEvent extends DynamideObject implements java.io.Serializable 
         responseCode = code;
     }
 
+    private String errorMessage = "";
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+
     public String redirectURL = "";
 
     /** Send the client a redirect, rather than a rendered page, to avoid POST data being re-posted on a refresh.

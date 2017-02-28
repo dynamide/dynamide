@@ -47,9 +47,7 @@
 		<auth-constraint>
 			<role-name>dynamide-admin</role-name>
 		</auth-constraint>
-
 		<user-data-constraint>
-			<!-- transport-guarantee can be CONFIDENTIAL, INTEGRAL, or NONE -->
 			<transport-guarantee>NONE</transport-guarantee>
 		</user-data-constraint>
 	</security-constraint>
@@ -68,11 +66,41 @@
 		<auth-constraint>
 			<role-name>anarchia-author</role-name>
 		</auth-constraint>
-
 		<user-data-constraint>
-			<!-- transport-guarantee can be CONFIDENTIAL, INTEGRAL, or NONE -->
 			<transport-guarantee>NONE</transport-guarantee>
 		</user-data-constraint>
+	</security-constraint>
+
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Logged-in Votey.org Avatar Interface</web-resource-name>
+			<url-pattern>/votey/*</url-pattern>
+			<http-method>GET</http-method>
+			<http-method>POST</http-method>
+			<http-method>PUT</http-method>
+			<http-method>DELETE</http-method>
+			<http-method>OPTIONS</http-method>
+			<http-method>HEAD</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>votey-avatar</role-name>
+		</auth-constraint>
+		<user-data-constraint>
+			<transport-guarantee>NONE</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint>
+
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Votey.org Public Registration Point</web-resource-name>
+			<url-pattern>/votey-registrar/*</url-pattern>
+			<http-method>GET</http-method>
+			<http-method>POST</http-method>
+			<http-method>PUT</http-method>
+			<http-method>DELETE</http-method>
+			<http-method>OPTIONS</http-method>
+			<http-method>HEAD</http-method>
+		</web-resource-collection>
 	</security-constraint>
 
 	<security-constraint>

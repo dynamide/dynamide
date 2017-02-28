@@ -2069,7 +2069,7 @@ implements ISession, ISessionItem, ISessionTableItem, IDatasource, IContext {
             // 4/10/2004 must loadPage before putAllFieldsIntoSession
             Page page = null;
             if ( m_pageNames.indexOf(pageID) > -1){
-                loadPage(pageID, reloadPageRequested, null);
+                page = loadPage(pageID, reloadPageRequested, null);
             }
 
             //5/18/2003 7:26AM moved this here:
@@ -2126,6 +2126,7 @@ implements ISession, ISessionItem, ISessionTableItem, IDatasource, IContext {
                         handlerResult.result = event.resultSrc;
                         handlerResult.mimeType = event.mimeType;
                         handlerResult.setResponseCode(event.getResponseCode());
+                        handlerResult.setErrorMessage(event.getErrorMessage());
                         setActivePage("");
                         return handlerResult;
                     } else if (event.resultAction == ScriptEvent.RA_RETURN_STREAM){
@@ -2133,6 +2134,7 @@ implements ISession, ISessionItem, ISessionTableItem, IDatasource, IContext {
                         handlerResult.mimeType = event.mimeType;
                         handlerResult.setPrettyPrint(false);
                         handlerResult.setResponseCode(event.getResponseCode());
+                        handlerResult.setErrorMessage(event.getErrorMessage());
                         setActivePage("");
                         return handlerResult;
                     }
@@ -2186,6 +2188,9 @@ implements ISession, ISessionItem, ISessionTableItem, IDatasource, IContext {
                         if (LOG_EVENTS_TO_HANDLERLOG) logHandlerProc("DEBUG", "Result of page.handleAction: "+ event.dumpHTML());
                         setActivePage(pageID);
                         return page.outputPage(handlerResult);  //re-present, errors will take care of themselves.
+                    } else if ((event.getResponseCode()<200)||(event.getResponseCode()>=300)) {
+                        handlerResult.setErrorMessage(event.getErrorMessage());
+                        handlerResult.setResponseCode(event.getResponseCode());
                     } else {
                         logHandlerProc("INFO", "Page validated: "+pageID);
                     }
@@ -2195,14 +2200,16 @@ implements ISession, ISessionItem, ISessionTableItem, IDatasource, IContext {
                         handlerResult.mimeType = event.mimeType;
                         handlerResult.setPrettyPrint(false);
                         handlerResult.setResponseCode(event.getResponseCode());
+                        handlerResult.setErrorMessage(event.getErrorMessage());
                         setActivePage("");
                         return handlerResult;
-                    } else if ((event.resultAction == ScriptEvent.RA_RETURN_SOURCE) && (event.resultSrc.length()>0)){
+                    } else if ((event.resultAction == ScriptEvent.RA_RETURN_SOURCE) && ((event.resultSrc==null) || (event.resultSrc.length()>0))){
                         logHandlerProc("INFO", "returning event.resultSrc");
                         handlerResult.result = event.resultSrc;
                         handlerResult.mimeType = event.mimeType;
                         handlerResult.prettyPrint = event.prettyPrint;//MEMORY_LEAKS: stops leaks if this is uncommented: handlerResult.prettyPrint = false;
                         handlerResult.setResponseCode(event.getResponseCode());
+                        handlerResult.setErrorMessage(event.getErrorMessage());
                         setActivePage("");
                         return handlerResult;
                     }
@@ -2261,6 +2268,7 @@ implements ISession, ISessionItem, ISessionTableItem, IDatasource, IContext {
                     handlerResult.mimeType = event.mimeType;
                     handlerResult.prettyPrint = event.prettyPrint;
                     handlerResult.setResponseCode(event.getResponseCode());
+                    handlerResult.setErrorMessage(event.getErrorMessage());
                     setActivePage("");
                     return handlerResult;
                 }

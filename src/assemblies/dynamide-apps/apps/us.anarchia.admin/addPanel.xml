@@ -4,7 +4,7 @@
   <event language="beanshell" name="addPanel_onAction"><![CDATA[//no escapes
         if (event.request.getMethod().equals("POST")){
             try {
-                UserRESTHelper backend = getBackend();
+                MongoREST backend = getBackend();
                 try {
                     JSONObject jo = new JSONObject();
                     jo.put("img",    event.getQueryParam("addPanel_img"))

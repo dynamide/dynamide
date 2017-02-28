@@ -365,10 +365,15 @@ public class DynamideServlet extends HttpServlet {
                     writeResult(response, result.mimeType, result.binaryResult);
                     if (com.dynamide.Constants.PROFILE) profiler.leave("servlet.writeResult: " + fullURI);
                 } else if (result.getResponseCode() > 0) {
-                    //response.sendError(result.getResponseCode(), result.getErrorMessage());
+                    //IF you do it this way, tomcat send an error page.  If you don't the message line can't be changed, but the code will go through, and so will the body, although the http protocol seems to say it can close the stream.
+                    // response.sendError(result.getResponseCode(), result.getErrorMessage());
                     response.setStatus(result.getResponseCode());
                     response.setContentType(result.getMimeType());
-                    response.getWriter().print(result.result);
+                    if (Tools.isBlank(result.getErrorMessage())){
+                        response.getWriter().print(result.result);
+                    } else {
+                        response.getWriter().print(result.getErrorMessage());
+                    }
                 } else {
                     if (com.dynamide.Constants.PROFILE) profiler.enter("servlet.printResult: " + fullURI);
                     printResult(response, result.mimeType, result.result);

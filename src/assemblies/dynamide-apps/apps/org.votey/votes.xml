@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!DOCTYPE dynamideForm>
+<dynamideForm>
+  <event language="beanshell" name="GET" ><![CDATA[
+     MongoREST backend = getBackend();
+     try {
+        String token = event.getQueryParam("token");
+        if (StringTools.notEmpty(token)){
+            Tools.safe(token);
+            query = "{'token':'"+token+"'}";
+            res = backend.getAll("votey", "votes", query, 0, 1000);
+        } else {
+            res = backend.getAll("votey", "votes", "{}", 0, 1000);
+        }
+        event.returnSource(res, false, "application/json");
+      } catch (Throwable t) {
+        returnErrorJSON(t, event);
+      } finally {
+        backend.close();
+      }
+  ]]></event>
+
+  <event language="beanshell" name="POST" ><![CDATA[
+      MongoREST backend = getBackend();
+      try {
+          String res = backend.post("votey",
+                                    "votes",
+                                    event.getRequestBody());
+          event.returnSource(res, false, "application/json");
+          return;
+      } catch (Throwable t) {
+          returnErrorJSON(t, event);
+      } finally {
+          backend.close();
+      }
+  ]]></event>
+
+  <event language="beanshell" name="PUT" ><![CDATA[
+      MongoREST backend = getBackend();
+      try {
+         res = backend.put( "votey",
+                            "votes",
+                             event.getRequestBody(),
+                             false,
+                             false);
+         event.returnSource(res, false, "application/json");
+      } catch (Throwable t) {
+         returnErrorJSON(t, event);
+      } finally {
+         backend.close();
+      }
+  ]]></event>
+
+  <widgets>
+  </widgets>
+  <htmlsrc browser="*"><![CDATA[
+<HTML>
+  <HEAD>
+    <TITLE>votes service</TITLE>
+  </HEAD>
+  <BODY id="votes" name="votes">
+    Something went wrong accessing the web service for /votes which should have returned JSON data.
+  </BODY>
+</HTML>
+]]></htmlsrc>
+  <properties>
+    <property name="name">
+      <readOnly>true</readOnly>
+      <value>votes</value>
+    </property>
+    <property name="type">
+      <readOnly>true</readOnly>
+      <value>pagetypes/com.dynamide.page</value>
+    </property>
+  </properties>
+</dynamideForm>

@@ -2015,7 +2015,7 @@ public final class ResourceManager extends Pool {
                         urictx.setPoolMax(session.getPropertyStringValue("poolMax"));
                         Assembly.accessed(urictx);
                         Assembly.accessed(session);
-                        logInfo("Session repooled: "+uri+" id: "+sessionID);//+" context, after: \r\n"+dumpContext(urictx, "  ", false)+"\r\nat\r\n"+Tools.getStackTrace());
+                        logDebug("Session repooled: "+uri+" id: "+sessionID);//+" context, after: \r\n"+dumpContext(urictx, "  ", false)+"\r\nat\r\n"+Tools.getStackTrace());
                         break;
                     case POOL_ACTION_REMOVE:
                         session.setPooled(false);
